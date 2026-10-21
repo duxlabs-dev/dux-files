@@ -57,6 +57,10 @@ Singleton {
     property alias reduceMotion: adapter.reduceMotion
     property alias springBounce: adapter.springBounce
     property alias enableRippleEffects: adapter.enableRippleEffects
+    property alias fontSource: adapter.fontSource
+    property alias fontFamily: adapter.fontFamily
+    property alias monoFontFamily: adapter.monoFontFamily
+    property alias displayFontFamily: adapter.displayFontFamily
     property alias fontWeight: adapter.fontWeight
     property alias fontScale: adapter.fontScale
     property alias focusRingEnabled: adapter.focusRingEnabled
@@ -158,6 +162,10 @@ Singleton {
             property bool reduceMotion: false
             property int springBounce: 1
             property bool enableRippleEffects: true
+            property string fontSource: "auto"
+            property string fontFamily: ""
+            property string monoFontFamily: ""
+            property string displayFontFamily: ""
             property int fontWeight: 400
             property real fontScale: 1.0
             property bool focusRingEnabled: true

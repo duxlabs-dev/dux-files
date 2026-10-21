@@ -9,6 +9,8 @@ SettingsRow {
     property string description: ""
     property string currentValue: ""
     property alias options: dropdown.options
+    property alias enableFuzzySearch: dropdown.enableFuzzySearch
+    property alias maxPopupHeight: dropdown.maxPopupHeight
     property alias dropdownWidth: dropdown.dropdownWidth
 
     signal valueChanged(string value)
