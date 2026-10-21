@@ -44,14 +44,20 @@ FloatingWindow {
     readonly property WindowActions actions: actions
     readonly property WindowSidebarHost sidebar: sidebarHost
     readonly property FilesTopbar topbar: topbar
+    readonly property PreviewOverlay preview: previewOverlay
     readonly property var activePane: splitView && activePaneIndex === 1 && secondPane ? secondPane : primaryPane
     readonly property string currentPath: activePane.path
     readonly property bool dialogOpen: dialogs.anyOpen
     readonly property bool textEditing: surface.focusItem instanceof TextInput || surface.focusItem instanceof TextEdit
     readonly property bool sidebarFocused: sidebarHost.focused
     readonly property bool tabRowFocused: ItemTree.isInside(surface.focusItem, tabRow)
-    readonly property bool shortcutsEnabled: !dialogOpen && !textEditing
+    readonly property bool shortcutsEnabled: !dialogOpen && !textEditing && !(preview?.open ?? false)
     readonly property bool lastActive: WindowService.lastActiveId === windowId
+    readonly property var previewTarget: {
+        const entries = selectedEntries();
+        return entries.length === 1 ? entries[0] : null;
+    }
+    readonly property bool previewExpandable: preview.supports(previewTarget)
 
     Component.onDestruction: FileOpsService.forget(opScope)
 
@@ -473,6 +479,7 @@ FloatingWindow {
             anchors.bottomMargin: FilesMetrics.contentMarginV
             anchors.leftMargin: FilesMetrics.contentMarginH + sidebarHost.dockedWidth
             anchors.rightMargin: FilesMetrics.contentMarginH
+            enabled: !window.preview.open
 
             TabRow {
                 id: tabRow
@@ -480,8 +487,8 @@ FloatingWindow {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
-                visible: window.tabManager.tabs.length > 1
-                height: visible ? implicitHeight : 0
+                visible: true
+                height: implicitHeight
                 tabs: window.tabManager.tabs.map(state => window.tabManager.tabLabel(state))
                 currentIndex: window.tabManager.currentTab
                 onTabSelected: index => window.tabManager.selectTab(index)
@@ -512,6 +519,7 @@ FloatingWindow {
                 folderRemembered: window.activePane.folderRemembered
                 folderHasSettings: window.activePane.hasFolderSettings
                 previewOpen: window.previewOpen
+                previewExpandable: window.previewExpandable
                 trashActive: window.activePane.trashActive
                 recentActive: window.activePane.recentActive
                 filterText: window.activePane.nameFilter
@@ -544,6 +552,7 @@ FloatingWindow {
                 onUseForAllFoldersRequested: window.useForAllFolders()
                 onResetFolderRequested: window.activePane.resetFolder()
                 onPreviewToggled: window.actions.runAction("togglePreview")
+                onPreviewExpandRequested: window.actions.runAction("previewExpand")
                 onReloadRequested: window.actions.runAction("reload")
                 onTerminalRequested: window.actions.runAction("openTerminal")
                 onPropertiesRequested: window.actions.runAction("properties")
@@ -613,6 +622,7 @@ FloatingWindow {
             anchors.right: parent.right
             mainWindow: window
             focusItem: surface.focusItem
+            enabled: !window.preview.open
         }
 
         DragController {
@@ -637,6 +647,13 @@ FloatingWindow {
                         window.dismissEditors(point.position);
                 }
             }
+        }
+
+        PreviewOverlay {
+            id: previewOverlay
+
+            anchors.fill: parent
+            onClosed: window.activePane.focusBody()
         }
     }
 
