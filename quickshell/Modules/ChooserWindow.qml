@@ -687,7 +687,7 @@ FloatingWindow {
 
                         required property var modelData
 
-                        readonly property bool boolean: (modelData.options ?? []).length === 0
+                        readonly property bool isToggle: (modelData.options ?? []).length === 0
                         readonly property string value: window.choiceValues[modelData.id] ?? ""
 
                         spacing: Theme.spacingS
@@ -701,7 +701,7 @@ FloatingWindow {
 
                         DToggle {
                             anchors.verticalCenter: parent.verticalCenter
-                            visible: choiceRow.boolean
+                            visible: choiceRow.isToggle
                             hideText: true
                             text: choiceRow.modelData.label
                             checked: choiceRow.value === "true"
@@ -710,7 +710,7 @@ FloatingWindow {
 
                         DDropdown {
                             anchors.verticalCenter: parent.verticalCenter
-                            visible: !choiceRow.boolean
+                            visible: !choiceRow.isToggle
                             showLabel: false
                             options: (choiceRow.modelData.options ?? []).map(option => option.label)
                             currentValue: (choiceRow.modelData.options ?? []).find(option => option.id === choiceRow.value)?.label ?? ""
