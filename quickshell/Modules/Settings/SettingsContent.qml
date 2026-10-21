@@ -652,6 +652,13 @@ Item {
                 }
 
                 SettingsToggleRow {
+                    text: I18n.tr("Show file extensions", "toggle showing the file type suffix in names")
+                    keywords: I18n.tr("suffix type filename", "settings search keywords, space separated, add synonyms in your language")
+                    checked: SettingsData.showExtensions
+                    onToggled: checked => SettingsData.showExtensions = checked
+                }
+
+                SettingsToggleRow {
                     text: I18n.tr("Folders before files", "folders first toggle label")
                     keywords: I18n.tr("directories first sort", "settings search keywords, space separated, add synonyms in your language")
                     checked: SettingsData.foldersFirst

@@ -75,6 +75,7 @@ Singleton {
     property alias defaultSort: adapter.defaultSort
     property alias defaultSortDescending: adapter.defaultSortDescending
     property alias showHidden: adapter.showHidden
+    property alias showExtensions: adapter.showExtensions
     property alias foldersFirst: adapter.foldersFirst
     property alias rememberFolderViews: adapter.rememberFolderViews
     property alias folderCounts: adapter.folderCounts
@@ -175,6 +176,7 @@ Singleton {
             property string defaultSort: "name"
             property bool defaultSortDescending: false
             property bool showHidden: false
+            property bool showExtensions: true
             property bool foldersFirst: true
             property bool rememberFolderViews: true
             property bool folderCounts: true
