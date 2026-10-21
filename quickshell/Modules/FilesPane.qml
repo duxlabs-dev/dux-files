@@ -15,6 +15,7 @@ FocusScope {
     property string sortKey: SessionData.lastUsed("sortKey", SettingsData.defaultSort)
     property bool sortDescending: SessionData.lastUsed("sortDescending", SettingsData.defaultSortDescending)
     property string viewMode: SessionData.lastUsed("viewMode", SettingsData.defaultView)
+    property bool folderViews: true
     property bool hasFolderSettings: false
     property var restoringView: null
     property bool previewOpen: true
@@ -83,6 +84,8 @@ FocusScope {
     }
 
     function resolveFolder(target, heldView) {
+        if (!folderViews)
+            return;
         const entry = SettingsData.rememberFolderViews ? FolderViews.lookup(target) : null;
         const values = FolderViews.resolve(entry, SessionData.browsing, {
             "sortKey": SettingsData.defaultSort,

@@ -611,6 +611,7 @@ FloatingWindow {
                 anchors.right: parent.right
                 anchors.topMargin: FilesMetrics.contentSpacing
                 focus: !window.saving
+                folderViews: false
                 showHidden: window.showHidden
                 sortKey: window.sortKey
                 sortDescending: window.sortDescending
