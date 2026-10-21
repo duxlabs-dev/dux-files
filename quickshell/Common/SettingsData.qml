@@ -90,6 +90,13 @@ Singleton {
     property alias thumbnailSizeLimitMb: adapter.thumbnailSizeLimitMb
     property alias networkThumbnails: adapter.networkThumbnails
     property alias showSystemPartitions: adapter.showSystemPartitions
+    property alias showGamesSidebar: adapter.showGamesSidebar
+    property alias showSteamGames: adapter.showSteamGames
+    property alias showHeroicGames: adapter.showHeroicGames
+    property alias showLutrisGames: adapter.showLutrisGames
+    property alias showGameSettingsFolders: adapter.showGameSettingsFolders
+    property alias showGamePrefixes: adapter.showGamePrefixes
+    property alias showGameFolders: adapter.showGameFolders
     property alias mountOnClick: adapter.mountOnClick
     property alias searchHidden: adapter.searchHidden
     property alias searchExcludes: adapter.searchExcludes
@@ -195,6 +202,13 @@ Singleton {
             property int thumbnailSizeLimitMb: 64
             property bool networkThumbnails: false
             property bool showSystemPartitions: false
+            property bool showGamesSidebar: true
+            property bool showSteamGames: true
+            property bool showHeroicGames: true
+            property bool showLutrisGames: true
+            property bool showGameSettingsFolders: true
+            property bool showGamePrefixes: true
+            property bool showGameFolders: true
             property bool mountOnClick: true
             property bool searchHidden: false
             property var searchExcludes: []

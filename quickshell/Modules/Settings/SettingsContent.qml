@@ -1227,6 +1227,72 @@ Item {
                 }
             }
 
+            SettingsCard {
+                title: I18n.tr("Games in the sidebar", "games settings section label")
+
+                SettingsToggleRow {
+                    text: I18n.tr("Show games", "games setting label")
+                    keywords: I18n.tr("steam heroic lutris proton games sidebar hide", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("Only launchers with an installed game are listed.", "games setting description")
+                    checked: SettingsData.showGamesSidebar
+                    onToggled: checked => SettingsData.showGamesSidebar = checked
+                }
+
+                SettingsToggleRow {
+                    text: I18n.tr("Steam", "games setting label for the steam group")
+                    keywords: I18n.tr("steam proton valve", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("Libraries and Proton prefixes.", "steam games setting description")
+                    enabled: SettingsData.showGamesSidebar
+                    checked: SettingsData.showSteamGames
+                    onToggled: checked => SettingsData.showSteamGames = checked
+                }
+
+                SettingsToggleRow {
+                    text: I18n.tr("Heroic", "games setting label for the heroic group")
+                    keywords: I18n.tr("heroic epic gog amazon", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("Games and prefixes Heroic installed.", "heroic games setting description")
+                    enabled: SettingsData.showGamesSidebar
+                    checked: SettingsData.showHeroicGames
+                    onToggled: checked => SettingsData.showHeroicGames = checked
+                }
+
+                SettingsToggleRow {
+                    text: I18n.tr("Lutris", "games setting label for the lutris group")
+                    keywords: I18n.tr("lutris wine prefix", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("Games and prefixes Lutris installed.", "lutris games setting description")
+                    enabled: SettingsData.showGamesSidebar
+                    checked: SettingsData.showLutrisGames
+                    onToggled: checked => SettingsData.showLutrisGames = checked
+                }
+
+                SettingsToggleRow {
+                    text: I18n.tr("Settings folders", "games setting label hiding the launcher config folders")
+                    keywords: I18n.tr("config folder launcher wine prefix", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("Each launcher's own configuration folder.", "games setting description for the settings folders")
+                    enabled: SettingsData.showGamesSidebar
+                    checked: SettingsData.showGameSettingsFolders
+                    onToggled: checked => SettingsData.showGameSettingsFolders = checked
+                }
+
+                SettingsToggleRow {
+                    text: I18n.tr("Prefixes", "games setting label hiding wine prefixes")
+                    keywords: I18n.tr("wine prefix proton compatdata", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("The Wine prefix of each game.", "games setting description for the wine prefixes")
+                    enabled: SettingsData.showGamesSidebar
+                    checked: SettingsData.showGamePrefixes
+                    onToggled: checked => SettingsData.showGamePrefixes = checked
+                }
+
+                SettingsToggleRow {
+                    text: I18n.tr("Games folders", "games setting label hiding the folders holding the games")
+                    keywords: I18n.tr("games library steamapps common", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("Where the launcher keeps the games.", "games setting description for the games folders")
+                    enabled: SettingsData.showGamesSidebar
+                    checked: SettingsData.showGameFolders
+                    onToggled: checked => SettingsData.showGameFolders = checked
+                }
+            }
+
             SettingsRow {
                 visible: !SandboxService.available("devices")
                 iconName: "info"
