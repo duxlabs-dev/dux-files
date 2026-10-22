@@ -126,7 +126,7 @@ func exists(roots []string, theme string) bool {
 
 // walk adds the icon names under dir to badges or icons, whichever is non-nil.
 func walk(dir, families string, badges, icons map[string]bool) {
-	filepath.WalkDir(dir, func(path string, entry fs.DirEntry, err error) error {
+	_ = filepath.WalkDir(dir, func(path string, entry fs.DirEntry, err error) error {
 		if err != nil {
 			return nil
 		}
