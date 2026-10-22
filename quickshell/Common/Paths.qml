@@ -47,9 +47,21 @@ Singleton {
         const cached = _iconPaths[iconName];
         if (cached !== undefined)
             return cached;
-        const resolved = Quickshell.iconPath(iconName, true) || bundledIconPath(iconName);
-        _iconPaths[iconName] = resolved;
+        const resolved = literalIconSource(iconName) || Quickshell.iconPath(iconName, true) || bundledIconPath(iconName);
+        if (resolved !== "")
+            _iconPaths[iconName] = resolved;
         return resolved;
+    }
+
+    function literalIconSource(source: string): string {
+        switch (true) {
+        case source.startsWith("/"):
+            return "file://" + source;
+        case /^https?:\/\//.test(source):
+            return source;
+        default:
+            return "";
+        }
     }
 
     function bundledIconPath(iconName: string): string {

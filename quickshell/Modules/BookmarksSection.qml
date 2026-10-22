@@ -87,6 +87,7 @@ FilePlaceSection {
             label: recent ? I18n.tr("Recent", "recent files view header and sidebar entry") : trash ? I18n.tr("Trash", "trash view header and sidebar entry") : section.labelFor(modelData)
             glyph: recent ? "history" : ""
             iconName: recent ? "" : trash ? (TrashService.count > 0 ? "user-trash-full" : "user-trash") : section.iconFor(modelData)
+            path: recent || trash ? "" : target
             tooltipText: {
                 if (recent)
                     return RecentService.count < 0 ? "" : RecentService.count > 0 ? FileFormat.count(RecentService.count) : I18n.tr("No recent files", "recent files view placeholder when nothing was opened yet");

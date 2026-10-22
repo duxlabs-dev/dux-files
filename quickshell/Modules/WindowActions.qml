@@ -47,6 +47,7 @@ QtObject {
         case "extract":
         case "extractTo":
         case "properties":
+        case "customizeFolder":
         case "copyPath":
         case "bookmark":
         case "bookmarkSelected":
@@ -312,6 +313,9 @@ QtObject {
             return;
         case "properties":
             showProperties();
+            return;
+        case "customizeFolder":
+            mainWindow.dialogs.showAppearance(mainWindow.selectedEntries());
             return;
         case "copyPath":
             copyText((mainWindow.selectedPaths().length > 0 ? mainWindow.selectedPaths() : [currentPath]).join("\n"));

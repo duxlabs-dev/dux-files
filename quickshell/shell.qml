@@ -36,6 +36,7 @@ ShellRoot {
         DC.Host.session = SessionService;
         DC.Host.cache = CacheData;
         DC.Host.files = DirectoryService;
+        DC.Host.appearance = FolderAppearances;
         DC.Host.ownWindowDecorations = Qt.binding(() => SettingsData.windowTitleBars);
         if (Quickshell.env("DFILES_START_HIDDEN") !== "1")
             WindowService.create([]);
