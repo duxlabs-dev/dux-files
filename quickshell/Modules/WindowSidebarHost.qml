@@ -75,8 +75,8 @@ Item {
                 host.focusIfPending(sidebar);
         }
         onNavigateRequested: path => {
-            host.overlayOpen = false;
             host.mainWindow.openPath(path, false);
+            host.leave();
         }
         onTabRequested: path => host.mainWindow.tabManager.newTab(path, true)
         onUnlockRequested: device => host.mainWindow.dialogs.askUnlock(device)

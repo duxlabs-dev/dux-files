@@ -382,6 +382,10 @@ FloatingWindow {
         LayoutMirroring.enabled: I18n.isRtl
         LayoutMirroring.childrenInherit: true
 
+        FocusFallback {
+            onTriggered: pane.focusBody()
+        }
+
         Keys.onPressed: event => {
             const control = (event.modifiers & Qt.ControlModifier) !== 0;
             const alt = (event.modifiers & Qt.AltModifier) !== 0;
