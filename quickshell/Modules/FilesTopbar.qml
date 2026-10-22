@@ -11,7 +11,6 @@ Item {
     id: topbar
 
     property bool splitView: false
-    property bool bookmarked: false
     property bool backEnabled: false
     property bool forwardEnabled: false
     property bool compact: false
@@ -29,7 +28,6 @@ Item {
     property bool folderHasSettings: false
 
     readonly property bool virtualActive: trashActive || recentActive
-    readonly property string bookmarkLabel: bookmarked ? I18n.tr("Remove bookmark", "tooltip on the bookmark button") : I18n.tr("Bookmark this folder", "tooltip on the bookmark button")
     readonly property var viewModes: [
         {
             "value": "list",
@@ -148,7 +146,6 @@ Item {
     signal backRequested
     signal forwardRequested
     signal splitToggled
-    signal bookmarkToggled
     signal viewModeSelected(string mode)
     signal previewToggled
     signal previewExpandRequested
@@ -256,18 +253,6 @@ Item {
         spacing: FilesMetrics.topbarSpacing
 
         FlatButton {
-            anchors.verticalCenter: parent.verticalCenter
-            visible: !topbar.compact
-            enabled: !topbar.virtualActive
-            iconName: "bookmark"
-            iconFilled: topbar.bookmarked
-            iconColor: topbar.bookmarked ? Theme.primary : Theme.surfaceText
-            backgroundColor: Theme.chipSurface
-            tooltipText: topbar.bookmarkLabel
-            onClicked: topbar.bookmarkToggled()
-        }
-
-        FlatButton {
             id: viewButton
 
             anchors.verticalCenter: parent.verticalCenter
@@ -357,14 +342,6 @@ Item {
             function pick(action) {
                 close();
                 action();
-            }
-
-            FileMenuItem {
-                visible: menu.compactRows
-                enabled: !topbar.virtualActive
-                text: topbar.bookmarkLabel
-                iconName: topbar.bookmarked ? "bookmark_remove" : "bookmark"
-                onClicked: menu.pick(() => topbar.bookmarkToggled())
             }
 
             Repeater {

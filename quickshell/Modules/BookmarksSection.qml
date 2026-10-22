@@ -95,15 +95,12 @@ FilePlaceSection {
                 return "";
             }
             selected: target === section.currentPath
-            actionIcon: saved ? "bookmark_remove" : ""
-            actionTooltip: I18n.tr("Remove bookmark", "tooltip on the bookmark button")
             dropPath: recent ? "" : target
             springLoad: saved
             z: dragging ? 1 : 0
             opacity: dragging ? Theme.pendingOpacity : 1
             onClicked: section.navigateRequested(target)
             onMiddleClicked: section.tabRequested(target)
-            onActionTriggered: BookmarksService.remove(modelData.path)
             onDropped: drop => section.dropRequested(target, drop)
             onSpringLoaded: section.navigateRequested(target)
 

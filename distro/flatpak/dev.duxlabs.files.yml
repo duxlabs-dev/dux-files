@@ -106,6 +106,25 @@ modules:
         commit: 1a4716cde794a59928d9d9fc15f2afc7a95de360
         disable-submodules: true
 
+  - name: qtpdf
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DINSTALL_LIBDIR=lib
+      - -DINSTALL_QMLDIR=lib/qml
+      - -DINSTALL_PLUGINSDIR=lib/plugins
+      - -DQT_FEATURE_qtwebengine_build=OFF
+      - -DQT_FEATURE_qtpdf_build=ON
+      - -DQT_FEATURE_qtpdf_quick_build=ON
+      - -DQT_FEATURE_qtpdf_widgets_build=OFF
+      - -DQT_FEATURE_pdf_v8=OFF
+      - -DQT_FEATURE_pdf_xfa=OFF
+    sources:
+      - type: archive
+        url: https://download.qt.io/official_releases/qt/6.11/6.11.1/submodules/qtwebengine-everywhere-src-6.11.1.tar.xz
+        sha256: 679c66ccc6c158fc215e9c58ef160331ecd29974232e345c05161889f8667083
+
   - name: dux-files
     buildsystem: simple
     build-commands:

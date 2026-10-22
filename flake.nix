@@ -49,7 +49,10 @@
 
       mkDfiles =
         pkgs:
-        (
+        pkgs.lib.makeOverridable (
+          {
+            withPdfPreview ? true,
+          }:
           let
             version = "2.0.0";
             thumbnailTools = with pkgs; [
@@ -57,6 +60,7 @@
               ffmpegthumbnailer
               poppler-utils
             ];
+            pdfQmlImportPath = "${pkgs.qt6.qtwebengine}/${pkgs.qt6.qtbase.qtQmlPrefix}";
           in
           (pkgs.buildGoModule.override { go = goForPkgs pkgs; }) {
             inherit version;
@@ -132,7 +136,7 @@
                 --zsh <($out/bin/dfiles completion zsh)
 
               wrapProgram $out/bin/dfiles \
-                --prefix PATH : ${pkgs.lib.makeBinPath thumbnailTools}
+                --prefix PATH : ${pkgs.lib.makeBinPath thumbnailTools} ${pkgs.lib.optionalString withPdfPreview "--prefix NIXPKGS_QT6_QML_IMPORT_PATH : ${pdfQmlImportPath}"}
             '';
 
             meta = {
@@ -143,7 +147,7 @@
               platforms = pkgs.lib.platforms.linux;
             };
           }
-        );
+        ) { };
 
       buildDfilesPkgs = pkgs: {
         dux-files = mkDfiles pkgs;

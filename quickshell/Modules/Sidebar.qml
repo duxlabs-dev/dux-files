@@ -110,6 +110,10 @@ DFlickable {
             focusEdge(true);
             break;
         case Qt.Key_Delete:
+            if (bookmarkPath(row) !== "") {
+                BookmarksService.remove(row.dropPath);
+                break;
+            }
             if (!row || row.actionIcon === "" || row.busy)
                 return;
             row.actionTriggered();

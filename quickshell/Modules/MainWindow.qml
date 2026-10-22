@@ -516,7 +516,6 @@ FloatingWindow {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 splitView: window.splitView
-                bookmarked: BookmarksService.has(window.currentPath)
                 backEnabled: window.activePane.canGoBack
                 forwardEnabled: window.activePane.canGoForward
                 sortKey: window.activePane.effectiveSortKey
@@ -552,7 +551,6 @@ FloatingWindow {
                 onBackRequested: window.activePane.back()
                 onForwardRequested: window.activePane.forward()
                 onSplitToggled: window.toggleSplit()
-                onBookmarkToggled: window.actions.runAction("bookmark")
                 onSortKeySelected: key => window.activePane.sortBy(key)
                 onSortDirectionToggled: window.activePane.flipSort()
                 onCopyPathRequested: window.actions.copyText(window.currentPath)
