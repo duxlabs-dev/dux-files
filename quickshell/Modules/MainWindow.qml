@@ -487,8 +487,8 @@ FloatingWindow {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
-                visible: true
-                height: implicitHeight
+                visible: window.tabManager.tabs.length > 1
+                height: visible ? implicitHeight : 0
                 tabs: window.tabManager.tabs.map(state => window.tabManager.tabLabel(state))
                 currentIndex: window.tabManager.currentTab
                 onTabSelected: index => window.tabManager.selectTab(index)

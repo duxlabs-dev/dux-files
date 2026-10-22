@@ -106,6 +106,13 @@ ShellRoot {
         view.reset();
         check("resetting drops zoom, angle and pan", [view.zoom, view.angle, view.panX, view.panY], [1, 0, 0, 0]);
 
+        view.present({
+            "path": "/nonexistent/scan.pdf",
+            "name": "scan.pdf",
+            "mime": "application/pdf"
+        });
+        check("a pdf opens the page view", [view.open, view.kind, view.pageView !== null], [true, "pdf", true]);
+
         view.dismiss();
         check("dismissing closes it and forgets the entry", [view.open, view.entry], [false, null]);
 

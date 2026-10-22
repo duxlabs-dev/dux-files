@@ -22,6 +22,7 @@ FocusScope {
     readonly property bool turned: PreviewView.normalizeAngle(angle) % 180 !== 0
     readonly property real devicePixelRatio: Window.window?.devicePixelRatio ?? Screen.devicePixelRatio
     readonly property int rasterBucket: Math.min(4, Math.max(1, Math.ceil(zoom)))
+    readonly property alias pageView: pages.item
 
     signal closed
 
@@ -219,7 +220,12 @@ FocusScope {
 
                 anchors.fill: parent
                 active: overlay.kind === "pdf"
-                sourceComponent: pageView
+                source: active ? "PreviewPdf.qml" : ""
+                onLoaded: {
+                    item.source = FilePaths.toFileUrl(overlay.path);
+                    item.zoom = Qt.binding(() => overlay.zoom);
+                    item.angle = Qt.binding(() => overlay.angle);
+                }
             }
 
             MouseArea {
@@ -261,8 +267,8 @@ FocusScope {
             StyledText {
                 anchors.centerIn: parent
                 width: parent.width - Theme.spacingXL * 2
-                visible: overlay.kind === "image" && picture.status === Image.Error
-                text: I18n.tr("This image could not be opened", "large preview placeholder")
+                visible: (overlay.kind === "image" && picture.status === Image.Error) || (overlay.kind === "pdf" && pages.status === Loader.Error)
+                text: I18n.tr("This file could not be opened", "large preview placeholder")
                 color: Theme.surfaceVariantText
                 font.pixelSize: Theme.fontSizeMedium
                 horizontalAlignment: Text.AlignHCenter
@@ -323,16 +329,6 @@ FocusScope {
             sequences: ["Escape"]
             enabled: overlay.open
             onActivated: overlay.dismiss()
-        }
-    }
-
-    Component {
-        id: pageView
-
-        PreviewPdf {
-            source: FilePaths.toFileUrl(overlay.path)
-            zoom: overlay.zoom
-            angle: overlay.angle
         }
     }
 }
