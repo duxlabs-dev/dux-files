@@ -1,17 +1,22 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtTest
 import Quickshell
 import qs.Common
 import qs.Services
 import qs.Modules
 import qs.DCommon.Common as DC
+import qs.DCommon.FileBrowser
 
 ShellRoot {
     id: fixture
 
     readonly property var log: Log.scoped("fixture")
     property int failures: 0
+    property var view: null
+    property bool ready: false
+    property bool pdfChecked: false
 
     function check(label, actual, expected) {
         const ok = JSON.stringify(actual) === JSON.stringify(expected);
@@ -51,7 +56,9 @@ ShellRoot {
         DC.Paths.backend = Paths;
 
         const view = overlayComponent.createObject(host);
+        fixture.view = view;
         check("the overlay starts closed", view.open, false);
+        check("pdf availability is unknown before opening a pdf", [PdfService.available, PdfService.unavailable], [false, false]);
 
         view.present({
             "path": "/nonexistent/photo.png",
@@ -97,27 +104,79 @@ ShellRoot {
         view.reset();
         check("resetting drops zoom, angle and pan", [view.zoom, view.angle, view.panX, view.panY], [1, 0, 0, 0]);
 
-        view.present({
-            "path": "/nonexistent/scan.pdf",
-            "name": "scan.pdf",
-            "mime": "application/pdf"
-        });
-        check("a pdf opens it", [view.open, view.kind], [true, "pdf"]);
+        fixture.ready = true;
+    }
 
-        // QtQuick.Pdf ships with the runtime or it does not, so the module that
-        // provides it is optional: without it the overlay stays open on the
-        // placeholder instead of taking the window down.
-        if (view.pageView !== null) {
-            view.pageView.zoom = 2;
-            check("the pdf view keeps its zoom", view.pageView.zoom, 2);
-        } else {
-            check("a pdf without the module still opens", view.open, true);
+    function findItem(item, predicate) {
+        for (const child of item.children ?? []) {
+            if (predicate(child))
+                return child;
+            const match = findItem(child, predicate);
+            if (match)
+                return match;
+        }
+        return null;
+    }
+
+    TestCase {
+        name: "PdfPreview"
+        when: fixture.ready
+
+        function test_optional_pdf() {
+            const view = fixture.view;
+            view.present({
+                "path": FilePaths.fromUrl(Qt.resolvedUrl("preview.pdf")),
+                "name": "preview.pdf",
+                "mime": "application/pdf"
+            });
+            compare(view.open, true);
+            compare(view.kind, "pdf");
+
+            if (PdfService.available) {
+                verify(view.pageView !== null);
+                tryCompare(view.pageView, "ready", true);
+                compare(view.errorMessage, "");
+                view.zoom = 2;
+                compare(view.pageView.zoom, 2);
+                view.angle = 90;
+                compare(view.pageView.angle, 90);
+
+                view.present({
+                    "path": FilePaths.fromUrl(Qt.resolvedUrl("missing.pdf")),
+                    "name": "missing.pdf",
+                    "mime": "application/pdf"
+                });
+                tryCompare(view.pageView, "failed", true);
+                compare(view.errorMessage, "This file could not be opened");
+            } else {
+                compare(PdfService.unavailable, true);
+                compare(view.pageView, null);
+                compare(view.errorMessage, "PDF preview is not available. Install Qt PDF support to view this file.");
+            }
+
+            const label = fixture.findItem(view, item => item.text === view.errorMessage);
+            verify(label !== null);
+            compare(label.visible, true);
+            view.dismiss();
+            compare(view.open, false);
+            compare(view.entry, null);
+            compare(view.errorMessage, "");
+            view.present({"path": FilePaths.fromUrl(Qt.resolvedUrl("preview.png")), "name": "preview.png", "mime": "image/png"});
+            compare(view.kind, "image");
+            compare(view.open, true);
+            compare(view.pageView, null);
+            const image = fixture.findItem(view, item => item.source !== undefined && item.paintedWidth !== undefined);
+            verify(image !== null);
+            tryCompare(image, "status", Image.Ready);
+            compare(view.errorMessage, "");
+            fixture.pdfChecked = true;
         }
 
-        view.dismiss();
-        check("dismissing closes it and forgets the entry", [view.open, view.entry], [false, null]);
-
-        view.destroy();
-        finish();
+        function cleanupTestCase() {
+            if (!fixture.pdfChecked)
+                fixture.failures++;
+            fixture.view.destroy();
+            fixture.finish();
+        }
     }
 }

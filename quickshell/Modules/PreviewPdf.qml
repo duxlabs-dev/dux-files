@@ -12,6 +12,8 @@ Item {
     property real fitScale: 1
 
     readonly property int status: document.status
+    readonly property bool ready: document.status === PdfDocument.Ready
+    readonly property bool failed: document.status === PdfDocument.Error
 
     function applyView() {
         if (document.status !== PdfDocument.Ready || width < 2 || height < 2)

@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import qs.Common
+import qs.Services
 import qs.DCommon.Widgets
 import qs.DCommon.FileBrowser
 import "../Common/PreviewView.js" as PreviewView
@@ -23,6 +24,13 @@ FocusScope {
     readonly property real devicePixelRatio: Window.window?.devicePixelRatio ?? Screen.devicePixelRatio
     readonly property int rasterBucket: Math.min(4, Math.max(1, Math.ceil(zoom)))
     readonly property alias pageView: pages.item
+    readonly property string errorMessage: {
+        if (kind === "pdf" && PdfService.unavailable)
+            return I18n.tr("PDF preview is not available. Install Qt PDF support to view this file.", "large preview warning when the optional Qt PDF module is missing");
+        if ((kind === "image" && picture.status === Image.Error) || (kind === "pdf" && (pages.status === Loader.Error || pageView?.failed)))
+            return I18n.tr("This file could not be opened", "large preview placeholder");
+        return "";
+    }
 
     signal closed
 
@@ -44,6 +52,8 @@ FocusScope {
         entry = target;
         reset();
         open = true;
+        if (kind === "pdf")
+            PdfService.ensureProbed();
         forceActiveFocus();
     }
 
@@ -219,10 +229,10 @@ FocusScope {
                 id: pages
 
                 anchors.fill: parent
-                active: overlay.kind === "pdf"
+                active: overlay.kind === "pdf" && PdfService.available
                 source: active ? "PreviewPdf.qml" : ""
                 onLoaded: {
-                    item.source = FilePaths.toFileUrl(overlay.path);
+                    item.source = Qt.binding(() => FilePaths.toFileUrl(overlay.path));
                     item.zoom = Qt.binding(() => overlay.zoom);
                     item.angle = Qt.binding(() => overlay.angle);
                 }
@@ -267,8 +277,8 @@ FocusScope {
             StyledText {
                 anchors.centerIn: parent
                 width: parent.width - Theme.spacingXL * 2
-                visible: (overlay.kind === "image" && picture.status === Image.Error) || (overlay.kind === "pdf" && pages.status === Loader.Error)
-                text: I18n.tr("This file could not be opened", "large preview placeholder")
+                visible: overlay.errorMessage !== ""
+                text: overlay.errorMessage
                 color: Theme.surfaceVariantText
                 font.pixelSize: Theme.fontSizeMedium
                 horizontalAlignment: Text.AlignHCenter
@@ -279,6 +289,7 @@ FocusScope {
         RowLayout {
             id: controls
 
+            enabled: overlay.kind !== "pdf" || overlay.pageView?.ready === true
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottomMargin: Theme.spacingM

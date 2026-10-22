@@ -83,6 +83,9 @@ def scratch_root(root, fixture):
             continue
         (harness / entry.name).symlink_to(entry)
     shutil.copy(fixture, harness / "shell.qml")
+    if fixture.stem == "preview":
+        for name in ("preview.pdf", "preview.png"):
+            shutil.copy(tests_dir / "qml" / name, harness / name)
     return harness
 
 
