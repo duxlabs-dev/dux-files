@@ -194,5 +194,13 @@ DFlickable {
             onConnectRequested: sidebar.connectRequested()
             onDropRequested: (path, drop) => sidebar.dropRequested(path, drop)
         }
+
+        GamesSection {
+            width: sections.width
+            currentPath: sidebar.currentPath
+            onNavigateRequested: path => sidebar.navigateRequested(path)
+            onTabRequested: path => sidebar.tabRequested(path)
+            onDropRequested: (path, drop) => sidebar.dropRequested(path, drop)
+        }
     }
 }
