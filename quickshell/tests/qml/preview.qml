@@ -45,15 +45,6 @@ ShellRoot {
         }
     }
 
-    Component {
-        id: pdfComponent
-
-        PreviewPdf {
-            width: host.width
-            height: host.height
-        }
-    }
-
     Component.onCompleted: {
         DC.Style.theme = Theme;
         DC.I18n.backend = I18n;
@@ -111,16 +102,20 @@ ShellRoot {
             "name": "scan.pdf",
             "mime": "application/pdf"
         });
-        check("a pdf opens the page view", [view.open, view.kind, view.pageView !== null], [true, "pdf", true]);
+        check("a pdf opens it", [view.open, view.kind], [true, "pdf"]);
+
+        // QtQuick.Pdf ships with the runtime or it does not, so the module that
+        // provides it is optional: without it the overlay stays open on the
+        // placeholder instead of taking the window down.
+        if (view.pageView !== null) {
+            view.pageView.zoom = 2;
+            check("the pdf view keeps its zoom", view.pageView.zoom, 2);
+        } else {
+            check("a pdf without the module still opens", view.open, true);
+        }
 
         view.dismiss();
         check("dismissing closes it and forgets the entry", [view.open, view.entry], [false, null]);
-
-        const pdf = pdfComponent.createObject(fixture);
-        check("the pdf page view builds", pdf !== null, true);
-        pdf.zoom = 2;
-        check("the pdf view keeps its zoom", pdf.zoom, 2);
-        pdf.destroy();
 
         view.destroy();
         finish();
