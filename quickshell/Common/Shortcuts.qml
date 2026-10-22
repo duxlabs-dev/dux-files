@@ -324,6 +324,13 @@ Singleton {
             "label": I18n.tr("Preview", "view menu entry and shortcut showing or hiding the preview drawer")
         },
         {
+            "id": "previewExpand",
+            "keys": ["F4"],
+            "group": "view",
+            "scope": "window",
+            "label": I18n.tr("Open the preview in a large view", "keyboard shortcut opening the preview overlay")
+        },
+        {
             "id": "previewStep",
             "keys": ["Shift+Space", "Ctrl+Shift+Space"],
             "group": "view",

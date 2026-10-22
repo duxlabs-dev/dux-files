@@ -17,6 +17,7 @@ Item {
     property bool compact: false
     property string viewMode: "list"
     property bool previewOpen: false
+    property bool previewExpandable: false
     property string sortKey: "name"
     property bool sortDescending: false
     property bool trashActive: false
@@ -47,6 +48,7 @@ Item {
         }
     ]
     readonly property string previewLabel: I18n.tr("Preview", "view menu entry and shortcut showing or hiding the preview drawer")
+    readonly property string previewExpandLabel: I18n.tr("Open the preview in a large view", "keyboard shortcut opening the preview overlay")
     readonly property string useForAllLabel: I18n.tr("Use these settings for all folders", "view menu entry making this folder's sort and view the defaults")
     readonly property string resetFolderLabel: I18n.tr("Reset this folder", "view menu entry dropping this folder's own sort and view")
     readonly property var currentViewMode: viewModes.find(mode => mode.value === viewMode) ?? viewModes[0]
@@ -149,6 +151,7 @@ Item {
     signal bookmarkToggled
     signal viewModeSelected(string mode)
     signal previewToggled
+    signal previewExpandRequested
     signal sortKeySelected(string key)
     signal sortDirectionToggled
     signal useForAllFoldersRequested
@@ -287,6 +290,15 @@ Item {
 
         FlatButton {
             anchors.verticalCenter: parent.verticalCenter
+            visible: !topbar.compact && topbar.previewExpandable
+            iconName: "open_in_full"
+            backgroundColor: Theme.chipSurface
+            tooltipText: topbar.previewExpandLabel
+            onClicked: topbar.previewExpandRequested()
+        }
+
+        FlatButton {
+            anchors.verticalCenter: parent.verticalCenter
             visible: !topbar.compact
             iconName: "splitscreen_vertical_add"
             iconColor: topbar.splitView ? Theme.onPrimary : Theme.surfaceText
@@ -379,6 +391,13 @@ Item {
                 iconName: "view_sidebar"
                 checked: topbar.previewOpen
                 onClicked: menu.pick(() => topbar.previewToggled())
+            }
+
+            FileMenuItem {
+                visible: menu.viewRows && topbar.previewExpandable
+                text: topbar.previewExpandLabel
+                iconName: "open_in_full"
+                onClicked: menu.pick(() => topbar.previewExpandRequested())
             }
 
             FileMenuItem {

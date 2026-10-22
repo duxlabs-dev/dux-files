@@ -241,6 +241,9 @@ QtObject {
         case "togglePreview":
             togglePreview();
             return;
+        case "previewExpand":
+            mainWindow.preview.present(mainWindow.previewTarget);
+            return;
         case "zoomIn":
             activePane.body.zoomBy(1);
             return;

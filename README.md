@@ -94,6 +94,9 @@ Picked up from `PATH` when the daemon starts:
 
 Images in png, jpeg, gif, bmp, tiff and webp are decoded in-process. Anything else uses the freedesktop thumbnailers installed on the system, so packages that ship one (glycin, gsf, evince, totem) just work. `dfiles ipc system.capabilities` shows what was found.
 
+PDF previews use the optional `QtQuick.Pdf` QML module (`qt6-webengine` on Arch Linux).
+Without it, the preview shows an installation hint; image previews and the rest of the file manager still work.
+
 ## Usage
 
 ```bash

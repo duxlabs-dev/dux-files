@@ -36,10 +36,10 @@ jobs:
       - name: Install test dependencies
         run: |
           pacman-key --init
-          pacman -Syu --noconfirm --needed git make nodejs python quickshell qt6-declarative
+          pacman -Syu --noconfirm --needed git make nodejs python quickshell qt6-declarative qt6-webengine
 
       - name: Record runtime versions
-        run: pacman -Q quickshell qt6-declarative nodejs
+        run: pacman -Q quickshell qt6-declarative qt6-webengine nodejs
 
       - name: Checkout
         uses: actions/checkout@v6
