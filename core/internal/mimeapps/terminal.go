@@ -10,12 +10,13 @@ import (
 type terminalSpec struct {
 	command string
 	exec    []string
+	openIn  func(dir string) []string
 }
 
 var knownTerminals = []terminalSpec{
 	{command: "ptyxis", exec: []string{"--"}},
 	{command: "kgx", exec: []string{"--"}},
-	{command: "ghostty", exec: []string{"-e"}},
+	{command: "ghostty", exec: []string{"-e"}, openIn: ghosttyOpenIn},
 	{command: "kitty", exec: nil},
 	{command: "foot", exec: nil},
 	{command: "alacritty", exec: []string{"-e"}},
@@ -53,6 +54,10 @@ func lookupTerminal(command string) (terminalSpec, bool) {
 	if _, err := exec.LookPath(command); err != nil {
 		return terminalSpec{}, false
 	}
+	return specFor(command), true
+}
+
+func specFor(command string) terminalSpec {
 	base := command
 	if cut := strings.LastIndexByte(base, '/'); cut >= 0 {
 		base = base[cut+1:]
@@ -60,10 +65,22 @@ func lookupTerminal(command string) (terminalSpec, bool) {
 	for _, spec := range knownTerminals {
 		if spec.command == base {
 			spec.command = command
-			return spec, true
+			return spec
 		}
 	}
-	return terminalSpec{command: command, exec: []string{"-e"}}, true
+	return terminalSpec{command: command, exec: []string{"-e"}}
+}
+
+// Without args ghostty starts in $HOME, and a forced single instance drops the args it is handed.
+func ghosttyOpenIn(dir string) []string {
+	return []string{"--gtk-single-instance=false", "--working-directory=" + dir}
+}
+
+func (s terminalSpec) argv(dir string) []string {
+	if s.openIn == nil {
+		return []string{s.command}
+	}
+	return append([]string{s.command}, s.openIn(dir)...)
 }
 
 func Terminals() []string {

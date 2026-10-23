@@ -71,14 +71,14 @@ func (s *Service) OpenTerminal(dir, preferred string) error {
 		if term == "" {
 			return fail(files.CodeSandboxed, "set a terminal in settings: the sandbox cannot see the host's")
 		}
-		return hostSpawn([]string{term}, dir)
+		return hostSpawn(specFor(term).argv(dir), dir)
 	}
 
 	term, err := s.terminal(preferred)
 	if err != nil {
 		return fail(files.CodeNotSupported, "%s", err)
 	}
-	return spawn([]string{term.command}, dir, "", false)
+	return spawn(term.argv(dir), dir, "", false)
 }
 
 func singularExec(tokens []string) bool {
