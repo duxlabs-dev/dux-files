@@ -35,7 +35,7 @@ template for translators). Run it after adding or changing strings.
 This repo has its own POEditor project, separate from Dux Shell:
 
 ```sh
-export DFILES_POEDITOR_API_TOKEN=...   # POEditor account API token
+export POEDITOR_API_TOKEN=...          # POEditor account API token, shared across Dux projects
 export DFILES_POEDITOR_PROJECT_ID=...  # this project's numeric id
 ```
 
@@ -47,9 +47,8 @@ make i18n-sync    # upload en.json terms, download translations, stage changes
 make i18n-check   # fail if local i18n is out of sync (for CI / pre-commit)
 ```
 
-The language list lives in `scripts/i18nsync.py` (`LANGUAGES`) and is empty
-until a locale has translations. Add `"<poeditor-code>": "<locale>.json"`
-entries as they come online.
+The language list lives in `scripts/i18nsync.py` (`LANGUAGES`). Add
+`"<poeditor-code>": "<locale>.json"` entries as locales come online.
 
 ## Translated exports
 

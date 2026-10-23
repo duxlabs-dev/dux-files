@@ -1,0 +1,1793 @@
+{
+  "%1 already exist in this folder. Do you want to overwrite them?": {
+    "%1 already exist in this folder. Do you want to overwrite them?": "%1 已存在于该文件夹中。要覆盖它们吗？"
+  },
+  "%1 already exists in this folder.": {
+    "%1 already exists in this folder.": "%1 已存在于该文件夹中。"
+  },
+  "%1 bookmarks imported": {
+    "%1 bookmarks imported": "已导入 %1 个书签"
+  },
+  "%1 can be run as a program. Open it in an editor instead to read it first.": {
+    "%1 can be run as a program. Open it in an editor instead to read it first.": "%1 可以作为程序运行。建议先用编辑器打开阅读。"
+  },
+  "%1 folders could not be read": {
+    "%1 folders could not be read": "%1 个文件夹无法读取"
+  },
+  "%1 h %2 min left": {
+    "%1 h %2 min left": "剩余 %1 小时 %2 分"
+  },
+  "%1 has not been marked as trusted. Running it allows it to start any program.": {
+    "%1 has not been marked as trusted. Running it allows it to start any program.": "%1 尚未标记为受信任。运行它可能会启动任意程序。"
+  },
+  "%1 hidden": {
+    "%1 hidden": "已隐藏 %1 项"
+  },
+  "%1 holds it; Files takes over when it quits.": {
+    "%1 holds it; Files takes over when it quits.": "%1 正在占用；它退出后由“文件”接管。"
+  },
+  "%1 is encrypted. Enter its passphrase to unlock it.": {
+    "%1 is encrypted. Enter its passphrase to unlock it.": "%1 已加密。请输入口令解锁。"
+  },
+  "%1 is password protected.": {
+    "%1 is password protected.": "%1 受密码保护。"
+  },
+  "%1 items copied": {
+    "%1 items copied": "已复制 %1 项"
+  },
+  "%1 items cut": {
+    "%1 items cut": "已剪切 %1 项"
+  },
+  "%1 levels deep": {
+    "%1 levels deep": "深入 %1 层"
+  },
+  "%1 matching “%2”": {
+    "%1 matching “%2”": "%1 项匹配“%2”"
+  },
+  "%1 min left": {
+    "%1 min left": "剩余 %1 分钟"
+  },
+  "%1 px": {
+    "%1 px": "%1 像素"
+  },
+  "%1 s left": {
+    "%1 s left": "剩余 %1 秒"
+  },
+  "%1 used · %2 free · %3 total": {
+    "%1 used · %2 free · %3 total": "已用 %1 · 可用 %2 · 共 %3"
+  },
+  "%1 will be deleted permanently. This cannot be undone.": {
+    "%1 will be deleted permanently. This cannot be undone.": "%1 将被永久删除，且无法撤销。"
+  },
+  "%1 will be moved to the trash.": {
+    "%1 will be moved to the trash.": "%1 将被移到回收站。"
+  },
+  "%1 · %2": {
+    "%1 · %2": "%1 · %2"
+  },
+  "%1 …": {
+    "%1 …": "%1 …"
+  },
+  "%1, %2 matches": {
+    "%1, %2 matches": "%1，%2 个匹配"
+  },
+  "%1/s": {
+    "%1/s": "%1/秒"
+  },
+  "1 MB to 100 MB": {
+    "1 MB to 100 MB": "1 MB 到 100 MB"
+  },
+  "1 item copied": {
+    "1 item copied": "已复制 1 项"
+  },
+  "1 item cut": {
+    "1 item cut": "已剪切 1 项"
+  },
+  "50 is the Material default.": {
+    "50 is the Material default.": "50 是 Material 的默认值。"
+  },
+  "? or F1 in the main window.": {
+    "? or F1 in the main window.": "在主窗口中按 ? 或 F1。"
+  },
+  "API": {
+    "API": "API"
+  },
+  "About": {
+    "About": "关于"
+  },
+  "Accessed": {
+    "Accessed": "访问时间"
+  },
+  "Add or remove one item": {
+    "Add or remove one item": "添加或移除一项"
+  },
+  "Add or remove the item under the cursor": {
+    "Add or remove the item under the cursor": "添加或移除光标下的项"
+  },
+  "Add to bookmarks": {
+    "Add to bookmarks": "添加到书签"
+  },
+  "Address": {
+    "Address": "地址"
+  },
+  "Administrator access is not available": {
+    "Administrator access is not available": "无法获取管理员权限"
+  },
+  "Administrator access is not available because pkexec is not installed": {
+    "Administrator access is not available because pkexec is not installed": "未安装 pkexec，无法获取管理员权限"
+  },
+  "Administrator access is not available because the polkit policy is not installed": {
+    "Administrator access is not available because the polkit policy is not installed": "未安装 polkit 策略，无法获取管理员权限"
+  },
+  "Administrator access is not available inside the sandbox": {
+    "Administrator access is not available inside the sandbox": "沙箱内无法获取管理员权限"
+  },
+  "Already here": {
+    "Already here": "已存在"
+  },
+  "Always": {
+    "Always": "总是"
+  },
+  "Always use the dark theme.": {
+    "Always use the dark theme.": "始终使用深色主题。"
+  },
+  "Always use the light theme.": {
+    "Always use the light theme.": "始终使用浅色主题。"
+  },
+  "Always use this application": {
+    "Always use this application": "始终使用此应用"
+  },
+  "Amber": {
+    "Amber": "琥珀色"
+  },
+  "Another file manager holds it.": {
+    "Another file manager holds it.": "另一个文件管理器正在占用。"
+  },
+  "Any size": {
+    "Any size": "任意大小"
+  },
+  "Any time": {
+    "Any time": "任意时间"
+  },
+  "Appearance": {
+    "Appearance": "外观"
+  },
+  "Apply": {
+    "Apply": "应用"
+  },
+  "Apply to everything inside": {
+    "Apply to everything inside": "应用到内部所有内容"
+  },
+  "Archive": {
+    "Archive": "归档"
+  },
+  "Archive created": {
+    "Archive created": "归档已创建"
+  },
+  "Archives": {
+    "Archives": "归档"
+  },
+  "Ask": {
+    "Ask": "询问"
+  },
+  "Ask every time": {
+    "Ask every time": "每次询问"
+  },
+  "Audio": {
+    "Audio": "音频"
+  },
+  "Auto": {
+    "Auto": "自动"
+  },
+  "Automatic": {
+    "Automatic": "自动"
+  },
+  "Automatic uses $TERMINAL.": {
+    "Automatic uses $TERMINAL.": "自动模式使用 $TERMINAL。"
+  },
+  "Available": {
+    "Available": "可用"
+  },
+  "Back": {
+    "Back": "后退"
+  },
+  "Back to the files": {
+    "Back to the files": "返回文件"
+  },
+  "Backend": {
+    "Backend": "后端"
+  },
+  "Backend: not reachable, no activation file": {
+    "Backend: not reachable, no activation file": "后端：无法连接，没有激活文件"
+  },
+  "Backend: served by this instance": {
+    "Backend: served by this instance": "后端：由此实例提供服务"
+  },
+  "Backend: started on demand through %1": {
+    "Backend: started on demand through %1": "后端：通过 %1 按需启动"
+  },
+  "Balanced": {
+    "Balanced": "平衡"
+  },
+  "Behaviour": {
+    "Behaviour": "行为"
+  },
+  "Being added": {
+    "Being added": "正在添加"
+  },
+  "Blue": {
+    "Blue": "蓝色"
+  },
+  "Bookmark this folder": {
+    "Bookmark this folder": "将此文件夹加入书签"
+  },
+  "Cancel": {
+    "Cancel": "取消"
+  },
+  "Cancelled": {
+    "Cancelled": "已取消"
+  },
+  "Capabilities": {
+    "Capabilities": "功能"
+  },
+  "Changing owner": {
+    "Changing owner": "正在更改所有者"
+  },
+  "Changing permissions": {
+    "Changing permissions": "正在更改权限"
+  },
+  "Choose a JSON color theme file.": {
+    "Choose a JSON color theme file.": "选择一个 JSON 颜色主题文件。"
+  },
+  "Clear Recent": {
+    "Clear Recent": "清除最近记录"
+  },
+  "Clear the clipboard": {
+    "Clear the clipboard": "清空剪贴板"
+  },
+  "Clear the recent files list?": {
+    "Clear the recent files list?": "清除最近文件列表？"
+  },
+  "Clear the selection": {
+    "Clear the selection": "取消选择"
+  },
+  "Close": {
+    "Close": "关闭"
+  },
+  "Close behavior": {
+    "Close behavior": "关闭行为"
+  },
+  "Close other tabs": {
+    "Close other tabs": "关闭其他标签页"
+  },
+  "Close tab": {
+    "Close tab": "关闭标签页"
+  },
+  "Close tabs to the right": {
+    "Close tabs to the right": "关闭右侧标签页"
+  },
+  "Collapse": {
+    "Collapse": ""
+  },
+  "Color source": {
+    "Color source": "颜色来源"
+  },
+  "Column view": {
+    "Column view": "分栏视图"
+  },
+  "Compress": {
+    "Compress": "压缩"
+  },
+  "Compressing": {
+    "Compressing": "正在压缩"
+  },
+  "Compress…": {
+    "Compress…": "压缩…"
+  },
+  "Confirm": {
+    "Confirm": "确认"
+  },
+  "Confirm before moving to the trash": {
+    "Confirm before moving to the trash": "移到回收站前确认"
+  },
+  "Connect": {
+    "Connect": "连接"
+  },
+  "Connect anonymously": {
+    "Connect anonymously": "匿名连接"
+  },
+  "Connect to Server": {
+    "Connect to Server": "连接到服务器"
+  },
+  "Connect to Server…": {
+    "Connect to Server…": "连接到服务器…"
+  },
+  "Connected": {
+    "Connected": "已连接"
+  },
+  "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": {
+    "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": "已连接，但共享没有本地文件夹。gvfs FUSE 服务可能未运行。"
+  },
+  "Contents": {
+    "Contents": "内容"
+  },
+  "Copied": {
+    "Copied": "已复制"
+  },
+  "Copy": {
+    "Copy": "复制"
+  },
+  "Copy location path": {
+    "Copy location path": "复制位置路径"
+  },
+  "Copy name": {
+    "Copy name": "复制名称"
+  },
+  "Copy to": {
+    "Copy to": "复制到"
+  },
+  "Copy to…": {
+    "Copy to…": "复制到…"
+  },
+  "Copying": {
+    "Copying": "正在复制"
+  },
+  "Coral": {
+    "Coral": "珊瑚色"
+  },
+  "Could not read that file, expected a JSON color theme.": {
+    "Could not read that file, expected a JSON color theme.": "无法读取该文件，应为 JSON 颜色主题。"
+  },
+  "Count items in folders": {
+    "Count items in folders": "统计文件夹中的项目数"
+  },
+  "Create": {
+    "Create": "创建"
+  },
+  "Created": {
+    "Created": "创建时间"
+  },
+  "Creating": {
+    "Creating": "正在创建"
+  },
+  "Ctrl copies, Alt asks.": {
+    "Ctrl copies, Alt asks.": "Ctrl 复制，Alt 询问。"
+  },
+  "Ctrl+H toggles per window.": {
+    "Ctrl+H toggles per window.": "Ctrl+H 按窗口切换。"
+  },
+  "Ctrl+Wheel resizes per window.": {
+    "Ctrl+Wheel resizes per window.": "Ctrl+滚轮按窗口调整大小。"
+  },
+  "Custom": {
+    "Custom": "自定义"
+  },
+  "Cut": {
+    "Cut": "剪切"
+  },
+  "Cyan": {
+    "Cyan": "青色"
+  },
+  "Dark": {
+    "Dark": "深色"
+  },
+  "Decrease": {
+    "Decrease": "减少"
+  },
+  "Default": {
+    "Default": ""
+  },
+  "Default applications": {
+    "Default applications": "默认应用"
+  },
+  "Default icon size": {
+    "Default icon size": "默认图标大小"
+  },
+  "Default view": {
+    "Default view": "默认视图"
+  },
+  "Delete": {
+    "Delete": "删除"
+  },
+  "Delete permanently": {
+    "Delete permanently": "永久删除"
+  },
+  "Delete permanently?": {
+    "Delete permanently?": "永久删除？"
+  },
+  "Deleting": {
+    "Deleting": "正在删除"
+  },
+  "Details": {
+    "Details": "详细信息"
+  },
+  "Devices": {
+    "Devices": "设备"
+  },
+  "Disconnect": {
+    "Disconnect": "断开连接"
+  },
+  "Display family": {
+    "Display family": ""
+  },
+  "Do this for the rest": {
+    "Do this for the rest": "对其余项执行相同操作"
+  },
+  "Docs": {
+    "Docs": "文档"
+  },
+  "Documents": {
+    "Documents": "文档"
+  },
+  "Domain": {
+    "Domain": "域"
+  },
+  "Double click": {
+    "Double click": "双击"
+  },
+  "Downloads each file.": {
+    "Downloads each file.": "逐个下载每个文件。"
+  },
+  "Drag and drop": {
+    "Drag and drop": "拖放"
+  },
+  "Drives and mounting": {
+    "Drives and mounting": "驱动器与挂载"
+  },
+  "Drives are unavailable because the sandbox cannot reach udisks2": {
+    "Drives are unavailable because the sandbox cannot reach udisks2": "沙箱无法访问 udisks2，驱动器不可用"
+  },
+  "Drives are unavailable because udisks2 is not running": {
+    "Drives are unavailable because udisks2 is not running": "udisks2 未运行，驱动器不可用"
+  },
+  "Dropping without a modifier": {
+    "Dropping without a modifier": "无修饰键拖放"
+  },
+  "Duplicate": {
+    "Duplicate": "创建副本"
+  },
+  "Duplicate tab": {
+    "Duplicate tab": "复制标签页"
+  },
+  "Duplicated": {
+    "Duplicated": "已创建副本"
+  },
+  "Duplicating": {
+    "Duplicating": "正在创建副本"
+  },
+  "Duration": {
+    "Duration": "持续时间"
+  },
+  "Dux Shell not detected, using %1.": {
+    "Dux Shell not detected, using %1.": ""
+  },
+  "Dux Shell not detected, using the %1 preset.": {
+    "Dux Shell not detected, using the %1 preset.": "未检测到 Dux Shell，使用 %1 预设。"
+  },
+  "Each launcher's own configuration folder.": {
+    "Each launcher's own configuration folder.": ""
+  },
+  "Eject": {
+    "Eject": "弹出"
+  },
+  "Empty Trash": {
+    "Empty Trash": "清空回收站"
+  },
+  "Empty file": {
+    "Empty file": "空文件"
+  },
+  "Empty the trash?": {
+    "Empty the trash?": "清空回收站？"
+  },
+  "Emptying the trash": {
+    "Emptying the trash": "正在清空回收站"
+  },
+  "Enter filename...": {
+    "Enter filename...": "输入文件名..."
+  },
+  "Estimating…": {
+    "Estimating…": "正在估算…"
+  },
+  "Every folder goes back to the default sort and view.": {
+    "Every folder goes back to the default sort and view.": "所有文件夹都将恢复默认排序和视图。"
+  },
+  "Everyone": {
+    "Everyone": "其他用户"
+  },
+  "Everywhere": {
+    "Everywhere": "所有位置"
+  },
+  "Execute": {
+    "Execute": "执行"
+  },
+  "Expand": {
+    "Expand": ""
+  },
+  "Extract archives on open": {
+    "Extract archives on open": "打开时解压归档"
+  },
+  "Extract here": {
+    "Extract here": "解压到此处"
+  },
+  "Extract to": {
+    "Extract to": "解压到"
+  },
+  "Extract to…": {
+    "Extract to…": "解压到…"
+  },
+  "Extracted": {
+    "Extracted": "已解压"
+  },
+  "Extracted to %1": {
+    "Extracted to %1": "已解压到 %1"
+  },
+  "Extracting": {
+    "Extracting": "正在解压"
+  },
+  "Family": {
+    "Family": ""
+  },
+  "File operations": {
+    "File operations": "文件操作"
+  },
+  "File system": {
+    "File system": "文件系统"
+  },
+  "Files": {
+    "Files": "文件"
+  },
+  "Files Settings": {
+    "Files Settings": "文件设置"
+  },
+  "Filter": {
+    "Filter": "筛选"
+  },
+  "Finished": {
+    "Finished": "已完成"
+  },
+  "Focus ring": {
+    "Focus ring": "焦点环"
+  },
+  "Focus the sidebar": {
+    "Focus the sidebar": "聚焦侧边栏"
+  },
+  "Folders": {
+    "Folders": "文件夹"
+  },
+  "Folders before files": {
+    "Folders before files": "文件夹优先于文件"
+  },
+  "Folders open in new tabs and files open in their applications.": {
+    "Folders open in new tabs and files open in their applications.": "文件夹将在新标签页中打开，文件将在其应用中打开。"
+  },
+  "Folders open in new tabs, archives are extracted and other files open in their applications.": {
+    "Folders open in new tabs, archives are extracted and other files open in their applications.": "文件夹将在新标签页中打开，归档将被解压，其他文件将在其应用中打开。"
+  },
+  "Folders to skip": {
+    "Folders to skip": "要跳过的文件夹"
+  },
+  "Follow Dux Shell colors, falling back to a preset.": {
+    "Follow Dux Shell colors, falling back to a preset.": "跟随 Dux Shell 颜色，否则回退到预设。"
+  },
+  "Following the system color scheme (currently %1).": {
+    "Following the system color scheme (currently %1).": "跟随系统配色方案（当前为 %1）。"
+  },
+  "Font source": {
+    "Font source": ""
+  },
+  "Forget": {
+    "Forget": "忘记"
+  },
+  "Forget all folder settings": {
+    "Forget all folder settings": "忘记所有文件夹设置"
+  },
+  "Forget all folder settings?": {
+    "Forget all folder settings?": "忘记所有文件夹设置？"
+  },
+  "Forward": {
+    "Forward": "前进"
+  },
+  "From the index": {
+    "From the index": "来自索引"
+  },
+  "Fuzzy": {
+    "Fuzzy": "模糊"
+  },
+  "Games": {
+    "Games": ""
+  },
+  "Games and prefixes Heroic installed.": {
+    "Games and prefixes Heroic installed.": ""
+  },
+  "Games and prefixes Lutris installed.": {
+    "Games and prefixes Lutris installed.": ""
+  },
+  "Games folder": {
+    "Games folder": ""
+  },
+  "Games folders": {
+    "Games folders": ""
+  },
+  "Games in the sidebar": {
+    "Games in the sidebar": ""
+  },
+  "General": {
+    "General": "常规"
+  },
+  "Getting around": {
+    "Getting around": "导航"
+  },
+  "GitHub": {
+    "GitHub": "GitHub"
+  },
+  "Go to that tab": {
+    "Go to that tab": "转到该标签页"
+  },
+  "Go to the home folder": {
+    "Go to the home folder": "转到主文件夹"
+  },
+  "Go to the parent folder": {
+    "Go to the parent folder": "转到上级文件夹"
+  },
+  "Green": {
+    "Green": "绿色"
+  },
+  "Grid icon size": {
+    "Grid icon size": "网格视图图标大小"
+  },
+  "Grid view": {
+    "Grid view": "网格视图"
+  },
+  "Group": {
+    "Group": "所属组"
+  },
+  "Heroic": {
+    "Heroic": ""
+  },
+  "Home": {
+    "Home": "主文件夹"
+  },
+  "Host filesystem": {
+    "Host filesystem": "主机文件系统"
+  },
+  "Image pasted": {
+    "Image pasted": "已粘贴图片"
+  },
+  "Images": {
+    "Images": "图片"
+  },
+  "Import": {
+    "Import": "导入"
+  },
+  "Import your GTK bookmarks?": {
+    "Import your GTK bookmarks?": "导入你的 GTK 书签？"
+  },
+  "Include hidden files": {
+    "Include hidden files": "包含隐藏文件"
+  },
+  "Include ignored": {
+    "Include ignored": "包含已忽略项"
+  },
+  "Increase": {
+    "Increase": "增加"
+  },
+  "Index is still building, results may be incomplete": {
+    "Index is still building, results may be incomplete": "索引仍在建立，结果可能不完整"
+  },
+  "Invert the selection": {
+    "Invert the selection": "反向选择"
+  },
+  "Items in the trash cannot be opened": {
+    "Items in the trash cannot be opened": "回收站中的项目无法打开"
+  },
+  "Jump to a folder you visited": {
+    "Jump to a folder you visited": "跳转到访问过的文件夹"
+  },
+  "Jump to a name or filter the folder with what you type": {
+    "Jump to a name or filter the folder with what you type": "跳转到名称，或按输入内容筛选文件夹"
+  },
+  "Jump to name": {
+    "Jump to name": "跳转到名称"
+  },
+  "Jump to the start, the end or the next screen": {
+    "Jump to the start, the end or the next screen": "跳到开头、结尾或下一屏"
+  },
+  "Keep a list of recent files": {
+    "Keep a list of recent files": "保留最近文件列表"
+  },
+  "Keep both": {
+    "Keep both": "保留两者"
+  },
+  "Keep running": {
+    "Keep running": "保持运行"
+  },
+  "Keyboard": {
+    "Keyboard": "键盘"
+  },
+  "Keyboard shortcuts": {
+    "Keyboard shortcuts": "键盘快捷键"
+  },
+  "Language": {
+    "Language": "语言"
+  },
+  "Larger icons": {
+    "Larger icons": "放大图标"
+  },
+  "Libraries and Proton prefixes.": {
+    "Libraries and Proton prefixes.": ""
+  },
+  "Library · %1": {
+    "Library · %1": ""
+  },
+  "Light": {
+    "Light": "浅色"
+  },
+  "Link": {
+    "Link": "链接"
+  },
+  "Linking": {
+    "Linking": "正在创建链接"
+  },
+  "Links to": {
+    "Links to": "链接目标"
+  },
+  "List icon size": {
+    "List icon size": "列表视图图标大小"
+  },
+  "List view": {
+    "List view": "列表视图"
+  },
+  "Load colors from your own theme file.": {
+    "Load colors from your own theme file.": "从你自己的主题文件加载颜色。"
+  },
+  "Location": {
+    "Location": "位置"
+  },
+  "Lock": {
+    "Lock": "锁定"
+  },
+  "Lutris": {
+    "Lutris": ""
+  },
+  "MIT License": {
+    "MIT License": "MIT 许可证"
+  },
+  "Menu": {
+    "Menu": "菜单"
+  },
+  "Merge": {
+    "Merge": "合并"
+  },
+  "Modified": {
+    "Modified": "修改时间"
+  },
+  "Monochrome": {
+    "Monochrome": "单色"
+  },
+  "Monospace family": {
+    "Monospace family": ""
+  },
+  "More actions": {
+    "More actions": "更多操作"
+  },
+  "Motion": {
+    "Motion": "动效"
+  },
+  "Mount": {
+    "Mount": "挂载"
+  },
+  "Move": {
+    "Move": "移动"
+  },
+  "Move the tab left": {
+    "Move the tab left": "将标签页左移"
+  },
+  "Move the tab right": {
+    "Move the tab right": "将标签页右移"
+  },
+  "Move through the folder": {
+    "Move through the folder": "在文件夹中移动"
+  },
+  "Move through the sidebar": {
+    "Move through the sidebar": "在侧边栏中移动"
+  },
+  "Move to": {
+    "Move to": "移动到"
+  },
+  "Move to Trash": {
+    "Move to Trash": "移到回收站"
+  },
+  "Move to the search filters": {
+    "Move to the search filters": "移到搜索筛选器"
+  },
+  "Move to…": {
+    "Move to…": "移动到…"
+  },
+  "Move, copy across drives": {
+    "Move, copy across drives": "移动，跨驱动器复制"
+  },
+  "Moved": {
+    "Moved": "已移动"
+  },
+  "Moved to trash": {
+    "Moved to trash": "已移到回收站"
+  },
+  "Moving": {
+    "Moving": "正在移动"
+  },
+  "Moving to trash": {
+    "Moving to trash": "正在移到回收站"
+  },
+  "Name": {
+    "Name": "名称"
+  },
+  "Name the host terminal to launch.": {
+    "Name the host terminal to launch.": "指定要启动的主机终端。"
+  },
+  "Names or paths, comma separated. Build and cache folders are skipped anyway.": {
+    "Names or paths, comma separated. Build and cache folders are skipped anyway.": "名称或路径，以逗号分隔。构建和缓存文件夹本来就会跳过。"
+  },
+  "Network": {
+    "Network": "网络"
+  },
+  "Network locations are unavailable because gvfs is not running": {
+    "Network locations are unavailable because gvfs is not running": "gvfs 未运行，网络位置不可用"
+  },
+  "Network locations are unavailable because the sandbox cannot reach gvfs": {
+    "Network locations are unavailable because the sandbox cannot reach gvfs": "沙箱无法访问 gvfs，网络位置不可用"
+  },
+  "Never": {
+    "Never": "从不"
+  },
+  "New document": {
+    "New document": "新建文档"
+  },
+  "New folder": {
+    "New folder": "新建文件夹"
+  },
+  "New folder with selection": {
+    "New folder with selection": "将所选内容放入新文件夹"
+  },
+  "New tab": {
+    "New tab": "新建标签页"
+  },
+  "New window": {
+    "New window": "新建窗口"
+  },
+  "Next tab": {
+    "Next tab": "下一个标签页"
+  },
+  "No limit": {
+    "No limit": "不限制"
+  },
+  "No recent files": {
+    "No recent files": "没有最近文件"
+  },
+  "No results": {
+    "No results": "无结果"
+  },
+  "No session bus.": {
+    "No session bus.": "没有会话总线。"
+  },
+  "No theme file selected": {
+    "No theme file selected": "未选择主题文件"
+  },
+  "Not available": {
+    "Not available": "不可用"
+  },
+  "Not available because the sandbox cannot start programs on the host": {
+    "Not available because the sandbox cannot start programs on the host": "沙箱无法在主机上启动程序，因此不可用"
+  },
+  "Not available inside the sandbox": {
+    "Not available inside the sandbox": "沙箱内不可用"
+  },
+  "Not available without access to the host filesystem": {
+    "Not available without access to the host filesystem": "无法访问主机文件系统，因此不可用"
+  },
+  "Nothing is running": {
+    "Nothing is running": "没有正在运行的任务"
+  },
+  "Octal": {
+    "Octal": "八进制"
+  },
+  "Off": {
+    "Off": "关闭"
+  },
+  "Off leaves decorations to the compositor. Applies to new windows.": {
+    "Off leaves decorations to the compositor. Applies to new windows.": "关闭时将窗口装饰交给合成器。对新窗口生效。"
+  },
+  "Off only mounts.": {
+    "Off only mounts.": "关闭时仅挂载。"
+  },
+  "Offline": {
+    "Offline": "离线"
+  },
+  "Only launchers with an installed game are listed.": {
+    "Only launchers with an installed game are listed.": ""
+  },
+  "Only the window process serves the portal": {
+    "Only the window process serves the portal": "只有窗口进程提供门户服务"
+  },
+  "Open": {
+    "Open": "打开"
+  },
+  "Open %1 items?": {
+    "Open %1 items?": "打开 %1 项？"
+  },
+  "Open and save dialogs": {
+    "Open and save dialogs": "打开和保存对话框"
+  },
+  "Open file": {
+    "Open file": "打开文件"
+  },
+  "Open files": {
+    "Open files": "打开文件"
+  },
+  "Open folders from other apps in a new tab": {
+    "Open folders from other apps in a new tab": "在其他应用中打开文件夹时使用新标签页"
+  },
+  "Open in editor": {
+    "Open in editor": "在编辑器中打开"
+  },
+  "Open in new tab": {
+    "Open in new tab": "在新标签页中打开"
+  },
+  "Open in new window": {
+    "Open in new window": "在新窗口中打开"
+  },
+  "Open in terminal": {
+    "Open in terminal": "在终端中打开"
+  },
+  "Open in the other pane": {
+    "Open in the other pane": "在另一窗格中打开"
+  },
+  "Open items with": {
+    "Open items with": "打开项目的方式"
+  },
+  "Open the bookmark menu": {
+    "Open the bookmark menu": "打开书签菜单"
+  },
+  "Open the containing folder": {
+    "Open the containing folder": "打开所在文件夹"
+  },
+  "Open the context menu": {
+    "Open the context menu": "打开上下文菜单"
+  },
+  "Open the place": {
+    "Open the place": "打开位置"
+  },
+  "Open the preview in a large view": {
+    "Open the preview in a large view": ""
+  },
+  "Open unmounted drives on click": {
+    "Open unmounted drives on click": "单击时打开未挂载的驱动器"
+  },
+  "Open with": {
+    "Open with": "打开方式"
+  },
+  "Orange": {
+    "Orange": "橙色"
+  },
+  "Other applications": {
+    "Other applications": "其他应用"
+  },
+  "Other application…": {
+    "Other application…": "其他应用…"
+  },
+  "Over 100 MB": {
+    "Over 100 MB": "超过 100 MB"
+  },
+  "Owner": {
+    "Owner": "所有者"
+  },
+  "PDF preview is not available. Install Qt PDF support to view this file.": {
+    "PDF preview is not available. Install Qt PDF support to view this file.": ""
+  },
+  "Palette: %1": {
+    "Palette: %1": "调色板：%1"
+  },
+  "Passphrase": {
+    "Passphrase": "口令"
+  },
+  "Password": {
+    "Password": "密码"
+  },
+  "Password required": {
+    "Password required": "需要密码"
+  },
+  "Paste": {
+    "Paste": "粘贴"
+  },
+  "Paste as link": {
+    "Paste as link": "粘贴为链接"
+  },
+  "Paste into folder": {
+    "Paste into folder": "粘贴到文件夹"
+  },
+  "Pasted image": {
+    "Pasted image": "粘贴的图片"
+  },
+  "Pasting image": {
+    "Pasting image": "正在粘贴图片"
+  },
+  "Permissions": {
+    "Permissions": "权限"
+  },
+  "Pink": {
+    "Pink": "粉色"
+  },
+  "Places": {
+    "Places": "位置"
+  },
+  "Playful": {
+    "Playful": "活泼"
+  },
+  "Portal file: %1": {
+    "Portal file: %1": "门户文件：%1"
+  },
+  "Portal file: not installed": {
+    "Portal file: not installed": "门户文件：未安装"
+  },
+  "Preference: %1 is used": {
+    "Preference: %1 is used": "首选项：正在使用 %1"
+  },
+  "Preference: %1 names Dux Files": {
+    "Preference: %1 names Dux Files": "首选项：%1 指向 Dux Files"
+  },
+  "Preference: no file chooser backend configured": {
+    "Preference: no file chooser backend configured": "首选项：未配置文件选择器后端"
+  },
+  "Prefix · %1": {
+    "Prefix · %1": ""
+  },
+  "Prefixes": {
+    "Prefixes": ""
+  },
+  "Preset": {
+    "Preset": "预设"
+  },
+  "Preview": {
+    "Preview": "预览"
+  },
+  "Preview the next or previous selected item": {
+    "Preview the next or previous selected item": "预览下一个或上一个选中项"
+  },
+  "Previous tab": {
+    "Previous tab": "上一个标签页"
+  },
+  "Properties": {
+    "Properties": "属性"
+  },
+  "Protect with a password": {
+    "Protect with a password": "使用密码保护"
+  },
+  "Protocol": {
+    "Protocol": "协议"
+  },
+  "Proton · %1": {
+    "Proton · %1": ""
+  },
+  "Purple": {
+    "Purple": "紫色"
+  },
+  "Quit": {
+    "Quit": "退出"
+  },
+  "Radius strength": {
+    "Radius strength": "圆角强度"
+  },
+  "Read": {
+    "Read": "读取"
+  },
+  "Recent": {
+    "Recent": "最近"
+  },
+  "Recently used": {
+    "Recently used": "最近使用"
+  },
+  "Recommended": {
+    "Recommended": "推荐"
+  },
+  "Red": {
+    "Red": "红色"
+  },
+  "Redo": {
+    "Redo": "重做"
+  },
+  "Redone": {
+    "Redone": "已重做"
+  },
+  "Reduce motion": {
+    "Reduce motion": "减少动效"
+  },
+  "Register as the session file manager": {
+    "Register as the session file manager": "注册为会话文件管理器"
+  },
+  "Relevance": {
+    "Relevance": "相关度"
+  },
+  "Reload": {
+    "Reload": "重新加载"
+  },
+  "Remember password": {
+    "Remember password": "记住密码"
+  },
+  "Remember view and sort per folder": {
+    "Remember view and sort per folder": "按文件夹记住视图和排序"
+  },
+  "Remove bookmark": {
+    "Remove bookmark": "移除书签"
+  },
+  "Remove from Recent": {
+    "Remove from Recent": "从最近记录中移除"
+  },
+  "Remove the bookmark or eject the drive": {
+    "Remove the bookmark or eject the drive": "移除书签或弹出驱动器"
+  },
+  "Rename": {
+    "Rename": "重命名"
+  },
+  "Rename the bookmark": {
+    "Rename the bookmark": "重命名书签"
+  },
+  "Renamed": {
+    "Renamed": "已重命名"
+  },
+  "Renaming": {
+    "Renaming": "正在重命名"
+  },
+  "Reopen the closed tab": {
+    "Reopen the closed tab": "重新打开已关闭的标签页"
+  },
+  "Replace": {
+    "Replace": "替换"
+  },
+  "Reset the view": {
+    "Reset the view": ""
+  },
+  "Reset this folder": {
+    "Reset this folder": "重置此文件夹"
+  },
+  "Resize icons": {
+    "Resize icons": "调整图标大小"
+  },
+  "Resize the preview, or reset its width": {
+    "Resize the preview, or reset its width": "调整预览大小，或重置其宽度"
+  },
+  "Restart": {
+    "Restart": "重启"
+  },
+  "Restart the portal service": {
+    "Restart the portal service": "重启门户服务"
+  },
+  "Restart the portal service?": {
+    "Restart the portal service?": "重启门户服务？"
+  },
+  "Restore": {
+    "Restore": "还原"
+  },
+  "Restored": {
+    "Restored": "已还原"
+  },
+  "Restoring": {
+    "Restoring": "正在还原"
+  },
+  "Results for “%1” in %2": {
+    "Results for “%1” in %2": "“%1”在 %2 中的结果"
+  },
+  "Results in %1": {
+    "Results in %1": "在 %1 中的结果"
+  },
+  "Retry as administrator": {
+    "Retry as administrator": "以管理员身份重试"
+  },
+  "Reverse the sort order": {
+    "Reverse the sort order": "反转排序顺序"
+  },
+  "Ripple effects": {
+    "Ripple effects": "波纹效果"
+  },
+  "Rotate left": {
+    "Rotate left": ""
+  },
+  "Rotate right": {
+    "Rotate right": ""
+  },
+  "Run": {
+    "Run": "运行"
+  },
+  "Run programs": {
+    "Run programs": "运行程序"
+  },
+  "Run this desktop file?": {
+    "Run this desktop file?": "运行此桌面文件？"
+  },
+  "Run this file?": {
+    "Run this file?": "运行此文件？"
+  },
+  "Sandbox": {
+    "Sandbox": "沙箱"
+  },
+  "Save": {
+    "Save": "保存"
+  },
+  "Save file": {
+    "Save file": "保存文件"
+  },
+  "Save files": {
+    "Save files": "保存文件"
+  },
+  "Save here": {
+    "Save here": "保存到此处"
+  },
+  "Saving %1 into the chosen folder": {
+    "Saving %1 into the chosen folder": "正在将 %1 保存到所选文件夹"
+  },
+  "Scale": {
+    "Scale": "缩放"
+  },
+  "Scroll the preview": {
+    "Scroll the preview": "滚动预览"
+  },
+  "Search applications": {
+    "Search applications": "搜索应用"
+  },
+  "Search in Files": {
+    "Search in Files": "在文件中搜索"
+  },
+  "Search results": {
+    "Search results": "搜索结果"
+  },
+  "Search settings": {
+    "Search settings": "搜索设置"
+  },
+  "Search subfolders": {
+    "Search subfolders": "搜索子文件夹"
+  },
+  "Search the disk": {
+    "Search the disk": "搜索磁盘"
+  },
+  "Search with the danksearch index": {
+    "Search with the danksearch index": "使用 danksearch 索引搜索"
+  },
+  "Search your home folder": {
+    "Search your home folder": "搜索主文件夹"
+  },
+  "Searching…": {
+    "Searching…": "正在搜索…"
+  },
+  "Select a range": {
+    "Select a range": "选择范围"
+  },
+  "Select all": {
+    "Select all": "全选"
+  },
+  "Select folder": {
+    "Select folder": "选择文件夹"
+  },
+  "Selection": {
+    "Selection": "选择"
+  },
+  "Settings": {
+    "Settings": "设置"
+  },
+  "Settings folder": {
+    "Settings folder": ""
+  },
+  "Settings folders": {
+    "Settings folders": ""
+  },
+  "Shape": {
+    "Shape": "形状"
+  },
+  "Shared with other apps.": {
+    "Shared with other apps.": "与其他应用共享。"
+  },
+  "Show": {
+    "Show": "显示"
+  },
+  "Show file extensions": {
+    "Show file extensions": ""
+  },
+  "Show games": {
+    "Show games": ""
+  },
+  "Show hidden files": {
+    "Show hidden files": "显示隐藏文件"
+  },
+  "Show system partitions": {
+    "Show system partitions": "显示系统分区"
+  },
+  "Show thumbnails": {
+    "Show thumbnails": "显示缩略图"
+  },
+  "Showing the first %1 results": {
+    "Showing the first %1 results": "仅显示前 %1 个结果"
+  },
+  "Shown in the size column.": {
+    "Shown in the size column.": "显示在大小列中。"
+  },
+  "Sidebar": {
+    "Sidebar": "侧边栏"
+  },
+  "Sign in": {
+    "Sign in": "登录"
+  },
+  "Single click": {
+    "Single click": "单击"
+  },
+  "Size": {
+    "Size": "大小"
+  },
+  "Skip": {
+    "Skip": "跳过"
+  },
+  "Skip images larger than": {
+    "Skip images larger than": "跳过大于此大小的图片"
+  },
+  "Smaller icons": {
+    "Smaller icons": "缩小图标"
+  },
+  "Smooth": {
+    "Smooth": "平滑"
+  },
+  "Socket": {
+    "Socket": "套接字"
+  },
+  "Some matches may be missing": {
+    "Some matches may be missing": "部分匹配项可能缺失"
+  },
+  "Sort by": {
+    "Sort by": "排序方式"
+  },
+  "Sort by the next column": {
+    "Sort by the next column": "按下一列排序"
+  },
+  "Sort descending": {
+    "Sort descending": "降序排序"
+  },
+  "Split view": {
+    "Split view": "分栏视图"
+  },
+  "Spring": {
+    "Spring": "弹簧"
+  },
+  "Square": {
+    "Square": "直角"
+  },
+  "Status": {
+    "Status": "状态"
+  },
+  "Steam": {
+    "Steam": ""
+  },
+  "Steam, ~/VirtualBox VMs": {
+    "Steam, ~/VirtualBox VMs": "如 Steam、~/VirtualBox VMs"
+  },
+  "Stop measuring": {
+    "Stop measuring": "停止统计"
+  },
+  "Such as a separate /home.": {
+    "Such as a separate /home.": "例如单独的 /home。"
+  },
+  "Support Dux Labs": {
+    "Support Dux Labs": "支持 Dux Labs"
+  },
+  "Switch pane": {
+    "Switch pane": "切换窗格"
+  },
+  "System": {
+    "System": ""
+  },
+  "System default": {
+    "System default": "系统默认"
+  },
+  "System preference unavailable, using dark.": {
+    "System preference unavailable, using dark.": "系统偏好不可用，使用深色。"
+  },
+  "Terminal": {
+    "Terminal": "终端"
+  },
+  "Terminal, drag and thumbnails": {
+    "Terminal, drag and thumbnails": "终端、拖放与缩略图"
+  },
+  "The Wine prefix of each game.": {
+    "The Wine prefix of each game.": ""
+  },
+  "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": {
+    "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": "更改将在 xdg-desktop-portal 重启后生效。其他应用已打开的打开和保存对话框将会关闭。"
+  },
+  "The files themselves stay where they are.": {
+    "The files themselves stay where they are.": "文件本身仍保留在原处。"
+  },
+  "The portal list is managed by the system.": {
+    "The portal list is managed by the system.": "门户列表由系统管理。"
+  },
+  "The session bus refused it.": {
+    "The session bus refused it.": "会话总线拒绝了该请求。"
+  },
+  "The system application chooser opens instead": {
+    "The system application chooser opens instead": "将改为打开系统应用选择器"
+  },
+  "Theme": {
+    "Theme": "主题"
+  },
+  "Theme, shape and motion": {
+    "Theme, shape and motion": "主题、形状与动效"
+  },
+  "Thickness": {
+    "Thickness": "粗细"
+  },
+  "This file could not be opened": {
+    "This file could not be opened": ""
+  },
+  "This folder": {
+    "This folder": "此文件夹"
+  },
+  "This folder is empty": {
+    "This folder is empty": "此文件夹为空"
+  },
+  "This instance cannot reach the session bus.": {
+    "This instance cannot reach the session bus.": "此实例无法连接会话总线。"
+  },
+  "This item already exists": {
+    "This item already exists": "此项已存在"
+  },
+  "This month": {
+    "This month": "本月"
+  },
+  "This session": {
+    "This session": "本次会话"
+  },
+  "This step cannot be retried as administrator": {
+    "This step cannot be retried as administrator": "此步骤无法以管理员身份重试"
+  },
+  "This week": {
+    "This week": "本周"
+  },
+  "Thumbnails": {
+    "Thumbnails": "缩略图"
+  },
+  "Thumbnails on network locations": {
+    "Thumbnails on network locations": "网络位置上的缩略图"
+  },
+  "Title bars": {
+    "Title bars": "标题栏"
+  },
+  "Today": {
+    "Today": "今天"
+  },
+  "Toggle sidebar": {
+    "Toggle sidebar": "切换侧边栏"
+  },
+  "Trash": {
+    "Trash": "回收站"
+  },
+  "Trash is empty": {
+    "Trash is empty": "回收站为空"
+  },
+  "Trust and run": {
+    "Trust and run": "信任并运行"
+  },
+  "Try again": {
+    "Try again": "重试"
+  },
+  "Type": {
+    "Type": "类型"
+  },
+  "Type a location": {
+    "Type a location": "输入位置"
+  },
+  "Typing in the file list": {
+    "Typing in the file list": "在文件列表中输入"
+  },
+  "Typography": {
+    "Typography": "字体排版"
+  },
+  "Unavailable until its drive is mounted": {
+    "Unavailable until its drive is mounted": ""
+  },
+  "Under 1 MB": {
+    "Under 1 MB": "小于 1 MB"
+  },
+  "Undo": {
+    "Undo": "撤销"
+  },
+  "Undone": {
+    "Undone": "已撤销"
+  },
+  "Unknown": {
+    "Unknown": "未知"
+  },
+  "Unlock": {
+    "Unlock": "解锁"
+  },
+  "Unmount": {
+    "Unmount": "卸载"
+  },
+  "Unpacks into a folder beside it.": {
+    "Unpacks into a folder beside it.": "解压到旁边的文件夹中。"
+  },
+  "Untitled document": {
+    "Untitled document": "无标题文档"
+  },
+  "Untitled folder": {
+    "Untitled folder": "无标题文件夹"
+  },
+  "Use Dux Files for open and save dialogs": {
+    "Use Dux Files for open and save dialogs": "使用 Dux Files 处理打开和保存对话框"
+  },
+  "Use a bundled color palette.": {
+    "Use a bundled color palette.": "使用内置调色板。"
+  },
+  "Use these settings for all folders": {
+    "Use these settings for all folders": "对所有文件夹使用这些设置"
+  },
+  "Use this folder": {
+    "Use this folder": "使用此文件夹"
+  },
+  "Username": {
+    "Username": "用户名"
+  },
+  "Using Dux Shell dynamic colors.": {
+    "Using Dux Shell dynamic colors.": "正在使用 Dux Shell 动态颜色。"
+  },
+  "Version": {
+    "Version": "版本"
+  },
+  "Version and capabilities": {
+    "Version and capabilities": "版本与功能"
+  },
+  "Video": {
+    "Video": "视频"
+  },
+  "View": {
+    "View": "视图"
+  },
+  "Views, sorting and defaults": {
+    "Views, sorting and defaults": "视图、排序与默认值"
+  },
+  "Vim keys": {
+    "Vim keys": "Vim 键位"
+  },
+  "Waiting": {
+    "Waiting": "等待中"
+  },
+  "Weight": {
+    "Weight": "字重"
+  },
+  "Where the launcher keeps the games.": {
+    "Where the launcher keeps the games.": ""
+  },
+  "Window": {
+    "Window": "窗口"
+  },
+  "Windows": {
+    "Windows": "窗口"
+  },
+  "Working": {
+    "Working": "正在处理"
+  },
+  "Write": {
+    "Write": "写入"
+  },
+  "Wrong password": {
+    "Wrong password": "密码错误"
+  },
+  "Zoom in": {
+    "Zoom in": ""
+  },
+  "Zoom out": {
+    "Zoom out": ""
+  },
+  "accessibility animation disable": {
+    "accessibility animation disable": "无障碍 动画 禁用"
+  },
+  "animation click feedback": {
+    "animation click feedback": "动画 点击 反馈"
+  },
+  "animation speed motion": {
+    "animation speed motion": "动画 速度 动效"
+  },
+  "bounce animation motion": {
+    "bounce animation motion": "弹跳 动画 动效"
+  },
+  "capability available sandbox": {
+    "capability available sandbox": "功能 可用 沙箱"
+  },
+  "config folder launcher wine prefix": {
+    "config folder launcher wine prefix": ""
+  },
+  "console emulator shell command line": {
+    "console emulator shell command line": "控制台 终端 命令 命令行"
+  },
+  "corners rounding shape square": {
+    "corners rounding shape square": "圆角 形状 直角"
+  },
+  "custom theme json file": {
+    "custom theme json file": "自定义 主题 json 文件"
+  },
+  "daemon connected offline socket": {
+    "daemon connected offline socket": "守护进程 已连接 离线 套接字"
+  },
+  "daemon path unix": {
+    "daemon path unix": "守护进程 路径 unix"
+  },
+  "daemon protocol": {
+    "daemon protocol": "守护进程 协议"
+  },
+  "daemon release build": {
+    "daemon release build": "守护进程 发布 构建"
+  },
+  "dark": {
+    "dark": "深色"
+  },
+  "decorations csd window header": {
+    "decorations csd window header": "窗口装饰 csd 标题栏"
+  },
+  "default file manager dbus reveal": {
+    "default file manager dbus reveal": "默认 文件管理器 dbus 显示"
+  },
+  "delete confirmation prompt": {
+    "delete confirmation prompt": "删除 确认 提示"
+  },
+  "directories first sort": {
+    "directories first sort": "文件夹优先 排序"
+  },
+  "documentation help manual": {
+    "documentation help manual": "文档 帮助 手册"
+  },
+  "dotfiles invisible": {
+    "dotfiles invisible": "隐藏文件 不可见"
+  },
+  "drag drop copy move ask default action": {
+    "drag drop copy move ask default action": "拖放 复制 移动 询问 默认操作"
+  },
+  "flatpak app id": {
+    "flatpak app id": "flatpak 应用 id"
+  },
+  "focus ring width outline": {
+    "focus ring width outline": "焦点环 宽度 轮廓"
+  },
+  "folder memory per-folder remember": {
+    "folder memory per-folder remember": "文件夹记忆 按文件夹 记住"
+  },
+  "font bold typography": {
+    "font bold typography": "字体 粗体 排版"
+  },
+  "font family typeface dms system qt": {
+    "font family typeface dms system qt": ""
+  },
+  "font size text zoom typography": {
+    "font size text zoom typography": "字体大小 文本 缩放 排版"
+  },
+  "font typeface": {
+    "font typeface": ""
+  },
+  "font typeface code mono": {
+    "font typeface code mono": ""
+  },
+  "font typeface headline title": {
+    "font typeface headline title": ""
+  },
+  "games library steamapps common": {
+    "games library steamapps common": ""
+  },
+  "h j k l move, / searches and letters run commands instead of jumping to a name.": {
+    "h j k l move, / searches and letters run commands instead of jumping to a name.": "h j k l 移动，/ 搜索，字母执行命令而不是跳转到名称。"
+  },
+  "h j k l move, / searches.": {
+    "h j k l move, / searches.": "h j k l 移动，/ 搜索。"
+  },
+  "heroic epic gog amazon": {
+    "heroic epic gog amazon": ""
+  },
+  "history recently used opened sidebar": {
+    "history recently used opened sidebar": "历史 最近使用 已打开 侧边栏"
+  },
+  "hjkl keyboard navigation modal": {
+    "hjkl keyboard navigation modal": "hjkl 键盘 导航 模态"
+  },
+  "internal drives udisks home boot": {
+    "internal drives udisks home boot": "内部驱动器 udisks 主目录 启动"
+  },
+  "keyboard outline accessibility": {
+    "keyboard outline accessibility": "键盘 轮廓 无障碍"
+  },
+  "keys bindings hotkeys F1": {
+    "keys bindings hotkeys F1": "按键 绑定 热键 F1"
+  },
+  "light": {
+    "light": "浅色"
+  },
+  "light dark mode system color scheme": {
+    "light dark mode system color scheme": "浅色 深色 模式 系统 配色方案"
+  },
+  "list grid columns icons tiles": {
+    "list grid columns icons tiles": "列表 网格 列 图标 图块"
+  },
+  "locale translation interface": {
+    "locale translation interface": "区域设置 翻译 界面"
+  },
+  "lutris wine prefix": {
+    "lutris wine prefix": ""
+  },
+  "mount usb removable sidebar": {
+    "mount usb removable sidebar": "挂载 usb 可移动 侧边栏"
+  },
+  "order direction ascending reverse": {
+    "order direction ascending reverse": "顺序 方向 升序 反转"
+  },
+  "order name size modified type date": {
+    "order name size modified type date": "排序 名称 大小 修改 类型 日期"
+  },
+  "palette dms preset custom accent": {
+    "palette dms preset custom accent": "调色板 dms 预设 自定义 强调色"
+  },
+  "portal file chooser picker xdg": {
+    "portal file chooser picker xdg": "门户 文件选择器 选择器 xdg"
+  },
+  "preset palette swatch colors": {
+    "preset palette swatch colors": "预设 调色板 色块 颜色"
+  },
+  "previews images video pdf": {
+    "previews images video pdf": "预览 图片 视频 pdf"
+  },
+  "quit exit hide daemon keep running": {
+    "quit exit hide daemon keep running": "退出 隐藏 守护进程 保持运行"
+  },
+  "remote sftp smb previews": {
+    "remote sftp smb previews": "远程 sftp smb 预览"
+  },
+  "reset clear per-folder memory": {
+    "reset clear per-folder memory": "重置 清除 按文件夹 记忆"
+  },
+  "search dotfiles recursive": {
+    "search dotfiles recursive": "搜索 隐藏文件 递归"
+  },
+  "search exclude ignore": {
+    "search exclude ignore": "搜索 排除 忽略"
+  },
+  "single double click activate": {
+    "single double click activate": "单击 双击 激活"
+  },
+  "size column entries": {
+    "size column entries": "大小 列 项目数"
+  },
+  "source code repository issues": {
+    "source code repository issues": "源代码 仓库 问题"
+  },
+  "steam heroic lutris proton games sidebar hide": {
+    "steam heroic lutris proton games sidebar hide": ""
+  },
+  "steam proton valve": {
+    "steam proton valve": ""
+  },
+  "suffix type filename": {
+    "suffix type filename": ""
+  },
+  "tabs external open location": {
+    "tabs external open location": "标签页 外部 打开 位置"
+  },
+  "thumbnail size limit cap megabytes": {
+    "thumbnail size limit cap megabytes": "缩略图 大小 限制 上限 兆字节"
+  },
+  "type-ahead jump filter search keyboard": {
+    "type-ahead jump filter search keyboard": "即时输入 跳转 筛选 搜索 键盘"
+  },
+  "wine prefix proton compatdata": {
+    "wine prefix proton compatdata": ""
+  },
+  "xdg-desktop-portal": {
+    "xdg-desktop-portal": "xdg-desktop-portal"
+  },
+  "zip tar unpack compressed": {
+    "zip tar unpack compressed": "zip tar 解压 压缩"
+  },
+  "zoom rows": {
+    "zoom rows": "缩放 行"
+  },
+  "zoom thumbnails tiles": {
+    "zoom thumbnails tiles": "缩放 缩略图 图块"
+  }
+}

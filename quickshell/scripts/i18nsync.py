@@ -21,12 +21,13 @@ SYNC_STATE = REPO_ROOT / ".git" / "i18n_sync_state.json"
 TRANSLATIONS_REL = TRANSLATIONS_DIR.relative_to(REPO_ROOT).as_posix()
 EN_JSON_REL = EN_JSON.relative_to(REPO_ROOT).as_posix()
 
-API_TOKEN_ENV = "DFILES_POEDITOR_API_TOKEN"
+API_TOKEN_ENV = "POEDITOR_API_TOKEN"
 PROJECT_ID_ENV = "DFILES_POEDITOR_PROJECT_ID"
 
-# POEditor language code -> poexports/<file>. Empty until the project has
-# translations; add entries as locales come online, e.g. "de": "de.json".
-LANGUAGES = {}
+LANGUAGES = {
+    "zh-Hans": "zh_CN.json",
+    "zh-Hant": "zh_TW.json",
+}
 
 
 def error(msg):

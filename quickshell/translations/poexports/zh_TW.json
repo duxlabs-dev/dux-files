@@ -1,0 +1,1793 @@
+{
+  "%1 already exist in this folder. Do you want to overwrite them?": {
+    "%1 already exist in this folder. Do you want to overwrite them?": "%1 已存在於此資料夾中。要覆寫它們嗎？"
+  },
+  "%1 already exists in this folder.": {
+    "%1 already exists in this folder.": "%1 已存在於此資料夾中。"
+  },
+  "%1 bookmarks imported": {
+    "%1 bookmarks imported": "已匯入 %1 個書籤"
+  },
+  "%1 can be run as a program. Open it in an editor instead to read it first.": {
+    "%1 can be run as a program. Open it in an editor instead to read it first.": "%1 可以作為程式執行。建議先以編輯器開啟閱讀。"
+  },
+  "%1 folders could not be read": {
+    "%1 folders could not be read": "%1 個資料夾無法讀取"
+  },
+  "%1 h %2 min left": {
+    "%1 h %2 min left": "剩餘 %1 小時 %2 分鐘"
+  },
+  "%1 has not been marked as trusted. Running it allows it to start any program.": {
+    "%1 has not been marked as trusted. Running it allows it to start any program.": "%1 尚未標記為受信任。執行它可能會啟動任意程式。"
+  },
+  "%1 hidden": {
+    "%1 hidden": "已隱藏 %1 項"
+  },
+  "%1 holds it; Files takes over when it quits.": {
+    "%1 holds it; Files takes over when it quits.": "%1 正在佔用；它結束後由「檔案」接管。"
+  },
+  "%1 is encrypted. Enter its passphrase to unlock it.": {
+    "%1 is encrypted. Enter its passphrase to unlock it.": "%1 已加密。請輸入密碼短語解鎖。"
+  },
+  "%1 is password protected.": {
+    "%1 is password protected.": "%1 受密碼保護。"
+  },
+  "%1 items copied": {
+    "%1 items copied": "已複製 %1 項"
+  },
+  "%1 items cut": {
+    "%1 items cut": "已剪下 %1 項"
+  },
+  "%1 levels deep": {
+    "%1 levels deep": "深入 %1 層"
+  },
+  "%1 matching “%2”": {
+    "%1 matching “%2”": "%1 項符合「%2」"
+  },
+  "%1 min left": {
+    "%1 min left": "剩餘 %1 分鐘"
+  },
+  "%1 px": {
+    "%1 px": "%1 像素"
+  },
+  "%1 s left": {
+    "%1 s left": "剩餘 %1 秒"
+  },
+  "%1 used · %2 free · %3 total": {
+    "%1 used · %2 free · %3 total": "已用 %1 · 可用 %2 · 共 %3"
+  },
+  "%1 will be deleted permanently. This cannot be undone.": {
+    "%1 will be deleted permanently. This cannot be undone.": "%1 將被永久刪除，且無法復原。"
+  },
+  "%1 will be moved to the trash.": {
+    "%1 will be moved to the trash.": "%1 將被移到垃圾桶。"
+  },
+  "%1 · %2": {
+    "%1 · %2": "%1 · %2"
+  },
+  "%1 …": {
+    "%1 …": "%1 …"
+  },
+  "%1, %2 matches": {
+    "%1, %2 matches": "%1，%2 個相符項目"
+  },
+  "%1/s": {
+    "%1/s": "%1/秒"
+  },
+  "1 MB to 100 MB": {
+    "1 MB to 100 MB": "1 MB 到 100 MB"
+  },
+  "1 item copied": {
+    "1 item copied": "已複製 1 項"
+  },
+  "1 item cut": {
+    "1 item cut": "已剪下 1 項"
+  },
+  "50 is the Material default.": {
+    "50 is the Material default.": "50 是 Material 的預設值。"
+  },
+  "? or F1 in the main window.": {
+    "? or F1 in the main window.": "在主視窗中按 ? 或 F1。"
+  },
+  "API": {
+    "API": "API"
+  },
+  "About": {
+    "About": "關於"
+  },
+  "Accessed": {
+    "Accessed": "存取時間"
+  },
+  "Add or remove one item": {
+    "Add or remove one item": "新增或移除一項"
+  },
+  "Add or remove the item under the cursor": {
+    "Add or remove the item under the cursor": "新增或移除游標下的項目"
+  },
+  "Add to bookmarks": {
+    "Add to bookmarks": "加入書籤"
+  },
+  "Address": {
+    "Address": "位址"
+  },
+  "Administrator access is not available": {
+    "Administrator access is not available": "無法取得管理員權限"
+  },
+  "Administrator access is not available because pkexec is not installed": {
+    "Administrator access is not available because pkexec is not installed": "未安裝 pkexec，無法取得管理員權限"
+  },
+  "Administrator access is not available because the polkit policy is not installed": {
+    "Administrator access is not available because the polkit policy is not installed": "未安裝 polkit 原則，無法取得管理員權限"
+  },
+  "Administrator access is not available inside the sandbox": {
+    "Administrator access is not available inside the sandbox": "沙箱內無法取得管理員權限"
+  },
+  "Already here": {
+    "Already here": "已存在"
+  },
+  "Always": {
+    "Always": "總是"
+  },
+  "Always use the dark theme.": {
+    "Always use the dark theme.": "一律使用深色主題。"
+  },
+  "Always use the light theme.": {
+    "Always use the light theme.": "一律使用淺色主題。"
+  },
+  "Always use this application": {
+    "Always use this application": "一律使用此應用程式"
+  },
+  "Amber": {
+    "Amber": "琥珀色"
+  },
+  "Another file manager holds it.": {
+    "Another file manager holds it.": "另一個檔案管理員正在佔用。"
+  },
+  "Any size": {
+    "Any size": "任意大小"
+  },
+  "Any time": {
+    "Any time": "任意時間"
+  },
+  "Appearance": {
+    "Appearance": "外觀"
+  },
+  "Apply": {
+    "Apply": "套用"
+  },
+  "Apply to everything inside": {
+    "Apply to everything inside": "套用到內部所有內容"
+  },
+  "Archive": {
+    "Archive": "壓縮檔"
+  },
+  "Archive created": {
+    "Archive created": "已建立壓縮檔"
+  },
+  "Archives": {
+    "Archives": "壓縮檔"
+  },
+  "Ask": {
+    "Ask": "詢問"
+  },
+  "Ask every time": {
+    "Ask every time": "每次詢問"
+  },
+  "Audio": {
+    "Audio": "音訊"
+  },
+  "Auto": {
+    "Auto": "自動"
+  },
+  "Automatic": {
+    "Automatic": "自動"
+  },
+  "Automatic uses $TERMINAL.": {
+    "Automatic uses $TERMINAL.": "自動模式使用 $TERMINAL。"
+  },
+  "Available": {
+    "Available": "可用"
+  },
+  "Back": {
+    "Back": "上一頁"
+  },
+  "Back to the files": {
+    "Back to the files": "返回檔案"
+  },
+  "Backend": {
+    "Backend": "後端"
+  },
+  "Backend: not reachable, no activation file": {
+    "Backend: not reachable, no activation file": "後端：無法連線，沒有啟用檔案"
+  },
+  "Backend: served by this instance": {
+    "Backend: served by this instance": "後端：由此執行個體提供服務"
+  },
+  "Backend: started on demand through %1": {
+    "Backend: started on demand through %1": "後端：透過 %1 隨需啟動"
+  },
+  "Balanced": {
+    "Balanced": "平衡"
+  },
+  "Behaviour": {
+    "Behaviour": "行為"
+  },
+  "Being added": {
+    "Being added": "正在新增"
+  },
+  "Blue": {
+    "Blue": "藍色"
+  },
+  "Bookmark this folder": {
+    "Bookmark this folder": "將此資料夾加入書籤"
+  },
+  "Cancel": {
+    "Cancel": "取消"
+  },
+  "Cancelled": {
+    "Cancelled": "已取消"
+  },
+  "Capabilities": {
+    "Capabilities": "功能"
+  },
+  "Changing owner": {
+    "Changing owner": "正在變更擁有者"
+  },
+  "Changing permissions": {
+    "Changing permissions": "正在變更權限"
+  },
+  "Choose a JSON color theme file.": {
+    "Choose a JSON color theme file.": "選擇一個 JSON 色彩主題檔案。"
+  },
+  "Clear Recent": {
+    "Clear Recent": "清除最近項目"
+  },
+  "Clear the clipboard": {
+    "Clear the clipboard": "清空剪貼簿"
+  },
+  "Clear the recent files list?": {
+    "Clear the recent files list?": "清除最近檔案清單？"
+  },
+  "Clear the selection": {
+    "Clear the selection": "取消選取"
+  },
+  "Close": {
+    "Close": "關閉"
+  },
+  "Close behavior": {
+    "Close behavior": "關閉行為"
+  },
+  "Close other tabs": {
+    "Close other tabs": "關閉其他分頁"
+  },
+  "Close tab": {
+    "Close tab": "關閉分頁"
+  },
+  "Close tabs to the right": {
+    "Close tabs to the right": "關閉右側分頁"
+  },
+  "Collapse": {
+    "Collapse": ""
+  },
+  "Color source": {
+    "Color source": "色彩來源"
+  },
+  "Column view": {
+    "Column view": "直欄檢視"
+  },
+  "Compress": {
+    "Compress": "壓縮"
+  },
+  "Compressing": {
+    "Compressing": "正在壓縮"
+  },
+  "Compress…": {
+    "Compress…": "壓縮…"
+  },
+  "Confirm": {
+    "Confirm": "確認"
+  },
+  "Confirm before moving to the trash": {
+    "Confirm before moving to the trash": "移到垃圾桶前確認"
+  },
+  "Connect": {
+    "Connect": "連線"
+  },
+  "Connect anonymously": {
+    "Connect anonymously": "匿名連線"
+  },
+  "Connect to Server": {
+    "Connect to Server": "連線到伺服器"
+  },
+  "Connect to Server…": {
+    "Connect to Server…": "連線到伺服器…"
+  },
+  "Connected": {
+    "Connected": "已連線"
+  },
+  "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": {
+    "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": "已連線，但共用沒有本機資料夾。gvfs FUSE 服務可能未執行。"
+  },
+  "Contents": {
+    "Contents": "內容"
+  },
+  "Copied": {
+    "Copied": "已複製"
+  },
+  "Copy": {
+    "Copy": "複製"
+  },
+  "Copy location path": {
+    "Copy location path": "複製位置路徑"
+  },
+  "Copy name": {
+    "Copy name": "複製名稱"
+  },
+  "Copy to": {
+    "Copy to": "複製到"
+  },
+  "Copy to…": {
+    "Copy to…": "複製到…"
+  },
+  "Copying": {
+    "Copying": "正在複製"
+  },
+  "Coral": {
+    "Coral": "珊瑚色"
+  },
+  "Could not read that file, expected a JSON color theme.": {
+    "Could not read that file, expected a JSON color theme.": "無法讀取該檔案，應為 JSON 色彩主題。"
+  },
+  "Count items in folders": {
+    "Count items in folders": "計算資料夾中的項目數"
+  },
+  "Create": {
+    "Create": "建立"
+  },
+  "Created": {
+    "Created": "建立時間"
+  },
+  "Creating": {
+    "Creating": "正在建立"
+  },
+  "Ctrl copies, Alt asks.": {
+    "Ctrl copies, Alt asks.": "Ctrl 複製，Alt 詢問。"
+  },
+  "Ctrl+H toggles per window.": {
+    "Ctrl+H toggles per window.": "Ctrl+H 依視窗切換。"
+  },
+  "Ctrl+Wheel resizes per window.": {
+    "Ctrl+Wheel resizes per window.": "Ctrl+滾輪依視窗調整大小。"
+  },
+  "Custom": {
+    "Custom": "自訂"
+  },
+  "Cut": {
+    "Cut": "剪下"
+  },
+  "Cyan": {
+    "Cyan": "青色"
+  },
+  "Dark": {
+    "Dark": "深色"
+  },
+  "Decrease": {
+    "Decrease": "減少"
+  },
+  "Default": {
+    "Default": ""
+  },
+  "Default applications": {
+    "Default applications": "預設應用程式"
+  },
+  "Default icon size": {
+    "Default icon size": "預設圖示大小"
+  },
+  "Default view": {
+    "Default view": "預設檢視"
+  },
+  "Delete": {
+    "Delete": "刪除"
+  },
+  "Delete permanently": {
+    "Delete permanently": "永久刪除"
+  },
+  "Delete permanently?": {
+    "Delete permanently?": "永久刪除？"
+  },
+  "Deleting": {
+    "Deleting": "正在刪除"
+  },
+  "Details": {
+    "Details": "詳細資料"
+  },
+  "Devices": {
+    "Devices": "裝置"
+  },
+  "Disconnect": {
+    "Disconnect": "中斷連線"
+  },
+  "Display family": {
+    "Display family": ""
+  },
+  "Do this for the rest": {
+    "Do this for the rest": "對其餘項目執行相同操作"
+  },
+  "Docs": {
+    "Docs": "文件"
+  },
+  "Documents": {
+    "Documents": "文件"
+  },
+  "Domain": {
+    "Domain": "網域"
+  },
+  "Double click": {
+    "Double click": "按兩下"
+  },
+  "Downloads each file.": {
+    "Downloads each file.": "逐一下載每個檔案。"
+  },
+  "Drag and drop": {
+    "Drag and drop": "拖放"
+  },
+  "Drives and mounting": {
+    "Drives and mounting": "磁碟機與掛載"
+  },
+  "Drives are unavailable because the sandbox cannot reach udisks2": {
+    "Drives are unavailable because the sandbox cannot reach udisks2": "沙箱無法存取 udisks2，磁碟機無法使用"
+  },
+  "Drives are unavailable because udisks2 is not running": {
+    "Drives are unavailable because udisks2 is not running": "udisks2 未執行，磁碟機無法使用"
+  },
+  "Dropping without a modifier": {
+    "Dropping without a modifier": "無修飾鍵拖放"
+  },
+  "Duplicate": {
+    "Duplicate": "建立副本"
+  },
+  "Duplicate tab": {
+    "Duplicate tab": "複製分頁"
+  },
+  "Duplicated": {
+    "Duplicated": "已建立副本"
+  },
+  "Duplicating": {
+    "Duplicating": "正在建立副本"
+  },
+  "Duration": {
+    "Duration": "持續時間"
+  },
+  "Dux Shell not detected, using %1.": {
+    "Dux Shell not detected, using %1.": ""
+  },
+  "Dux Shell not detected, using the %1 preset.": {
+    "Dux Shell not detected, using the %1 preset.": "未偵測到 Dux Shell，使用 %1 預設。"
+  },
+  "Each launcher's own configuration folder.": {
+    "Each launcher's own configuration folder.": ""
+  },
+  "Eject": {
+    "Eject": "退出"
+  },
+  "Empty Trash": {
+    "Empty Trash": "清空垃圾桶"
+  },
+  "Empty file": {
+    "Empty file": "空白檔案"
+  },
+  "Empty the trash?": {
+    "Empty the trash?": "清空垃圾桶？"
+  },
+  "Emptying the trash": {
+    "Emptying the trash": "正在清空垃圾桶"
+  },
+  "Enter filename...": {
+    "Enter filename...": "輸入檔案名稱..."
+  },
+  "Estimating…": {
+    "Estimating…": "正在估算…"
+  },
+  "Every folder goes back to the default sort and view.": {
+    "Every folder goes back to the default sort and view.": "所有資料夾都將恢復預設排序與檢視。"
+  },
+  "Everyone": {
+    "Everyone": "其他使用者"
+  },
+  "Everywhere": {
+    "Everywhere": "所有位置"
+  },
+  "Execute": {
+    "Execute": "執行"
+  },
+  "Expand": {
+    "Expand": ""
+  },
+  "Extract archives on open": {
+    "Extract archives on open": "開啟時解壓縮"
+  },
+  "Extract here": {
+    "Extract here": "解壓縮到此處"
+  },
+  "Extract to": {
+    "Extract to": "解壓縮到"
+  },
+  "Extract to…": {
+    "Extract to…": "解壓縮到…"
+  },
+  "Extracted": {
+    "Extracted": "已解壓縮"
+  },
+  "Extracted to %1": {
+    "Extracted to %1": "已解壓縮到 %1"
+  },
+  "Extracting": {
+    "Extracting": "正在解壓縮"
+  },
+  "Family": {
+    "Family": ""
+  },
+  "File operations": {
+    "File operations": "檔案操作"
+  },
+  "File system": {
+    "File system": "檔案系統"
+  },
+  "Files": {
+    "Files": "檔案"
+  },
+  "Files Settings": {
+    "Files Settings": "檔案設定"
+  },
+  "Filter": {
+    "Filter": "篩選"
+  },
+  "Finished": {
+    "Finished": "已完成"
+  },
+  "Focus ring": {
+    "Focus ring": "焦點環"
+  },
+  "Focus the sidebar": {
+    "Focus the sidebar": "聚焦側邊欄"
+  },
+  "Folders": {
+    "Folders": "資料夾"
+  },
+  "Folders before files": {
+    "Folders before files": "資料夾優先於檔案"
+  },
+  "Folders open in new tabs and files open in their applications.": {
+    "Folders open in new tabs and files open in their applications.": "資料夾將在新分頁中開啟，檔案將在其應用程式中開啟。"
+  },
+  "Folders open in new tabs, archives are extracted and other files open in their applications.": {
+    "Folders open in new tabs, archives are extracted and other files open in their applications.": "資料夾將在新分頁中開啟，壓縮檔將被解壓縮，其他檔案將在其應用程式中開啟。"
+  },
+  "Folders to skip": {
+    "Folders to skip": "要略過的資料夾"
+  },
+  "Follow Dux Shell colors, falling back to a preset.": {
+    "Follow Dux Shell colors, falling back to a preset.": "跟隨 Dux Shell 色彩，否則退回預設。"
+  },
+  "Following the system color scheme (currently %1).": {
+    "Following the system color scheme (currently %1).": "跟隨系統色彩配置（目前為 %1）。"
+  },
+  "Font source": {
+    "Font source": ""
+  },
+  "Forget": {
+    "Forget": "忘記"
+  },
+  "Forget all folder settings": {
+    "Forget all folder settings": "忘記所有資料夾設定"
+  },
+  "Forget all folder settings?": {
+    "Forget all folder settings?": "忘記所有資料夾設定？"
+  },
+  "Forward": {
+    "Forward": "下一頁"
+  },
+  "From the index": {
+    "From the index": "來自索引"
+  },
+  "Fuzzy": {
+    "Fuzzy": "模糊"
+  },
+  "Games": {
+    "Games": ""
+  },
+  "Games and prefixes Heroic installed.": {
+    "Games and prefixes Heroic installed.": ""
+  },
+  "Games and prefixes Lutris installed.": {
+    "Games and prefixes Lutris installed.": ""
+  },
+  "Games folder": {
+    "Games folder": ""
+  },
+  "Games folders": {
+    "Games folders": ""
+  },
+  "Games in the sidebar": {
+    "Games in the sidebar": ""
+  },
+  "General": {
+    "General": "一般"
+  },
+  "Getting around": {
+    "Getting around": "瀏覽"
+  },
+  "GitHub": {
+    "GitHub": "GitHub"
+  },
+  "Go to that tab": {
+    "Go to that tab": "切換到該分頁"
+  },
+  "Go to the home folder": {
+    "Go to the home folder": "前往主資料夾"
+  },
+  "Go to the parent folder": {
+    "Go to the parent folder": "前往上層資料夾"
+  },
+  "Green": {
+    "Green": "綠色"
+  },
+  "Grid icon size": {
+    "Grid icon size": "格狀檢視圖示大小"
+  },
+  "Grid view": {
+    "Grid view": "格狀檢視"
+  },
+  "Group": {
+    "Group": "群組"
+  },
+  "Heroic": {
+    "Heroic": ""
+  },
+  "Home": {
+    "Home": "主資料夾"
+  },
+  "Host filesystem": {
+    "Host filesystem": "主機檔案系統"
+  },
+  "Image pasted": {
+    "Image pasted": "已貼上圖片"
+  },
+  "Images": {
+    "Images": "圖片"
+  },
+  "Import": {
+    "Import": "匯入"
+  },
+  "Import your GTK bookmarks?": {
+    "Import your GTK bookmarks?": "匯入你的 GTK 書籤？"
+  },
+  "Include hidden files": {
+    "Include hidden files": "包含隱藏檔案"
+  },
+  "Include ignored": {
+    "Include ignored": "包含已忽略項目"
+  },
+  "Increase": {
+    "Increase": "增加"
+  },
+  "Index is still building, results may be incomplete": {
+    "Index is still building, results may be incomplete": "索引仍在建立，結果可能不完整"
+  },
+  "Invert the selection": {
+    "Invert the selection": "反向選取"
+  },
+  "Items in the trash cannot be opened": {
+    "Items in the trash cannot be opened": "垃圾桶中的項目無法開啟"
+  },
+  "Jump to a folder you visited": {
+    "Jump to a folder you visited": "跳至造訪過的資料夾"
+  },
+  "Jump to a name or filter the folder with what you type": {
+    "Jump to a name or filter the folder with what you type": "跳至名稱，或依輸入內容篩選資料夾"
+  },
+  "Jump to name": {
+    "Jump to name": "跳至名稱"
+  },
+  "Jump to the start, the end or the next screen": {
+    "Jump to the start, the end or the next screen": "跳至開頭、結尾或下一頁"
+  },
+  "Keep a list of recent files": {
+    "Keep a list of recent files": "保留最近檔案清單"
+  },
+  "Keep both": {
+    "Keep both": "兩者都保留"
+  },
+  "Keep running": {
+    "Keep running": "保持執行"
+  },
+  "Keyboard": {
+    "Keyboard": "鍵盤"
+  },
+  "Keyboard shortcuts": {
+    "Keyboard shortcuts": "鍵盤快速鍵"
+  },
+  "Language": {
+    "Language": "語言"
+  },
+  "Larger icons": {
+    "Larger icons": "放大圖示"
+  },
+  "Libraries and Proton prefixes.": {
+    "Libraries and Proton prefixes.": ""
+  },
+  "Library · %1": {
+    "Library · %1": ""
+  },
+  "Light": {
+    "Light": "淺色"
+  },
+  "Link": {
+    "Link": "連結"
+  },
+  "Linking": {
+    "Linking": "正在建立連結"
+  },
+  "Links to": {
+    "Links to": "連結目標"
+  },
+  "List icon size": {
+    "List icon size": "清單檢視圖示大小"
+  },
+  "List view": {
+    "List view": "清單檢視"
+  },
+  "Load colors from your own theme file.": {
+    "Load colors from your own theme file.": "從你自己的主題檔案載入色彩。"
+  },
+  "Location": {
+    "Location": "位置"
+  },
+  "Lock": {
+    "Lock": "鎖定"
+  },
+  "Lutris": {
+    "Lutris": ""
+  },
+  "MIT License": {
+    "MIT License": "MIT 授權條款"
+  },
+  "Menu": {
+    "Menu": "選單"
+  },
+  "Merge": {
+    "Merge": "合併"
+  },
+  "Modified": {
+    "Modified": "修改時間"
+  },
+  "Monochrome": {
+    "Monochrome": "單色"
+  },
+  "Monospace family": {
+    "Monospace family": ""
+  },
+  "More actions": {
+    "More actions": "更多動作"
+  },
+  "Motion": {
+    "Motion": "動態效果"
+  },
+  "Mount": {
+    "Mount": "掛載"
+  },
+  "Move": {
+    "Move": "移動"
+  },
+  "Move the tab left": {
+    "Move the tab left": "將分頁左移"
+  },
+  "Move the tab right": {
+    "Move the tab right": "將分頁右移"
+  },
+  "Move through the folder": {
+    "Move through the folder": "在資料夾中移動"
+  },
+  "Move through the sidebar": {
+    "Move through the sidebar": "在側邊欄中移動"
+  },
+  "Move to": {
+    "Move to": "移到"
+  },
+  "Move to Trash": {
+    "Move to Trash": "移到垃圾桶"
+  },
+  "Move to the search filters": {
+    "Move to the search filters": "移到搜尋篩選器"
+  },
+  "Move to…": {
+    "Move to…": "移到…"
+  },
+  "Move, copy across drives": {
+    "Move, copy across drives": "移動，跨磁碟機複製"
+  },
+  "Moved": {
+    "Moved": "已移動"
+  },
+  "Moved to trash": {
+    "Moved to trash": "已移到垃圾桶"
+  },
+  "Moving": {
+    "Moving": "正在移動"
+  },
+  "Moving to trash": {
+    "Moving to trash": "正在移到垃圾桶"
+  },
+  "Name": {
+    "Name": "名稱"
+  },
+  "Name the host terminal to launch.": {
+    "Name the host terminal to launch.": "指定要啟動的主機終端機。"
+  },
+  "Names or paths, comma separated. Build and cache folders are skipped anyway.": {
+    "Names or paths, comma separated. Build and cache folders are skipped anyway.": "名稱或路徑，以逗號分隔。建置與快取資料夾本來就會略過。"
+  },
+  "Network": {
+    "Network": "網路"
+  },
+  "Network locations are unavailable because gvfs is not running": {
+    "Network locations are unavailable because gvfs is not running": "gvfs 未執行，網路位置無法使用"
+  },
+  "Network locations are unavailable because the sandbox cannot reach gvfs": {
+    "Network locations are unavailable because the sandbox cannot reach gvfs": "沙箱無法存取 gvfs，網路位置無法使用"
+  },
+  "Never": {
+    "Never": "從不"
+  },
+  "New document": {
+    "New document": "新增文件"
+  },
+  "New folder": {
+    "New folder": "新增資料夾"
+  },
+  "New folder with selection": {
+    "New folder with selection": "將所選項目放入新資料夾"
+  },
+  "New tab": {
+    "New tab": "新增分頁"
+  },
+  "New window": {
+    "New window": "新增視窗"
+  },
+  "Next tab": {
+    "Next tab": "下一個分頁"
+  },
+  "No limit": {
+    "No limit": "無限制"
+  },
+  "No recent files": {
+    "No recent files": "沒有最近檔案"
+  },
+  "No results": {
+    "No results": "無結果"
+  },
+  "No session bus.": {
+    "No session bus.": "沒有工作階段匯流排。"
+  },
+  "No theme file selected": {
+    "No theme file selected": "未選擇主題檔案"
+  },
+  "Not available": {
+    "Not available": "無法使用"
+  },
+  "Not available because the sandbox cannot start programs on the host": {
+    "Not available because the sandbox cannot start programs on the host": "沙箱無法在主機上啟動程式，因此無法使用"
+  },
+  "Not available inside the sandbox": {
+    "Not available inside the sandbox": "沙箱內無法使用"
+  },
+  "Not available without access to the host filesystem": {
+    "Not available without access to the host filesystem": "無法存取主機檔案系統，因此無法使用"
+  },
+  "Nothing is running": {
+    "Nothing is running": "沒有正在執行的任務"
+  },
+  "Octal": {
+    "Octal": "八進位"
+  },
+  "Off": {
+    "Off": "關閉"
+  },
+  "Off leaves decorations to the compositor. Applies to new windows.": {
+    "Off leaves decorations to the compositor. Applies to new windows.": "關閉時將視窗裝飾交由合成器處理。對新視窗生效。"
+  },
+  "Off only mounts.": {
+    "Off only mounts.": "關閉時僅掛載。"
+  },
+  "Offline": {
+    "Offline": "離線"
+  },
+  "Only launchers with an installed game are listed.": {
+    "Only launchers with an installed game are listed.": ""
+  },
+  "Only the window process serves the portal": {
+    "Only the window process serves the portal": "只有視窗程序提供入口服務"
+  },
+  "Open": {
+    "Open": "開啟"
+  },
+  "Open %1 items?": {
+    "Open %1 items?": "開啟 %1 個項目？"
+  },
+  "Open and save dialogs": {
+    "Open and save dialogs": "開啟與儲存對話框"
+  },
+  "Open file": {
+    "Open file": "開啟檔案"
+  },
+  "Open files": {
+    "Open files": "開啟檔案"
+  },
+  "Open folders from other apps in a new tab": {
+    "Open folders from other apps in a new tab": "從其他應用程式開啟資料夾時使用新分頁"
+  },
+  "Open in editor": {
+    "Open in editor": "以編輯器開啟"
+  },
+  "Open in new tab": {
+    "Open in new tab": "在新分頁中開啟"
+  },
+  "Open in new window": {
+    "Open in new window": "在新視窗中開啟"
+  },
+  "Open in terminal": {
+    "Open in terminal": "在終端機中開啟"
+  },
+  "Open in the other pane": {
+    "Open in the other pane": "在另一個窗格中開啟"
+  },
+  "Open items with": {
+    "Open items with": "開啟項目的方式"
+  },
+  "Open the bookmark menu": {
+    "Open the bookmark menu": "開啟書籤選單"
+  },
+  "Open the containing folder": {
+    "Open the containing folder": "開啟所在資料夾"
+  },
+  "Open the context menu": {
+    "Open the context menu": "開啟內容選單"
+  },
+  "Open the place": {
+    "Open the place": "開啟位置"
+  },
+  "Open the preview in a large view": {
+    "Open the preview in a large view": ""
+  },
+  "Open unmounted drives on click": {
+    "Open unmounted drives on click": "按一下時開啟未掛載的磁碟機"
+  },
+  "Open with": {
+    "Open with": "開啟方式"
+  },
+  "Orange": {
+    "Orange": "橘色"
+  },
+  "Other applications": {
+    "Other applications": "其他應用程式"
+  },
+  "Other application…": {
+    "Other application…": "其他應用程式…"
+  },
+  "Over 100 MB": {
+    "Over 100 MB": "超過 100 MB"
+  },
+  "Owner": {
+    "Owner": "擁有者"
+  },
+  "PDF preview is not available. Install Qt PDF support to view this file.": {
+    "PDF preview is not available. Install Qt PDF support to view this file.": ""
+  },
+  "Palette: %1": {
+    "Palette: %1": "調色盤：%1"
+  },
+  "Passphrase": {
+    "Passphrase": "密碼短語"
+  },
+  "Password": {
+    "Password": "密碼"
+  },
+  "Password required": {
+    "Password required": "需要密碼"
+  },
+  "Paste": {
+    "Paste": "貼上"
+  },
+  "Paste as link": {
+    "Paste as link": "貼上為連結"
+  },
+  "Paste into folder": {
+    "Paste into folder": "貼上到資料夾"
+  },
+  "Pasted image": {
+    "Pasted image": "貼上的圖片"
+  },
+  "Pasting image": {
+    "Pasting image": "正在貼上圖片"
+  },
+  "Permissions": {
+    "Permissions": "權限"
+  },
+  "Pink": {
+    "Pink": "粉紅色"
+  },
+  "Places": {
+    "Places": "位置"
+  },
+  "Playful": {
+    "Playful": "活潑"
+  },
+  "Portal file: %1": {
+    "Portal file: %1": "入口檔案：%1"
+  },
+  "Portal file: not installed": {
+    "Portal file: not installed": "入口檔案：未安裝"
+  },
+  "Preference: %1 is used": {
+    "Preference: %1 is used": "偏好設定：正在使用 %1"
+  },
+  "Preference: %1 names Dux Files": {
+    "Preference: %1 names Dux Files": "偏好設定：%1 指向 Dux Files"
+  },
+  "Preference: no file chooser backend configured": {
+    "Preference: no file chooser backend configured": "偏好設定：未設定檔案選擇器後端"
+  },
+  "Prefix · %1": {
+    "Prefix · %1": ""
+  },
+  "Prefixes": {
+    "Prefixes": ""
+  },
+  "Preset": {
+    "Preset": "預設"
+  },
+  "Preview": {
+    "Preview": "預覽"
+  },
+  "Preview the next or previous selected item": {
+    "Preview the next or previous selected item": "預覽下一個或上一個選取項目"
+  },
+  "Previous tab": {
+    "Previous tab": "上一個分頁"
+  },
+  "Properties": {
+    "Properties": "屬性"
+  },
+  "Protect with a password": {
+    "Protect with a password": "使用密碼保護"
+  },
+  "Protocol": {
+    "Protocol": "協定"
+  },
+  "Proton · %1": {
+    "Proton · %1": ""
+  },
+  "Purple": {
+    "Purple": "紫色"
+  },
+  "Quit": {
+    "Quit": "結束"
+  },
+  "Radius strength": {
+    "Radius strength": "圓角強度"
+  },
+  "Read": {
+    "Read": "讀取"
+  },
+  "Recent": {
+    "Recent": "最近"
+  },
+  "Recently used": {
+    "Recently used": "最近使用"
+  },
+  "Recommended": {
+    "Recommended": "建議"
+  },
+  "Red": {
+    "Red": "紅色"
+  },
+  "Redo": {
+    "Redo": "重做"
+  },
+  "Redone": {
+    "Redone": "已重做"
+  },
+  "Reduce motion": {
+    "Reduce motion": "減少動態效果"
+  },
+  "Register as the session file manager": {
+    "Register as the session file manager": "註冊為工作階段檔案管理員"
+  },
+  "Relevance": {
+    "Relevance": "關聯性"
+  },
+  "Reload": {
+    "Reload": "重新載入"
+  },
+  "Remember password": {
+    "Remember password": "記住密碼"
+  },
+  "Remember view and sort per folder": {
+    "Remember view and sort per folder": "依資料夾記住檢視與排序"
+  },
+  "Remove bookmark": {
+    "Remove bookmark": "移除書籤"
+  },
+  "Remove from Recent": {
+    "Remove from Recent": "從最近項目中移除"
+  },
+  "Remove the bookmark or eject the drive": {
+    "Remove the bookmark or eject the drive": "移除書籤或退出磁碟機"
+  },
+  "Rename": {
+    "Rename": "重新命名"
+  },
+  "Rename the bookmark": {
+    "Rename the bookmark": "重新命名書籤"
+  },
+  "Renamed": {
+    "Renamed": "已重新命名"
+  },
+  "Renaming": {
+    "Renaming": "正在重新命名"
+  },
+  "Reopen the closed tab": {
+    "Reopen the closed tab": "重新開啟已關閉的分頁"
+  },
+  "Replace": {
+    "Replace": "取代"
+  },
+  "Reset the view": {
+    "Reset the view": ""
+  },
+  "Reset this folder": {
+    "Reset this folder": "重設此資料夾"
+  },
+  "Resize icons": {
+    "Resize icons": "調整圖示大小"
+  },
+  "Resize the preview, or reset its width": {
+    "Resize the preview, or reset its width": "調整預覽大小，或重設其寬度"
+  },
+  "Restart": {
+    "Restart": "重新啟動"
+  },
+  "Restart the portal service": {
+    "Restart the portal service": "重新啟動入口服務"
+  },
+  "Restart the portal service?": {
+    "Restart the portal service?": "重新啟動入口服務？"
+  },
+  "Restore": {
+    "Restore": "還原"
+  },
+  "Restored": {
+    "Restored": "已還原"
+  },
+  "Restoring": {
+    "Restoring": "正在還原"
+  },
+  "Results for “%1” in %2": {
+    "Results for “%1” in %2": "在 %2 中搜尋「%1」的結果"
+  },
+  "Results in %1": {
+    "Results in %1": "在 %1 中的結果"
+  },
+  "Retry as administrator": {
+    "Retry as administrator": "以管理員身分重試"
+  },
+  "Reverse the sort order": {
+    "Reverse the sort order": "反轉排序順序"
+  },
+  "Ripple effects": {
+    "Ripple effects": "波紋效果"
+  },
+  "Rotate left": {
+    "Rotate left": ""
+  },
+  "Rotate right": {
+    "Rotate right": ""
+  },
+  "Run": {
+    "Run": "執行"
+  },
+  "Run programs": {
+    "Run programs": "執行程序"
+  },
+  "Run this desktop file?": {
+    "Run this desktop file?": "執行此桌面檔案？"
+  },
+  "Run this file?": {
+    "Run this file?": "執行此檔案？"
+  },
+  "Sandbox": {
+    "Sandbox": "沙箱"
+  },
+  "Save": {
+    "Save": "儲存"
+  },
+  "Save file": {
+    "Save file": "儲存檔案"
+  },
+  "Save files": {
+    "Save files": "儲存檔案"
+  },
+  "Save here": {
+    "Save here": "儲存到此處"
+  },
+  "Saving %1 into the chosen folder": {
+    "Saving %1 into the chosen folder": "正在將 %1 儲存到所選資料夾"
+  },
+  "Scale": {
+    "Scale": "縮放"
+  },
+  "Scroll the preview": {
+    "Scroll the preview": "捲動預覽"
+  },
+  "Search applications": {
+    "Search applications": "搜尋應用程式"
+  },
+  "Search in Files": {
+    "Search in Files": "在檔案中搜尋"
+  },
+  "Search results": {
+    "Search results": "搜尋結果"
+  },
+  "Search settings": {
+    "Search settings": "搜尋設定"
+  },
+  "Search subfolders": {
+    "Search subfolders": "搜尋子資料夾"
+  },
+  "Search the disk": {
+    "Search the disk": "搜尋磁碟"
+  },
+  "Search with the danksearch index": {
+    "Search with the danksearch index": "使用 danksearch 索引搜尋"
+  },
+  "Search your home folder": {
+    "Search your home folder": "搜尋主資料夾"
+  },
+  "Searching…": {
+    "Searching…": "正在搜尋…"
+  },
+  "Select a range": {
+    "Select a range": "選取範圍"
+  },
+  "Select all": {
+    "Select all": "全選"
+  },
+  "Select folder": {
+    "Select folder": "選擇資料夾"
+  },
+  "Selection": {
+    "Selection": "選取"
+  },
+  "Settings": {
+    "Settings": "設定"
+  },
+  "Settings folder": {
+    "Settings folder": ""
+  },
+  "Settings folders": {
+    "Settings folders": ""
+  },
+  "Shape": {
+    "Shape": "形狀"
+  },
+  "Shared with other apps.": {
+    "Shared with other apps.": "與其他應用程式共用。"
+  },
+  "Show": {
+    "Show": "顯示"
+  },
+  "Show file extensions": {
+    "Show file extensions": ""
+  },
+  "Show games": {
+    "Show games": ""
+  },
+  "Show hidden files": {
+    "Show hidden files": "顯示隱藏檔案"
+  },
+  "Show system partitions": {
+    "Show system partitions": "顯示系統分割區"
+  },
+  "Show thumbnails": {
+    "Show thumbnails": "顯示縮圖"
+  },
+  "Showing the first %1 results": {
+    "Showing the first %1 results": "僅顯示前 %1 個結果"
+  },
+  "Shown in the size column.": {
+    "Shown in the size column.": "顯示於大小欄中。"
+  },
+  "Sidebar": {
+    "Sidebar": "側邊欄"
+  },
+  "Sign in": {
+    "Sign in": "登入"
+  },
+  "Single click": {
+    "Single click": "按一下"
+  },
+  "Size": {
+    "Size": "大小"
+  },
+  "Skip": {
+    "Skip": "略過"
+  },
+  "Skip images larger than": {
+    "Skip images larger than": "略過大於此大小的圖片"
+  },
+  "Smaller icons": {
+    "Smaller icons": "縮小圖示"
+  },
+  "Smooth": {
+    "Smooth": "平滑"
+  },
+  "Socket": {
+    "Socket": "通訊端"
+  },
+  "Some matches may be missing": {
+    "Some matches may be missing": "部分相符項目可能遺漏"
+  },
+  "Sort by": {
+    "Sort by": "排序方式"
+  },
+  "Sort by the next column": {
+    "Sort by the next column": "依下一個欄位排序"
+  },
+  "Sort descending": {
+    "Sort descending": "遞減排序"
+  },
+  "Split view": {
+    "Split view": "分割檢視"
+  },
+  "Spring": {
+    "Spring": "彈簧"
+  },
+  "Square": {
+    "Square": "直角"
+  },
+  "Status": {
+    "Status": "狀態"
+  },
+  "Steam": {
+    "Steam": ""
+  },
+  "Steam, ~/VirtualBox VMs": {
+    "Steam, ~/VirtualBox VMs": "例如 Steam、~/VirtualBox VMs"
+  },
+  "Stop measuring": {
+    "Stop measuring": "停止計算"
+  },
+  "Such as a separate /home.": {
+    "Such as a separate /home.": "例如獨立的 /home。"
+  },
+  "Support Dux Labs": {
+    "Support Dux Labs": "支持 Dux Labs"
+  },
+  "Switch pane": {
+    "Switch pane": "切換窗格"
+  },
+  "System": {
+    "System": ""
+  },
+  "System default": {
+    "System default": "系統預設"
+  },
+  "System preference unavailable, using dark.": {
+    "System preference unavailable, using dark.": "系統偏好設定無法使用，使用深色。"
+  },
+  "Terminal": {
+    "Terminal": "終端機"
+  },
+  "Terminal, drag and thumbnails": {
+    "Terminal, drag and thumbnails": "終端機、拖放與縮圖"
+  },
+  "The Wine prefix of each game.": {
+    "The Wine prefix of each game.": ""
+  },
+  "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": {
+    "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": "變更將在 xdg-desktop-portal 重新啟動後生效。其他應用程式已開啟的開啟與儲存對話框將會關閉。"
+  },
+  "The files themselves stay where they are.": {
+    "The files themselves stay where they are.": "檔案本身仍保留在原處。"
+  },
+  "The portal list is managed by the system.": {
+    "The portal list is managed by the system.": "入口清單由系統管理。"
+  },
+  "The session bus refused it.": {
+    "The session bus refused it.": "工作階段匯流排拒絕了該要求。"
+  },
+  "The system application chooser opens instead": {
+    "The system application chooser opens instead": "將改為開啟系統應用程式選擇器"
+  },
+  "Theme": {
+    "Theme": "主題"
+  },
+  "Theme, shape and motion": {
+    "Theme, shape and motion": "主題、形狀與動態效果"
+  },
+  "Thickness": {
+    "Thickness": "粗細"
+  },
+  "This file could not be opened": {
+    "This file could not be opened": ""
+  },
+  "This folder": {
+    "This folder": "此資料夾"
+  },
+  "This folder is empty": {
+    "This folder is empty": "此資料夾是空的"
+  },
+  "This instance cannot reach the session bus.": {
+    "This instance cannot reach the session bus.": "此執行個體無法連線至工作階段匯流排。"
+  },
+  "This item already exists": {
+    "This item already exists": "此項目已存在"
+  },
+  "This month": {
+    "This month": "本月"
+  },
+  "This session": {
+    "This session": "此次工作階段"
+  },
+  "This step cannot be retried as administrator": {
+    "This step cannot be retried as administrator": "此步驟無法以管理員身分重試"
+  },
+  "This week": {
+    "This week": "本週"
+  },
+  "Thumbnails": {
+    "Thumbnails": "縮圖"
+  },
+  "Thumbnails on network locations": {
+    "Thumbnails on network locations": "網路位置上的縮圖"
+  },
+  "Title bars": {
+    "Title bars": "標題列"
+  },
+  "Today": {
+    "Today": "今天"
+  },
+  "Toggle sidebar": {
+    "Toggle sidebar": "切換側邊欄"
+  },
+  "Trash": {
+    "Trash": "垃圾桶"
+  },
+  "Trash is empty": {
+    "Trash is empty": "垃圾桶是空的"
+  },
+  "Trust and run": {
+    "Trust and run": "信任並執行"
+  },
+  "Try again": {
+    "Try again": "重試"
+  },
+  "Type": {
+    "Type": "類型"
+  },
+  "Type a location": {
+    "Type a location": "輸入位置"
+  },
+  "Typing in the file list": {
+    "Typing in the file list": "在檔案清單中輸入"
+  },
+  "Typography": {
+    "Typography": "字型排版"
+  },
+  "Unavailable until its drive is mounted": {
+    "Unavailable until its drive is mounted": ""
+  },
+  "Under 1 MB": {
+    "Under 1 MB": "小於 1 MB"
+  },
+  "Undo": {
+    "Undo": "復原"
+  },
+  "Undone": {
+    "Undone": "已復原"
+  },
+  "Unknown": {
+    "Unknown": "未知"
+  },
+  "Unlock": {
+    "Unlock": "解鎖"
+  },
+  "Unmount": {
+    "Unmount": "卸載"
+  },
+  "Unpacks into a folder beside it.": {
+    "Unpacks into a folder beside it.": "解壓縮到旁邊的資料夾中。"
+  },
+  "Untitled document": {
+    "Untitled document": "未命名文件"
+  },
+  "Untitled folder": {
+    "Untitled folder": "未命名資料夾"
+  },
+  "Use Dux Files for open and save dialogs": {
+    "Use Dux Files for open and save dialogs": "使用 Dux Files 處理開啟與儲存對話框"
+  },
+  "Use a bundled color palette.": {
+    "Use a bundled color palette.": "使用內建調色盤。"
+  },
+  "Use these settings for all folders": {
+    "Use these settings for all folders": "對所有資料夾使用這些設定"
+  },
+  "Use this folder": {
+    "Use this folder": "使用此資料夾"
+  },
+  "Username": {
+    "Username": "使用者名稱"
+  },
+  "Using Dux Shell dynamic colors.": {
+    "Using Dux Shell dynamic colors.": "正在使用 Dux Shell 動態色彩。"
+  },
+  "Version": {
+    "Version": "版本"
+  },
+  "Version and capabilities": {
+    "Version and capabilities": "版本與功能"
+  },
+  "Video": {
+    "Video": "影片"
+  },
+  "View": {
+    "View": "檢視"
+  },
+  "Views, sorting and defaults": {
+    "Views, sorting and defaults": "檢視、排序與預設值"
+  },
+  "Vim keys": {
+    "Vim keys": "Vim 鍵位"
+  },
+  "Waiting": {
+    "Waiting": "等待中"
+  },
+  "Weight": {
+    "Weight": "字重"
+  },
+  "Where the launcher keeps the games.": {
+    "Where the launcher keeps the games.": ""
+  },
+  "Window": {
+    "Window": "視窗"
+  },
+  "Windows": {
+    "Windows": "視窗"
+  },
+  "Working": {
+    "Working": "正在處理"
+  },
+  "Write": {
+    "Write": "寫入"
+  },
+  "Wrong password": {
+    "Wrong password": "密碼錯誤"
+  },
+  "Zoom in": {
+    "Zoom in": ""
+  },
+  "Zoom out": {
+    "Zoom out": ""
+  },
+  "accessibility animation disable": {
+    "accessibility animation disable": "無障礙 動畫 停用"
+  },
+  "animation click feedback": {
+    "animation click feedback": "動畫 點擊 回饋"
+  },
+  "animation speed motion": {
+    "animation speed motion": "動畫 速度 動態效果"
+  },
+  "bounce animation motion": {
+    "bounce animation motion": "彈跳 動畫 動態效果"
+  },
+  "capability available sandbox": {
+    "capability available sandbox": "功能 可用 沙箱"
+  },
+  "config folder launcher wine prefix": {
+    "config folder launcher wine prefix": ""
+  },
+  "console emulator shell command line": {
+    "console emulator shell command line": "主控台 終端機 命令 命令列"
+  },
+  "corners rounding shape square": {
+    "corners rounding shape square": "圓角 形狀 直角"
+  },
+  "custom theme json file": {
+    "custom theme json file": "自訂 主題 json 檔案"
+  },
+  "daemon connected offline socket": {
+    "daemon connected offline socket": "常駐程式 已連線 離線 通訊端"
+  },
+  "daemon path unix": {
+    "daemon path unix": "常駐程式 路徑 unix"
+  },
+  "daemon protocol": {
+    "daemon protocol": "常駐程式 協定"
+  },
+  "daemon release build": {
+    "daemon release build": "常駐程式 發行 建置"
+  },
+  "dark": {
+    "dark": "深色"
+  },
+  "decorations csd window header": {
+    "decorations csd window header": "視窗裝飾 csd 標題列"
+  },
+  "default file manager dbus reveal": {
+    "default file manager dbus reveal": "預設 檔案管理員 dbus 顯示"
+  },
+  "delete confirmation prompt": {
+    "delete confirmation prompt": "刪除 確認 提示"
+  },
+  "directories first sort": {
+    "directories first sort": "資料夾優先 排序"
+  },
+  "documentation help manual": {
+    "documentation help manual": "文件 說明 手冊"
+  },
+  "dotfiles invisible": {
+    "dotfiles invisible": "隱藏檔案 不可見"
+  },
+  "drag drop copy move ask default action": {
+    "drag drop copy move ask default action": "拖放 複製 移動 詢問 預設動作"
+  },
+  "flatpak app id": {
+    "flatpak app id": "flatpak 應用程式 id"
+  },
+  "focus ring width outline": {
+    "focus ring width outline": "焦點環 寬度 外框"
+  },
+  "folder memory per-folder remember": {
+    "folder memory per-folder remember": "資料夾記憶 依資料夾 記住"
+  },
+  "font bold typography": {
+    "font bold typography": "字型 粗體 排版"
+  },
+  "font family typeface dms system qt": {
+    "font family typeface dms system qt": ""
+  },
+  "font size text zoom typography": {
+    "font size text zoom typography": "字型大小 文字 縮放 排版"
+  },
+  "font typeface": {
+    "font typeface": ""
+  },
+  "font typeface code mono": {
+    "font typeface code mono": ""
+  },
+  "font typeface headline title": {
+    "font typeface headline title": ""
+  },
+  "games library steamapps common": {
+    "games library steamapps common": ""
+  },
+  "h j k l move, / searches and letters run commands instead of jumping to a name.": {
+    "h j k l move, / searches and letters run commands instead of jumping to a name.": "h j k l 移動，/ 搜尋，字母執行命令而非跳至名稱。"
+  },
+  "h j k l move, / searches.": {
+    "h j k l move, / searches.": "h j k l 移動，/ 搜尋。"
+  },
+  "heroic epic gog amazon": {
+    "heroic epic gog amazon": ""
+  },
+  "history recently used opened sidebar": {
+    "history recently used opened sidebar": "歷程 最近使用 已開啟 側邊欄"
+  },
+  "hjkl keyboard navigation modal": {
+    "hjkl keyboard navigation modal": "hjkl 鍵盤 導覽 模態"
+  },
+  "internal drives udisks home boot": {
+    "internal drives udisks home boot": "內部磁碟機 udisks 主目錄 開機"
+  },
+  "keyboard outline accessibility": {
+    "keyboard outline accessibility": "鍵盤 外框 無障礙"
+  },
+  "keys bindings hotkeys F1": {
+    "keys bindings hotkeys F1": "按鍵 繫結 快速鍵 F1"
+  },
+  "light": {
+    "light": "淺色"
+  },
+  "light dark mode system color scheme": {
+    "light dark mode system color scheme": "淺色 深色 模式 系統 色彩配置"
+  },
+  "list grid columns icons tiles": {
+    "list grid columns icons tiles": "清單 格狀 欄 圖示 磚塊"
+  },
+  "locale translation interface": {
+    "locale translation interface": "地區設定 翻譯 介面"
+  },
+  "lutris wine prefix": {
+    "lutris wine prefix": ""
+  },
+  "mount usb removable sidebar": {
+    "mount usb removable sidebar": "掛載 usb 可移除 側邊欄"
+  },
+  "order direction ascending reverse": {
+    "order direction ascending reverse": "順序 方向 遞增 反轉"
+  },
+  "order name size modified type date": {
+    "order name size modified type date": "排序 名稱 大小 修改 類型 日期"
+  },
+  "palette dms preset custom accent": {
+    "palette dms preset custom accent": "調色盤 dms 預設 自訂 強調色"
+  },
+  "portal file chooser picker xdg": {
+    "portal file chooser picker xdg": "入口 檔案選擇器 選擇器 xdg"
+  },
+  "preset palette swatch colors": {
+    "preset palette swatch colors": "預設 調色盤 色票 色彩"
+  },
+  "previews images video pdf": {
+    "previews images video pdf": "預覽 圖片 影片 pdf"
+  },
+  "quit exit hide daemon keep running": {
+    "quit exit hide daemon keep running": "結束 隱藏 常駐程式 保持執行"
+  },
+  "remote sftp smb previews": {
+    "remote sftp smb previews": "遠端 sftp smb 預覽"
+  },
+  "reset clear per-folder memory": {
+    "reset clear per-folder memory": "重設 清除 依資料夾 記憶"
+  },
+  "search dotfiles recursive": {
+    "search dotfiles recursive": "搜尋 隱藏檔案 遞迴"
+  },
+  "search exclude ignore": {
+    "search exclude ignore": "搜尋 排除 忽略"
+  },
+  "single double click activate": {
+    "single double click activate": "按一下 按兩下 啟用"
+  },
+  "size column entries": {
+    "size column entries": "大小 欄 項目數"
+  },
+  "source code repository issues": {
+    "source code repository issues": "原始碼 儲存庫 問題"
+  },
+  "steam heroic lutris proton games sidebar hide": {
+    "steam heroic lutris proton games sidebar hide": ""
+  },
+  "steam proton valve": {
+    "steam proton valve": ""
+  },
+  "suffix type filename": {
+    "suffix type filename": ""
+  },
+  "tabs external open location": {
+    "tabs external open location": "分頁 外部 開啟 位置"
+  },
+  "thumbnail size limit cap megabytes": {
+    "thumbnail size limit cap megabytes": "縮圖 大小 限制 上限 百萬位元組"
+  },
+  "type-ahead jump filter search keyboard": {
+    "type-ahead jump filter search keyboard": "輸入即跳 跳至 篩選 搜尋 鍵盤"
+  },
+  "wine prefix proton compatdata": {
+    "wine prefix proton compatdata": ""
+  },
+  "xdg-desktop-portal": {
+    "xdg-desktop-portal": "xdg-desktop-portal"
+  },
+  "zip tar unpack compressed": {
+    "zip tar unpack compressed": "zip tar 解壓縮 壓縮"
+  },
+  "zoom rows": {
+    "zoom rows": "縮放 列"
+  },
+  "zoom thumbnails tiles": {
+    "zoom thumbnails tiles": "縮放 縮圖 磚塊"
+  }
+}
