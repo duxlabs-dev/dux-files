@@ -390,6 +390,16 @@ Singleton {
         return Shape.buttonRadius(width, height, sizeHeight, pressed, round, shapeScale);
     }
 
+    readonly property int densityLevel: {
+        switch (SettingsData.density) {
+        case "spacious":
+            return 1;
+        case "compact":
+            return -1;
+        default:
+            return 0;
+        }
+    }
     readonly property real groupedListGap: spacingXXS
     readonly property real groupedListInnerRadius: cornerRadiusXS
     readonly property real groupedListOuterRadius: cornerRadiusL

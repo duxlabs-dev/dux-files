@@ -55,6 +55,21 @@ Item {
         }
     ]
 
+    readonly property var densityOptions: [
+        {
+            label: I18n.tr("Spacious", "interface density option with the most room between items"),
+            value: "spacious"
+        },
+        {
+            label: I18n.tr("Comfortable", "interface density option with the default spacing"),
+            value: "comfortable"
+        },
+        {
+            label: I18n.tr("Compact", "interface density option fitting the most items on screen"),
+            value: "compact"
+        }
+    ]
+
     readonly property var viewOptions: [
         {
             label: I18n.tr("List view", "view mode showing one row per item"),
@@ -950,6 +965,18 @@ Item {
                     maximum: 100
                     unit: ""
                     onSliderValueChanged: newValue => SettingsData.radiusStrength = newValue
+                }
+            }
+
+            SettingsCard {
+                title: I18n.tr("Density", "appearance settings section label")
+
+                OptionGroupRow {
+                    text: I18n.tr("Interface density", "interface density setting label")
+                    keywords: I18n.tr("density compact spacious comfortable spacing padding rows", "settings search keywords, space separated, add synonyms in your language")
+                    optionList: root.densityOptions
+                    current: SettingsData.density
+                    onPicked: value => SettingsData.density = value
                 }
             }
 

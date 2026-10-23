@@ -53,6 +53,7 @@ Singleton {
     property alias presetTheme: adapter.presetTheme
     property alias customThemeFile: adapter.customThemeFile
     property alias radiusStrength: adapter.radiusStrength
+    property alias density: adapter.density
     property alias animationDuration: adapter.animationDuration
     property alias reduceMotion: adapter.reduceMotion
     property alias springBounce: adapter.springBounce
@@ -165,6 +166,7 @@ Singleton {
             property string presetTheme: "purple"
             property string customThemeFile: ""
             property int radiusStrength: 50
+            property string density: "comfortable"
             property int animationDuration: 250
             property bool reduceMotion: false
             property int springBounce: 1
