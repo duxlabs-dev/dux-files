@@ -46,6 +46,17 @@ func (s *Service) Apps() []*Entry {
 	return out
 }
 
+func shown(entries []*Entry, defaultID string) []*Entry {
+	var out []*Entry
+	for _, entry := range entries {
+		if entry.NoDisplay && entry.ID != defaultID {
+			continue
+		}
+		out = append(out, entry)
+	}
+	return out
+}
+
 func (s *Service) MimeOf(path string) (string, error) {
 	info, err := os.Stat(path)
 	if err != nil {

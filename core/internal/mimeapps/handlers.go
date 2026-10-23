@@ -141,7 +141,7 @@ func (s *Service) handleForMime(w *ipc.ConnWriter, req ipc.Request) {
 	w.Respond(req.ID, appsResult{
 		MimeType:  mimeType,
 		DefaultID: defaultID,
-		Apps:      viewsOf(s.Associations(mimeType), defaultID),
+		Apps:      viewsOf(shown(s.Associations(mimeType), defaultID), defaultID),
 	})
 }
 

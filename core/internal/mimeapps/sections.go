@@ -104,8 +104,8 @@ func (s *Service) Sections(mimeTypes []string) Sections {
 		out.DefaultID = preferred
 	}
 
-	recommended := s.Associations(types[0])
-	recent := s.RecentFor(types[0])
+	recommended := shown(s.Associations(types[0]), out.DefaultID)
+	recent := shown(s.RecentFor(types[0]), out.DefaultID)
 	for _, mimeType := range types[1:] {
 		recommended = intersectEntries(recommended, s.Associations(mimeType))
 		recent = intersectEntries(recent, s.RecentFor(mimeType))

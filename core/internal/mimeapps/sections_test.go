@@ -54,6 +54,17 @@ func TestRecordUseDoesNotOverrideAnExplicitDefault(t *testing.T) {
 	assert.Equal(t, []string{"viewer.desktop"}, idsOf(svc.RecentFor("image/jpeg")))
 }
 
+func TestSectionsHideNoDisplayUnlessDefault(t *testing.T) {
+	svc, root := fixture(t)
+	assert.NotContains(t, idsOf(svc.Sections([]string{"text/markdown"}).Recommended), "background.desktop")
+
+	path := filepath.Join(root, "xdg", "config", "mimeapps.list")
+	require.NoError(t, os.WriteFile(path, []byte("[Default Applications]\ntext/markdown=background.desktop\n"), 0o644))
+	sections := svc.Sections([]string{"text/markdown"})
+	assert.Equal(t, "background.desktop", sections.DefaultID)
+	assert.Contains(t, idsOf(sections.Recommended), "background.desktop", "the configured default stays visible")
+}
+
 func TestSectionsHideSelfEvenAsDefault(t *testing.T) {
 	svc, root := fixture(t)
 	addApp(t, root, selfDesktopID, "inode/directory;")
