@@ -12,7 +12,7 @@ Item {
 
     property int propertiesRequest: 0
 
-    readonly property bool anyOpen: conflictDialog.visible || errorDialog.visible || archivePasswordDialog.visible || confirmDialog.visible || openConfirmDialog.visible || openWithDialog.visible || executableDialog.visible || trustDialog.visible || unlockDialog.visible || connectDialog.visible || credentialDialog.visible || propertiesDialog.visible || shortcutsOverlay.visible || compressDialog.visible || renameBookmarkDialog.visible || trashConfirmDialog.visible || emptyTrashDialog.visible || clearRecentDialog.visible || (extractPickerLoader.item?.visible ?? false) || (transferPickerLoader.item?.visible ?? false)
+    readonly property bool anyOpen: conflictDialog.visible || errorDialog.visible || archivePasswordDialog.visible || confirmDialog.visible || openConfirmDialog.visible || openWithDialog.visible || executableDialog.visible || trustDialog.visible || unlockDialog.visible || connectDialog.visible || credentialDialog.visible || propertiesDialog.visible || appearanceDialog.visible || shortcutsOverlay.visible || compressDialog.visible || renameBookmarkDialog.visible || trashConfirmDialog.visible || emptyTrashDialog.visible || clearRecentDialog.visible || (extractPickerLoader.item?.visible ?? false) || (transferPickerLoader.item?.visible ?? false)
 
     function openSettings() {
         settingsLoader.active = true;
@@ -34,6 +34,12 @@ Item {
 
     function showProperties(entries) {
         propertiesDialog.show(entries);
+    }
+
+    function showAppearance(entries) {
+        const folder = entries.find(entry => entry.isDir);
+        if (folder)
+            appearanceDialog.show(folder);
     }
 
     function showPropertiesFor(paths) {
@@ -166,6 +172,32 @@ Item {
         id: propertiesDialog
 
         onRenameRequested: (target, name) => FileOpsService.rename(target, name, dialogs.mainWindow.opScope)
+    }
+
+    FolderAppearanceDialog {
+        id: appearanceDialog
+
+        onBrowseRequested: {
+            badgePickerLoader.active = true;
+            badgePickerLoader.item.open();
+        }
+    }
+
+    LazyLoader {
+        id: badgePickerLoader
+
+        active: false
+
+        FileBrowserModal {
+            parentModal: dialogs.mainWindow
+            browserTitle: I18n.tr("Choose a badge image", "file picker title for a folder badge image")
+            bucket: "badge"
+            filters: ["*.svg", "*.png", "*.jpg", "*.jpeg", "*.webp"]
+            onAccepted: paths => appearanceDialog.apply({
+                    "emblem": paths[0],
+                    "icon": ""
+                })
+        }
     }
 
     ShortcutsOverlay {

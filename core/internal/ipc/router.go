@@ -85,6 +85,8 @@ func Route(ctx context.Context, w *ConnWriter, req Request, deps Deps) {
 		HandlePreview(ctx, w, req)
 	case req.Method == "files.imageSize":
 		HandleImageSize(ctx, w, req)
+	case req.Method == "files.iconCatalog":
+		HandleIconCatalog(ctx, w, req)
 	case strings.HasPrefix(req.Method, "files."):
 		if deps.Files == nil {
 			w.RespondError(req.ID, "file service unavailable")

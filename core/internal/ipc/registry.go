@@ -46,6 +46,7 @@ var Methods = []MethodSpec{
 	{Name: "files.thumbnail", Group: "files", Desc: "Thumbnail cache paths, generating what is missing", Params: []ParamSpec{req("paths", "absolute file paths"), opt("size", "normal|large|x-large|xx-large"), opt("watchId", "deliver late results on this watch topic")}},
 	{Name: "files.userDirs", Group: "files", Desc: "XDG user directories, home first"},
 	{Name: "files.icon", Group: "files", Desc: "Icon name ladders for paths or mime types", Params: []ParamSpec{opt("paths", "absolute paths"), opt("mimes", "mime types")}},
+	{Name: "files.iconCatalog", Group: "files", Desc: "Installed icon names a folder badge or icon can use"},
 	{Name: "files.size", Group: "files", Desc: "Scan paths recursively, streaming totals on the sizes topic", Params: []ParamSpec{req("paths", "absolute paths")}},
 	{Name: "files.sizeCancel", Group: "files", Desc: "Stop a running recursive scan", Params: []ParamSpec{req("scanId", "id from files.size")}},
 	{Name: "files.mkdir", Group: "files", Desc: "Create a directory whose parent exists, without undo", Params: []ParamSpec{req("path", "absolute path of the new directory")}},

@@ -266,6 +266,13 @@ FileMenu {
             "enabled": selectionCount > 0
         },
         {
+            "id": "customizeFolder",
+            "icon": "palette",
+            "label": I18n.tr("Folder appearance", "context menu entry opening the folder appearance dialog"),
+            "enabled": selectionCount === 1 && hasDirectory,
+            "visible": selectionCount === 1 && hasDirectory && !crossFolder
+        },
+        {
             "id": "properties",
             "icon": "info",
             "label": I18n.tr("Properties", "menu entry showing details about the current folder"),
