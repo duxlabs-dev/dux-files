@@ -19,10 +19,10 @@ FilePlaceSection {
     readonly property var shown: visibleGroups()
 
     readonly property var launchers: ({
-        "steam": SettingsData.showSteamGames,
-        "heroic": SettingsData.showHeroicGames,
-        "lutris": SettingsData.showLutrisGames
-    })
+            "steam": SettingsData.showSteamGames,
+            "heroic": SettingsData.showHeroicGames,
+            "lutris": SettingsData.showLutrisGames
+        })
 
     function showsLauncher(key) {
         return launchers[key] !== false;
@@ -117,10 +117,9 @@ FilePlaceSection {
             FilePlaceRow {
                 label: section.groupTitle(group.modelData.key)
                 glyph: "sports_esports"
-                actionIcon: section.expanded(group.modelData.key) ? "expand_less" : "expand_more"
-                actionTooltip: section.expanded(group.modelData.key) ? I18n.tr("Collapse", "games sidebar action hiding a launcher's folders") : I18n.tr("Expand", "games sidebar action showing a launcher's folders")
+                expandable: true
+                expanded: section.expanded(group.modelData.key)
                 onClicked: section.toggle(group.modelData.key)
-                onActionTriggered: section.toggle(group.modelData.key)
             }
 
             Repeater {

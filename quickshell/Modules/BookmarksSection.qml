@@ -67,7 +67,7 @@ FilePlaceSection {
 
         width: section.width
         model: section.bookmarks
-        spacing: Theme.spacingXXS
+        spacing: FileBrowserMetrics.sidebarRowGap
         onReordered: indices => BookmarksService.reorder(section.fullOrder(indices.map(index => section.bookmarks[index].path)))
 
         delegate: FilePlaceRow {
