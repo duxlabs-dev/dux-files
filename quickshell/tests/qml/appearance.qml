@@ -6,6 +6,7 @@ import qs.Common
 import qs.Services
 import qs.DCommon.Common as DC
 import qs.Modules
+import qs.DCommon.FileBrowser
 
 ShellRoot {
     id: fixture
@@ -39,6 +40,19 @@ ShellRoot {
 
     FolderAppearanceDialog {
         id: dialog
+    }
+
+    FileIcon {
+        id: customIcon
+
+        iconName: "folder"
+        iconOverride: "folder-icon-that-no-theme-has"
+    }
+
+    FileIcon {
+        id: plainIcon
+
+        iconName: "folder"
     }
 
     Component.onCompleted: {
@@ -80,6 +94,8 @@ ShellRoot {
             "emblem": "https://example.com/logo.png"
         });
         FolderAppearances.reset("/tmp/looks");
+
+        check("an icon the theme lacks falls back to the base name", [customIcon.themeIconPath !== "", customIcon.themeIconPath], [true, plainIcon.themeIconPath]);
 
         finish();
     }

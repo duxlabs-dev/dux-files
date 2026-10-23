@@ -18,9 +18,10 @@ type Catalog struct {
 }
 
 const (
-	maxNames  = 1500
-	badgeDirs = "emblems,apps"
-	iconDirs  = "places"
+	maxNames      = 1500
+	minFolderSize = 48
+	badgeDirs     = "emblems,apps"
+	iconDirs      = "places"
 )
 
 // Roots lists the icon theme directories XDG points at.
@@ -143,11 +144,26 @@ func walk(dir, families string, badges, icons map[string]bool) {
 		if badges != nil && len(badges) < maxNames {
 			badges[icon] = true
 		}
-		if icons != nil && strings.HasPrefix(icon, "folder") && len(icons) < maxNames {
+		if icons != nil && strings.HasPrefix(icon, "folder") && isLarge(path) && len(icons) < maxNames {
 			icons[icon] = true
 		}
 		return nil
 	})
+}
+
+// isLarge reports whether an icon file is scalable or at least minFolderSize,
+// which tells a drawn folder from a small symbol.
+func isLarge(path string) bool {
+	for _, part := range strings.Split(filepath.ToSlash(path), "/") {
+		size, _, _ := strings.Cut(strings.Split(part, "@")[0], "x")
+		switch number, err := strconv.Atoi(size); {
+		case part == "scalable":
+			return true
+		case err == nil && number >= minFolderSize:
+			return true
+		}
+	}
+	return false
 }
 
 // isFamily reports whether a directory holds a wanted icon family or its sizes.
@@ -155,8 +171,10 @@ func isFamily(dir, families string) bool {
 	if dir == "scalable" || dir == "symbolic" {
 		return true
 	}
-	if _, err := strconv.Atoi(dir); err == nil {
-		return true
+	if size, _, _ := strings.Cut(dir, "x"); size != "" {
+		if _, err := strconv.Atoi(size); err == nil {
+			return true
+		}
 	}
 	for _, name := range strings.Split(families, ",") {
 		if dir == name {

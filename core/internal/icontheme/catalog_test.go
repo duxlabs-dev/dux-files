@@ -47,7 +47,7 @@ func TestScanDropsThePurposeVariantsOfAFolderFamily(t *testing.T) {
 
 func TestScanReadsOnlyTheConfiguredTheme(t *testing.T) {
 	root := t.TempDir()
-	icon(t, root, "Paper", "places", "folder.svg")
+	icon(t, root, "Paper", "places/scalable", "folder.svg")
 	icon(t, root, "Adwaita", "apps", "firefox.svg")
 
 	catalog := Scan([]string{root}, "Paper")
@@ -68,8 +68,8 @@ func TestScanFallsBackToEveryThemeWhenTheSelectionIsGone(t *testing.T) {
 
 func TestScanSkipsWhatItCannotName(t *testing.T) {
 	root := t.TempDir()
-	icon(t, root, "Paper", "places", "folder.ico")
-	icon(t, root, "Paper", "places", "folder red.svg")
+	icon(t, root, "Paper", "places/scalable", "folder.ico")
+	icon(t, root, "Paper", "places/scalable", "folder red.svg")
 
 	catalog := Scan([]string{root}, "Paper")
 
@@ -115,4 +115,34 @@ func TestRootsFollowsXDGOrder(t *testing.T) {
 		"/usr/local/share/icons",
 		"/usr/share/icons",
 	}, roots)
+}
+
+func TestScanKeepsOnlyFoldersDrawnAtALargeSize(t *testing.T) {
+	root := t.TempDir()
+	icon(t, root, "Paper", "places/scalable", "folder-blue.svg")
+	icon(t, root, "Paper", "places/48", "folder-green.svg")
+	icon(t, root, "Paper", "places/64@2x", "folder-red.png")
+	icon(t, root, "Paper", "places/48x48", "folder-teal.png")
+	icon(t, root, "Paper", "places/16", "folder-apple.svg")
+	icon(t, root, "Paper", "places/22", "folder-new.svg")
+	icon(t, root, "Paper", "places/24x24", "folder-add.png")
+
+	catalog := Scan([]string{root}, "Paper")
+
+	assert.Equal(t, []string{"folder-blue", "folder-green", "folder-red", "folder-teal"}, catalog.Icons)
+}
+
+func TestScanKeepsAFolderThatHasASmallAndALargeFile(t *testing.T) {
+	root := t.TempDir()
+	icon(t, root, "Paper", "places/16", "folder-book.svg")
+	icon(t, root, "Paper", "places/scalable", "folder-book.svg")
+
+	assert.Equal(t, []string{"folder-book"}, Scan([]string{root}, "Paper").Icons)
+}
+
+func TestSmallSizesDoNotFilterBadges(t *testing.T) {
+	root := t.TempDir()
+	icon(t, root, "Paper", "apps/16", "steam.svg")
+
+	assert.Equal(t, []string{"steam"}, Scan([]string{root}, "Paper").Badges)
 }
