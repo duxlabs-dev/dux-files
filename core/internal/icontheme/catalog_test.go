@@ -146,3 +146,15 @@ func TestSmallSizesDoNotFilterBadges(t *testing.T) {
 
 	assert.Equal(t, []string{"steam"}, Scan([]string{root}, "Paper").Badges)
 }
+
+func TestInstalledListsAThemeOnceAcrossRoots(t *testing.T) {
+	first, second := t.TempDir(), t.TempDir()
+	for _, root := range []string{first, second} {
+		for _, theme := range []string{"Adwaita", "hicolor"} {
+			require.NoError(t, os.MkdirAll(filepath.Join(root, theme), 0o755))
+		}
+	}
+	require.NoError(t, os.MkdirAll(filepath.Join(second, "Paper"), 0o755))
+
+	assert.Equal(t, []string{"Adwaita", "hicolor", "Paper"}, installed([]string{first, second}))
+}

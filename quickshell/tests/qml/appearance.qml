@@ -7,6 +7,7 @@ import qs.Services
 import qs.DCommon.Common as DC
 import qs.Modules
 import qs.DCommon.FileBrowser
+import qs.DCommon.Widgets
 
 ShellRoot {
     id: fixture
@@ -40,6 +41,20 @@ ShellRoot {
 
     FolderAppearanceDialog {
         id: dialog
+    }
+
+    DGridView {
+        id: iconGrid
+
+        width: 256
+        height: 128
+        cellWidth: 64
+        cellHeight: 64
+        model: 40
+        delegate: Item {
+            width: 56
+            height: 56
+        }
     }
 
     FileIcon {
@@ -96,6 +111,9 @@ ShellRoot {
         FolderAppearances.reset("/tmp/looks");
 
         check("an icon the theme lacks falls back to the base name", [customIcon.themeIconPath !== "", customIcon.themeIconPath], [true, plainIcon.themeIconPath]);
+
+        iconGrid.contentY = iconGrid.maximumContentY;
+        check("the icon grid can scroll past its first rows", [iconGrid.contentHeight > iconGrid.height, iconGrid.contentY > 0], [true, true]);
 
         finish();
     }

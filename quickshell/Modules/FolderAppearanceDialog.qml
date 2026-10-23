@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 import qs.Common
 import qs.DCommon.Widgets
@@ -278,15 +277,13 @@ OverlayDialog {
             }
         }
 
-        GridView {
+        DGridView {
             Layout.fillWidth: true
             Layout.preferredHeight: 280
             clip: true
             cellWidth: 64
             cellHeight: 64
             model: root.shown
-
-            ScrollBar.vertical: ScrollBar {}
 
             delegate: Rectangle {
                 required property string modelData

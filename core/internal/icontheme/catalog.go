@@ -101,6 +101,7 @@ func Scan(roots []string, theme string) Catalog {
 }
 
 func installed(roots []string) []string {
+	seen := map[string]bool{}
 	names := []string{}
 	for _, root := range roots {
 		entries, err := os.ReadDir(root)
@@ -108,7 +109,8 @@ func installed(roots []string) []string {
 			continue
 		}
 		for _, entry := range entries {
-			if entry.IsDir() {
+			if entry.IsDir() && !seen[entry.Name()] {
+				seen[entry.Name()] = true
 				names = append(names, entry.Name())
 			}
 		}
