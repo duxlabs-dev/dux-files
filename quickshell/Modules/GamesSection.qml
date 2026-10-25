@@ -122,22 +122,46 @@ FilePlaceSection {
                 onClicked: section.toggle(group.modelData.key)
             }
 
-            Repeater {
-                model: section.expanded(group.modelData.key) ? group.modelData.places : []
+            Item {
+                id: placesBox
 
-                FilePlaceRow {
-                    required property var modelData
+                width: group.width
+                height: section.expanded(group.modelData.key) ? placesList.height : 0
+                clip: true
 
-                    label: section.placeTitle(modelData)
-                    iconName: "folder"
-                    enabled: !modelData.missing
-                    tooltipText: modelData.missing ? I18n.tr("Unavailable until its drive is mounted", "games sidebar row for a library on a drive that is not mounted") : modelData.path
-                    selected: !modelData.missing && section.currentPath === modelData.path
-                    dropPath: modelData.missing ? "" : modelData.path
-                    onClicked: section.navigateRequested(modelData.path)
-                    onMiddleClicked: section.tabRequested(modelData.path)
-                    onDropped: drop => section.dropRequested(modelData.path, drop)
-                    onSpringLoaded: section.navigateRequested(modelData.path)
+                Behavior on height {
+                    enabled: Theme.animationsEnabled
+                    NumberAnimation {
+                        duration: Theme.expressiveDurations.expressiveFastSpatial
+                        easing.bezierCurve: Theme.expressiveCurves.expressiveDefaultSpatial
+                    }
+                }
+
+                Column {
+                    id: placesList
+
+                    width: placesBox.width
+                    spacing: FileBrowserMetrics.sidebarRowGap
+
+                    Repeater {
+                        model: group.modelData.places
+
+                        FilePlaceRow {
+                            required property var modelData
+
+                            visible: section.expanded(group.modelData.key)
+                            label: section.placeTitle(modelData)
+                            iconName: "folder"
+                            enabled: !modelData.missing
+                            tooltipText: modelData.missing ? I18n.tr("Unavailable until its drive is mounted", "games sidebar row for a library on a drive that is not mounted") : modelData.path
+                            selected: !modelData.missing && section.currentPath === modelData.path
+                            dropPath: modelData.missing ? "" : modelData.path
+                            onClicked: section.navigateRequested(modelData.path)
+                            onMiddleClicked: section.tabRequested(modelData.path)
+                            onDropped: drop => section.dropRequested(modelData.path, drop)
+                            onSpringLoaded: section.navigateRequested(modelData.path)
+                        }
+                    }
                 }
             }
         }
