@@ -1059,6 +1059,14 @@ Item {
                     checked: SettingsData.windowTitleBars
                     onToggled: checked => SettingsData.windowTitleBars = checked
                 }
+
+                SettingsToggleRow {
+                    text: I18n.tr("Window header", "toggle label for the window title and buttons")
+                    keywords: I18n.tr("title bar header hide decorations", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("Hides the title and the window buttons, leaving a thin strip to drag the window.", "window header toggle description")
+                    checked: SettingsData.showTitleBar
+                    onToggled: checked => SettingsData.showTitleBar = checked
+                }
             }
 
             SettingsCard {

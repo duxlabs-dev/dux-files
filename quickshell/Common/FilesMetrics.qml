@@ -35,6 +35,7 @@ Singleton {
     readonly property int closedTabHistory: 10
     readonly property int defaultGridZoom: FileBrowserMetrics.defaultGridZoom
     readonly property int defaultListZoom: FileBrowserMetrics.defaultListZoom
+    readonly property int defaultColumnZoom: FileBrowserMetrics.defaultColumnZoom
 
     function defaultZoom(viewMode) {
         return FileBrowserMetrics.defaultZoom(viewMode);

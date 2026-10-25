@@ -358,6 +358,11 @@ FocusScope {
             SessionData.gridZoom = level;
             return;
         }
+        if (mode === "columns") {
+            SessionData.columnZoom = level;
+            SessionData.columnPaneWidth = 0;
+            return;
+        }
         SessionData.listZoom = level;
     }
 
@@ -498,6 +503,8 @@ FocusScope {
         viewMode: pane.viewMode
         gridZoom: SessionData.gridZoom
         listZoom: SessionData.listZoom
+        columnZoom: SessionData.columnZoom
+        columnPaneWidth: SessionData.columnPaneWidth
         listColumns: SessionData.listColumns
         columnWidths: SessionData.columnWidths
         dragEnabled: pane.dragEnabled
@@ -550,6 +557,7 @@ FocusScope {
         onSortRequested: key => pane.sortRequested(key)
         onZoomRequested: (mode, level) => pane.setZoom(mode, level)
         onColumnResizeRequested: (id, width) => pane.setColumnWidth(id, width)
+        onColumnPaneResizeRequested: width => SessionData.columnPaneWidth = width
         onPreviewToggleRequested: pane.previewToggleRequested()
         onPreviewResized: width => pane.setPreviewWidth(width)
         onFocusRequested: pane.focusRequested()
