@@ -17,6 +17,7 @@ type LaunchOptions struct {
 	WorkingDir      string
 	ActivationToken string
 	Terminal        string
+	Opener          string
 }
 
 func (s *Service) Launch(entry *Entry, opts LaunchOptions) error {

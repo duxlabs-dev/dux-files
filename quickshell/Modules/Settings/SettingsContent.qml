@@ -133,6 +133,17 @@ Item {
         }
     ]
 
+    readonly property var openerOptions: [
+        {
+            label: I18n.tr("Default application", "opener dropdown option launching the app registered for the file type"),
+            value: ""
+        },
+        {
+            label: "xdg-open",
+            value: "xdg-open"
+        }
+    ]
+
     readonly property var terminalOptions: [
         {
             label: I18n.tr("Automatic", "terminal dropdown option following $TERMINAL and the installed emulators"),
@@ -1151,6 +1162,19 @@ Item {
                     optionList: root.terminalOptions
                     current: SettingsData.terminal
                     onPicked: value => SettingsData.terminal = value
+                }
+            }
+
+            SettingsCard {
+                title: I18n.tr("Open files", "behaviour settings section label for the file opener")
+
+                OptionDropdownRow {
+                    text: I18n.tr("Open files with", "file opener setting label")
+                    keywords: I18n.tr("xdg-open handlr mimeo opener default application launch", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("xdg-open follows the handler on your PATH.", "file opener setting description")
+                    optionList: root.openerOptions
+                    current: SettingsData.opener
+                    onPicked: value => SettingsData.opener = value
                 }
             }
 

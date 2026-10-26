@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 
@@ -260,4 +261,35 @@ func TestLaunchesLeaveASystemdUnitsCgroup(t *testing.T) {
 	assert.Equal(t, argv, inOwnScope(argv, terminal, found), "a daemon started from a terminal already lives in that scope")
 	assert.Equal(t, argv, inOwnScope(argv, unit, missing), "without systemd-run the launch goes ahead unwrapped")
 	assert.Equal(t, []string{"missing-app"}, inOwnScope([]string{"missing-app"}, unit, found), "a missing binary still fails at exec instead of inside systemd-run")
+}
+
+func TestOpenDelegatesToTheOpener(t *testing.T) {
+	svc, root := fixture(t)
+
+	marker := filepath.Join(root, "opened")
+	opener := writeFile(t, filepath.Join(root, "bin", "opener"), []byte("#!/bin/sh\necho \"$1 $2\" >> "+marker+"\n"))
+	require.NoError(t, os.Chmod(opener, 0o755))
+	note := writeFile(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
+	disc := writeFile(t, filepath.Join(root, "files", "disc.iso"), []byte("nothing handles this"))
+
+	require.NoError(t, svc.Open(context.Background(), []string{note, disc}, LaunchOptions{Opener: opener + " --quiet"}))
+	require.Eventually(t, func() bool {
+		data, err := os.ReadFile(marker)
+		if err != nil {
+			return false
+		}
+		lines := strings.Split(strings.TrimSpace(string(data)), "\n")
+		slices.Sort(lines)
+		return slices.Equal(lines, []string{"--quiet " + disc, "--quiet " + note})
+	}, waitFor, waitTick, "the opener ran once per path, unregistered types included")
+}
+
+func TestOpenReportsAMissingOpener(t *testing.T) {
+	svc, root := fixture(t)
+	t.Setenv("PATH", root)
+
+	note := writeFile(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
+	err := svc.Open(context.Background(), []string{note}, LaunchOptions{Opener: "no-such-opener"})
+	require.Error(t, err)
+	assert.Equal(t, files.CodeNotFound, files.CodeOf(err))
 }

@@ -70,6 +70,7 @@ Singleton {
     property alias windowTitleBars: adapter.windowTitleBars
     property alias language: adapter.language
     property alias terminal: adapter.terminal
+    property alias opener: adapter.opener
     property alias closeBehavior: adapter.closeBehavior
     property alias openLocationIn: adapter.openLocationIn
     property alias extractOnOpen: adapter.extractOnOpen
@@ -183,6 +184,7 @@ Singleton {
             property bool windowTitleBars: true
             property string language: ""
             property string terminal: ""
+            property string opener: ""
             property string closeBehavior: "quit"
             property string openLocationIn: "current"
             property bool extractOnOpen: true

@@ -72,6 +72,19 @@ ShellRoot {
             "paths": ["/tmp/a.txt"]
         });
 
+        SettingsData.opener = "xdg-open";
+        AppsService.open(["/tmp/a.txt"], null);
+        check("opener preference is passed through", lastSent().params, {
+            "paths": ["/tmp/a.txt"],
+            "opener": "xdg-open"
+        });
+        AppsService.openWith(["/tmp/a.txt"], "editor.desktop", null);
+        check("a chosen app bypasses the opener", lastSent().params, {
+            "paths": ["/tmp/a.txt"],
+            "desktopId": "editor.desktop"
+        });
+        SettingsData.opener = "";
+
         SettingsData.terminal = "ghostty";
         AppsService.openTerminal("/tmp", null);
         check("terminal preference is passed through", lastSent().params, {

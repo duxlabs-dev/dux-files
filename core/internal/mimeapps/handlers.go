@@ -194,6 +194,7 @@ func launchOptions(req ipc.Request) LaunchOptions {
 		WorkingDir:      params.StringOpt(req.Params, "cwd", ""),
 		ActivationToken: params.StringOpt(req.Params, "activationToken", ""),
 		Terminal:        params.StringOpt(req.Params, "terminal", ""),
+		Opener:          params.StringOpt(req.Params, "opener", ""),
 	}
 }
 

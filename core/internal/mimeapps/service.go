@@ -1,10 +1,14 @@
 package mimeapps
 
 import (
+	"cmp"
 	"context"
+	"errors"
 	"fmt"
 	"net/url"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"slices"
 	"sort"
 	"strings"
@@ -69,6 +73,9 @@ func (s *Service) Open(ctx context.Context, paths []string, opts LaunchOptions) 
 	if len(paths) == 0 {
 		return fail(files.CodeInvalid, "no paths given")
 	}
+	if opts.Opener != "" {
+		return s.openViaCommand(paths, opts)
+	}
 	if Sandboxed() {
 		return openViaPortal(ctx, paths, false)
 	}
@@ -90,6 +97,32 @@ func (s *Service) Open(ctx context.Context, paths []string, opts LaunchOptions) 
 	if len(unhandled) > 0 {
 		return fail(files.CodeNotSupported, "no application is registered for %s", strings.Join(unhandled, ", "))
 	}
+	return nil
+}
+
+func (s *Service) openViaCommand(paths []string, opts LaunchOptions) error {
+	command := strings.Fields(opts.Opener)
+	if len(command) == 0 {
+		return fail(files.CodeInvalid, "empty opener command")
+	}
+	for _, path := range paths {
+		dir := cmp.Or(opts.WorkingDir, filepath.Dir(path))
+		argv := append(slices.Clone(command), path)
+		var err error
+		if Sandboxed() {
+			err = hostSpawn(argv, dir)
+		} else {
+			err = spawn(argv, dir, opts.ActivationToken, false)
+		}
+		switch {
+		case err == nil:
+		case errors.Is(err, exec.ErrNotFound):
+			return fail(files.CodeNotFound, "opener %q is not installed", command[0])
+		default:
+			return fail(files.CodeIO, "opener %s: %v", command[0], err)
+		}
+	}
+	s.noteOpened(nil, paths, nil)
 	return nil
 }
 

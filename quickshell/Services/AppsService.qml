@@ -12,9 +12,12 @@ Singleton {
     property var transport: DuxFilesService
 
     function open(paths, callback) {
-        _launch("files.open", {
+        const params = {
             "paths": paths
-        }, callback);
+        };
+        if (SettingsData.opener !== "")
+            params.opener = SettingsData.opener;
+        _launch("files.open", params, callback);
     }
 
     function openWith(paths, desktopId, callback) {
