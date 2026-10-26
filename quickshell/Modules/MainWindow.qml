@@ -469,11 +469,22 @@ FloatingWindow {
             anchors.right: parent.right
             controls: windowControls
             title: window.title
+            visible: SettingsData.showTitleBar
+            height: visible ? implicitHeight : 0
             onCloseRequested: window.requestClose()
 
             JobsButton {
                 anchors.verticalCenter: parent.verticalCenter
             }
+        }
+
+        MouseArea {
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: Theme.spacingS
+            visible: !SettingsData.showTitleBar
+            onPressed: windowControls.tryStartMove()
         }
 
         Item {
@@ -555,6 +566,7 @@ FloatingWindow {
                 onSortDirectionToggled: window.activePane.flipSort()
                 onCopyPathRequested: window.actions.copyText(window.currentPath)
                 onViewModeSelected: mode => window.activePane.setViewMode(mode)
+                onZoomRequested: step => window.activePane.body.zoomBy(step)
                 onUseForAllFoldersRequested: window.useForAllFolders()
                 onResetFolderRequested: window.activePane.resetFolder()
                 onPreviewToggled: window.actions.runAction("togglePreview")

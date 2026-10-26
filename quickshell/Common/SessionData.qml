@@ -22,6 +22,8 @@ Singleton {
     property var tabs: []
     property int gridZoom: FilesMetrics.defaultGridZoom
     property int listZoom: FilesMetrics.defaultListZoom
+    property int columnZoom: FilesMetrics.defaultColumnZoom
+    property real columnPaneWidth: 0
     property var listColumns: ["size", "modified", "type"]
     property var columnWidths: ({})
     property var browsing: ({})
@@ -36,6 +38,8 @@ Singleton {
             "tabs": tabs,
             "gridZoom": gridZoom,
             "listZoom": listZoom,
+            "columnZoom": columnZoom,
+            "columnPaneWidth": Math.round(columnPaneWidth),
             "listColumns": listColumns,
             "columnWidths": columnWidths,
             "browsing": browsing

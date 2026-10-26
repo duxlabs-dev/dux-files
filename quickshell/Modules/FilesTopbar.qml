@@ -147,6 +147,7 @@ Item {
     signal forwardRequested
     signal splitToggled
     signal viewModeSelected(string mode)
+    signal zoomRequested(int step)
     signal previewToggled
     signal previewExpandRequested
     signal sortKeySelected(string key)
@@ -356,6 +357,24 @@ Item {
                     checked: topbar.viewMode === modelData.value
                     onClicked: menu.pick(() => topbar.viewModeSelected(modelData.value))
                 }
+            }
+
+            FileMenuDivider {
+                visible: menu.viewOnly
+            }
+
+            FileMenuItem {
+                visible: menu.viewRows
+                text: I18n.tr("Zoom in", "menu entry making the file view bigger")
+                iconName: "zoom_in"
+                onClicked: topbar.zoomRequested(1)
+            }
+
+            FileMenuItem {
+                visible: menu.viewRows
+                text: I18n.tr("Zoom out", "menu entry making the file view smaller")
+                iconName: "zoom_out"
+                onClicked: topbar.zoomRequested(-1)
             }
 
             FileMenuDivider {
