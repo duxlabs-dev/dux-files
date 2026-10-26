@@ -82,10 +82,21 @@ func ParseURI(raw string, mountables []Mountable) (Spec, error) {
 		return smbSpec(spec, parsed.Hostname()), nil
 	}
 	spec.Items["host"] = parsed.Hostname()
-	if parsed.Scheme == "davs" {
-		spec.Items["ssl"] = "true"
+	return davSpec(spec, parsed.Scheme), nil
+}
+
+// gvfsd-dav registers no davs backend; davs:// is type dav with ssl=true, as in gvfs's httpuri.c.
+func davSpec(spec Spec, scheme string) Spec {
+	switch scheme {
+	case "davs":
+		spec.Items["type"] = "dav"
+	case "davs+sd":
+		spec.Items["type"] = "dav+sd"
+	default:
+		return spec
 	}
-	return spec, nil
+	spec.Items["ssl"] = "true"
+	return spec
 }
 
 func smbSpec(spec Spec, host string) Spec {

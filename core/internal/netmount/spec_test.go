@@ -10,10 +10,14 @@ import (
 )
 
 // Taken from ListMountableInfo on a machine with the stock gvfs backends.
+// dav.mount lists Type=dav;davs, so the tracker reports one mountable per type.
 var mountables = []Mountable{
 	{Type: "sftp", Scheme: "sftp", Aliases: []string{"ssh"}, DefaultPort: 22, HostIsInet: true},
 	{Type: "ftp", Scheme: "ftp", DefaultPort: 21, HostIsInet: true},
-	{Type: "dav", Scheme: "dav", Aliases: []string{"davs"}, DefaultPort: 80, HostIsInet: true},
+	{Type: "dav", Scheme: "dav"},
+	{Type: "davs", Scheme: "davs"},
+	{Type: "dav+sd", Scheme: "dav+sd"},
+	{Type: "davs+sd", Scheme: "davs+sd"},
 	{Type: "smb-share", Scheme: "smb", HostIsInet: true},
 	{Type: "archive", Scheme: "archive"},
 	{Type: "mtp", Scheme: "mtp"},
@@ -92,8 +96,14 @@ func TestURIOfRebuildsWhatWasMounted(t *testing.T) {
 func TestDavsCarriesTheSSLItem(t *testing.T) {
 	spec, err := ParseURI("davs://ana@cloud.example/remote.php/dav", mountables)
 	require.NoError(t, err)
+	assert.Equal(t, "dav", spec.Type(), "gvfsd-dav registers no davs backend and answers Invalid backend type to it")
 	assert.Equal(t, "true", spec.Items["ssl"], "gvfsd-dav picks https from ssl=true")
 	assert.Equal(t, "davs://ana@cloud.example/remote.php/dav", URIOf(spec, mountables))
+
+	discovered, err := ParseURI("davs+sd://cloud.example/", mountables)
+	require.NoError(t, err)
+	assert.Equal(t, "dav+sd", discovered.Type())
+	assert.Equal(t, "true", discovered.Items["ssl"])
 
 	plain, err := ParseURI("dav://cloud.example/", mountables)
 	require.NoError(t, err)
