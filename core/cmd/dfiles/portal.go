@@ -148,8 +148,10 @@ func printPortalReport(r portal.Report) {
 	switch {
 	case !r.Frontend.Running:
 		fmt.Println("service:    xdg-desktop-portal is not running")
-	case r.Frontend.RestartNeeded:
+	case r.Frontend.RestartNeeded && r.Frontend.UnitKnown:
 		fmt.Println("service:    restart needed: systemctl --user restart xdg-desktop-portal.service")
+	case r.Frontend.RestartNeeded:
+		fmt.Printf("service:    restart needed: kill %d, the bus starts xdg-desktop-portal again on demand\n", r.Frontend.PID)
 	default:
 		fmt.Println("service:    xdg-desktop-portal is up to date")
 	}

@@ -2,8 +2,10 @@ package portalsetup
 
 import (
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
+	"syscall"
 	"testing"
 	"time"
 
@@ -437,4 +439,21 @@ func TestProcessStart(t *testing.T) {
 	assert.False(t, ok)
 	_, ok = processStart(stat, 0, 0)
 	assert.False(t, ok)
+}
+
+func TestStopFrontendEndsTheProcess(t *testing.T) {
+	cmd := exec.Command("sleep", "30")
+	require.NoError(t, cmd.Start())
+	waited := make(chan error, 1)
+	go func() { waited <- cmd.Wait() }()
+
+	require.NoError(t, stopFrontend(cmd.Process.Pid))
+
+	var exit *exec.ExitError
+	require.ErrorAs(t, <-waited, &exit)
+	assert.Equal(t, syscall.SIGTERM, exit.Sys().(syscall.WaitStatus).Signal())
+}
+
+func TestStopFrontendWithoutAProcess(t *testing.T) {
+	assert.NoError(t, stopFrontend(0), "nothing runs, nothing to stop")
 }

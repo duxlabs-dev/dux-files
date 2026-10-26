@@ -136,7 +136,8 @@ func (c *Controller) Uninstall() (Report, error) {
 }
 
 func (c *Controller) Restart() error {
-	return portalsetup.RestartFrontend()
+	pid, _ := c.frontendPID()
+	return portalsetup.RestartFrontend(pid)
 }
 
 func (c *Controller) Answer(id string, answer filechooser.Answer) bool {
