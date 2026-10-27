@@ -79,8 +79,8 @@ func gsettingsTheme() string {
 	return strings.Trim(strings.TrimSpace(string(out)), "'")
 }
 
-// Installed lists the icon themes found in the icon roots. A theme needs an
-// index.theme to be one, which is what keeps cursor-only directories out.
+// Installed lists the icon themes found in the icon roots. A theme holds icons
+// when it has a directory of them, which is what keeps the cursor themes out.
 func Installed(roots []string) []string {
 	seen := map[string]bool{}
 	names := []string{}
@@ -93,7 +93,7 @@ func Installed(roots []string) []string {
 			if !entry.IsDir() || seen[entry.Name()] {
 				continue
 			}
-			if info, err := os.Stat(filepath.Join(root, entry.Name(), "index.theme")); err != nil || info.IsDir() {
+			if !holdsIcons(filepath.Join(root, entry.Name())) {
 				continue
 			}
 			seen[entry.Name()] = true
@@ -102,6 +102,21 @@ func Installed(roots []string) []string {
 	}
 	sort.Strings(names)
 	return names
+}
+
+// holdsIcons reports whether a theme directory carries icons rather than only
+// cursors.
+func holdsIcons(dir string) bool {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return false
+	}
+	for _, entry := range entries {
+		if entry.IsDir() && entry.Name() != "cursors" && entry.Name() != "cursors_scalable" {
+			return true
+		}
+	}
+	return false
 }
 
 func settingPath(home string) string {

@@ -70,14 +70,21 @@ func TestInstalledListsEveryThemeOnce(t *testing.T) {
 	first, second := t.TempDir(), t.TempDir()
 	for _, root := range []string{first, second} {
 		for _, theme := range []string{"Adwaita", "hicolor"} {
-			require.NoError(t, os.MkdirAll(filepath.Join(root, theme), 0o755))
+			require.NoError(t, os.MkdirAll(filepath.Join(root, theme, "scalable"), 0o755))
 			require.NoError(t, os.WriteFile(filepath.Join(root, theme, "index.theme"), []byte("[Icon Theme]\n"), 0o644))
 		}
 	}
-	require.NoError(t, os.MkdirAll(filepath.Join(second, "Breeze"), 0o755))
+	require.NoError(t, os.MkdirAll(filepath.Join(second, "Breeze", "scalable"), 0o755))
 	require.NoError(t, os.WriteFile(filepath.Join(second, "Breeze", "index.theme"), []byte("[Icon Theme]\n"), 0o644))
-	// a directory without an index.theme is not an icon theme
-	require.NoError(t, os.MkdirAll(filepath.Join(second, "Cursors"), 0o755))
 
 	assert.Equal(t, []string{"Adwaita", "Breeze", "hicolor"}, Installed([]string{first, second}))
+}
+
+func TestInstalledLeavesCursorThemesOut(t *testing.T) {
+	root := t.TempDir()
+	require.NoError(t, os.MkdirAll(filepath.Join(root, "Breeze", "cursors"), 0o755))
+	require.NoError(t, os.WriteFile(filepath.Join(root, "Breeze", "index.theme"), []byte("[Icon Theme]\n"), 0o644))
+	require.NoError(t, os.MkdirAll(filepath.Join(root, "Breeze", "cursors_scalable"), 0o755))
+
+	assert.Empty(t, Installed([]string{root}))
 }
