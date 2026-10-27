@@ -40,10 +40,47 @@ Singleton {
     }
 
     property var _iconPaths: ({})
+    property var themePaths: ({})
+    property string iconThemeSetting: "auto"
+    property string iconThemeEffective: ""
+
+    function applyIconTheme(result) {
+        iconThemeSetting = result.setting || "auto";
+        iconThemeEffective = result.effective || "";
+        _iconPaths = ({});
+        themePaths = result.paths || ({});
+    }
+
+    function refreshIconTheme() {
+        DuxFilesService.sendRequest("files.iconThemes", null, response => {
+            if (!response.error)
+                applyIconTheme(response.result || {});
+        });
+    }
+
+    Connections {
+        target: DuxFilesService
+        function onConnectedChanged() {
+            if (DuxFilesService.connected)
+                root.refreshIconTheme();
+        }
+        function onIconThemeUpdate() { root.refreshIconTheme(); }
+    }
+
+    Component.onCompleted: {
+        if (DuxFilesService.connected)
+            refreshIconTheme();
+    }
 
     function resolveIconPath(iconName: string): string {
         if (!iconName)
             return "";
+        const literal = literalIconSource(iconName);
+        if (literal)
+            return literal;
+        const themed = themePaths[iconName];
+        if (themed)
+            return Qt.resolvedUrl("file://" + themed).toString();
         const cached = _iconPaths[iconName];
         if (cached !== undefined)
             return cached;

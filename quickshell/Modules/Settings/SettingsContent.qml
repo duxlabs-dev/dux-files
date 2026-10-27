@@ -22,8 +22,8 @@ Item {
     signal resultPicked(int page, var row)
     property var terminals: []
     property var iconThemes: []
-    property string iconThemeSetting: "auto"
-    property string iconThemeEffective: ""
+    readonly property string iconThemeSetting: Paths.iconThemeSetting
+    readonly property string iconThemeEffective: Paths.iconThemeEffective
     property var fileManagerStatus: ({})
     property var portalStatus: ({})
     property bool portalBusy: false
@@ -211,8 +211,7 @@ Item {
                 return;
             const result = response.result || {};
             root.iconThemes = result.installed || [];
-            root.iconThemeSetting = result.setting || "auto";
-            root.iconThemeEffective = result.effective || "";
+            Paths.applyIconTheme(result);
         });
     }
 
@@ -223,8 +222,7 @@ Item {
             if (response.error)
                 return;
             const result = response.result || {};
-            root.iconThemeSetting = result.setting || "auto";
-            root.iconThemeEffective = result.effective || "";
+            Paths.applyIconTheme(result);
         });
     }
 
@@ -992,7 +990,7 @@ Item {
                 OptionDropdownRow {
                     text: I18n.tr("Icon theme", "icon theme setting label")
                     keywords: I18n.tr("icons symbols folders badges appearance", "settings search keywords, space separated, add synonyms in your language")
-                    description: root.iconThemeEffective ? I18n.tr("Drawing with %1. Picks up on the next start.", "icon theme setting description showing the theme in use").arg(root.iconThemeEffective) : I18n.tr("The theme the desktop asks for.", "icon theme setting description")
+                    description: root.iconThemeEffective ? I18n.tr("Drawing with %1.", "icon theme setting description showing the theme in use").arg(root.iconThemeEffective) : I18n.tr("The theme the desktop asks for.", "icon theme setting description")
                     optionList: [{
                         label: I18n.tr("Automatic", "icon theme option following the desktop"),
                         value: "auto"

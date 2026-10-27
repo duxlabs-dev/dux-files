@@ -29,10 +29,12 @@ Singleton {
     signal chooserRequested(var request)
     signal chooserCloseRequested(string id)
     signal colorSchemeUpdate(var data)
+    signal iconThemeUpdate(var data)
 
     Component.onCompleted: {
         subscribeTopic("ui", _onUiEvent);
         subscribeTopic("colorScheme", data => root.colorSchemeUpdate(data));
+        subscribeTopic("iconTheme", data => root.iconThemeUpdate(data));
         requestSocket.connected = socketPath !== "";
     }
 

@@ -63,6 +63,14 @@ Singleton {
         set(path, {});
     }
 
+    Connections {
+        target: Paths
+        function onThemePathsChanged() {
+            root._catalog = ({});
+            root.refreshCatalog();
+        }
+    }
+
     function refreshCatalog() {
         if (_catalog.badges)
             return;

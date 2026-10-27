@@ -90,7 +90,7 @@ func Route(ctx context.Context, w *ConnWriter, req Request, deps Deps) {
 	case req.Method == "files.iconThemes":
 		HandleIconThemes(ctx, w, req)
 	case req.Method == "files.setIconTheme":
-		HandleSetIconTheme(ctx, w, req)
+		HandleSetIconTheme(ctx, w, req, deps)
 	case strings.HasPrefix(req.Method, "files."):
 		if deps.Files == nil {
 			w.RespondError(req.ID, "file service unavailable")

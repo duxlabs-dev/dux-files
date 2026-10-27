@@ -23,18 +23,19 @@ func HandleIconThemes(ctx context.Context, w *ConnWriter, req Request) {
 		"setting":   icontheme.Setting(home),
 		"effective": icontheme.Effective(home),
 		"installed": icontheme.Installed(roots),
+		"paths":     icontheme.Paths(roots, icontheme.Effective(home)),
 	})
 }
 
 // HandleSetIconTheme stores the icon theme the user picked.
-func HandleSetIconTheme(ctx context.Context, w *ConnWriter, req Request) {
+func HandleSetIconTheme(ctx context.Context, w *ConnWriter, req Request, deps Deps) {
 	home, _ := os.UserHomeDir()
 	if err := icontheme.Set(home, params.StringOpt(req.Params, "name", "")); err != nil {
 		w.RespondError(req.ID, err.Error())
 		return
 	}
-	w.Respond(req.ID, map[string]any{
-		"setting":   icontheme.Setting(home),
-		"effective": icontheme.Effective(home),
-	})
+	if deps.Bus != nil {
+		deps.Bus.Publish("iconTheme", map[string]any{"setting": icontheme.Setting(home), "effective": icontheme.Effective(home)})
+	}
+	HandleIconThemes(ctx, w, req)
 }
