@@ -47,6 +47,8 @@ var Methods = []MethodSpec{
 	{Name: "files.userDirs", Group: "files", Desc: "XDG user directories, home first"},
 	{Name: "files.icon", Group: "files", Desc: "Icon name ladders for paths or mime types", Params: []ParamSpec{opt("paths", "absolute paths"), opt("mimes", "mime types")}},
 	{Name: "files.iconCatalog", Group: "files", Desc: "Installed icon names a folder badge or icon can use"},
+	{Name: "files.iconThemes", Group: "files", Desc: "Icon themes installed on this system and the one in use"},
+	{Name: "files.setIconTheme", Group: "files", Desc: "Pick the icon theme to draw with", Params: []ParamSpec{opt("name", "theme name, or empty for automatic")}},
 	{Name: "files.size", Group: "files", Desc: "Scan paths recursively, streaming totals on the sizes topic", Params: []ParamSpec{req("paths", "absolute paths")}},
 	{Name: "files.sizeCancel", Group: "files", Desc: "Stop a running recursive scan", Params: []ParamSpec{req("scanId", "id from files.size")}},
 	{Name: "files.mkdir", Group: "files", Desc: "Create a directory whose parent exists, without undo", Params: []ParamSpec{req("path", "absolute path of the new directory")}},

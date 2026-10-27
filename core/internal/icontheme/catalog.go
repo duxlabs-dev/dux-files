@@ -85,7 +85,7 @@ func Scan(roots []string, theme string) Catalog {
 	icons := map[string]bool{}
 	themes := []string{theme}
 	if theme == "" || !exists(roots, theme) {
-		themes = installed(roots)
+		themes = Installed(roots)
 	}
 	for _, name := range themes {
 		for _, root := range roots {
@@ -98,24 +98,6 @@ func Scan(roots []string, theme string) Catalog {
 		}
 	}
 	return Catalog{Badges: sorted(badges), Icons: plainVariants(sorted(icons))}
-}
-
-func installed(roots []string) []string {
-	seen := map[string]bool{}
-	names := []string{}
-	for _, root := range roots {
-		entries, err := os.ReadDir(root)
-		if err != nil {
-			continue
-		}
-		for _, entry := range entries {
-			if entry.IsDir() && !seen[entry.Name()] {
-				seen[entry.Name()] = true
-				names = append(names, entry.Name())
-			}
-		}
-	}
-	return names
 }
 
 func exists(roots []string, theme string) bool {
@@ -230,5 +212,5 @@ func sorted(set map[string]bool) []string {
 // Default scans the icon theme this user has configured.
 func Default() Catalog {
 	home, _ := os.UserHomeDir()
-	return Scan(Roots(home, os.Getenv("XDG_DATA_HOME"), filepath.SplitList(os.Getenv("XDG_DATA_DIRS"))), Theme(home))
+	return Scan(Roots(home, os.Getenv("XDG_DATA_HOME"), filepath.SplitList(os.Getenv("XDG_DATA_DIRS"))), Effective(home))
 }
