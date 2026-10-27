@@ -485,7 +485,7 @@ Item {
         anchors.leftMargin: FilesMetrics.topbarSpacing
         anchors.rightMargin: FilesMetrics.topbarSpacing
         anchors.verticalCenter: parent.verticalCenter
-        controlHeight: FilesMetrics.topbarControlSize
+        fieldHeight: FilesMetrics.topbarControlSize
         leftIconSize: Theme.iconSizeMedium
         backgroundColor: Theme.surfaceContainerLowest
         placeholderText: I18n.tr("Search in Files", "placeholder in the search field")

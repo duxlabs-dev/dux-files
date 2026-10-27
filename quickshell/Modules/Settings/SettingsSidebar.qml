@@ -116,7 +116,6 @@ Item {
                 id: searchField
 
                 width: navColumn.width - navColumn.padding * 2
-                controlHeight: Theme.buttonHeightM
                 backgroundColor: Theme.surfaceContainerLowest
                 placeholderText: I18n.tr("Search settings", "placeholder in the settings search field")
                 onAccepted: root.searchAccepted()
