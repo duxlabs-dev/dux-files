@@ -92,7 +92,9 @@ Singleton {
     property alias thumbnails: adapter.thumbnails
     property alias thumbnailSizeLimitMb: adapter.thumbnailSizeLimitMb
     property alias networkThumbnails: adapter.networkThumbnails
+    property alias showDevicesSection: adapter.showDevicesSidebar
     property alias showSystemPartitions: adapter.showSystemPartitions
+    property alias showNetworkSection: adapter.showNetworkSidebar
     property alias showGamesSidebar: adapter.showGamesSidebar
     property alias showSteamGames: adapter.showSteamGames
     property alias showHeroicGames: adapter.showHeroicGames
@@ -207,7 +209,9 @@ Singleton {
             property bool thumbnails: true
             property int thumbnailSizeLimitMb: 64
             property bool networkThumbnails: false
+            property bool showDevicesSidebar: true
             property bool showSystemPartitions: false
+            property bool showNetworkSidebar: true
             property bool showGamesSidebar: true
             property bool showSteamGames: true
             property bool showHeroicGames: true
