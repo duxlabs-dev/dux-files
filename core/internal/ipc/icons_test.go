@@ -37,7 +37,10 @@ func TestSetIconThemeNotifiesRunningUI(t *testing.T) {
 	}()
 	response := routeAndRead(t, Request{ID: 1, Method: "files.setIconTheme", Params: map[string]any{"name": "Test"}}, Deps{Bus: bus})
 	result := response["result"].(map[string]any)
-	require.Equal(t, icon, result["paths"].(map[string]any)["folder"])
+	require.Equal(t, "Test", result["effective"])
+	require.NotContains(t, result, "paths")
+	paths := routeAndRead(t, Request{ID: 2, Method: "files.iconThemePaths"}, Deps{})
+	require.Equal(t, icon, paths["result"].(map[string]any)["folder"])
 	line := <-events
 	var event map[string]any
 	require.NoError(t, json.Unmarshal(line, &event))

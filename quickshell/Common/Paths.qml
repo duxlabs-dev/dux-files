@@ -43,18 +43,42 @@ Singleton {
     property var themePaths: ({})
     property string iconThemeSetting: "auto"
     property string iconThemeEffective: ""
+    property bool _themePathsLoaded: false
 
     function applyIconTheme(result) {
+        const changed = iconThemeEffective !== (result.effective || "");
         iconThemeSetting = result.setting || "auto";
         iconThemeEffective = result.effective || "";
-        _iconPaths = ({});
-        themePaths = result.paths || ({});
+        if (changed) {
+            _iconPaths = ({});
+            themePaths = ({});
+            _themePathsLoaded = false;
+            loadThemePaths();
+        }
     }
 
     function refreshIconTheme() {
         DuxFilesService.sendRequest("files.iconThemes", null, response => {
-            if (!response.error)
-                applyIconTheme(response.result || {});
+            if (response.error)
+                return;
+            applyIconTheme(response.result || {});
+            loadThemePaths();
+        });
+    }
+
+    function loadThemePaths() {
+        if (_themePathsLoaded)
+            return;
+        _themePathsLoaded = true;
+        const expectedTheme = iconThemeEffective;
+        DuxFilesService.sendRequest("files.iconThemePaths", null, response => {
+            if (expectedTheme !== iconThemeEffective)
+                return;
+            if (response.error) {
+                _themePathsLoaded = false;
+                return;
+            }
+            themePaths = response.result || ({});
         });
     }
 
@@ -64,7 +88,7 @@ Singleton {
             if (DuxFilesService.connected)
                 root.refreshIconTheme();
         }
-        function onIconThemeUpdate() { root.refreshIconTheme(); }
+        function onIconThemeUpdate(data) { root.applyIconTheme(data || {}); }
     }
 
     Component.onCompleted: {

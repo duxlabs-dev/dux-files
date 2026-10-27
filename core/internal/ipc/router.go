@@ -89,6 +89,8 @@ func Route(ctx context.Context, w *ConnWriter, req Request, deps Deps) {
 		HandleIconCatalog(ctx, w, req)
 	case req.Method == "files.iconThemes":
 		HandleIconThemes(ctx, w, req)
+	case req.Method == "files.iconThemePaths":
+		HandleIconThemePaths(ctx, w, req)
 	case req.Method == "files.setIconTheme":
 		HandleSetIconTheme(ctx, w, req, deps)
 	case strings.HasPrefix(req.Method, "files."):

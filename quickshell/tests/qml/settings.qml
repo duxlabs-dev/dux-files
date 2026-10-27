@@ -52,10 +52,12 @@ ShellRoot {
         check("the appearance page builds", content.children.length > 0, true);
         check("the icon theme starts on automatic", content.iconThemeSetting, "auto");
         check("the theme list is empty until the daemon answers", content.iconThemes.length, 0);
-        Paths.applyIconTheme({setting: "A", effective: "A", paths: {folder: "/tmp/theme-a/folder.svg"}});
+        Paths.applyIconTheme({setting: "A", effective: "A"});
+        Paths.themePaths = {folder: "/tmp/theme-a/folder.svg"};
         Qt.callLater(() => {
             check("bound icon uses theme A", boundIcon.source, "file:///tmp/theme-a/folder.svg");
-            Paths.applyIconTheme({setting: "B", effective: "B", paths: {folder: "/tmp/theme-b/folder.svg"}});
+            Paths.applyIconTheme({setting: "B", effective: "B"});
+            Paths.themePaths = {folder: "/tmp/theme-b/folder.svg"};
             Qt.callLater(() => {
                 check("bound icon changes without restart", boundIcon.source, "file:///tmp/theme-b/folder.svg");
                 check("settings follows the active theme", content.iconThemeSetting, "B");

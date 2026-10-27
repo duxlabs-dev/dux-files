@@ -18,13 +18,28 @@ func HandleIconCatalog(ctx context.Context, w *ConnWriter, req Request) {
 // in use.
 func HandleIconThemes(ctx context.Context, w *ConnWriter, req Request) {
 	home, _ := os.UserHomeDir()
-	roots := icontheme.Roots(home, os.Getenv("XDG_DATA_HOME"), filepath.SplitList(os.Getenv("XDG_DATA_DIRS")))
+	roots := iconRoots(home)
+	setting := icontheme.Setting(home)
+	effective := icontheme.Effective(home)
 	w.Respond(req.ID, map[string]any{
-		"setting":   icontheme.Setting(home),
-		"effective": icontheme.Effective(home),
+		"setting":   setting,
+		"effective": effective,
 		"installed": icontheme.Installed(roots),
-		"paths":     icontheme.Paths(roots, icontheme.Effective(home)),
 	})
+}
+
+func HandleIconThemePaths(ctx context.Context, w *ConnWriter, req Request) {
+	home, _ := os.UserHomeDir()
+	effective := icontheme.Effective(home)
+	w.Respond(req.ID, iconThemePaths(home, effective))
+}
+
+func iconRoots(home string) []string {
+	return icontheme.Roots(home, os.Getenv("XDG_DATA_HOME"), filepath.SplitList(os.Getenv("XDG_DATA_DIRS")))
+}
+
+func iconThemePaths(home, effective string) map[string]string {
+	return icontheme.Paths(iconRoots(home), effective)
 }
 
 // HandleSetIconTheme stores the icon theme the user picked.
@@ -34,8 +49,15 @@ func HandleSetIconTheme(ctx context.Context, w *ConnWriter, req Request, deps De
 		w.RespondError(req.ID, err.Error())
 		return
 	}
+	setting := icontheme.Setting(home)
+	effective := icontheme.Effective(home)
 	if deps.Bus != nil {
-		deps.Bus.Publish("iconTheme", map[string]any{"setting": icontheme.Setting(home), "effective": icontheme.Effective(home)})
+		deps.Bus.Publish("iconTheme", map[string]any{"setting": setting, "effective": effective})
 	}
-	HandleIconThemes(ctx, w, req)
+	roots := iconRoots(home)
+	w.Respond(req.ID, map[string]any{
+		"setting":   setting,
+		"effective": effective,
+		"installed": icontheme.Installed(roots),
+	})
 }
