@@ -100,7 +100,7 @@ FilePlaceSection {
         return I18n.tr("Drives are unavailable because udisks2 is not running", "sidebar explanation when the device service is missing");
     }
     showEmpty: !DevicesService.available
-    visible: shownDevices.length > 0 || NetworkService.portables.length > 0 || NetworkService.deviceMounts.length > 0 || (showEmpty && emptyText !== "")
+    visible: SettingsData.showDevicesSection && (shownDevices.length > 0 || NetworkService.portables.length > 0 || NetworkService.deviceMounts.length > 0 || (showEmpty && emptyText !== ""))
 
     function activateOrMount(device) {
         if (busyId !== "")

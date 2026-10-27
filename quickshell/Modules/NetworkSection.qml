@@ -16,6 +16,7 @@ FilePlaceSection {
     signal dropRequested(string path, var drop)
     signal connectRequested
 
+    visible: SettingsData.showNetworkSection
     title: I18n.tr("Network", "sidebar section listing remote locations")
     emptyText: {
         if (NetworkService.available)

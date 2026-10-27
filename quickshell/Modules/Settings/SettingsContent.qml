@@ -1268,11 +1268,22 @@ Item {
     Component {
         id: devicesPage
         SettingsPage {
-            SettingsGroup {
+            SettingsCard {
+                title: I18n.tr("Devices in the sidebar", "devices settings section label")
+
+                SettingsToggleRow {
+                    text: I18n.tr("Show devices", "devices setting label")
+                    keywords: I18n.tr("drives usb volumes sidebar hide", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("Mounted and removable drives.", "devices setting description")
+                    checked: SettingsData.showDevicesSection
+                    onToggled: checked => SettingsData.showDevicesSection = checked
+                }
+
                 SettingsToggleRow {
                     text: I18n.tr("Show system partitions", "devices setting label")
                     keywords: I18n.tr("internal drives udisks home boot", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Such as a separate /home.", "devices setting description")
+                    enabled: SettingsData.showDevicesSection
                     checked: SettingsData.showSystemPartitions
                     onToggled: checked => SettingsData.showSystemPartitions = checked
                 }
@@ -1281,8 +1292,21 @@ Item {
                     text: I18n.tr("Open unmounted drives on click", "devices setting label")
                     keywords: I18n.tr("mount usb removable sidebar", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Off only mounts.", "devices setting description")
+                    enabled: SettingsData.showDevicesSection
                     checked: SettingsData.mountOnClick
                     onToggled: checked => SettingsData.mountOnClick = checked
+                }
+            }
+
+            SettingsCard {
+                title: I18n.tr("Network in the sidebar", "network settings section label")
+
+                SettingsToggleRow {
+                    text: I18n.tr("Show network", "network setting label")
+                    keywords: I18n.tr("gvfs smb sftp remote servers sidebar hide", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("Mounted network locations and Connect to Server.", "network setting description")
+                    checked: SettingsData.showNetworkSection
+                    onToggled: checked => SettingsData.showNetworkSection = checked
                 }
             }
 
