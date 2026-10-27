@@ -207,7 +207,22 @@ ShellRoot {
             NetworkService.transport = root.fakeTransport;
             tryCompare(surface, "width", 1100);
             const pane = win.activePane;
+            check(win.topbar.mapToItem(surface, 0, win.topbar.height).y <= win.sidebar.mapToItem(surface, 0, 0).y, true);
+            check(win.topbar.mapToItem(surface, 0, 0).x < pane.mapToItem(surface, 0, 0).x, true);
+            check(SettingsData.alwaysShowTabs, true);
+            for (const value of ["/tmp", "~/Code", "./Documentos", "../", "sftp://host/path"])
+                check(win.topbar.isLocation(value), true);
+            for (const value of ["Documentos", "foto.png", "relatório", ".gitignore"])
+                check(win.topbar.isLocation(value), false);
             pane.navigate("/tmp");
+            win.topbar.openFilter("bocch");
+            wait(50);
+            const clearButton = findChild(win.topbar, "clearButton");
+            verify(clearButton !== null);
+            mouseClick(clearButton);
+            wait(50);
+            check(win.topbar.editing, false);
+            check(pane.nameFilter, "");
             pane.setViewMode("grid");
             tryVerify(() => pane.body.view?.cellWidth > 0);
             entries(pane.body.directory);

@@ -10,6 +10,7 @@ FocusScope {
     id: pane
 
     property bool active: true
+    property bool showPathBar: true
     property bool showActiveOutline: false
     property bool showHidden: false
     property string sortKey: SessionData.lastUsed("sortKey", SettingsData.defaultSort)
@@ -531,6 +532,7 @@ FocusScope {
         folderJump: FolderHistory
         unlistedPaths: [TrashService.filesPath, RecentService.path]
         header: pane.filtering ? filterHeader : null
+        showPathBar: pane.showPathBar
         pathBarTrailing: paneStatus
         emptyText: {
             if (pane.virtualActive)

@@ -25,6 +25,43 @@ Item {
     property string filterText: ""
     property string currentPath: ""
     property bool searchFocused: false
+    property bool editing: false
+    readonly property bool pathInput: isLocation(search.text)
+    property var completions: []
+    property int completionRequest: 0
+    readonly property var completionTarget: editing && pathInput ? PathCompletion.target(search.text, currentPath, FilePaths.home) : null
+    readonly property var pathSuggestions: completionTarget ? PathCompletion.rank(completions, completionTarget, FilePaths.home, FileBrowserMetrics.suggestionCap) : []
+
+    onCompletionTargetChanged: fetchCompletions()
+
+    function fetchCompletions() {
+        const request = ++completionRequest;
+        completions = [];
+        const target = completionTarget;
+        if (!target)
+            return;
+        DirectoryService.list(target.dir, {
+            limit: FileBrowserMetrics.completionLimit,
+            includeHidden: target.prefix.startsWith("."),
+            dirsFirst: true,
+            sortKey: "name"
+        }, result => {
+            if (request === completionRequest)
+                completions = result.error ? [] : (result.entries || []).filter(entry => entry.isDir);
+        });
+    }
+
+    function isLocation(text) {
+        const value = text.trim();
+        return value.startsWith("/") || value === "~" || value.startsWith("~/") || value === "." || value === ".." || value.startsWith("./") || value.startsWith("../") || PathCompletion.isUri(value);
+    }
+
+    function focusLocation() {
+        editing = true;
+        search.text = currentPath;
+        search.forceActiveFocus();
+        search.selectAll();
+    }
     property bool folderRemembered: false
     property bool folderHasSettings: false
 
@@ -170,9 +207,11 @@ Item {
     signal searchRequested(string query)
     signal searchCleared
     signal locationRequested(var location)
+    signal tabRequested(string path)
     signal resultsRequested
 
     function focusSearch() {
+        editing = true;
         search.forceActiveFocus();
         search.selectAll();
     }
@@ -183,6 +222,7 @@ Item {
     }
 
     function focusFilter() {
+        editing = true;
         search.forceActiveFocus();
         search.cursorPosition = search.text.length;
     }
@@ -191,10 +231,18 @@ Item {
         return search.contains(search.mapFromItem(topbar, x, y));
     }
 
-    function clearSearch() {
+    function resetInput() {
+        editing = false;
         search.text = "";
+        filterChanged("");
+    }
+
+    function clearSearch() {
+        resetInput();
         searchCleared();
     }
+
+    onCurrentPathChanged: resetInput()
 
     function openRecent(path) {
         DirectoryService.resolveLocation(path, currentPath, result => {
@@ -204,6 +252,8 @@ Item {
                 ToastService.info(FileFormat.operationError(result.code, result.error));
                 return;
             }
+            topbar.editing = false;
+            search.text = "";
             topbar.locationRequested(result.location);
         });
     }
@@ -220,7 +270,7 @@ Item {
     }
 
     onFilterTextChanged: {
-        if (search.text !== filterText)
+        if (!pathInput && search.text !== filterText)
             search.text = filterText;
     }
 
@@ -526,8 +576,48 @@ Item {
         }
     }
 
+    Rectangle {
+        anchors.left: leftActions.right
+        anchors.right: rightActions.left
+        anchors.leftMargin: FilesMetrics.topbarSpacing
+        anchors.rightMargin: FilesMetrics.topbarSpacing
+        anchors.verticalCenter: parent.verticalCenter
+        height: FilesMetrics.topbarControlSize
+        radius: Theme.fullRadius(width, height)
+        color: Theme.surfaceContainerHigh
+        visible: breadcrumb.visible
+    }
+
+    PathBar {
+        id: breadcrumb
+        anchors.left: leftActions.right
+        anchors.right: searchButton.left
+        anchors.leftMargin: FilesMetrics.topbarSpacing
+        anchors.rightMargin: FilesMetrics.topbarSpacing
+        anchors.verticalCenter: parent.verticalCenter
+        visible: !topbar.editing && topbar.filterText === ""
+        path: topbar.currentPath
+        editable: false
+        flat: true
+        onEditRequested: topbar.focusLocation()
+        onNavigated: target => topbar.openRecent(target)
+        onTabRequested: target => topbar.tabRequested(target)
+    }
+
+    FlatButton {
+        id: searchButton
+        anchors.right: rightActions.left
+        anchors.rightMargin: FilesMetrics.topbarSpacing
+        anchors.verticalCenter: parent.verticalCenter
+        visible: breadcrumb.visible
+        iconName: "search"
+        tooltipText: I18n.tr("Search", "button focusing the combined address and search field")
+        onClicked: topbar.focusSearch()
+    }
+
     DSearchField {
         id: search
+        visible: !breadcrumb.visible
 
         anchors.left: leftActions.right
         anchors.right: rightActions.left
@@ -537,18 +627,28 @@ Item {
         fieldHeight: FilesMetrics.topbarControlSize
         leftIconSize: Theme.iconSizeMedium
         backgroundColor: Theme.surfaceContainerLowest
-        placeholderText: I18n.tr("Search in Files", "placeholder in the search field")
+        placeholderText: I18n.tr("Search or enter a path", "placeholder in the combined address and search field")
         keyForwardTargets: [topbar]
         onFocusStateChanged: hasFocus => topbar.searchFocused = hasFocus
         onTextChanged: {
             recentPopup.highlightIndex = -1;
-            if (text !== topbar.filterText)
-                topbar.filterChanged(text);
+            if (text === "" && topbar.editing) {
+                topbar.clearSearch();
+                return;
+            }
+            const query = topbar.pathInput ? "" : text;
+            if (query !== topbar.filterText)
+                topbar.filterChanged(query);
         }
+        onCleared: topbar.clearSearch()
         onAccepted: {
             const picked = recentPopup.highlightedRow();
             if (picked) {
                 topbar.openRecent(picked.path);
+                return;
+            }
+            if (topbar.pathInput) {
+                topbar.openRecent(text.trim());
                 return;
             }
             if (text.trim() !== "")
@@ -561,6 +661,17 @@ Item {
         case Qt.Key_Escape:
             topbar.clearSearch();
             break;
+        case Qt.Key_Tab: {
+            if (!topbar.pathInput)
+                return;
+            const next = PathCompletion.tab(search.text, recentPopup.rows, recentPopup.highlightIndex);
+            if (!next)
+                return;
+            search.text = next.text;
+            search.cursorPosition = search.text.length;
+            recentPopup.highlightIndex = next.highlight;
+            break;
+        }
         case Qt.Key_Down:
             if (recentPopup.rows.length > 0) {
                 recentPopup.move(1);
@@ -585,8 +696,8 @@ Item {
         id: recentPopup
 
         anchorItem: search
-        rows: topbar.recentSuggestions
-        visible: topbar.recentSuggestions.length > 0
+        rows: topbar.pathInput ? topbar.pathSuggestions : topbar.recentSuggestions
+        visible: topbar.editing && topbar.searchFocused && rows.length > 0
         onChosen: row => topbar.openRecent(row.path)
     }
 }
