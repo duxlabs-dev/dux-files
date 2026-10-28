@@ -396,6 +396,8 @@ Singleton {
             return 1;
         case "compact":
             return -1;
+        case "dense":
+            return -2;
         default:
             return 0;
         }

@@ -67,6 +67,10 @@ Item {
         {
             label: I18n.tr("Compact", "interface density option fitting the most items on screen"),
             value: "compact"
+        },
+        {
+            label: I18n.tr("Dense", "interface density option denser than compact for small text and tight rows"),
+            value: "dense"
         }
     ]
 
@@ -984,7 +988,7 @@ Item {
 
                 OptionGroupRow {
                     text: I18n.tr("Interface density", "interface density setting label")
-                    keywords: I18n.tr("density compact spacious comfortable spacing padding rows", "settings search keywords, space separated, add synonyms in your language")
+                    keywords: I18n.tr("density compact dense spacious comfortable spacing padding rows", "settings search keywords, space separated, add synonyms in your language")
                     optionList: root.densityOptions
                     current: SettingsData.density
                     onPicked: value => SettingsData.density = value
