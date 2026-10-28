@@ -13,15 +13,18 @@ Singleton {
     readonly property real windowHeight: 940
     readonly property real windowMinWidth: 500
     readonly property real windowMinHeight: 400
-    readonly property real pagePaddingV: Theme.spacingXL
+    readonly property real pagePaddingV: Theme.spacingXL + Theme.densityStepM
     readonly property real pageHeaderHeight: Theme.fontSizeXXLarge + Theme.spacingXL + Theme.spacingM
-    readonly property real rowPaddingH: Theme.spacingL + Theme.spacingXS
-    readonly property real rowPaddingV: Theme.spacingL
+    readonly property real rowPaddingH: Theme.spacingL + Theme.spacingXS + Theme.densityStepS
+    readonly property real rowPaddingV: Theme.spacingL + Theme.densityStepS
+    readonly property real rowMinHeight: Math.max(Theme.listItemHeight + Theme.densityStepM, Theme.buttonHeightS + Theme.spacingXS)
+    readonly property real rowMinHeightTwoLine: Theme.listItemTwoLineHeight + Theme.densityStepM
+    readonly property real cardGap: Theme.spacingL + Theme.densityStepS
     readonly property real rowContentSpacing: Theme.spacingL
-    readonly property real sectionLabelTopGap: Theme.spacingS
+    readonly property real sectionLabelTopGap: Math.max(Theme.spacingXS, Theme.spacingS + Theme.densityStepS)
     readonly property real sectionLabelBottomGap: Theme.spacingM
     readonly property real navIconSize: Theme.avatarSize
-    readonly property real navItemMinHeight: Theme.listItemHeight
+    readonly property real navItemMinHeight: rowMinHeight
     readonly property real sidebarGroupGap: Theme.spacingS
     readonly property real buttonGroupCompactThreshold: Theme.spacingXL * 8
     readonly property real dropdownWidth: 220

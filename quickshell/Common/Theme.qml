@@ -402,6 +402,9 @@ Singleton {
             return 0;
         }
     }
+    readonly property real densityStepS: densityLevel * spacingXS
+    readonly property real densityStepM: densityLevel * spacingS
+    readonly property real densityStepXS: densityLevel * spacingXXS
     readonly property real groupedListGap: spacingXXS
     readonly property real groupedListInnerRadius: cornerRadiusXS
     readonly property real groupedListOuterRadius: cornerRadiusL
@@ -477,8 +480,8 @@ Singleton {
     readonly property real tabIndicatorMinWidth: 24
     readonly property real tabIndicatorInset: 2
     readonly property real fieldDefaultWidth: 200
-    readonly property real fieldHeight: Math.round(fontSizeMedium * 3) + densityLevel * spacingXS
-    readonly property real fieldHeightLarge: 48 + densityLevel * spacingXS
+    readonly property real fieldHeight: Math.round(fontSizeMedium * 3) + densityStepS
+    readonly property real fieldHeightLarge: 48 + densityStepS
     readonly property real outlinedFieldLabelLineHeight: 16
     readonly property real osdHeight: sliderHandleHeight + spacingS * 2
     readonly property real bottomSheetHandleWidth: 36

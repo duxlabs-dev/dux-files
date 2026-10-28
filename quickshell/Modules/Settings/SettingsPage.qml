@@ -27,6 +27,6 @@ DFlickable {
         width: Math.min(root.contentMaxWidth, parent.width - Theme.spacingL * 2)
         bottomPadding: SettingsMetrics.pagePaddingV
         anchors.horizontalCenter: parent.horizontalCenter
-        spacing: Theme.spacingL
+        spacing: SettingsMetrics.cardGap
     }
 }

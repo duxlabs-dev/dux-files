@@ -39,7 +39,7 @@ T.Control {
     readonly property bool isLastInGroup: edgeRow(false) === root
     property real topRadius: isFirstInGroup ? Theme.groupedListOuterRadius : Theme.groupedListInnerRadius
     property real bottomRadius: isLastInGroup ? Theme.groupedListOuterRadius : Theme.groupedListInnerRadius
-    readonly property real minHeight: subtitle !== "" ? Theme.listItemTwoLineHeight : Theme.listItemHeight
+    readonly property real minHeight: subtitle !== "" ? SettingsMetrics.rowMinHeightTwoLine : SettingsMetrics.rowMinHeight
 
     signal clicked
 
