@@ -477,8 +477,8 @@ Singleton {
     readonly property real tabIndicatorMinWidth: 24
     readonly property real tabIndicatorInset: 2
     readonly property real fieldDefaultWidth: 200
-    readonly property real fieldHeight: Math.round(fontSizeMedium * 3)
-    readonly property real fieldHeightLarge: 48
+    readonly property real fieldHeight: Math.round(fontSizeMedium * 3) + densityLevel * spacingXS
+    readonly property real fieldHeightLarge: 48 + densityLevel * spacingXS
     readonly property real outlinedFieldLabelLineHeight: 16
     readonly property real osdHeight: sliderHandleHeight + spacingS * 2
     readonly property real bottomSheetHandleWidth: 36
