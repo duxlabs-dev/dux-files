@@ -483,6 +483,13 @@
     "comment": ""
   },
   {
+    "term": "Badges",
+    "translation": "",
+    "context": "folder appearance tab listing badge icons",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Balanced",
     "translation": "",
     "context": "spring bounce option",
@@ -560,6 +567,20 @@
     "comment": ""
   },
   {
+    "term": "Choose a badge image",
+    "translation": "",
+    "context": "file picker title for a folder badge image",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Clear",
+    "translation": "",
+    "context": "folder appearance action clearing the badge",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Clear Recent",
     "translation": "",
     "context": "action emptying the recently used list without touching the files",
@@ -590,7 +611,7 @@
   {
     "term": "Close",
     "translation": "",
-    "context": "dialog button dismissing a dialog | dialog button to close | tooltip on the button closing the large preview",
+    "context": "dialog button closing the dialog | dialog button dismissing a dialog | dialog button to close | tooltip on the button closing the large preview",
     "reference": "",
     "comment": ""
   },
@@ -623,13 +644,6 @@
     "comment": ""
   },
   {
-    "term": "Collapse",
-    "translation": "",
-    "context": "games sidebar action hiding a launcher's folders",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Color source",
     "translation": "",
     "context": "color source setting label",
@@ -640,6 +654,20 @@
     "term": "Column view",
     "translation": "",
     "context": "view mode showing folders side by side",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Comfortable",
+    "translation": "",
+    "context": "interface density option with the default spacing",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Compact",
+    "translation": "",
+    "context": "interface density option fitting the most items on screen",
     "reference": "",
     "comment": ""
   },
@@ -882,6 +910,13 @@
     "comment": ""
   },
   {
+    "term": "Default application",
+    "translation": "",
+    "context": "opener dropdown option launching the app registered for the file type",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Default applications",
     "translation": "",
     "context": "capability row on the about page",
@@ -931,6 +966,20 @@
     "comment": ""
   },
   {
+    "term": "Dense",
+    "translation": "",
+    "context": "interface density option denser than compact for small text and tight rows",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Density",
+    "translation": "",
+    "context": "appearance settings section label",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Details",
     "translation": "",
     "context": "properties tab with the basic facts about an item",
@@ -941,6 +990,13 @@
     "term": "Devices",
     "translation": "",
     "context": "sidebar section listing drives and volumes",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Devices in the sidebar",
+    "translation": "",
+    "context": "devices settings section label",
     "reference": "",
     "comment": ""
   },
@@ -1169,13 +1225,6 @@
     "comment": ""
   },
   {
-    "term": "Expand",
-    "translation": "",
-    "context": "games sidebar action showing a launcher's folders",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Extract archives on open",
     "translation": "",
     "context": "setting label for opening archives",
@@ -1284,6 +1333,13 @@
     "term": "Focus the sidebar",
     "translation": "",
     "context": "keyboard shortcut",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Folder appearance",
+    "translation": "",
+    "context": "context menu entry opening the folder appearance dialog | folder appearance dialog title",
     "reference": "",
     "comment": ""
   },
@@ -1505,6 +1561,13 @@
     "comment": ""
   },
   {
+    "term": "Hides the title and the window buttons, leaving a thin strip to drag the window.",
+    "translation": "",
+    "context": "window header toggle description",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Home",
     "translation": "",
     "context": "sidebar entry for the user's home folder",
@@ -1519,9 +1582,23 @@
     "comment": ""
   },
   {
+    "term": "Icons",
+    "translation": "",
+    "context": "folder appearance tab listing folder icons",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Image pasted",
     "translation": "",
     "context": "toast after writing a clipboard image into the folder",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Image web address",
+    "translation": "",
+    "context": "placeholder of the folder appearance badge web address field",
     "reference": "",
     "comment": ""
   },
@@ -1571,6 +1648,13 @@
     "term": "Index is still building, results may be incomplete",
     "translation": "",
     "context": "search results header note while danksearch is indexing",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Interface density",
+    "translation": "",
+    "context": "interface density setting label",
     "reference": "",
     "comment": ""
   },
@@ -1813,6 +1897,20 @@
     "comment": ""
   },
   {
+    "term": "Mounted and removable drives.",
+    "translation": "",
+    "context": "devices setting description",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Mounted network locations and Connect to Server.",
+    "translation": "",
+    "context": "network setting description",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Move",
     "translation": "",
     "context": "drag label for moving files",
@@ -1935,6 +2033,13 @@
     "term": "Network",
     "translation": "",
     "context": "sidebar section listing network locations | sidebar section listing remote locations",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Network in the sidebar",
+    "translation": "",
+    "context": "network settings section label",
     "reference": "",
     "comment": ""
   },
@@ -2151,7 +2256,14 @@
   {
     "term": "Open files",
     "translation": "",
-    "context": "file chooser default title when picking several files",
+    "context": "behaviour settings section label for the file opener | file chooser default title when picking several files",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Open files with",
+    "translation": "",
+    "context": "file opener setting label",
     "reference": "",
     "comment": ""
   },
@@ -2723,6 +2835,13 @@
     "comment": ""
   },
   {
+    "term": "Restore default",
+    "translation": "",
+    "context": "folder appearance action dropping color and badge",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Restored",
     "translation": "",
     "context": "toast after restoring items from the trash",
@@ -2877,6 +2996,20 @@
     "comment": ""
   },
   {
+    "term": "Search icon",
+    "translation": "",
+    "context": "placeholder of the folder appearance icon search",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Search icons",
+    "translation": "",
+    "context": "folder appearance button toggling the icon search",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Search in Files",
     "translation": "",
     "context": "placeholder in the search field",
@@ -3003,6 +3136,13 @@
     "comment": ""
   },
   {
+    "term": "Show devices",
+    "translation": "",
+    "context": "devices setting label",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Show file extensions",
     "translation": "",
     "context": "toggle showing the file type suffix in names",
@@ -3020,6 +3160,13 @@
     "term": "Show hidden files",
     "translation": "",
     "context": "file browser toolbar toggle | menu entry listing dot files",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Show network",
+    "translation": "",
+    "context": "network setting label",
     "reference": "",
     "comment": ""
   },
@@ -3139,6 +3286,13 @@
     "term": "Sort descending",
     "translation": "",
     "context": "sort direction option",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Spacious",
+    "translation": "",
+    "context": "interface density option with the most room between items",
     "reference": "",
     "comment": ""
   },
@@ -3535,6 +3689,13 @@
     "comment": ""
   },
   {
+    "term": "Use",
+    "translation": "",
+    "context": "folder appearance button applying the typed badge web address",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Use Dux Files for open and save dialogs",
     "translation": "",
     "context": "setting label for serving the desktop portal file chooser",
@@ -3545,6 +3706,20 @@
     "term": "Use a bundled color palette.",
     "translation": "",
     "context": "color source description for preset",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Use an image from a web address",
+    "translation": "",
+    "context": "folder appearance button typing a web badge address",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Use an image from this computer",
+    "translation": "",
+    "context": "folder appearance button picking a local badge image",
     "reference": "",
     "comment": ""
   },
@@ -3647,6 +3822,13 @@
     "comment": ""
   },
   {
+    "term": "Window header",
+    "translation": "",
+    "context": "toggle label for the window title and buttons",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Windows",
     "translation": "",
     "context": "appearance settings section label",
@@ -3677,14 +3859,14 @@
   {
     "term": "Zoom in",
     "translation": "",
-    "context": "tooltip on the button zooming the large preview in",
+    "context": "menu entry making the file view bigger | tooltip on the button zooming the large preview in",
     "reference": "",
     "comment": ""
   },
   {
     "term": "Zoom out",
     "translation": "",
-    "context": "tooltip on the button zooming the large preview out",
+    "context": "menu entry making the file view smaller | tooltip on the button zooming the large preview out",
     "reference": "",
     "comment": ""
   },
@@ -3808,6 +3990,13 @@
     "comment": ""
   },
   {
+    "term": "density compact dense spacious comfortable spacing padding rows",
+    "translation": "",
+    "context": "settings search keywords, space separated, add synonyms in your language",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "directories first sort",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
@@ -3830,6 +4019,13 @@
   },
   {
     "term": "drag drop copy move ask default action",
+    "translation": "",
+    "context": "settings search keywords, space separated, add synonyms in your language",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "drives usb volumes sidebar hide",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
     "reference": "",
@@ -3900,6 +4096,13 @@
   },
   {
     "term": "games library steamapps common",
+    "translation": "",
+    "context": "settings search keywords, space separated, add synonyms in your language",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "gvfs smb sftp remote servers sidebar hide",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
     "reference": "",
@@ -4137,6 +4340,13 @@
     "comment": ""
   },
   {
+    "term": "title bar header hide decorations",
+    "translation": "",
+    "context": "settings search keywords, space separated, add synonyms in your language",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "type-ahead jump filter search keyboard",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
@@ -4152,6 +4362,20 @@
   },
   {
     "term": "xdg-desktop-portal",
+    "translation": "",
+    "context": "settings search keywords, space separated, add synonyms in your language",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "xdg-open follows the handler on your PATH.",
+    "translation": "",
+    "context": "file opener setting description",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "xdg-open handlr mimeo opener default application launch",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
     "reference": "",

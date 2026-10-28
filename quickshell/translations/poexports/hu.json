@@ -1,0 +1,1895 @@
+{
+  "%1 already exist in this folder. Do you want to overwrite them?": {
+    "%1 already exist in this folder. Do you want to overwrite them?": "A(z) %1 már létezik ebben a mappában. Felül szeretnéd írni?"
+  },
+  "%1 already exists in this folder.": {
+    "%1 already exists in this folder.": "A(z) %1 már létezik ebben a mappában."
+  },
+  "%1 bookmarks imported": {
+    "%1 bookmarks imported": "%1 könyvjelző importálva"
+  },
+  "%1 can be run as a program. Open it in an editor instead to read it first.": {
+    "%1 can be run as a program. Open it in an editor instead to read it first.": "A(z) %1 programként futtatható. Nyisd meg inkább szerkesztőben az olvasáshoz."
+  },
+  "%1 folders could not be read": {
+    "%1 folders could not be read": "%1 mappa nem olvasható"
+  },
+  "%1 h %2 min left": {
+    "%1 h %2 min left": "%1 ó %2 p van hátra"
+  },
+  "%1 has not been marked as trusted. Running it allows it to start any program.": {
+    "%1 has not been marked as trusted. Running it allows it to start any program.": "A(z) %1 nincs megbízhatónak jelölve. Futtatásával bármilyen program elindítható."
+  },
+  "%1 hidden": {
+    "%1 hidden": "%1 rejtett"
+  },
+  "%1 holds it; Files takes over when it quits.": {
+    "%1 holds it; Files takes over when it quits.": "A(z) %1 zárolja; a Fájlok átveszi, amikor az kilép."
+  },
+  "%1 is encrypted. Enter its passphrase to unlock it.": {
+    "%1 is encrypted. Enter its passphrase to unlock it.": "A(z) %1 titkosított. Add meg a jelszót a feloldáshoz."
+  },
+  "%1 is password protected.": {
+    "%1 is password protected.": "A(z) %1 jelszóval védett."
+  },
+  "%1 items copied": {
+    "%1 items copied": "%1 elem másolva"
+  },
+  "%1 items cut": {
+    "%1 items cut": "%1 elem kivágva"
+  },
+  "%1 levels deep": {
+    "%1 levels deep": "%1 szint mélyen"
+  },
+  "%1 matching “%2”": {
+    "%1 matching “%2”": "%1 egyezés erre: „%2”"
+  },
+  "%1 min left": {
+    "%1 min left": "%1 perc van hátra"
+  },
+  "%1 px": {
+    "%1 px": "%1 képpont"
+  },
+  "%1 s left": {
+    "%1 s left": "%1 mp van hátra"
+  },
+  "%1 used · %2 free · %3 total": {
+    "%1 used · %2 free · %3 total": "%1 felhasznált · %2 szabad · %3 összesen"
+  },
+  "%1 will be deleted permanently. This cannot be undone.": {
+    "%1 will be deleted permanently. This cannot be undone.": "A(z) %1 véglegesen törlődik. Ez a művelet nem vonható vissza."
+  },
+  "%1 will be moved to the trash.": {
+    "%1 will be moved to the trash.": "A(z) %1 a kukába kerül."
+  },
+  "%1 · %2": {
+    "%1 · %2": "%1 · %2"
+  },
+  "%1 …": {
+    "%1 …": "%1 …"
+  },
+  "%1, %2 matches": {
+    "%1, %2 matches": "%1, %2 találat"
+  },
+  "%1/s": {
+    "%1/s": "%1/s"
+  },
+  "1 MB to 100 MB": {
+    "1 MB to 100 MB": "1 MB – 100 MB"
+  },
+  "1 item copied": {
+    "1 item copied": "1 elem másolva"
+  },
+  "1 item cut": {
+    "1 item cut": "1 elem kivágva"
+  },
+  "50 is the Material default.": {
+    "50 is the Material default.": "Az 50 az alapértelmezett Material-érték."
+  },
+  "? or F1 in the main window.": {
+    "? or F1 in the main window.": "? vagy F1 a főablakban."
+  },
+  "API": {
+    "API": "API"
+  },
+  "About": {
+    "About": "Névjegy"
+  },
+  "Accessed": {
+    "Accessed": "Hozzáférés ideje"
+  },
+  "Add or remove one item": {
+    "Add or remove one item": "Egy elem hozzáadása vagy eltávolítása"
+  },
+  "Add or remove the item under the cursor": {
+    "Add or remove the item under the cursor": "A mutató alatti elem hozzáadása vagy eltávolítása"
+  },
+  "Add to bookmarks": {
+    "Add to bookmarks": "Hozzáadás a könyvjelzőkhöz"
+  },
+  "Address": {
+    "Address": "Cím"
+  },
+  "Administrator access is not available": {
+    "Administrator access is not available": "Rendszergazdai hozzáférés nem érhető el"
+  },
+  "Administrator access is not available because pkexec is not installed": {
+    "Administrator access is not available because pkexec is not installed": "Rendszergazdai hozzáférés nem érhető el, mert a pkexec nincs telepítve"
+  },
+  "Administrator access is not available because the polkit policy is not installed": {
+    "Administrator access is not available because the polkit policy is not installed": "Rendszergazdai hozzáférés nem érhető el, mert a polkit-irányelv nincs telepítve"
+  },
+  "Administrator access is not available inside the sandbox": {
+    "Administrator access is not available inside the sandbox": "Rendszergazdai hozzáférés nem érhető el a homokozón belül"
+  },
+  "Already here": {
+    "Already here": "Már itt van"
+  },
+  "Always": {
+    "Always": "Mindig"
+  },
+  "Always use the dark theme.": {
+    "Always use the dark theme.": "Mindig sötét téma használata."
+  },
+  "Always use the light theme.": {
+    "Always use the light theme.": "Mindig világos téma használata."
+  },
+  "Always use this application": {
+    "Always use this application": "Mindig ezt az alkalmazást használja"
+  },
+  "Amber": {
+    "Amber": "Borostyán"
+  },
+  "Another file manager holds it.": {
+    "Another file manager holds it.": "Egy másik fájlkezelő zárolja."
+  },
+  "Any size": {
+    "Any size": "Bármilyen méret"
+  },
+  "Any time": {
+    "Any time": "Bármikor"
+  },
+  "Appearance": {
+    "Appearance": "Megjelenés"
+  },
+  "Apply": {
+    "Apply": "Alkalmazás"
+  },
+  "Apply to everything inside": {
+    "Apply to everything inside": "Alkalmazás minden belső elemre"
+  },
+  "Archive": {
+    "Archive": "Archívum"
+  },
+  "Archive created": {
+    "Archive created": "Archívum létrehozva"
+  },
+  "Archives": {
+    "Archives": "Archívumok"
+  },
+  "Ask": {
+    "Ask": "Kérdezzen rá"
+  },
+  "Ask every time": {
+    "Ask every time": "Kérdezzen rá minden alkalommal"
+  },
+  "Audio": {
+    "Audio": "Hang"
+  },
+  "Auto": {
+    "Auto": "Automatikus"
+  },
+  "Automatic": {
+    "Automatic": "Automatikus"
+  },
+  "Automatic uses $TERMINAL.": {
+    "Automatic uses $TERMINAL.": "Az automatikus beállítás a $TERMINAL változót használja."
+  },
+  "Available": {
+    "Available": "Elérhető"
+  },
+  "Back": {
+    "Back": "Vissza"
+  },
+  "Back to the files": {
+    "Back to the files": "Vissza a fájlokhoz"
+  },
+  "Backend": {
+    "Backend": "Háttérrendszer"
+  },
+  "Backend: not reachable, no activation file": {
+    "Backend: not reachable, no activation file": "Háttérrendszer: nem érhető el, nincs aktiválási fájl"
+  },
+  "Backend: served by this instance": {
+    "Backend: served by this instance": "Háttérrendszer: ez a példány kiszolgálja"
+  },
+  "Backend: started on demand through %1": {
+    "Backend: started on demand through %1": "Háttérrendszer: igény szerint elindítva a(z) %1 révén"
+  },
+  "Badges": {
+    "Badges": ""
+  },
+  "Balanced": {
+    "Balanced": "Kiegyensúlyozott"
+  },
+  "Behaviour": {
+    "Behaviour": "Viselkedés"
+  },
+  "Being added": {
+    "Being added": "Hozzáadás folyamatban"
+  },
+  "Blue": {
+    "Blue": "Kék"
+  },
+  "Bookmark this folder": {
+    "Bookmark this folder": "Mappa felvétele a könyvjelzők közé"
+  },
+  "Cancel": {
+    "Cancel": "Mégse"
+  },
+  "Cancelled": {
+    "Cancelled": "Megszakítva"
+  },
+  "Capabilities": {
+    "Capabilities": "Képességek"
+  },
+  "Changing owner": {
+    "Changing owner": "Tulajdonos módosítása"
+  },
+  "Changing permissions": {
+    "Changing permissions": "Jogosultságok módosítása"
+  },
+  "Choose a JSON color theme file.": {
+    "Choose a JSON color theme file.": "Válassz egy JSON színtémafájlt."
+  },
+  "Choose a badge image": {
+    "Choose a badge image": ""
+  },
+  "Clear": {
+    "Clear": ""
+  },
+  "Clear Recent": {
+    "Clear Recent": "Előzmények törlése"
+  },
+  "Clear the clipboard": {
+    "Clear the clipboard": "Vágólap törlése"
+  },
+  "Clear the recent files list?": {
+    "Clear the recent files list?": "Törlöd a legutóbbi fájlok listáját?"
+  },
+  "Clear the selection": {
+    "Clear the selection": "Kijelölés megszüntetése"
+  },
+  "Close": {
+    "Close": "Bezárás"
+  },
+  "Close behavior": {
+    "Close behavior": "Bezárási viselkedés"
+  },
+  "Close other tabs": {
+    "Close other tabs": "Többi lap bezárása"
+  },
+  "Close tab": {
+    "Close tab": "Lap bezárása"
+  },
+  "Close tabs to the right": {
+    "Close tabs to the right": "Jobbra lévő lapok bezárása"
+  },
+  "Collapse": {
+    "Collapse": "Összecsukás"
+  },
+  "Color source": {
+    "Color source": "Színforrás"
+  },
+  "Column view": {
+    "Column view": "Oszlopnézet"
+  },
+  "Comfortable": {
+    "Comfortable": ""
+  },
+  "Compact": {
+    "Compact": ""
+  },
+  "Compress": {
+    "Compress": "Tömörítés"
+  },
+  "Compressing": {
+    "Compressing": "Tömörítés folyamatban"
+  },
+  "Compress…": {
+    "Compress…": "Tömörítés…"
+  },
+  "Confirm": {
+    "Confirm": "Megerősítés"
+  },
+  "Confirm before moving to the trash": {
+    "Confirm before moving to the trash": "Megerősítés a Kukába helyezés előtt"
+  },
+  "Connect": {
+    "Connect": "Kapcsolódás"
+  },
+  "Connect anonymously": {
+    "Connect anonymously": "Névtelen kapcsolódás"
+  },
+  "Connect to Server": {
+    "Connect to Server": "Kapcsolódás a kiszolgálóhoz"
+  },
+  "Connect to Server…": {
+    "Connect to Server…": "Kapcsolódás a kiszolgálóhoz…"
+  },
+  "Connected": {
+    "Connected": "Kapcsolódva"
+  },
+  "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": {
+    "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": "Kapcsolódva, de a megosztásnak nincs helyi mappája. Lehet, hogy a gvfs FUSE-szolgáltatás nem fut."
+  },
+  "Contents": {
+    "Contents": "Tartalom"
+  },
+  "Copied": {
+    "Copied": "Másolva"
+  },
+  "Copy": {
+    "Copy": "Másolás"
+  },
+  "Copy location path": {
+    "Copy location path": "Hely elérési útjának másolása"
+  },
+  "Copy name": {
+    "Copy name": "Név másolása"
+  },
+  "Copy to": {
+    "Copy to": "Másolás ide"
+  },
+  "Copy to…": {
+    "Copy to…": "Másolás ide…"
+  },
+  "Copying": {
+    "Copying": "Másolás folyamatban"
+  },
+  "Coral": {
+    "Coral": "Korall"
+  },
+  "Could not read that file, expected a JSON color theme.": {
+    "Could not read that file, expected a JSON color theme.": "A fájl nem olvasható, JSON színtéma szükséges."
+  },
+  "Count items in folders": {
+    "Count items in folders": "Elemek számlálása a mappákban"
+  },
+  "Create": {
+    "Create": "Létrehozás"
+  },
+  "Created": {
+    "Created": "Létrehozva"
+  },
+  "Creating": {
+    "Creating": "Létrehozás folyamatban"
+  },
+  "Ctrl copies, Alt asks.": {
+    "Ctrl copies, Alt asks.": "Ctrl másol, Alt kérdez."
+  },
+  "Ctrl+H toggles per window.": {
+    "Ctrl+H toggles per window.": "A Ctrl+H ablakonként váltja."
+  },
+  "Ctrl+Wheel resizes per window.": {
+    "Ctrl+Wheel resizes per window.": "A Ctrl+Görgő ablakonként méretezi át."
+  },
+  "Custom": {
+    "Custom": "Egyéni"
+  },
+  "Cut": {
+    "Cut": "Kivágás"
+  },
+  "Cyan": {
+    "Cyan": "Cián"
+  },
+  "Dark": {
+    "Dark": "Sötét"
+  },
+  "Decrease": {
+    "Decrease": "Csökkentés"
+  },
+  "Default": {
+    "Default": "Alapértelmezett"
+  },
+  "Default application": {
+    "Default application": ""
+  },
+  "Default applications": {
+    "Default applications": "Alapértelmezett alkalmazások"
+  },
+  "Default icon size": {
+    "Default icon size": "Alapértelmezett ikonméret"
+  },
+  "Default view": {
+    "Default view": "Alapértelmezett nézet"
+  },
+  "Delete": {
+    "Delete": "Törlés"
+  },
+  "Delete permanently": {
+    "Delete permanently": "Végleges törlés"
+  },
+  "Delete permanently?": {
+    "Delete permanently?": "Véglegesen törlöd?"
+  },
+  "Deleting": {
+    "Deleting": "Törlés folyamatban"
+  },
+  "Dense": {
+    "Dense": ""
+  },
+  "Density": {
+    "Density": ""
+  },
+  "Details": {
+    "Details": "Részletek"
+  },
+  "Devices": {
+    "Devices": "Eszközök"
+  },
+  "Devices in the sidebar": {
+    "Devices in the sidebar": ""
+  },
+  "Disconnect": {
+    "Disconnect": "Leválasztás"
+  },
+  "Display family": {
+    "Display family": "Kijelzőcsalád"
+  },
+  "Do this for the rest": {
+    "Do this for the rest": "Ugyanez minden további esetben"
+  },
+  "Docs": {
+    "Docs": "Dokumentumok"
+  },
+  "Documents": {
+    "Documents": "Dokumentumok"
+  },
+  "Domain": {
+    "Domain": "Tartomány"
+  },
+  "Double click": {
+    "Double click": "Dupla kattintás"
+  },
+  "Downloads each file.": {
+    "Downloads each file.": "Minden fájlt letölt."
+  },
+  "Drag and drop": {
+    "Drag and drop": "Fogd és vidd"
+  },
+  "Drives and mounting": {
+    "Drives and mounting": "Meghajtók és csatolás"
+  },
+  "Drives are unavailable because the sandbox cannot reach udisks2": {
+    "Drives are unavailable because the sandbox cannot reach udisks2": "A meghajtók nem érhetők el, mert a homokozó nem éri el az udisks2 szolgáltatást"
+  },
+  "Drives are unavailable because udisks2 is not running": {
+    "Drives are unavailable because udisks2 is not running": "A meghajtók nem érhetők el, mert az udisks2 nem fut"
+  },
+  "Dropping without a modifier": {
+    "Dropping without a modifier": "Eldobás módosítóbillentyű nélkül"
+  },
+  "Duplicate": {
+    "Duplicate": "Kettőzés"
+  },
+  "Duplicate tab": {
+    "Duplicate tab": "Lap kettőzése"
+  },
+  "Duplicated": {
+    "Duplicated": "Kettőzve"
+  },
+  "Duplicating": {
+    "Duplicating": "Kettőzés"
+  },
+  "Duration": {
+    "Duration": "Időtartam"
+  },
+  "Dux Shell not detected, using %1.": {
+    "Dux Shell not detected, using %1.": "A Dux Shell nem észlelhető, a(z) %1 kerül felhasználásra."
+  },
+  "Dux Shell not detected, using the %1 preset.": {
+    "Dux Shell not detected, using the %1 preset.": "A Dux Shell nem észlelhető, a(z) %1 előbeállítás kerül felhasználásra."
+  },
+  "Each launcher's own configuration folder.": {
+    "Each launcher's own configuration folder.": "Az egyes indítók saját konfigurációs mappája."
+  },
+  "Eject": {
+    "Eject": "Kiadás"
+  },
+  "Empty Trash": {
+    "Empty Trash": "Kuka ürítése"
+  },
+  "Empty file": {
+    "Empty file": "Üres fájl"
+  },
+  "Empty the trash?": {
+    "Empty the trash?": "Kiüríted a kukát?"
+  },
+  "Emptying the trash": {
+    "Emptying the trash": "A kuka ürítése"
+  },
+  "Enter filename...": {
+    "Enter filename...": "Fájlnév megadása…"
+  },
+  "Estimating…": {
+    "Estimating…": "Becslés…"
+  },
+  "Every folder goes back to the default sort and view.": {
+    "Every folder goes back to the default sort and view.": "Minden mappa visszaáll az alapértelmezett rendezésre és nézetre."
+  },
+  "Everyone": {
+    "Everyone": "Mindenki"
+  },
+  "Everywhere": {
+    "Everywhere": "Mindenhol"
+  },
+  "Execute": {
+    "Execute": "Végrehajtás"
+  },
+  "Expand": {
+    "Expand": "Kibontás"
+  },
+  "Extract archives on open": {
+    "Extract archives on open": "Archívumok kibontása megnyitáskor"
+  },
+  "Extract here": {
+    "Extract here": "Kibontás ide"
+  },
+  "Extract to": {
+    "Extract to": "Kibontás ide…"
+  },
+  "Extract to…": {
+    "Extract to…": "Kibontás…"
+  },
+  "Extracted": {
+    "Extracted": "Kibontva"
+  },
+  "Extracted to %1": {
+    "Extracted to %1": "Kibontva ide: %1"
+  },
+  "Extracting": {
+    "Extracting": "Kibontás"
+  },
+  "Family": {
+    "Family": "Család"
+  },
+  "File operations": {
+    "File operations": "Fájlműveletek"
+  },
+  "File system": {
+    "File system": "Fájlrendszer"
+  },
+  "Files": {
+    "Files": "Fájlok"
+  },
+  "Files Settings": {
+    "Files Settings": "Fájlok beállításai"
+  },
+  "Filter": {
+    "Filter": "Szűrő"
+  },
+  "Finished": {
+    "Finished": "Befejezve"
+  },
+  "Focus ring": {
+    "Focus ring": "Fókuszgyűrű"
+  },
+  "Focus the sidebar": {
+    "Focus the sidebar": "Fókusz az oldalsávra"
+  },
+  "Folder appearance": {
+    "Folder appearance": ""
+  },
+  "Folders": {
+    "Folders": "Mappák"
+  },
+  "Folders before files": {
+    "Folders before files": "Mappák a fájlok előtt"
+  },
+  "Folders open in new tabs and files open in their applications.": {
+    "Folders open in new tabs and files open in their applications.": "A mappák új lapon nyílnak meg, a fájlok pedig az alkalmazásukban."
+  },
+  "Folders open in new tabs, archives are extracted and other files open in their applications.": {
+    "Folders open in new tabs, archives are extracted and other files open in their applications.": "A mappák új lapon nyílnak meg, az archívumok kibontásra kerülnek, a többi fájl pedig az alkalmazásában nyílik meg."
+  },
+  "Folders to skip": {
+    "Folders to skip": "Kihagyandó mappák"
+  },
+  "Follow Dux Shell colors, falling back to a preset.": {
+    "Follow Dux Shell colors, falling back to a preset.": "A Dux Shell színeinek követése, visszatérés egy előbeállításhoz."
+  },
+  "Following the system color scheme (currently %1).": {
+    "Following the system color scheme (currently %1).": "A rendszer színsémájának követése (jelenleg: %1)."
+  },
+  "Font source": {
+    "Font source": "Betűkészlet forrása"
+  },
+  "Forget": {
+    "Forget": "Elfelejtés"
+  },
+  "Forget all folder settings": {
+    "Forget all folder settings": "Minden mappabeállítás elfelejtése"
+  },
+  "Forget all folder settings?": {
+    "Forget all folder settings?": "Összes mappabeállítás elfelejtése?"
+  },
+  "Forward": {
+    "Forward": "Előre"
+  },
+  "From the index": {
+    "From the index": "Az indexből"
+  },
+  "Fuzzy": {
+    "Fuzzy": "Homályos"
+  },
+  "Games": {
+    "Games": "Játékok"
+  },
+  "Games and prefixes Heroic installed.": {
+    "Games and prefixes Heroic installed.": "A Heroic által telepített játékok és prefixek."
+  },
+  "Games and prefixes Lutris installed.": {
+    "Games and prefixes Lutris installed.": "A Lutris által telepített játékok és prefixek."
+  },
+  "Games folder": {
+    "Games folder": "Játékok mappa"
+  },
+  "Games folders": {
+    "Games folders": "Játékok mappái"
+  },
+  "Games in the sidebar": {
+    "Games in the sidebar": "Játékok az oldalsávban"
+  },
+  "General": {
+    "General": "Általános"
+  },
+  "Getting around": {
+    "Getting around": "Navigáció"
+  },
+  "GitHub": {
+    "GitHub": "GitHub"
+  },
+  "Go to that tab": {
+    "Go to that tab": "Ugrás arra a lapra"
+  },
+  "Go to the home folder": {
+    "Go to the home folder": "Ugrás a saját mappába"
+  },
+  "Go to the parent folder": {
+    "Go to the parent folder": "Ugrás a szülőmappába"
+  },
+  "Green": {
+    "Green": "Zöld"
+  },
+  "Grid icon size": {
+    "Grid icon size": "Rács ikonmérete"
+  },
+  "Grid view": {
+    "Grid view": "Rácsnézet"
+  },
+  "Group": {
+    "Group": "Csoport"
+  },
+  "Heroic": {
+    "Heroic": "Heroic"
+  },
+  "Hides the title and the window buttons, leaving a thin strip to drag the window.": {
+    "Hides the title and the window buttons, leaving a thin strip to drag the window.": ""
+  },
+  "Home": {
+    "Home": "Kezdőlap"
+  },
+  "Host filesystem": {
+    "Host filesystem": "Gazdagép fájlrendszere"
+  },
+  "Icons": {
+    "Icons": ""
+  },
+  "Image pasted": {
+    "Image pasted": "Kép beillesztve"
+  },
+  "Image web address": {
+    "Image web address": ""
+  },
+  "Images": {
+    "Images": "Képek"
+  },
+  "Import": {
+    "Import": "Importálás"
+  },
+  "Import your GTK bookmarks?": {
+    "Import your GTK bookmarks?": "Importálod a GTK-könyvjelzőidet?"
+  },
+  "Include hidden files": {
+    "Include hidden files": "Rejtett fájlok megjelenítése"
+  },
+  "Include ignored": {
+    "Include ignored": "Mellőzöttek belefoglalása"
+  },
+  "Increase": {
+    "Increase": "Növelés"
+  },
+  "Index is still building, results may be incomplete": {
+    "Index is still building, results may be incomplete": "Az indexelés még folyamatban van, az eredmények hiányosak lehetnek"
+  },
+  "Interface density": {
+    "Interface density": ""
+  },
+  "Invert the selection": {
+    "Invert the selection": "Kijelölés megfordítása"
+  },
+  "Items in the trash cannot be opened": {
+    "Items in the trash cannot be opened": "A kukában lévő elemek nem nyithatók meg"
+  },
+  "Jump to a folder you visited": {
+    "Jump to a folder you visited": "Ugrás egy korábban meglátogatott mappára"
+  },
+  "Jump to a name or filter the folder with what you type": {
+    "Jump to a name or filter the folder with what you type": "Ugrás egy névre, vagy a mappa szűrése a gépelt szöveg alapján"
+  },
+  "Jump to name": {
+    "Jump to name": "Ugrás névre"
+  },
+  "Jump to the start, the end or the next screen": {
+    "Jump to the start, the end or the next screen": "Ugrás az elejére, a végére vagy a következő képernyőre"
+  },
+  "Keep a list of recent files": {
+    "Keep a list of recent files": "Legutóbbi fájlok listájának megőrzése"
+  },
+  "Keep both": {
+    "Keep both": "Mindkettő megtartása"
+  },
+  "Keep running": {
+    "Keep running": "Futtatás folytatása"
+  },
+  "Keyboard": {
+    "Keyboard": "Billentyűzet"
+  },
+  "Keyboard shortcuts": {
+    "Keyboard shortcuts": "Gyorsbillentyűk"
+  },
+  "Language": {
+    "Language": "Nyelv"
+  },
+  "Larger icons": {
+    "Larger icons": "Nagyobb ikonok"
+  },
+  "Libraries and Proton prefixes.": {
+    "Libraries and Proton prefixes.": "Könyvtárak és Proton-előtagok."
+  },
+  "Library · %1": {
+    "Library · %1": "Könyvtár · %1"
+  },
+  "Light": {
+    "Light": "Világos"
+  },
+  "Link": {
+    "Link": "Hivatkozás"
+  },
+  "Linking": {
+    "Linking": "Hivatkozás létrehozása"
+  },
+  "Links to": {
+    "Links to": "Cél:"
+  },
+  "List icon size": {
+    "List icon size": "Listanézet ikonmérete"
+  },
+  "List view": {
+    "List view": "Listanézet"
+  },
+  "Load colors from your own theme file.": {
+    "Load colors from your own theme file.": "Színek betöltése saját témakészlet-fájlból."
+  },
+  "Location": {
+    "Location": "Hely"
+  },
+  "Lock": {
+    "Lock": "Zárolás"
+  },
+  "Lutris": {
+    "Lutris": "Lutris"
+  },
+  "MIT License": {
+    "MIT License": "MIT licenc"
+  },
+  "Menu": {
+    "Menu": "Menü"
+  },
+  "Merge": {
+    "Merge": "Egyesítés"
+  },
+  "Modified": {
+    "Modified": "Módosítva"
+  },
+  "Monochrome": {
+    "Monochrome": "Monokróm"
+  },
+  "Monospace family": {
+    "Monospace family": "Rögzített szélességű betűcsalád"
+  },
+  "More actions": {
+    "More actions": "További műveletek"
+  },
+  "Motion": {
+    "Motion": "Mozgás"
+  },
+  "Mount": {
+    "Mount": "Csatolás"
+  },
+  "Mounted and removable drives.": {
+    "Mounted and removable drives.": ""
+  },
+  "Mounted network locations and Connect to Server.": {
+    "Mounted network locations and Connect to Server.": ""
+  },
+  "Move": {
+    "Move": "Áthelyezés"
+  },
+  "Move the tab left": {
+    "Move the tab left": "Lap mozgatása balra"
+  },
+  "Move the tab right": {
+    "Move the tab right": "Lap mozgatása jobbra"
+  },
+  "Move through the folder": {
+    "Move through the folder": "Navigálás a mappában"
+  },
+  "Move through the sidebar": {
+    "Move through the sidebar": "Navigálás az oldalsávban"
+  },
+  "Move to": {
+    "Move to": "Áthelyezés ide:"
+  },
+  "Move to Trash": {
+    "Move to Trash": "Áthelyezés a Kukába"
+  },
+  "Move to the search filters": {
+    "Move to the search filters": "Ugrás a keresési szűrőkhöz"
+  },
+  "Move to…": {
+    "Move to…": "Áthelyezés…"
+  },
+  "Move, copy across drives": {
+    "Move, copy across drives": "Áthelyezés, másolás meghajtók között"
+  },
+  "Moved": {
+    "Moved": "Áthelyezve"
+  },
+  "Moved to trash": {
+    "Moved to trash": "Kukába helyezve"
+  },
+  "Moving": {
+    "Moving": "Áthelyezés folyamatban"
+  },
+  "Moving to trash": {
+    "Moving to trash": "Áthelyezés a kukába folyamatban"
+  },
+  "Name": {
+    "Name": "Név"
+  },
+  "Name the host terminal to launch.": {
+    "Name the host terminal to launch.": "Add meg az indítandó gazdaterminál nevét."
+  },
+  "Names or paths, comma separated. Build and cache folders are skipped anyway.": {
+    "Names or paths, comma separated. Build and cache folders are skipped anyway.": "Nevek vagy elérési utak vesszővel elválasztva. Az összeállítási és gyorsítótármappák mindenképp kimaradnak."
+  },
+  "Network": {
+    "Network": "Hálózat"
+  },
+  "Network in the sidebar": {
+    "Network in the sidebar": ""
+  },
+  "Network locations are unavailable because gvfs is not running": {
+    "Network locations are unavailable because gvfs is not running": "A hálózati helyek nem érhetők el, mert a gvfs nem fut"
+  },
+  "Network locations are unavailable because the sandbox cannot reach gvfs": {
+    "Network locations are unavailable because the sandbox cannot reach gvfs": "A hálózati helyek nem érhetők el, mert a homokozó nem éri el a gvfs-t"
+  },
+  "Never": {
+    "Never": "Soha"
+  },
+  "New document": {
+    "New document": "Új dokumentum"
+  },
+  "New folder": {
+    "New folder": "Új mappa"
+  },
+  "New folder with selection": {
+    "New folder with selection": "Új mappa a kijelöltekkel"
+  },
+  "New tab": {
+    "New tab": "Új lap"
+  },
+  "New window": {
+    "New window": "Új ablak"
+  },
+  "Next tab": {
+    "Next tab": "Következő lap"
+  },
+  "No limit": {
+    "No limit": "Nincs korlát"
+  },
+  "No recent files": {
+    "No recent files": "Nincsenek legutóbbi fájlok"
+  },
+  "No results": {
+    "No results": "Nincs találat"
+  },
+  "No session bus.": {
+    "No session bus.": "Nincs munkamenetbusz."
+  },
+  "No theme file selected": {
+    "No theme file selected": "Nincs témakészletfájl kiválasztva"
+  },
+  "Not available": {
+    "Not available": "Nem érhető el"
+  },
+  "Not available because the sandbox cannot start programs on the host": {
+    "Not available because the sandbox cannot start programs on the host": "Nem érhető el, mert a homokozó nem tud programokat indítani a gazdagépen"
+  },
+  "Not available inside the sandbox": {
+    "Not available inside the sandbox": "Nem érhető el a homokozón belül"
+  },
+  "Not available without access to the host filesystem": {
+    "Not available without access to the host filesystem": "Nem érhető el a gazdagép fájlrendszeréhez való hozzáférés nélkül"
+  },
+  "Nothing is running": {
+    "Nothing is running": "Semmi sem fut"
+  },
+  "Octal": {
+    "Octal": "Oktális"
+  },
+  "Off": {
+    "Off": "Ki"
+  },
+  "Off leaves decorations to the compositor. Applies to new windows.": {
+    "Off leaves decorations to the compositor. Applies to new windows.": "A kikapcsolt állapot a kompozitorra bízza a díszítéseket. Az új ablakokra érvényes."
+  },
+  "Off only mounts.": {
+    "Off only mounts.": "Kikapcsolva csak csatol."
+  },
+  "Offline": {
+    "Offline": "Kapcsolat nélkül"
+  },
+  "Only launchers with an installed game are listed.": {
+    "Only launchers with an installed game are listed.": "Csak a telepített játékot tartalmazó indítók jelennek meg."
+  },
+  "Only the window process serves the portal": {
+    "Only the window process serves the portal": "Csak az ablakfolyamat szolgálja ki a portált"
+  },
+  "Open": {
+    "Open": "Megnyitás"
+  },
+  "Open %1 items?": {
+    "Open %1 items?": "Megnyitod ezt a(z) %1 elemet?"
+  },
+  "Open and save dialogs": {
+    "Open and save dialogs": "Megnyitási és mentési párbeszédpanelek"
+  },
+  "Open file": {
+    "Open file": "Fájl megnyitása"
+  },
+  "Open files": {
+    "Open files": "Fájlok megnyitása"
+  },
+  "Open files with": {
+    "Open files with": ""
+  },
+  "Open folders from other apps in a new tab": {
+    "Open folders from other apps in a new tab": "Más alkalmazásokból származó mappák megnyitása új lapon"
+  },
+  "Open in editor": {
+    "Open in editor": "Megnyitás szerkesztőben"
+  },
+  "Open in new tab": {
+    "Open in new tab": "Megnyitás új lapon"
+  },
+  "Open in new window": {
+    "Open in new window": "Megnyitás új ablakban"
+  },
+  "Open in terminal": {
+    "Open in terminal": "Megnyitás terminálban"
+  },
+  "Open in the other pane": {
+    "Open in the other pane": "Megnyitás a másik ablaktáblán"
+  },
+  "Open items with": {
+    "Open items with": "Elemek megnyitása ezzel"
+  },
+  "Open the bookmark menu": {
+    "Open the bookmark menu": "A könyvjelzőmenü megnyitása"
+  },
+  "Open the containing folder": {
+    "Open the containing folder": "Tartalmazó mappa megnyitása"
+  },
+  "Open the context menu": {
+    "Open the context menu": "A helyi menü megnyitása"
+  },
+  "Open the place": {
+    "Open the place": "A hely megnyitása"
+  },
+  "Open the preview in a large view": {
+    "Open the preview in a large view": "Előnézet megnyitása nagy nézetben"
+  },
+  "Open unmounted drives on click": {
+    "Open unmounted drives on click": "Nem csatolt meghajtók megnyitása kattintásra"
+  },
+  "Open with": {
+    "Open with": "Megnyitás ezzel"
+  },
+  "Orange": {
+    "Orange": "Narancssárga"
+  },
+  "Other applications": {
+    "Other applications": "Egyéb alkalmazások"
+  },
+  "Other application…": {
+    "Other application…": "Egyéb alkalmazás…"
+  },
+  "Over 100 MB": {
+    "Over 100 MB": "Több mint 100 MB"
+  },
+  "Owner": {
+    "Owner": "Tulajdonos"
+  },
+  "PDF preview is not available. Install Qt PDF support to view this file.": {
+    "PDF preview is not available. Install Qt PDF support to view this file.": "A PDF-előnézet nem érhető el. A fájl megtekintéséhez telepítsd a Qt PDF-támogatást."
+  },
+  "Palette: %1": {
+    "Palette: %1": "Paletta: %1"
+  },
+  "Passphrase": {
+    "Passphrase": "Jelmondat"
+  },
+  "Password": {
+    "Password": "Jelszó"
+  },
+  "Password required": {
+    "Password required": "Jelszó szükséges"
+  },
+  "Paste": {
+    "Paste": "Beillesztés"
+  },
+  "Paste as link": {
+    "Paste as link": "Beillesztés hivatkozásként"
+  },
+  "Paste into folder": {
+    "Paste into folder": "Beillesztés a mappába"
+  },
+  "Pasted image": {
+    "Pasted image": "Beillesztett kép"
+  },
+  "Pasting image": {
+    "Pasting image": "Kép beillesztése"
+  },
+  "Permissions": {
+    "Permissions": "Engedélyek"
+  },
+  "Pink": {
+    "Pink": "Rózsaszín"
+  },
+  "Places": {
+    "Places": "Helyek"
+  },
+  "Playful": {
+    "Playful": "Játékos"
+  },
+  "Portal file: %1": {
+    "Portal file: %1": "Portálfájl: %1"
+  },
+  "Portal file: not installed": {
+    "Portal file: not installed": "Portálfájl: nincs telepítve"
+  },
+  "Preference: %1 is used": {
+    "Preference: %1 is used": "Beállítás: a(z) %1 van használatban"
+  },
+  "Preference: %1 names Dux Files": {
+    "Preference: %1 names Dux Files": "Beállítás: a(z) %1 a Dux Fájlok alkalmazást nevezi meg"
+  },
+  "Preference: no file chooser backend configured": {
+    "Preference: no file chooser backend configured": "Beállítás: nincs beállítva fájlválasztó háttérrendszer"
+  },
+  "Prefix · %1": {
+    "Prefix · %1": "Előtag · %1"
+  },
+  "Prefixes": {
+    "Prefixes": "Előtagok"
+  },
+  "Preset": {
+    "Preset": "Előbeállítás"
+  },
+  "Preview": {
+    "Preview": "Előnézet"
+  },
+  "Preview the next or previous selected item": {
+    "Preview the next or previous selected item": "A következő vagy előző kiválasztott elem előnézete"
+  },
+  "Previous tab": {
+    "Previous tab": "Előző lap"
+  },
+  "Properties": {
+    "Properties": "Tulajdonságok"
+  },
+  "Protect with a password": {
+    "Protect with a password": "Védelem jelszóval"
+  },
+  "Protocol": {
+    "Protocol": "Protokoll"
+  },
+  "Proton · %1": {
+    "Proton · %1": "Proton · %1"
+  },
+  "Purple": {
+    "Purple": "Lila"
+  },
+  "Quit": {
+    "Quit": "Kilépés"
+  },
+  "Radius strength": {
+    "Radius strength": "Sugár erőssége"
+  },
+  "Read": {
+    "Read": "Olvasás"
+  },
+  "Recent": {
+    "Recent": "Legutóbbiak"
+  },
+  "Recently used": {
+    "Recently used": "Legutóbb használt"
+  },
+  "Recommended": {
+    "Recommended": "Ajánlott"
+  },
+  "Red": {
+    "Red": "Piros"
+  },
+  "Redo": {
+    "Redo": "Mégis"
+  },
+  "Redone": {
+    "Redone": "Ismételve"
+  },
+  "Reduce motion": {
+    "Reduce motion": "Mozgás csökkentése"
+  },
+  "Register as the session file manager": {
+    "Register as the session file manager": "Regisztrálás munkamenet-fájlkezelőként"
+  },
+  "Relevance": {
+    "Relevance": "Relevancia"
+  },
+  "Reload": {
+    "Reload": "Újratöltés"
+  },
+  "Remember password": {
+    "Remember password": "Jelszó megjegyzése"
+  },
+  "Remember view and sort per folder": {
+    "Remember view and sort per folder": "Nézet és rendezés megjegyzése mappánként"
+  },
+  "Remove bookmark": {
+    "Remove bookmark": "Könyvjelző eltávolítása"
+  },
+  "Remove from Recent": {
+    "Remove from Recent": "Eltávolítás a legutóbbiak közül"
+  },
+  "Remove the bookmark or eject the drive": {
+    "Remove the bookmark or eject the drive": "A könyvjelző eltávolítása vagy a meghajtó kiadása"
+  },
+  "Rename": {
+    "Rename": "Átnevezés"
+  },
+  "Rename the bookmark": {
+    "Rename the bookmark": "A könyvjelző átnevezése"
+  },
+  "Renamed": {
+    "Renamed": "Átnevezve"
+  },
+  "Renaming": {
+    "Renaming": "Átnevezés..."
+  },
+  "Reopen the closed tab": {
+    "Reopen the closed tab": "A bezárt lap újranyitása"
+  },
+  "Replace": {
+    "Replace": "Csere"
+  },
+  "Reset the view": {
+    "Reset the view": "Nézet visszaállítása"
+  },
+  "Reset this folder": {
+    "Reset this folder": "Mappa visszaállítása"
+  },
+  "Resize icons": {
+    "Resize icons": "Ikonok átméretezése"
+  },
+  "Resize the preview, or reset its width": {
+    "Resize the preview, or reset its width": "Az előnézet átméretezése vagy szélességének visszaállítása"
+  },
+  "Restart": {
+    "Restart": "Újraindítás"
+  },
+  "Restart the portal service": {
+    "Restart the portal service": "Portálszolgáltatás újraindítása"
+  },
+  "Restart the portal service?": {
+    "Restart the portal service?": "Újraindítod a portálszolgáltatást?"
+  },
+  "Restore": {
+    "Restore": "Helyreállítás"
+  },
+  "Restore default": {
+    "Restore default": ""
+  },
+  "Restored": {
+    "Restored": "Helyreállítva"
+  },
+  "Restoring": {
+    "Restoring": "Helyreállítás…"
+  },
+  "Results for “%1” in %2": {
+    "Results for “%1” in %2": "Találatok erre: „%1” itt: %2"
+  },
+  "Results in %1": {
+    "Results in %1": "Találatok itt: %1"
+  },
+  "Retry as administrator": {
+    "Retry as administrator": "Újra rendszergazdaként"
+  },
+  "Reverse the sort order": {
+    "Reverse the sort order": "Rendezési sorrend megfordítása"
+  },
+  "Ripple effects": {
+    "Ripple effects": "Hullám effektusok"
+  },
+  "Rotate left": {
+    "Rotate left": "Forgatás balra"
+  },
+  "Rotate right": {
+    "Rotate right": "Forgatás jobbra"
+  },
+  "Run": {
+    "Run": "Futtatás"
+  },
+  "Run programs": {
+    "Run programs": "Programok futtatása"
+  },
+  "Run this desktop file?": {
+    "Run this desktop file?": "Futtatod ezt az asztali fájlt?"
+  },
+  "Run this file?": {
+    "Run this file?": "Futtatod ezt a fájlt?"
+  },
+  "Sandbox": {
+    "Sandbox": "Homokozó"
+  },
+  "Save": {
+    "Save": "Mentés"
+  },
+  "Save file": {
+    "Save file": "Fájl mentése"
+  },
+  "Save files": {
+    "Save files": "Fájlok mentése"
+  },
+  "Save here": {
+    "Save here": "Mentés ide"
+  },
+  "Saving %1 into the chosen folder": {
+    "Saving %1 into the chosen folder": "„%1” mentése a kiválasztott mappába"
+  },
+  "Scale": {
+    "Scale": "Méretezés"
+  },
+  "Scroll the preview": {
+    "Scroll the preview": "Az előnézet görgetése"
+  },
+  "Search applications": {
+    "Search applications": "Alkalmazások keresése"
+  },
+  "Search icon": {
+    "Search icon": ""
+  },
+  "Search icons": {
+    "Search icons": ""
+  },
+  "Search in Files": {
+    "Search in Files": "Keresés a fájlokban"
+  },
+  "Search results": {
+    "Search results": "Keresési eredmények"
+  },
+  "Search settings": {
+    "Search settings": "Beállítások keresése"
+  },
+  "Search subfolders": {
+    "Search subfolders": "Keresés az almappákban"
+  },
+  "Search the disk": {
+    "Search the disk": "Keresés a lemezen"
+  },
+  "Search with the danksearch index": {
+    "Search with the danksearch index": "Keresés a danksearch indexszel"
+  },
+  "Search your home folder": {
+    "Search your home folder": "Keresés a saját mappában"
+  },
+  "Searching…": {
+    "Searching…": "Keresés…"
+  },
+  "Select a range": {
+    "Select a range": "Tartomány kijelölése"
+  },
+  "Select all": {
+    "Select all": "Összes kijelölése"
+  },
+  "Select folder": {
+    "Select folder": "Mappa kiválasztása"
+  },
+  "Selection": {
+    "Selection": "Kijelölés"
+  },
+  "Settings": {
+    "Settings": "Beállítások"
+  },
+  "Settings folder": {
+    "Settings folder": "Beállítások mappa"
+  },
+  "Settings folders": {
+    "Settings folders": "Beállításmappák"
+  },
+  "Shape": {
+    "Shape": "Alakzat"
+  },
+  "Shared with other apps.": {
+    "Shared with other apps.": "Megosztva más alkalmazásokkal."
+  },
+  "Show": {
+    "Show": "Megjelenítés"
+  },
+  "Show devices": {
+    "Show devices": ""
+  },
+  "Show file extensions": {
+    "Show file extensions": "Fájlkiterjesztések megjelenítése"
+  },
+  "Show games": {
+    "Show games": "Játékok megjelenítése"
+  },
+  "Show hidden files": {
+    "Show hidden files": "Rejtett fájlok megjelenítése"
+  },
+  "Show network": {
+    "Show network": ""
+  },
+  "Show system partitions": {
+    "Show system partitions": "Rendszerpartíciók megjelenítése"
+  },
+  "Show thumbnails": {
+    "Show thumbnails": "Előnézetek megjelenítése"
+  },
+  "Showing the first %1 results": {
+    "Showing the first %1 results": "Az első %1 találat megjelenítése"
+  },
+  "Shown in the size column.": {
+    "Shown in the size column.": "Megjelenik a méret oszlopban."
+  },
+  "Sidebar": {
+    "Sidebar": "Oldalsáv"
+  },
+  "Sign in": {
+    "Sign in": "Bejelentkezés"
+  },
+  "Single click": {
+    "Single click": "Egyszeres kattintás"
+  },
+  "Size": {
+    "Size": "Méret"
+  },
+  "Skip": {
+    "Skip": "Kihagyás"
+  },
+  "Skip images larger than": {
+    "Skip images larger than": "A megadott méretnél nagyobb képek kihagyása:"
+  },
+  "Smaller icons": {
+    "Smaller icons": "Kisebb ikonok"
+  },
+  "Smooth": {
+    "Smooth": "Simítás"
+  },
+  "Socket": {
+    "Socket": "Foglalat"
+  },
+  "Some matches may be missing": {
+    "Some matches may be missing": "Néhány találat hiányozhat"
+  },
+  "Sort by": {
+    "Sort by": "Rendezés"
+  },
+  "Sort by the next column": {
+    "Sort by the next column": "Rendezés a következő oszlop szerint"
+  },
+  "Sort descending": {
+    "Sort descending": "Csökkenő sorrend"
+  },
+  "Spacious": {
+    "Spacious": ""
+  },
+  "Split view": {
+    "Split view": "Osztott nézet"
+  },
+  "Spring": {
+    "Spring": "Rugó"
+  },
+  "Square": {
+    "Square": "Négyzet"
+  },
+  "Status": {
+    "Status": "Állapot"
+  },
+  "Steam": {
+    "Steam": "Steam"
+  },
+  "Steam, ~/VirtualBox VMs": {
+    "Steam, ~/VirtualBox VMs": "Steam, ~/VirtualBox VMs"
+  },
+  "Stop measuring": {
+    "Stop measuring": "Mérés leállítása"
+  },
+  "Such as a separate /home.": {
+    "Such as a separate /home.": "Például egy külön /home könyvtár."
+  },
+  "Support Dux Labs": {
+    "Support Dux Labs": "A Dux Labs támogatása"
+  },
+  "Switch pane": {
+    "Switch pane": "Ablaktábla váltása"
+  },
+  "System": {
+    "System": "Rendszer"
+  },
+  "System default": {
+    "System default": "Rendszer-alapértelmezett"
+  },
+  "System preference unavailable, using dark.": {
+    "System preference unavailable, using dark.": "A rendszerbeállítás nem érhető el, sötét mód használata."
+  },
+  "Terminal": {
+    "Terminal": "Terminál"
+  },
+  "Terminal, drag and thumbnails": {
+    "Terminal, drag and thumbnails": "Terminál, húzás és előnézetek"
+  },
+  "The Wine prefix of each game.": {
+    "The Wine prefix of each game.": "Az egyes játékok Wine-környezetmappája."
+  },
+  "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": {
+    "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": "A módosítás az xdg-desktop-portal újraindítása után lép életbe. A más alkalmazások által nyitva tartott megnyitási és mentési párbeszédpanelek bezáródnak."
+  },
+  "The files themselves stay where they are.": {
+    "The files themselves stay where they are.": "Maguk a fájlok a helyükön maradnak."
+  },
+  "The portal list is managed by the system.": {
+    "The portal list is managed by the system.": "A portállistát a rendszer kezeli."
+  },
+  "The session bus refused it.": {
+    "The session bus refused it.": "A munkamenetbusz elutasította."
+  },
+  "The system application chooser opens instead": {
+    "The system application chooser opens instead": "Ehelyett a rendszer alkalmazásválasztója nyílik meg"
+  },
+  "Theme": {
+    "Theme": "Téma"
+  },
+  "Theme, shape and motion": {
+    "Theme, shape and motion": "Téma, forma és mozgás"
+  },
+  "Thickness": {
+    "Thickness": "Vastagság"
+  },
+  "This file could not be opened": {
+    "This file could not be opened": "Ez a fájl nem nyitható meg"
+  },
+  "This folder": {
+    "This folder": "Ez a mappa"
+  },
+  "This folder is empty": {
+    "This folder is empty": "Ez a mappa üres"
+  },
+  "This instance cannot reach the session bus.": {
+    "This instance cannot reach the session bus.": "Ez a példány nem éri el a munkamenetbuszt."
+  },
+  "This item already exists": {
+    "This item already exists": "Ez az elem már létezik"
+  },
+  "This month": {
+    "This month": "Ebben a hónapban"
+  },
+  "This session": {
+    "This session": "Ez a munkamenet"
+  },
+  "This step cannot be retried as administrator": {
+    "This step cannot be retried as administrator": "Ez a lépés nem ismételhető meg rendszergazdaként"
+  },
+  "This week": {
+    "This week": "Ezen a héten"
+  },
+  "Thumbnails": {
+    "Thumbnails": "Előnézetek"
+  },
+  "Thumbnails on network locations": {
+    "Thumbnails on network locations": "Előnézetek hálózati helyeken"
+  },
+  "Title bars": {
+    "Title bars": "Címsorok"
+  },
+  "Today": {
+    "Today": "Ma"
+  },
+  "Toggle sidebar": {
+    "Toggle sidebar": "Oldalsáv ki/be"
+  },
+  "Trash": {
+    "Trash": "Kuka"
+  },
+  "Trash is empty": {
+    "Trash is empty": "A kuka üres"
+  },
+  "Trust and run": {
+    "Trust and run": "Megbízás és futtatás"
+  },
+  "Try again": {
+    "Try again": "Újra"
+  },
+  "Type": {
+    "Type": "Típus"
+  },
+  "Type a location": {
+    "Type a location": "Hely megadása"
+  },
+  "Typing in the file list": {
+    "Typing in the file list": "Gépelés a fájllistában"
+  },
+  "Typography": {
+    "Typography": "Tipográfia"
+  },
+  "Unavailable until its drive is mounted": {
+    "Unavailable until its drive is mounted": "Nem érhető el, amíg a meghajtója nincs csatolva"
+  },
+  "Under 1 MB": {
+    "Under 1 MB": "1 MB alatt"
+  },
+  "Undo": {
+    "Undo": "Visszavonás"
+  },
+  "Undone": {
+    "Undone": "Visszavonva"
+  },
+  "Unknown": {
+    "Unknown": "Ismeretlen"
+  },
+  "Unlock": {
+    "Unlock": "Feloldás"
+  },
+  "Unmount": {
+    "Unmount": "Leválasztás"
+  },
+  "Unpacks into a folder beside it.": {
+    "Unpacks into a folder beside it.": "Kicsomagolás egy mellette lévő mappába."
+  },
+  "Untitled document": {
+    "Untitled document": "Névtelen dokumentum"
+  },
+  "Untitled folder": {
+    "Untitled folder": "Névtelen mappa"
+  },
+  "Use": {
+    "Use": ""
+  },
+  "Use Dux Files for open and save dialogs": {
+    "Use Dux Files for open and save dialogs": "A Dux Fájlok használata a megnyitási és mentési párbeszédpanelekhez"
+  },
+  "Use a bundled color palette.": {
+    "Use a bundled color palette.": "Beépített színpaletta használata."
+  },
+  "Use an image from a web address": {
+    "Use an image from a web address": ""
+  },
+  "Use an image from this computer": {
+    "Use an image from this computer": ""
+  },
+  "Use these settings for all folders": {
+    "Use these settings for all folders": "Ezen beállítások használata minden mappához"
+  },
+  "Use this folder": {
+    "Use this folder": "Mappa használata"
+  },
+  "Username": {
+    "Username": "Felhasználónév"
+  },
+  "Using Dux Shell dynamic colors.": {
+    "Using Dux Shell dynamic colors.": "A Dux Shell dinamikus színeinek használata."
+  },
+  "Version": {
+    "Version": "Verzió"
+  },
+  "Version and capabilities": {
+    "Version and capabilities": "Verzió és képességek"
+  },
+  "Video": {
+    "Video": "Videó"
+  },
+  "View": {
+    "View": "Nézet"
+  },
+  "Views, sorting and defaults": {
+    "Views, sorting and defaults": "Nézetek, rendezés és alapértelmezések"
+  },
+  "Vim keys": {
+    "Vim keys": "Vim-billentyűk"
+  },
+  "Waiting": {
+    "Waiting": "Várakozás"
+  },
+  "Weight": {
+    "Weight": "Súly"
+  },
+  "Where the launcher keeps the games.": {
+    "Where the launcher keeps the games.": "Ahol az indító a játékokat tárolja."
+  },
+  "Window": {
+    "Window": "Ablak"
+  },
+  "Window header": {
+    "Window header": ""
+  },
+  "Windows": {
+    "Windows": "Ablakok"
+  },
+  "Working": {
+    "Working": "Folyamatban"
+  },
+  "Write": {
+    "Write": "Írás"
+  },
+  "Wrong password": {
+    "Wrong password": "Hibás jelszó"
+  },
+  "Zoom in": {
+    "Zoom in": "Nagyítás"
+  },
+  "Zoom out": {
+    "Zoom out": "Kicsinyítés"
+  },
+  "accessibility animation disable": {
+    "accessibility animation disable": "akadálymentesség animáció letiltás"
+  },
+  "animation click feedback": {
+    "animation click feedback": "animáció kattintás visszajelzés"
+  },
+  "animation speed motion": {
+    "animation speed motion": "animáció sebesség mozgás"
+  },
+  "bounce animation motion": {
+    "bounce animation motion": "visszapattanó animáció mozgás"
+  },
+  "capability available sandbox": {
+    "capability available sandbox": "képesség elérhető homokozó"
+  },
+  "config folder launcher wine prefix": {
+    "config folder launcher wine prefix": "konfigurációs mappa indító wine prefix"
+  },
+  "console emulator shell command line": {
+    "console emulator shell command line": "konzol emulátor parancssor héj"
+  },
+  "corners rounding shape square": {
+    "corners rounding shape square": "sarkok lekerekítés forma négyzet"
+  },
+  "custom theme json file": {
+    "custom theme json file": "egyéni téma json fájl"
+  },
+  "daemon connected offline socket": {
+    "daemon connected offline socket": "démon csatlakozva offline foglalat"
+  },
+  "daemon path unix": {
+    "daemon path unix": "démon útvonal unix"
+  },
+  "daemon protocol": {
+    "daemon protocol": "démon protokoll"
+  },
+  "daemon release build": {
+    "daemon release build": "démon kiadási verzió"
+  },
+  "dark": {
+    "dark": "sötét"
+  },
+  "decorations csd window header": {
+    "decorations csd window header": "dekorációk csd ablak fejléc"
+  },
+  "default file manager dbus reveal": {
+    "default file manager dbus reveal": "alapértelmezett fájlkezelő dbus felfedés"
+  },
+  "delete confirmation prompt": {
+    "delete confirmation prompt": "törlés megerősítés kérdés"
+  },
+  "density compact dense spacious comfortable spacing padding rows": {
+    "density compact dense spacious comfortable spacing padding rows": ""
+  },
+  "directories first sort": {
+    "directories first sort": "könyvtárak előre rendezés"
+  },
+  "documentation help manual": {
+    "documentation help manual": "dokumentáció súgó kézikönyv"
+  },
+  "dotfiles invisible": {
+    "dotfiles invisible": "rejtett fájlok láthatatlan"
+  },
+  "drag drop copy move ask default action": {
+    "drag drop copy move ask default action": "fogd és vidd másolás áthelyezés rákérdezés alapértelmezett művelet"
+  },
+  "drives usb volumes sidebar hide": {
+    "drives usb volumes sidebar hide": ""
+  },
+  "flatpak app id": {
+    "flatpak app id": "flatpak alkalmazás azonosító"
+  },
+  "focus ring width outline": {
+    "focus ring width outline": "fókuszkeret szélesség körvonal"
+  },
+  "folder memory per-folder remember": {
+    "folder memory per-folder remember": "mappa memória mappánként megjegyzés"
+  },
+  "font bold typography": {
+    "font bold typography": "betűtípus félkövér tipográfia"
+  },
+  "font family typeface dms system qt": {
+    "font family typeface dms system qt": "betűcsalád betűtípus dms rendszer qt"
+  },
+  "font size text zoom typography": {
+    "font size text zoom typography": "betűméret szöveg nagyítás tipográfia"
+  },
+  "font typeface": {
+    "font typeface": "betűtípus betűkészlet"
+  },
+  "font typeface code mono": {
+    "font typeface code mono": "betűtípus kód rögzített szélességű mono"
+  },
+  "font typeface headline title": {
+    "font typeface headline title": "betűtípus szedés főcím cím"
+  },
+  "games library steamapps common": {
+    "games library steamapps common": "játékok könyvtár steamapps common"
+  },
+  "gvfs smb sftp remote servers sidebar hide": {
+    "gvfs smb sftp remote servers sidebar hide": ""
+  },
+  "h j k l move, / searches and letters run commands instead of jumping to a name.": {
+    "h j k l move, / searches and letters run commands instead of jumping to a name.": "h j k l mozgat, / keres, és a betűk parancsokat futtatnak a névre ugrás helyett."
+  },
+  "h j k l move, / searches.": {
+    "h j k l move, / searches.": "h j k l mozgat, / keres."
+  },
+  "heroic epic gog amazon": {
+    "heroic epic gog amazon": "heroic epic gog amazon"
+  },
+  "history recently used opened sidebar": {
+    "history recently used opened sidebar": "előzmények legutóbb használt megnyitott oldalsáv"
+  },
+  "hjkl keyboard navigation modal": {
+    "hjkl keyboard navigation modal": "hjkl billentyűzet navigáció modális"
+  },
+  "internal drives udisks home boot": {
+    "internal drives udisks home boot": "belső meghajtók udisks home boot"
+  },
+  "keyboard outline accessibility": {
+    "keyboard outline accessibility": "billentyűzet körvonal akadálymentesség"
+  },
+  "keys bindings hotkeys F1": {
+    "keys bindings hotkeys F1": "billentyűk hozzárendelések gyorsbillentyűk F1"
+  },
+  "light": {
+    "light": "világos"
+  },
+  "light dark mode system color scheme": {
+    "light dark mode system color scheme": "világos sötét mód rendszer színséma"
+  },
+  "list grid columns icons tiles": {
+    "list grid columns icons tiles": "lista rács oszlopok ikonok csempék"
+  },
+  "locale translation interface": {
+    "locale translation interface": "területi beállítás fordítás felület"
+  },
+  "lutris wine prefix": {
+    "lutris wine prefix": "lutris wine prefix"
+  },
+  "mount usb removable sidebar": {
+    "mount usb removable sidebar": "csatolás usb cserélhető oldalsáv"
+  },
+  "order direction ascending reverse": {
+    "order direction ascending reverse": "sorrend irány növekvő fordított"
+  },
+  "order name size modified type date": {
+    "order name size modified type date": "sorrend név méret módosítva típus dátum"
+  },
+  "palette dms preset custom accent": {
+    "palette dms preset custom accent": "paletta dms előbeállítás egyéni kiemelés"
+  },
+  "portal file chooser picker xdg": {
+    "portal file chooser picker xdg": "portál fájlválasztó xdg"
+  },
+  "preset palette swatch colors": {
+    "preset palette swatch colors": "előre beállított paletta színminták színek"
+  },
+  "previews images video pdf": {
+    "previews images video pdf": "előnézetek képek videó pdf"
+  },
+  "quit exit hide daemon keep running": {
+    "quit exit hide daemon keep running": "kilépés bezárás elrejtés démon futtatás folytatása"
+  },
+  "remote sftp smb previews": {
+    "remote sftp smb previews": "távoli sftp smb előnézetek"
+  },
+  "reset clear per-folder memory": {
+    "reset clear per-folder memory": "visszaállítás törlés mappánkénti memória"
+  },
+  "search dotfiles recursive": {
+    "search dotfiles recursive": "keresés rejtett fájlok rekurzív"
+  },
+  "search exclude ignore": {
+    "search exclude ignore": "keresés kizárás figyelmen kívül hagyás"
+  },
+  "single double click activate": {
+    "single double click activate": "egyszeres dupla kattintás aktiválás"
+  },
+  "size column entries": {
+    "size column entries": "méret oszlop bejegyzések"
+  },
+  "source code repository issues": {
+    "source code repository issues": "forráskód tároló problémák hibák"
+  },
+  "steam heroic lutris proton games sidebar hide": {
+    "steam heroic lutris proton games sidebar hide": "steam heroic lutris proton játékok oldalsáv elrejtés"
+  },
+  "steam proton valve": {
+    "steam proton valve": "steam proton valve"
+  },
+  "suffix type filename": {
+    "suffix type filename": "kiterjesztés típus fájlnév"
+  },
+  "tabs external open location": {
+    "tabs external open location": "lapok külső megnyitás hely"
+  },
+  "thumbnail size limit cap megabytes": {
+    "thumbnail size limit cap megabytes": "bélyegkép előnézet méret korlát maximum megabájt"
+  },
+  "title bar header hide decorations": {
+    "title bar header hide decorations": ""
+  },
+  "type-ahead jump filter search keyboard": {
+    "type-ahead jump filter search keyboard": "gépelés közbeni ugrás szűrő keresés billentyűzet"
+  },
+  "wine prefix proton compatdata": {
+    "wine prefix proton compatdata": "wine prefix proton compatdata"
+  },
+  "xdg-desktop-portal": {
+    "xdg-desktop-portal": "xdg-desktop-portal"
+  },
+  "xdg-open follows the handler on your PATH.": {
+    "xdg-open follows the handler on your PATH.": ""
+  },
+  "xdg-open handlr mimeo opener default application launch": {
+    "xdg-open handlr mimeo opener default application launch": ""
+  },
+  "zip tar unpack compressed": {
+    "zip tar unpack compressed": "zip tar kibontás tömörített"
+  },
+  "zoom rows": {
+    "zoom rows": "sorok nagyítása"
+  },
+  "zoom thumbnails tiles": {
+    "zoom thumbnails tiles": "bélyegképek előnézetek csempék nagyítása"
+  }
+}

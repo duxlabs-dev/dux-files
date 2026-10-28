@@ -206,6 +206,9 @@
   "Backend: started on demand through %1": {
     "Backend: started on demand through %1": "后端：通过 %1 按需启动"
   },
+  "Badges": {
+    "Badges": ""
+  },
   "Balanced": {
     "Balanced": "平衡"
   },
@@ -238,6 +241,12 @@
   },
   "Choose a JSON color theme file.": {
     "Choose a JSON color theme file.": "选择一个 JSON 颜色主题文件。"
+  },
+  "Choose a badge image": {
+    "Choose a badge image": ""
+  },
+  "Clear": {
+    "Clear": ""
   },
   "Clear Recent": {
     "Clear Recent": "清除最近记录"
@@ -274,6 +283,12 @@
   },
   "Column view": {
     "Column view": "分栏视图"
+  },
+  "Comfortable": {
+    "Comfortable": ""
+  },
+  "Compact": {
+    "Compact": ""
   },
   "Compress": {
     "Compress": "压缩"
@@ -377,6 +392,9 @@
   "Default": {
     "Default": ""
   },
+  "Default application": {
+    "Default application": ""
+  },
   "Default applications": {
     "Default applications": "默认应用"
   },
@@ -398,11 +416,20 @@
   "Deleting": {
     "Deleting": "正在删除"
   },
+  "Dense": {
+    "Dense": ""
+  },
+  "Density": {
+    "Density": ""
+  },
   "Details": {
     "Details": "详细信息"
   },
   "Devices": {
     "Devices": "设备"
+  },
+  "Devices in the sidebar": {
+    "Devices in the sidebar": ""
   },
   "Disconnect": {
     "Disconnect": "断开连接"
@@ -551,6 +578,9 @@
   "Focus the sidebar": {
     "Focus the sidebar": "聚焦侧边栏"
   },
+  "Folder appearance": {
+    "Folder appearance": ""
+  },
   "Folders": {
     "Folders": "文件夹"
   },
@@ -644,14 +674,23 @@
   "Heroic": {
     "Heroic": ""
   },
+  "Hides the title and the window buttons, leaving a thin strip to drag the window.": {
+    "Hides the title and the window buttons, leaving a thin strip to drag the window.": ""
+  },
   "Home": {
     "Home": "主文件夹"
   },
   "Host filesystem": {
     "Host filesystem": "主机文件系统"
   },
+  "Icons": {
+    "Icons": ""
+  },
   "Image pasted": {
     "Image pasted": "已粘贴图片"
+  },
+  "Image web address": {
+    "Image web address": ""
   },
   "Images": {
     "Images": "图片"
@@ -673,6 +712,9 @@
   },
   "Index is still building, results may be incomplete": {
     "Index is still building, results may be incomplete": "索引仍在建立，结果可能不完整"
+  },
+  "Interface density": {
+    "Interface density": ""
   },
   "Invert the selection": {
     "Invert the selection": "反向选择"
@@ -776,6 +818,12 @@
   "Mount": {
     "Mount": "挂载"
   },
+  "Mounted and removable drives.": {
+    "Mounted and removable drives.": ""
+  },
+  "Mounted network locations and Connect to Server.": {
+    "Mounted network locations and Connect to Server.": ""
+  },
   "Move": {
     "Move": "移动"
   },
@@ -829,6 +877,9 @@
   },
   "Network": {
     "Network": "网络"
+  },
+  "Network in the sidebar": {
+    "Network in the sidebar": ""
   },
   "Network locations are unavailable because gvfs is not running": {
     "Network locations are unavailable because gvfs is not running": "gvfs 未运行，网络位置不可用"
@@ -922,6 +973,9 @@
   },
   "Open files": {
     "Open files": "打开文件"
+  },
+  "Open files with": {
+    "Open files with": ""
   },
   "Open folders from other apps in a new tab": {
     "Open folders from other apps in a new tab": "在其他应用中打开文件夹时使用新标签页"
@@ -1166,6 +1220,9 @@
   "Restore": {
     "Restore": "还原"
   },
+  "Restore default": {
+    "Restore default": ""
+  },
   "Restored": {
     "Restored": "已还原"
   },
@@ -1232,6 +1289,12 @@
   "Search applications": {
     "Search applications": "搜索应用"
   },
+  "Search icon": {
+    "Search icon": ""
+  },
+  "Search icons": {
+    "Search icons": ""
+  },
   "Search in Files": {
     "Search in Files": "在文件中搜索"
   },
@@ -1286,6 +1349,9 @@
   "Show": {
     "Show": "显示"
   },
+  "Show devices": {
+    "Show devices": ""
+  },
   "Show file extensions": {
     "Show file extensions": ""
   },
@@ -1294,6 +1360,9 @@
   },
   "Show hidden files": {
     "Show hidden files": "显示隐藏文件"
+  },
+  "Show network": {
+    "Show network": ""
   },
   "Show system partitions": {
     "Show system partitions": "显示系统分区"
@@ -1345,6 +1414,9 @@
   },
   "Sort descending": {
     "Sort descending": "降序排序"
+  },
+  "Spacious": {
+    "Spacious": ""
   },
   "Split view": {
     "Split view": "分栏视图"
@@ -1514,11 +1586,20 @@
   "Untitled folder": {
     "Untitled folder": "无标题文件夹"
   },
+  "Use": {
+    "Use": ""
+  },
   "Use Dux Files for open and save dialogs": {
     "Use Dux Files for open and save dialogs": "使用 Dux Files 处理打开和保存对话框"
   },
   "Use a bundled color palette.": {
     "Use a bundled color palette.": "使用内置调色板。"
+  },
+  "Use an image from a web address": {
+    "Use an image from a web address": ""
+  },
+  "Use an image from this computer": {
+    "Use an image from this computer": ""
   },
   "Use these settings for all folders": {
     "Use these settings for all folders": "对所有文件夹使用这些设置"
@@ -1561,6 +1642,9 @@
   },
   "Window": {
     "Window": "窗口"
+  },
+  "Window header": {
+    "Window header": ""
   },
   "Windows": {
     "Windows": "窗口"
@@ -1631,6 +1715,9 @@
   "delete confirmation prompt": {
     "delete confirmation prompt": "删除 确认 提示"
   },
+  "density compact dense spacious comfortable spacing padding rows": {
+    "density compact dense spacious comfortable spacing padding rows": ""
+  },
   "directories first sort": {
     "directories first sort": "文件夹优先 排序"
   },
@@ -1642,6 +1729,9 @@
   },
   "drag drop copy move ask default action": {
     "drag drop copy move ask default action": "拖放 复制 移动 询问 默认操作"
+  },
+  "drives usb volumes sidebar hide": {
+    "drives usb volumes sidebar hide": ""
   },
   "flatpak app id": {
     "flatpak app id": "flatpak 应用 id"
@@ -1672,6 +1762,9 @@
   },
   "games library steamapps common": {
     "games library steamapps common": ""
+  },
+  "gvfs smb sftp remote servers sidebar hide": {
+    "gvfs smb sftp remote servers sidebar hide": ""
   },
   "h j k l move, / searches and letters run commands instead of jumping to a name.": {
     "h j k l move, / searches and letters run commands instead of jumping to a name.": "h j k l 移动，/ 搜索，字母执行命令而不是跳转到名称。"
@@ -1772,6 +1865,9 @@
   "thumbnail size limit cap megabytes": {
     "thumbnail size limit cap megabytes": "缩略图 大小 限制 上限 兆字节"
   },
+  "title bar header hide decorations": {
+    "title bar header hide decorations": ""
+  },
   "type-ahead jump filter search keyboard": {
     "type-ahead jump filter search keyboard": "即时输入 跳转 筛选 搜索 键盘"
   },
@@ -1780,6 +1876,12 @@
   },
   "xdg-desktop-portal": {
     "xdg-desktop-portal": "xdg-desktop-portal"
+  },
+  "xdg-open follows the handler on your PATH.": {
+    "xdg-open follows the handler on your PATH.": ""
+  },
+  "xdg-open handlr mimeo opener default application launch": {
+    "xdg-open handlr mimeo opener default application launch": ""
   },
   "zip tar unpack compressed": {
     "zip tar unpack compressed": "zip tar 解压 压缩"

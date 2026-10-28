@@ -25,6 +25,8 @@ API_TOKEN_ENV = "POEDITOR_API_TOKEN"
 PROJECT_ID_ENV = "DFILES_POEDITOR_PROJECT_ID"
 
 LANGUAGES = {
+    "de": "de.json",
+    "hu": "hu.json",
     "zh-Hans": "zh_CN.json",
     "zh-Hant": "zh_TW.json",
 }
