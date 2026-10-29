@@ -207,7 +207,7 @@
     "Backend: started on demand through %1": "Háttérrendszer: igény szerint elindítva a(z) %1 révén"
   },
   "Badges": {
-    "Badges": ""
+    "Badges": "Jelvények"
   },
   "Balanced": {
     "Balanced": "Kiegyensúlyozott"
@@ -243,10 +243,10 @@
     "Choose a JSON color theme file.": "Válassz egy JSON színtémafájlt."
   },
   "Choose a badge image": {
-    "Choose a badge image": ""
+    "Choose a badge image": "Válassz jelvényképet"
   },
   "Clear": {
-    "Clear": ""
+    "Clear": "Törlés"
   },
   "Clear Recent": {
     "Clear Recent": "Előzmények törlése"
@@ -285,10 +285,10 @@
     "Column view": "Oszlopnézet"
   },
   "Comfortable": {
-    "Comfortable": ""
+    "Comfortable": "Kényelmes"
   },
   "Compact": {
-    "Compact": ""
+    "Compact": "Kompakt"
   },
   "Compress": {
     "Compress": "Tömörítés"
@@ -393,7 +393,7 @@
     "Default": "Alapértelmezett"
   },
   "Default application": {
-    "Default application": ""
+    "Default application": "Alapértelmezett alkalmazás"
   },
   "Default applications": {
     "Default applications": "Alapértelmezett alkalmazások"
@@ -417,10 +417,10 @@
     "Deleting": "Törlés folyamatban"
   },
   "Dense": {
-    "Dense": ""
+    "Dense": "Sűrű"
   },
   "Density": {
-    "Density": ""
+    "Density": "Sűrűség"
   },
   "Details": {
     "Details": "Részletek"
@@ -429,7 +429,7 @@
     "Devices": "Eszközök"
   },
   "Devices in the sidebar": {
-    "Devices in the sidebar": ""
+    "Devices in the sidebar": "Eszközök az oldalsávban"
   },
   "Disconnect": {
     "Disconnect": "Leválasztás"
@@ -579,7 +579,7 @@
     "Focus the sidebar": "Fókusz az oldalsávra"
   },
   "Folder appearance": {
-    "Folder appearance": ""
+    "Folder appearance": "Mappa megjelenése"
   },
   "Folders": {
     "Folders": "Mappák"
@@ -675,7 +675,7 @@
     "Heroic": "Heroic"
   },
   "Hides the title and the window buttons, leaving a thin strip to drag the window.": {
-    "Hides the title and the window buttons, leaving a thin strip to drag the window.": ""
+    "Hides the title and the window buttons, leaving a thin strip to drag the window.": "Elrejti a címet és az ablakgombokat, egy vékony sávot hagyva az ablak mozgatásához."
   },
   "Home": {
     "Home": "Kezdőlap"
@@ -684,13 +684,13 @@
     "Host filesystem": "Gazdagép fájlrendszere"
   },
   "Icons": {
-    "Icons": ""
+    "Icons": "Ikonok"
   },
   "Image pasted": {
     "Image pasted": "Kép beillesztve"
   },
   "Image web address": {
-    "Image web address": ""
+    "Image web address": "Kép webcíme"
   },
   "Images": {
     "Images": "Képek"
@@ -714,7 +714,7 @@
     "Index is still building, results may be incomplete": "Az indexelés még folyamatban van, az eredmények hiányosak lehetnek"
   },
   "Interface density": {
-    "Interface density": ""
+    "Interface density": "Felület sűrűsége"
   },
   "Invert the selection": {
     "Invert the selection": "Kijelölés megfordítása"
@@ -819,10 +819,10 @@
     "Mount": "Csatolás"
   },
   "Mounted and removable drives.": {
-    "Mounted and removable drives.": ""
+    "Mounted and removable drives.": "Csatolt és cserélhető meghajtók."
   },
   "Mounted network locations and Connect to Server.": {
-    "Mounted network locations and Connect to Server.": ""
+    "Mounted network locations and Connect to Server.": "Csatolt hálózati helyek és Kapcsolódás a kiszolgálóhoz."
   },
   "Move": {
     "Move": "Áthelyezés"
@@ -879,7 +879,7 @@
     "Network": "Hálózat"
   },
   "Network in the sidebar": {
-    "Network in the sidebar": ""
+    "Network in the sidebar": "Hálózat az oldalsávban"
   },
   "Network locations are unavailable because gvfs is not running": {
     "Network locations are unavailable because gvfs is not running": "A hálózati helyek nem érhetők el, mert a gvfs nem fut"
@@ -975,7 +975,7 @@
     "Open files": "Fájlok megnyitása"
   },
   "Open files with": {
-    "Open files with": ""
+    "Open files with": "Fájlok megnyitása ezzel"
   },
   "Open folders from other apps in a new tab": {
     "Open folders from other apps in a new tab": "Más alkalmazásokból származó mappák megnyitása új lapon"
@@ -1221,7 +1221,7 @@
     "Restore": "Helyreállítás"
   },
   "Restore default": {
-    "Restore default": ""
+    "Restore default": "Alapértelmezés visszaállítása"
   },
   "Restored": {
     "Restored": "Helyreállítva"
@@ -1290,10 +1290,10 @@
     "Search applications": "Alkalmazások keresése"
   },
   "Search icon": {
-    "Search icon": ""
+    "Search icon": "Ikon keresése"
   },
   "Search icons": {
-    "Search icons": ""
+    "Search icons": "Ikonok keresése"
   },
   "Search in Files": {
     "Search in Files": "Keresés a fájlokban"
@@ -1350,7 +1350,7 @@
     "Show": "Megjelenítés"
   },
   "Show devices": {
-    "Show devices": ""
+    "Show devices": "Eszközök megjelenítése"
   },
   "Show file extensions": {
     "Show file extensions": "Fájlkiterjesztések megjelenítése"
@@ -1362,7 +1362,7 @@
     "Show hidden files": "Rejtett fájlok megjelenítése"
   },
   "Show network": {
-    "Show network": ""
+    "Show network": "Hálózat megjelenítése"
   },
   "Show system partitions": {
     "Show system partitions": "Rendszerpartíciók megjelenítése"
@@ -1416,7 +1416,7 @@
     "Sort descending": "Csökkenő sorrend"
   },
   "Spacious": {
-    "Spacious": ""
+    "Spacious": "Tágas"
   },
   "Split view": {
     "Split view": "Osztott nézet"
@@ -1587,7 +1587,7 @@
     "Untitled folder": "Névtelen mappa"
   },
   "Use": {
-    "Use": ""
+    "Use": "Használat"
   },
   "Use Dux Files for open and save dialogs": {
     "Use Dux Files for open and save dialogs": "A Dux Fájlok használata a megnyitási és mentési párbeszédpanelekhez"
@@ -1596,10 +1596,10 @@
     "Use a bundled color palette.": "Beépített színpaletta használata."
   },
   "Use an image from a web address": {
-    "Use an image from a web address": ""
+    "Use an image from a web address": "Kép használata webcímről"
   },
   "Use an image from this computer": {
-    "Use an image from this computer": ""
+    "Use an image from this computer": "Kép használata erről a számítógépről"
   },
   "Use these settings for all folders": {
     "Use these settings for all folders": "Ezen beállítások használata minden mappához"
@@ -1644,7 +1644,7 @@
     "Window": "Ablak"
   },
   "Window header": {
-    "Window header": ""
+    "Window header": "Ablakfejléc"
   },
   "Windows": {
     "Windows": "Ablakok"
@@ -1716,7 +1716,7 @@
     "delete confirmation prompt": "törlés megerősítés kérdés"
   },
   "density compact dense spacious comfortable spacing padding rows": {
-    "density compact dense spacious comfortable spacing padding rows": ""
+    "density compact dense spacious comfortable spacing padding rows": "sűrűség kompakt sűrű tágas kényelmes térköz térkitöltés sorok"
   },
   "directories first sort": {
     "directories first sort": "könyvtárak előre rendezés"
@@ -1731,7 +1731,7 @@
     "drag drop copy move ask default action": "fogd és vidd másolás áthelyezés rákérdezés alapértelmezett művelet"
   },
   "drives usb volumes sidebar hide": {
-    "drives usb volumes sidebar hide": ""
+    "drives usb volumes sidebar hide": "meghajtók usb kötetek oldalsáv elrejtés"
   },
   "flatpak app id": {
     "flatpak app id": "flatpak alkalmazás azonosító"
@@ -1764,7 +1764,7 @@
     "games library steamapps common": "játékok könyvtár steamapps common"
   },
   "gvfs smb sftp remote servers sidebar hide": {
-    "gvfs smb sftp remote servers sidebar hide": ""
+    "gvfs smb sftp remote servers sidebar hide": "gvfs smb sftp távoli szerverek kiszolgálók oldalsáv elrejtés"
   },
   "h j k l move, / searches and letters run commands instead of jumping to a name.": {
     "h j k l move, / searches and letters run commands instead of jumping to a name.": "h j k l mozgat, / keres, és a betűk parancsokat futtatnak a névre ugrás helyett."
@@ -1866,7 +1866,7 @@
     "thumbnail size limit cap megabytes": "bélyegkép előnézet méret korlát maximum megabájt"
   },
   "title bar header hide decorations": {
-    "title bar header hide decorations": ""
+    "title bar header hide decorations": "címsor fejléc elrejtés díszítések"
   },
   "type-ahead jump filter search keyboard": {
     "type-ahead jump filter search keyboard": "gépelés közbeni ugrás szűrő keresés billentyűzet"
@@ -1878,10 +1878,10 @@
     "xdg-desktop-portal": "xdg-desktop-portal"
   },
   "xdg-open follows the handler on your PATH.": {
-    "xdg-open follows the handler on your PATH.": ""
+    "xdg-open follows the handler on your PATH.": "Az xdg-open a PATH környezeti változóban lévő kezelőt követi."
   },
   "xdg-open handlr mimeo opener default application launch": {
-    "xdg-open handlr mimeo opener default application launch": ""
+    "xdg-open handlr mimeo opener default application launch": "xdg-open handlr mimeo opener alapértelmezett alkalmazás indítás"
   },
   "zip tar unpack compressed": {
     "zip tar unpack compressed": "zip tar kibontás tömörített"

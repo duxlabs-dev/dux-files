@@ -1,0 +1,1895 @@
+{
+  "%1 already exist in this folder. Do you want to overwrite them?": {
+    "%1 already exist in this folder. Do you want to overwrite them?": "%1 вже існує в цій теці. Бажаєте перезаписати їх?"
+  },
+  "%1 already exists in this folder.": {
+    "%1 already exists in this folder.": "%1 вже існує в цій теці"
+  },
+  "%1 bookmarks imported": {
+    "%1 bookmarks imported": "Імпортовано %1 закладки"
+  },
+  "%1 can be run as a program. Open it in an editor instead to read it first.": {
+    "%1 can be run as a program. Open it in an editor instead to read it first.": "%1 можна запустити як програму. Замість цього відкрийте його в редакторі, щоб спочатку прочитати"
+  },
+  "%1 folders could not be read": {
+    "%1 folders could not be read": "Не вдалося прочитати %1 теки"
+  },
+  "%1 h %2 min left": {
+    "%1 h %2 min left": "Залишилося %1 год %2 хв"
+  },
+  "%1 has not been marked as trusted. Running it allows it to start any program.": {
+    "%1 has not been marked as trusted. Running it allows it to start any program.": "%1 не позначено як довірений. Запуск дозволить йому стартувати будь-яку програму"
+  },
+  "%1 hidden": {
+    "%1 hidden": "%1 приховано"
+  },
+  "%1 holds it; Files takes over when it quits.": {
+    "%1 holds it; Files takes over when it quits.": "%1 утримує його; Dux Files перехоплять керування після виходу"
+  },
+  "%1 is encrypted. Enter its passphrase to unlock it.": {
+    "%1 is encrypted. Enter its passphrase to unlock it.": "%1 зашифровано. Введіть пароль, щоб розблокувати його"
+  },
+  "%1 is password protected.": {
+    "%1 is password protected.": "%1 захищено паролем"
+  },
+  "%1 items copied": {
+    "%1 items copied": "Скопійовано %1 елементів"
+  },
+  "%1 items cut": {
+    "%1 items cut": "Вирізано %1 елементів"
+  },
+  "%1 levels deep": {
+    "%1 levels deep": "Глибина %1 рівнів"
+  },
+  "%1 matching “%2”": {
+    "%1 matching “%2”": "%1 збігів за запитом «%2»"
+  },
+  "%1 min left": {
+    "%1 min left": "Залишилося %1 хв"
+  },
+  "%1 px": {
+    "%1 px": "%1 пкс"
+  },
+  "%1 s left": {
+    "%1 s left": "Залишилося %1 с"
+  },
+  "%1 used · %2 free · %3 total": {
+    "%1 used · %2 free · %3 total": "Використано %1 · вільно %2 · всього %3"
+  },
+  "%1 will be deleted permanently. This cannot be undone.": {
+    "%1 will be deleted permanently. This cannot be undone.": "%1 буде видалено назавжди. Цю дію неможливо скасувати"
+  },
+  "%1 will be moved to the trash.": {
+    "%1 will be moved to the trash.": "%1 буде переміщено до кошика"
+  },
+  "%1 · %2": {
+    "%1 · %2": "%1 · %2"
+  },
+  "%1 …": {
+    "%1 …": "%1 …"
+  },
+  "%1, %2 matches": {
+    "%1, %2 matches": "%1, %2 збігів"
+  },
+  "%1/s": {
+    "%1/s": "%1/с"
+  },
+  "1 MB to 100 MB": {
+    "1 MB to 100 MB": "Від 1 до 100 МБ"
+  },
+  "1 item copied": {
+    "1 item copied": "Скопійовано 1 елемент"
+  },
+  "1 item cut": {
+    "1 item cut": "Вирізано 1 елемент"
+  },
+  "50 is the Material default.": {
+    "50 is the Material default.": "50 — це типове значення Material"
+  },
+  "? or F1 in the main window.": {
+    "? or F1 in the main window.": "? або F1 у головному вікні"
+  },
+  "API": {
+    "API": "API"
+  },
+  "About": {
+    "About": "Про програму"
+  },
+  "Accessed": {
+    "Accessed": "Дата доступу"
+  },
+  "Add or remove one item": {
+    "Add or remove one item": "Додати або видалити один елемент"
+  },
+  "Add or remove the item under the cursor": {
+    "Add or remove the item under the cursor": "Додати або видалити елемент під курсором"
+  },
+  "Add to bookmarks": {
+    "Add to bookmarks": "Додати до закладок"
+  },
+  "Address": {
+    "Address": "Адреса"
+  },
+  "Administrator access is not available": {
+    "Administrator access is not available": "Доступ адміністратора неможливий"
+  },
+  "Administrator access is not available because pkexec is not installed": {
+    "Administrator access is not available because pkexec is not installed": "Доступ адміністратора неможливий, оскільки pkexec не встановлено"
+  },
+  "Administrator access is not available because the polkit policy is not installed": {
+    "Administrator access is not available because the polkit policy is not installed": "Доступ адміністратора неможливий, оскільки політику polkit не встановлено"
+  },
+  "Administrator access is not available inside the sandbox": {
+    "Administrator access is not available inside the sandbox": "Доступ адміністратора неможливий всередині пісочниці"
+  },
+  "Already here": {
+    "Already here": "Вже тут"
+  },
+  "Always": {
+    "Always": "Завжди"
+  },
+  "Always use the dark theme.": {
+    "Always use the dark theme.": "Завжди використовувати темну тему"
+  },
+  "Always use the light theme.": {
+    "Always use the light theme.": "Завжди використовувати світлу тему"
+  },
+  "Always use this application": {
+    "Always use this application": "Завжди використовувати цю програму"
+  },
+  "Amber": {
+    "Amber": "Бурштиновий"
+  },
+  "Another file manager holds it.": {
+    "Another file manager holds it.": "Утримується іншим менеджером файлів"
+  },
+  "Any size": {
+    "Any size": "Будь-який розмір"
+  },
+  "Any time": {
+    "Any time": "Будь-який час"
+  },
+  "Appearance": {
+    "Appearance": "Вигляд"
+  },
+  "Apply": {
+    "Apply": "Застосувати"
+  },
+  "Apply to everything inside": {
+    "Apply to everything inside": "Застосувати до всього всередині"
+  },
+  "Archive": {
+    "Archive": "Архів"
+  },
+  "Archive created": {
+    "Archive created": "Архів створено"
+  },
+  "Archives": {
+    "Archives": "Архіви"
+  },
+  "Ask": {
+    "Ask": "Запитати"
+  },
+  "Ask every time": {
+    "Ask every time": "Запитувати щоразу"
+  },
+  "Audio": {
+    "Audio": "Аудіо"
+  },
+  "Auto": {
+    "Auto": "Авто"
+  },
+  "Automatic": {
+    "Automatic": "Автоматично"
+  },
+  "Automatic uses $TERMINAL.": {
+    "Automatic uses $TERMINAL.": "Автоматично використовує $TERMINAL"
+  },
+  "Available": {
+    "Available": "Доступно"
+  },
+  "Back": {
+    "Back": "Назад"
+  },
+  "Back to the files": {
+    "Back to the files": "Назад до файлів"
+  },
+  "Backend": {
+    "Backend": "Сервіс"
+  },
+  "Backend: not reachable, no activation file": {
+    "Backend: not reachable, no activation file": "Сервіс: недоступний, файл активації відсутній"
+  },
+  "Backend: served by this instance": {
+    "Backend: served by this instance": "Сервіс: обслуговується цим екземпляром"
+  },
+  "Backend: started on demand through %1": {
+    "Backend: started on demand through %1": "Сервіс: запущено за запитом через %1"
+  },
+  "Badges": {
+    "Badges": "Значки"
+  },
+  "Balanced": {
+    "Balanced": "Збалансований"
+  },
+  "Behaviour": {
+    "Behaviour": "Поведінка"
+  },
+  "Being added": {
+    "Being added": "Додавання"
+  },
+  "Blue": {
+    "Blue": "Синій"
+  },
+  "Bookmark this folder": {
+    "Bookmark this folder": "Додати цю теку до закладок"
+  },
+  "Cancel": {
+    "Cancel": "Скасувати"
+  },
+  "Cancelled": {
+    "Cancelled": "Скасовано"
+  },
+  "Capabilities": {
+    "Capabilities": "Можливості"
+  },
+  "Changing owner": {
+    "Changing owner": "Зміна власника"
+  },
+  "Changing permissions": {
+    "Changing permissions": "Зміна дозволів"
+  },
+  "Choose a JSON color theme file.": {
+    "Choose a JSON color theme file.": "Виберіть файл JSON з темою кольорів"
+  },
+  "Choose a badge image": {
+    "Choose a badge image": "Виберіть зображення значка"
+  },
+  "Clear": {
+    "Clear": "Очистити"
+  },
+  "Clear Recent": {
+    "Clear Recent": "Очистити нещодавні"
+  },
+  "Clear the clipboard": {
+    "Clear the clipboard": "Очистити буфер обміну"
+  },
+  "Clear the recent files list?": {
+    "Clear the recent files list?": "Очистити список нещодавніх файлів?"
+  },
+  "Clear the selection": {
+    "Clear the selection": "Скинути виділення"
+  },
+  "Close": {
+    "Close": "Закрити"
+  },
+  "Close behavior": {
+    "Close behavior": "Поведінка при закритті"
+  },
+  "Close other tabs": {
+    "Close other tabs": "Закрити інші вкладки"
+  },
+  "Close tab": {
+    "Close tab": "Закрити вкладку"
+  },
+  "Close tabs to the right": {
+    "Close tabs to the right": "Закрити вкладки праворуч"
+  },
+  "Collapse": {
+    "Collapse": "Згорнути"
+  },
+  "Color source": {
+    "Color source": "Джерело кольору"
+  },
+  "Column view": {
+    "Column view": "Вигляд стовпцями"
+  },
+  "Comfortable": {
+    "Comfortable": "Комфортний"
+  },
+  "Compact": {
+    "Compact": "Компактний"
+  },
+  "Compress": {
+    "Compress": "Стиснути"
+  },
+  "Compressing": {
+    "Compressing": "Стиснення"
+  },
+  "Compress…": {
+    "Compress…": "Стиснути…"
+  },
+  "Confirm": {
+    "Confirm": "Підтвердити"
+  },
+  "Confirm before moving to the trash": {
+    "Confirm before moving to the trash": "Підтверджувати перед переміщенням до кошика"
+  },
+  "Connect": {
+    "Connect": "Підключити"
+  },
+  "Connect anonymously": {
+    "Connect anonymously": "Підключитися анонімно"
+  },
+  "Connect to Server": {
+    "Connect to Server": "Підключитися до сервера"
+  },
+  "Connect to Server…": {
+    "Connect to Server…": "Підключитися до сервера…"
+  },
+  "Connected": {
+    "Connected": "Підключено"
+  },
+  "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": {
+    "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": "Підключено, але спільна тека не має локальної. Можливо, служба gvfs FUSE не запущена"
+  },
+  "Contents": {
+    "Contents": "Вміст"
+  },
+  "Copied": {
+    "Copied": "Скопійовано"
+  },
+  "Copy": {
+    "Copy": "Копіювати"
+  },
+  "Copy location path": {
+    "Copy location path": "Копіювати шлях до розташування"
+  },
+  "Copy name": {
+    "Copy name": "Копіювати назву"
+  },
+  "Copy to": {
+    "Copy to": "Копіювати до"
+  },
+  "Copy to…": {
+    "Copy to…": "Копіювати до…"
+  },
+  "Copying": {
+    "Copying": "Копіювання"
+  },
+  "Coral": {
+    "Coral": "Кораловий"
+  },
+  "Could not read that file, expected a JSON color theme.": {
+    "Could not read that file, expected a JSON color theme.": "Не вдалося прочитати цей файл, очікувався JSON-файл теми кольорів"
+  },
+  "Count items in folders": {
+    "Count items in folders": "Підрахувати елементи в теках"
+  },
+  "Create": {
+    "Create": "Створити"
+  },
+  "Created": {
+    "Created": "Створено"
+  },
+  "Creating": {
+    "Creating": "Створення"
+  },
+  "Ctrl copies, Alt asks.": {
+    "Ctrl copies, Alt asks.": "Ctrl копіює, Alt запитує"
+  },
+  "Ctrl+H toggles per window.": {
+    "Ctrl+H toggles per window.": "Ctrl+H перемикає для кожного вікна"
+  },
+  "Ctrl+Wheel resizes per window.": {
+    "Ctrl+Wheel resizes per window.": "Ctrl+Колесо змінює розмір для кожного вікна"
+  },
+  "Custom": {
+    "Custom": "Спеціальний"
+  },
+  "Cut": {
+    "Cut": "Вирізати"
+  },
+  "Cyan": {
+    "Cyan": "Ціан"
+  },
+  "Dark": {
+    "Dark": "Темний"
+  },
+  "Decrease": {
+    "Decrease": "Зменшити"
+  },
+  "Default": {
+    "Default": "Типове"
+  },
+  "Default application": {
+    "Default application": "Типова програма"
+  },
+  "Default applications": {
+    "Default applications": "Типові програми"
+  },
+  "Default icon size": {
+    "Default icon size": "Типовий розмір іконки"
+  },
+  "Default view": {
+    "Default view": "Типовий вигляд"
+  },
+  "Delete": {
+    "Delete": "Видалити"
+  },
+  "Delete permanently": {
+    "Delete permanently": "Видалити назавжди"
+  },
+  "Delete permanently?": {
+    "Delete permanently?": "Видалити назавжди?"
+  },
+  "Deleting": {
+    "Deleting": "Видалення"
+  },
+  "Dense": {
+    "Dense": "Щільний"
+  },
+  "Density": {
+    "Density": "Щільність"
+  },
+  "Details": {
+    "Details": "Подробиці"
+  },
+  "Devices": {
+    "Devices": "Пристрої"
+  },
+  "Devices in the sidebar": {
+    "Devices in the sidebar": "Пристрої на бічній панелі"
+  },
+  "Disconnect": {
+    "Disconnect": "Відключити"
+  },
+  "Display family": {
+    "Display family": "Сімейство шрифтів"
+  },
+  "Do this for the rest": {
+    "Do this for the rest": "Зробити це для решти"
+  },
+  "Docs": {
+    "Docs": "Документи"
+  },
+  "Documents": {
+    "Documents": "Документи"
+  },
+  "Domain": {
+    "Domain": "Домен"
+  },
+  "Double click": {
+    "Double click": "Подвійний клік"
+  },
+  "Downloads each file.": {
+    "Downloads each file.": "Завантажити кожен файл"
+  },
+  "Drag and drop": {
+    "Drag and drop": "Перетягування"
+  },
+  "Drives and mounting": {
+    "Drives and mounting": "Диски та монтування"
+  },
+  "Drives are unavailable because the sandbox cannot reach udisks2": {
+    "Drives are unavailable because the sandbox cannot reach udisks2": "Диски недоступні, оскільки пісочниця не має доступу до udisks2"
+  },
+  "Drives are unavailable because udisks2 is not running": {
+    "Drives are unavailable because udisks2 is not running": "Диски недоступні, оскільки udisks2 не запущено"
+  },
+  "Dropping without a modifier": {
+    "Dropping without a modifier": "Перетягування без модифікатора"
+  },
+  "Duplicate": {
+    "Duplicate": "Дублювати"
+  },
+  "Duplicate tab": {
+    "Duplicate tab": "Дублювати вкладку"
+  },
+  "Duplicated": {
+    "Duplicated": "Дубльовано"
+  },
+  "Duplicating": {
+    "Duplicating": "Дублювання"
+  },
+  "Duration": {
+    "Duration": "Тривалість"
+  },
+  "Dux Shell not detected, using %1.": {
+    "Dux Shell not detected, using %1.": "Dux Shell не виявлено, використовується %1"
+  },
+  "Dux Shell not detected, using the %1 preset.": {
+    "Dux Shell not detected, using the %1 preset.": "Dux Shell не виявлено, використовується набір налаштувань %1"
+  },
+  "Each launcher's own configuration folder.": {
+    "Each launcher's own configuration folder.": "Власна тека конфігурації для кожного запускача"
+  },
+  "Eject": {
+    "Eject": "Вилучити"
+  },
+  "Empty Trash": {
+    "Empty Trash": "Очистити кошик"
+  },
+  "Empty file": {
+    "Empty file": "Порожній файл"
+  },
+  "Empty the trash?": {
+    "Empty the trash?": "Очистити кошик?"
+  },
+  "Emptying the trash": {
+    "Emptying the trash": "Очищення кошика"
+  },
+  "Enter filename...": {
+    "Enter filename...": "Введіть ім'я файлу.."
+  },
+  "Estimating…": {
+    "Estimating…": "Оцінка…"
+  },
+  "Every folder goes back to the default sort and view.": {
+    "Every folder goes back to the default sort and view.": "Кожна тека повертається до типового сортування та вигляду"
+  },
+  "Everyone": {
+    "Everyone": "Усі"
+  },
+  "Everywhere": {
+    "Everywhere": "Скрізь"
+  },
+  "Execute": {
+    "Execute": "Виконати"
+  },
+  "Expand": {
+    "Expand": "Розгорнути"
+  },
+  "Extract archives on open": {
+    "Extract archives on open": "Розпаковувати архіви при відкритті"
+  },
+  "Extract here": {
+    "Extract here": "Розпакувати тут"
+  },
+  "Extract to": {
+    "Extract to": "Розпакувати в"
+  },
+  "Extract to…": {
+    "Extract to…": "Розпакувати в…"
+  },
+  "Extracted": {
+    "Extracted": "Розпаковано"
+  },
+  "Extracted to %1": {
+    "Extracted to %1": "Розпаковано в %1"
+  },
+  "Extracting": {
+    "Extracting": "Розпакування"
+  },
+  "Family": {
+    "Family": "Сімейство"
+  },
+  "File operations": {
+    "File operations": "Операції з файлами"
+  },
+  "File system": {
+    "File system": "Файлова система"
+  },
+  "Files": {
+    "Files": "Dux Files"
+  },
+  "Files Settings": {
+    "Files Settings": "Налаштування Dux Files"
+  },
+  "Filter": {
+    "Filter": "Фільтр"
+  },
+  "Finished": {
+    "Finished": "Завершено"
+  },
+  "Focus ring": {
+    "Focus ring": "Кільце фокусу"
+  },
+  "Focus the sidebar": {
+    "Focus the sidebar": "Фокусувати бічну панель"
+  },
+  "Folder appearance": {
+    "Folder appearance": "Вигляд теки"
+  },
+  "Folders": {
+    "Folders": "Теки"
+  },
+  "Folders before files": {
+    "Folders before files": "Теки перед файлами"
+  },
+  "Folders open in new tabs and files open in their applications.": {
+    "Folders open in new tabs and files open in their applications.": "Теки відкриваються в нових вкладках, а файли — у відповідних програмах"
+  },
+  "Folders open in new tabs, archives are extracted and other files open in their applications.": {
+    "Folders open in new tabs, archives are extracted and other files open in their applications.": "Теки відкриваються в нових вкладках, архіви розпаковуються, а інші файли відкриваються у відповідних програмах"
+  },
+  "Folders to skip": {
+    "Folders to skip": "Теки, які слід пропустити"
+  },
+  "Follow Dux Shell colors, falling back to a preset.": {
+    "Follow Dux Shell colors, falling back to a preset.": "Використовувати кольори Dux Shell, інакше — набір налаштувань"
+  },
+  "Following the system color scheme (currently %1).": {
+    "Following the system color scheme (currently %1).": "Використовувати системну кольорову схему (зараз %1)"
+  },
+  "Font source": {
+    "Font source": "Джерело шрифту"
+  },
+  "Forget": {
+    "Forget": "Забути"
+  },
+  "Forget all folder settings": {
+    "Forget all folder settings": "Забути всі налаштування теки"
+  },
+  "Forget all folder settings?": {
+    "Forget all folder settings?": "Забути всі налаштування теки?"
+  },
+  "Forward": {
+    "Forward": "Вперед"
+  },
+  "From the index": {
+    "From the index": "З індексу"
+  },
+  "Fuzzy": {
+    "Fuzzy": "Нечіткий"
+  },
+  "Games": {
+    "Games": "Ігри"
+  },
+  "Games and prefixes Heroic installed.": {
+    "Games and prefixes Heroic installed.": "Встановлено ігри та префікси Heroic"
+  },
+  "Games and prefixes Lutris installed.": {
+    "Games and prefixes Lutris installed.": "Встановлено ігри та префікси Lutris"
+  },
+  "Games folder": {
+    "Games folder": "Тека ігор"
+  },
+  "Games folders": {
+    "Games folders": "Теки ігор"
+  },
+  "Games in the sidebar": {
+    "Games in the sidebar": "Ігри на бічній панелі"
+  },
+  "General": {
+    "General": "Загальні"
+  },
+  "Getting around": {
+    "Getting around": "Навігація"
+  },
+  "GitHub": {
+    "GitHub": "GitHub"
+  },
+  "Go to that tab": {
+    "Go to that tab": "Перейти до цієї вкладки"
+  },
+  "Go to the home folder": {
+    "Go to the home folder": "Перейти до домашньої теки"
+  },
+  "Go to the parent folder": {
+    "Go to the parent folder": "Перейти до батьківської теки"
+  },
+  "Green": {
+    "Green": "Зелений"
+  },
+  "Grid icon size": {
+    "Grid icon size": "Розмір іконки сітки"
+  },
+  "Grid view": {
+    "Grid view": "Вигляд сіткою"
+  },
+  "Group": {
+    "Group": "Група"
+  },
+  "Heroic": {
+    "Heroic": "Heroic"
+  },
+  "Hides the title and the window buttons, leaving a thin strip to drag the window.": {
+    "Hides the title and the window buttons, leaving a thin strip to drag the window.": "Приховує заголовок і кнопки вікна, залишаючи вузьку смужку для перетягування вікна"
+  },
+  "Home": {
+    "Home": "Дім"
+  },
+  "Host filesystem": {
+    "Host filesystem": "Хостова файлова система"
+  },
+  "Icons": {
+    "Icons": "Піктограми"
+  },
+  "Image pasted": {
+    "Image pasted": "Зображення вставлено"
+  },
+  "Image web address": {
+    "Image web address": "Веб-адреса зображення"
+  },
+  "Images": {
+    "Images": "Зображення"
+  },
+  "Import": {
+    "Import": "Імпортувати"
+  },
+  "Import your GTK bookmarks?": {
+    "Import your GTK bookmarks?": "Імпортувати ваші GTK-закладки?"
+  },
+  "Include hidden files": {
+    "Include hidden files": "Включати приховані файли"
+  },
+  "Include ignored": {
+    "Include ignored": "Включати ігноровані"
+  },
+  "Increase": {
+    "Increase": "Збільшити"
+  },
+  "Index is still building, results may be incomplete": {
+    "Index is still building, results may be incomplete": "Індекс все ще створюється, результати можуть бути неповними"
+  },
+  "Interface density": {
+    "Interface density": "Щільність інтерфейсу"
+  },
+  "Invert the selection": {
+    "Invert the selection": "Інвертувати виділення"
+  },
+  "Items in the trash cannot be opened": {
+    "Items in the trash cannot be opened": "Елементи в кошику не можна відкрити"
+  },
+  "Jump to a folder you visited": {
+    "Jump to a folder you visited": "Перейти до відвіданої теки"
+  },
+  "Jump to a name or filter the folder with what you type": {
+    "Jump to a name or filter the folder with what you type": "Перейти до назви або відфільтрувати теку за допомогою введення"
+  },
+  "Jump to name": {
+    "Jump to name": "Перейти до назви"
+  },
+  "Jump to the start, the end or the next screen": {
+    "Jump to the start, the end or the next screen": "Перейти на початок, в кінець або на наступний екран"
+  },
+  "Keep a list of recent files": {
+    "Keep a list of recent files": "Зберігати список нещодавніх файлів"
+  },
+  "Keep both": {
+    "Keep both": "Зберегти обидва"
+  },
+  "Keep running": {
+    "Keep running": "Продовжити роботу"
+  },
+  "Keyboard": {
+    "Keyboard": "Клавіатура"
+  },
+  "Keyboard shortcuts": {
+    "Keyboard shortcuts": "Гарячі клавіші"
+  },
+  "Language": {
+    "Language": "Мова"
+  },
+  "Larger icons": {
+    "Larger icons": "Більші іконки"
+  },
+  "Libraries and Proton prefixes.": {
+    "Libraries and Proton prefixes.": "Бібліотеки та префікси Proton"
+  },
+  "Library · %1": {
+    "Library · %1": "Бібліотека · %1"
+  },
+  "Light": {
+    "Light": "Світлий"
+  },
+  "Link": {
+    "Link": "Посилання"
+  },
+  "Linking": {
+    "Linking": "Створення посилання"
+  },
+  "Links to": {
+    "Links to": "Посилання на"
+  },
+  "List icon size": {
+    "List icon size": "Розмір іконки списку"
+  },
+  "List view": {
+    "List view": "Вигляд списком"
+  },
+  "Load colors from your own theme file.": {
+    "Load colors from your own theme file.": "Завантажити кольори з власного файлу теми"
+  },
+  "Location": {
+    "Location": "Розташування"
+  },
+  "Lock": {
+    "Lock": "Заблокувати"
+  },
+  "Lutris": {
+    "Lutris": "Lutris"
+  },
+  "MIT License": {
+    "MIT License": "Ліцензія MIT"
+  },
+  "Menu": {
+    "Menu": "Меню"
+  },
+  "Merge": {
+    "Merge": "Об'єднати"
+  },
+  "Modified": {
+    "Modified": "Змінено"
+  },
+  "Monochrome": {
+    "Monochrome": "Монохромний"
+  },
+  "Monospace family": {
+    "Monospace family": "Моноширинне сімейство"
+  },
+  "More actions": {
+    "More actions": "Більше дій"
+  },
+  "Motion": {
+    "Motion": "Рух"
+  },
+  "Mount": {
+    "Mount": "Змонтувати"
+  },
+  "Mounted and removable drives.": {
+    "Mounted and removable drives.": "Змонтовані та знімні диски"
+  },
+  "Mounted network locations and Connect to Server.": {
+    "Mounted network locations and Connect to Server.": "«Змонтовані мережеві розташування» та «Підключитися до сервера»"
+  },
+  "Move": {
+    "Move": "Перемістити"
+  },
+  "Move the tab left": {
+    "Move the tab left": "Перемістити вкладку ліворуч"
+  },
+  "Move the tab right": {
+    "Move the tab right": "Перемістити вкладку праворуч"
+  },
+  "Move through the folder": {
+    "Move through the folder": "Переміщатися по теці"
+  },
+  "Move through the sidebar": {
+    "Move through the sidebar": "Переміщатися по бічній панелі"
+  },
+  "Move to": {
+    "Move to": "Перемістити до"
+  },
+  "Move to Trash": {
+    "Move to Trash": "Перемістити до кошика"
+  },
+  "Move to the search filters": {
+    "Move to the search filters": "Перемістити до фільтрів пошуку"
+  },
+  "Move to…": {
+    "Move to…": "Перемістити до…"
+  },
+  "Move, copy across drives": {
+    "Move, copy across drives": "Переміщення, копіювання між дисками"
+  },
+  "Moved": {
+    "Moved": "Переміщено"
+  },
+  "Moved to trash": {
+    "Moved to trash": "Переміщено до кошика"
+  },
+  "Moving": {
+    "Moving": "Переміщення"
+  },
+  "Moving to trash": {
+    "Moving to trash": "Переміщення до кошика"
+  },
+  "Name": {
+    "Name": "Назва"
+  },
+  "Name the host terminal to launch.": {
+    "Name the host terminal to launch.": "Назвіть хостовий термінал для запуску"
+  },
+  "Names or paths, comma separated. Build and cache folders are skipped anyway.": {
+    "Names or paths, comma separated. Build and cache folders are skipped anyway.": "Назви або шляхи через кому. Теки збірки та кешу все одно пропускаються"
+  },
+  "Network": {
+    "Network": "Мережа"
+  },
+  "Network in the sidebar": {
+    "Network in the sidebar": "«Мережа» на бічній панелі"
+  },
+  "Network locations are unavailable because gvfs is not running": {
+    "Network locations are unavailable because gvfs is not running": "Мережеві розташування недоступні, оскільки gvfs не запущено"
+  },
+  "Network locations are unavailable because the sandbox cannot reach gvfs": {
+    "Network locations are unavailable because the sandbox cannot reach gvfs": "Мережеві розташування недоступні, оскільки пісочниця не має доступу до gvfs"
+  },
+  "Never": {
+    "Never": "Ніколи"
+  },
+  "New document": {
+    "New document": "Новий документ"
+  },
+  "New folder": {
+    "New folder": "Нова тека"
+  },
+  "New folder with selection": {
+    "New folder with selection": "Нова тека з виділенням"
+  },
+  "New tab": {
+    "New tab": "Нова вкладка"
+  },
+  "New window": {
+    "New window": "Нове вікно"
+  },
+  "Next tab": {
+    "Next tab": "Наступна вкладка"
+  },
+  "No limit": {
+    "No limit": "Без обмежень"
+  },
+  "No recent files": {
+    "No recent files": "Нещодавні файли відсутні"
+  },
+  "No results": {
+    "No results": "Результати відсутні"
+  },
+  "No session bus.": {
+    "No session bus.": "Немає сесійної шини"
+  },
+  "No theme file selected": {
+    "No theme file selected": "Файл теми не вибрано"
+  },
+  "Not available": {
+    "Not available": "Недоступно"
+  },
+  "Not available because the sandbox cannot start programs on the host": {
+    "Not available because the sandbox cannot start programs on the host": "Недоступно, оскільки пісочниця не може запускати програми на хості"
+  },
+  "Not available inside the sandbox": {
+    "Not available inside the sandbox": "Недоступно всередині пісочниці"
+  },
+  "Not available without access to the host filesystem": {
+    "Not available without access to the host filesystem": "Недоступно без доступу до хостової файлової системи"
+  },
+  "Nothing is running": {
+    "Nothing is running": "Нічого не запущено"
+  },
+  "Octal": {
+    "Octal": "Вісімковий"
+  },
+  "Off": {
+    "Off": "Вимк."
+  },
+  "Off leaves decorations to the compositor. Applies to new windows.": {
+    "Off leaves decorations to the compositor. Applies to new windows.": "Вимкнено: декорації залишаються за композитором. Стосується нових вікон"
+  },
+  "Off only mounts.": {
+    "Off only mounts.": "Тільки монтування"
+  },
+  "Offline": {
+    "Offline": "Недоступний"
+  },
+  "Only launchers with an installed game are listed.": {
+    "Only launchers with an installed game are listed.": "У списку відображаються лише запускачі з встановленими іграми"
+  },
+  "Only the window process serves the portal": {
+    "Only the window process serves the portal": "Портал обслуговується лише процесом вікна"
+  },
+  "Open": {
+    "Open": "Відкрити"
+  },
+  "Open %1 items?": {
+    "Open %1 items?": "Відкрити %1 елементів?"
+  },
+  "Open and save dialogs": {
+    "Open and save dialogs": "Діалоги відкриття та збереження"
+  },
+  "Open file": {
+    "Open file": "Відкрити файл"
+  },
+  "Open files": {
+    "Open files": "Відкрити файли"
+  },
+  "Open files with": {
+    "Open files with": "Відкрити файли за допомогою"
+  },
+  "Open folders from other apps in a new tab": {
+    "Open folders from other apps in a new tab": "Відкривати теки з інших програм у новій вкладці"
+  },
+  "Open in editor": {
+    "Open in editor": "Відкрити в редакторі"
+  },
+  "Open in new tab": {
+    "Open in new tab": "Відкрити в новій вкладці"
+  },
+  "Open in new window": {
+    "Open in new window": "Відкрити в новому вікні"
+  },
+  "Open in terminal": {
+    "Open in terminal": "Відкрити в терміналі"
+  },
+  "Open in the other pane": {
+    "Open in the other pane": "Відкрити в іншій панелі"
+  },
+  "Open items with": {
+    "Open items with": "Відкрити елементи за допомогою"
+  },
+  "Open the bookmark menu": {
+    "Open the bookmark menu": "Відкрити меню закладок"
+  },
+  "Open the containing folder": {
+    "Open the containing folder": "Відкрити батьківську теку"
+  },
+  "Open the context menu": {
+    "Open the context menu": "Відкрити контекстне меню"
+  },
+  "Open the place": {
+    "Open the place": "Відкрити місце"
+  },
+  "Open the preview in a large view": {
+    "Open the preview in a large view": "Відкрити попередній перегляд у великому вікні"
+  },
+  "Open unmounted drives on click": {
+    "Open unmounted drives on click": "Відкривати незмонтовані диски при натисканні"
+  },
+  "Open with": {
+    "Open with": "Відкрити за допомогою"
+  },
+  "Orange": {
+    "Orange": "Помаранчевий"
+  },
+  "Other applications": {
+    "Other applications": "Інші програми"
+  },
+  "Other application…": {
+    "Other application…": "Інша програма…"
+  },
+  "Over 100 MB": {
+    "Over 100 MB": "Понад 100 МБ"
+  },
+  "Owner": {
+    "Owner": "Власник"
+  },
+  "PDF preview is not available. Install Qt PDF support to view this file.": {
+    "PDF preview is not available. Install Qt PDF support to view this file.": "Попередній перегляд PDF недоступний. Встановіть підтримку PDF у Qt, щоб переглянути цей файл"
+  },
+  "Palette: %1": {
+    "Palette: %1": "Палітра: %1"
+  },
+  "Passphrase": {
+    "Passphrase": "Парольна фраза"
+  },
+  "Password": {
+    "Password": "Пароль"
+  },
+  "Password required": {
+    "Password required": "Потрібен пароль"
+  },
+  "Paste": {
+    "Paste": "Вставити"
+  },
+  "Paste as link": {
+    "Paste as link": "Вставити як посилання"
+  },
+  "Paste into folder": {
+    "Paste into folder": "Вставити в теку"
+  },
+  "Pasted image": {
+    "Pasted image": "Вставлено зображення"
+  },
+  "Pasting image": {
+    "Pasting image": "Вставлення зображення"
+  },
+  "Permissions": {
+    "Permissions": "Дозволи"
+  },
+  "Pink": {
+    "Pink": "Рожевий"
+  },
+  "Places": {
+    "Places": "Місця"
+  },
+  "Playful": {
+    "Playful": "Грайливий"
+  },
+  "Portal file: %1": {
+    "Portal file: %1": "Файл порталу: %1"
+  },
+  "Portal file: not installed": {
+    "Portal file: not installed": "Файл порталу: не встановлено"
+  },
+  "Preference: %1 is used": {
+    "Preference: %1 is used": "Налаштування: використовується %1"
+  },
+  "Preference: %1 names Dux Files": {
+    "Preference: %1 names Dux Files": "Налаштування: %1 називає Dux Files"
+  },
+  "Preference: no file chooser backend configured": {
+    "Preference: no file chooser backend configured": "Налаштування: сервіс вибору файлів не налаштовано"
+  },
+  "Prefix · %1": {
+    "Prefix · %1": "Префікс · %1"
+  },
+  "Prefixes": {
+    "Prefixes": "Префікси"
+  },
+  "Preset": {
+    "Preset": "Набір налаштувань"
+  },
+  "Preview": {
+    "Preview": "Попередній перегляд"
+  },
+  "Preview the next or previous selected item": {
+    "Preview the next or previous selected item": "Попередній перегляд наступного або попереднього виділеного елемента"
+  },
+  "Previous tab": {
+    "Previous tab": "Попередня вкладка"
+  },
+  "Properties": {
+    "Properties": "Властивості"
+  },
+  "Protect with a password": {
+    "Protect with a password": "Захистити паролем"
+  },
+  "Protocol": {
+    "Protocol": "Протокол"
+  },
+  "Proton · %1": {
+    "Proton · %1": "Proton · %1"
+  },
+  "Purple": {
+    "Purple": "Фіолетовий"
+  },
+  "Quit": {
+    "Quit": "Вийти"
+  },
+  "Radius strength": {
+    "Radius strength": "Величина радіуса"
+  },
+  "Read": {
+    "Read": "Читати"
+  },
+  "Recent": {
+    "Recent": "Нещодавні"
+  },
+  "Recently used": {
+    "Recently used": "Нещодавно використані"
+  },
+  "Recommended": {
+    "Recommended": "Рекомендовано"
+  },
+  "Red": {
+    "Red": "Червоний"
+  },
+  "Redo": {
+    "Redo": "Повторити"
+  },
+  "Redone": {
+    "Redone": "Повторено"
+  },
+  "Reduce motion": {
+    "Reduce motion": "Зменшити рух"
+  },
+  "Register as the session file manager": {
+    "Register as the session file manager": "Зареєструвати як сесійний менеджер файлів"
+  },
+  "Relevance": {
+    "Relevance": "Релевантність"
+  },
+  "Reload": {
+    "Reload": "Перезавантажити"
+  },
+  "Remember password": {
+    "Remember password": "Запам'ятати пароль"
+  },
+  "Remember view and sort per folder": {
+    "Remember view and sort per folder": "Запам'ятати вигляд і сортування для кожної теки"
+  },
+  "Remove bookmark": {
+    "Remove bookmark": "Видалити закладку"
+  },
+  "Remove from Recent": {
+    "Remove from Recent": "Видалити з нещодавніх"
+  },
+  "Remove the bookmark or eject the drive": {
+    "Remove the bookmark or eject the drive": "Видалити закладку або вийняти диск"
+  },
+  "Rename": {
+    "Rename": "Перейменувати"
+  },
+  "Rename the bookmark": {
+    "Rename the bookmark": "Перейменувати закладку"
+  },
+  "Renamed": {
+    "Renamed": "Перейменовано"
+  },
+  "Renaming": {
+    "Renaming": "Перейменування"
+  },
+  "Reopen the closed tab": {
+    "Reopen the closed tab": "Знову відкрити закриту вкладку"
+  },
+  "Replace": {
+    "Replace": "Замінити"
+  },
+  "Reset the view": {
+    "Reset the view": "Скинути вигляд"
+  },
+  "Reset this folder": {
+    "Reset this folder": "Скинути налаштування цієї теки"
+  },
+  "Resize icons": {
+    "Resize icons": "Змінити розмір іконок"
+  },
+  "Resize the preview, or reset its width": {
+    "Resize the preview, or reset its width": "Змінити розмір попереднього перегляду або скинути його ширину"
+  },
+  "Restart": {
+    "Restart": "Перезапустити"
+  },
+  "Restart the portal service": {
+    "Restart the portal service": "Перезапустити службу порталу"
+  },
+  "Restart the portal service?": {
+    "Restart the portal service?": "Перезапустити службу порталу?"
+  },
+  "Restore": {
+    "Restore": "Відновити"
+  },
+  "Restore default": {
+    "Restore default": "Відновити типове"
+  },
+  "Restored": {
+    "Restored": "Відновлено"
+  },
+  "Restoring": {
+    "Restoring": "Відновлення"
+  },
+  "Results for “%1” in %2": {
+    "Results for “%1” in %2": "Результати за запитом «%1» у %2"
+  },
+  "Results in %1": {
+    "Results in %1": "Результати в %1"
+  },
+  "Retry as administrator": {
+    "Retry as administrator": "Повторити як адміністратор"
+  },
+  "Reverse the sort order": {
+    "Reverse the sort order": "Змінити порядок сортування"
+  },
+  "Ripple effects": {
+    "Ripple effects": "Ефекти розширення"
+  },
+  "Rotate left": {
+    "Rotate left": "Повернути ліворуч"
+  },
+  "Rotate right": {
+    "Rotate right": "Повернути праворуч"
+  },
+  "Run": {
+    "Run": "Запустити"
+  },
+  "Run programs": {
+    "Run programs": "Запускати програми"
+  },
+  "Run this desktop file?": {
+    "Run this desktop file?": "Запустити цей десктоп-файл?"
+  },
+  "Run this file?": {
+    "Run this file?": "Запустити цей файл?"
+  },
+  "Sandbox": {
+    "Sandbox": "Пісочниця"
+  },
+  "Save": {
+    "Save": "Зберегти"
+  },
+  "Save file": {
+    "Save file": "Зберегти файл"
+  },
+  "Save files": {
+    "Save files": "Зберегти файли"
+  },
+  "Save here": {
+    "Save here": "Зберегти тут"
+  },
+  "Saving %1 into the chosen folder": {
+    "Saving %1 into the chosen folder": "Збереження %1 у вибрану теку"
+  },
+  "Scale": {
+    "Scale": "Масштаб"
+  },
+  "Scroll the preview": {
+    "Scroll the preview": "Прокрутити попередній перегляд"
+  },
+  "Search applications": {
+    "Search applications": "Пошук програм"
+  },
+  "Search icon": {
+    "Search icon": "Піктограма пошуку"
+  },
+  "Search icons": {
+    "Search icons": "Піктограми пошуку"
+  },
+  "Search in Files": {
+    "Search in Files": "Пошук у Dux Files"
+  },
+  "Search results": {
+    "Search results": "Результати пошуку"
+  },
+  "Search settings": {
+    "Search settings": "Налаштування пошуку"
+  },
+  "Search subfolders": {
+    "Search subfolders": "Шукати в підтеках"
+  },
+  "Search the disk": {
+    "Search the disk": "Шукати на диску"
+  },
+  "Search with the danksearch index": {
+    "Search with the danksearch index": "Шукати за допомогою індексу danksearch"
+  },
+  "Search your home folder": {
+    "Search your home folder": "Шукати у домашній теці"
+  },
+  "Searching…": {
+    "Searching…": "Пошук…"
+  },
+  "Select a range": {
+    "Select a range": "Вибрати діапазон"
+  },
+  "Select all": {
+    "Select all": "Вибрати все"
+  },
+  "Select folder": {
+    "Select folder": "Вибрати теку"
+  },
+  "Selection": {
+    "Selection": "Виділення"
+  },
+  "Settings": {
+    "Settings": "Налаштування"
+  },
+  "Settings folder": {
+    "Settings folder": "Тека налаштувань"
+  },
+  "Settings folders": {
+    "Settings folders": "Теки налаштувань"
+  },
+  "Shape": {
+    "Shape": "Форма"
+  },
+  "Shared with other apps.": {
+    "Shared with other apps.": "Спільно з іншими програмами"
+  },
+  "Show": {
+    "Show": "Показати"
+  },
+  "Show devices": {
+    "Show devices": "Показувати пристрої"
+  },
+  "Show file extensions": {
+    "Show file extensions": "Показувати розширення файлів"
+  },
+  "Show games": {
+    "Show games": "Показувати ігри"
+  },
+  "Show hidden files": {
+    "Show hidden files": "Показувати приховані файли"
+  },
+  "Show network": {
+    "Show network": "Показувати мережу"
+  },
+  "Show system partitions": {
+    "Show system partitions": "Показувати системні розділи"
+  },
+  "Show thumbnails": {
+    "Show thumbnails": "Показувати мініатюри"
+  },
+  "Showing the first %1 results": {
+    "Showing the first %1 results": "Відображення перших %1 результатів"
+  },
+  "Shown in the size column.": {
+    "Shown in the size column.": "Відображається в стовпці розміру"
+  },
+  "Sidebar": {
+    "Sidebar": "Бічна панель"
+  },
+  "Sign in": {
+    "Sign in": "Увійти"
+  },
+  "Single click": {
+    "Single click": "Одиночний клік"
+  },
+  "Size": {
+    "Size": "Розмір"
+  },
+  "Skip": {
+    "Skip": "Пропустити"
+  },
+  "Skip images larger than": {
+    "Skip images larger than": "Пропускати зображення більше ніж"
+  },
+  "Smaller icons": {
+    "Smaller icons": "Менші іконки"
+  },
+  "Smooth": {
+    "Smooth": "Плавний"
+  },
+  "Socket": {
+    "Socket": "Сокет"
+  },
+  "Some matches may be missing": {
+    "Some matches may be missing": "Деякі збіги можуть бути відсутні"
+  },
+  "Sort by": {
+    "Sort by": "Сортувати за"
+  },
+  "Sort by the next column": {
+    "Sort by the next column": "Сортувати за наступним стовпцем"
+  },
+  "Sort descending": {
+    "Sort descending": "Сортувати за спаданням"
+  },
+  "Spacious": {
+    "Spacious": "Просторий"
+  },
+  "Split view": {
+    "Split view": "Розділений вигляд"
+  },
+  "Spring": {
+    "Spring": "Весняний"
+  },
+  "Square": {
+    "Square": "Квадратний"
+  },
+  "Status": {
+    "Status": "Статус"
+  },
+  "Steam": {
+    "Steam": "Steam"
+  },
+  "Steam, ~/VirtualBox VMs": {
+    "Steam, ~/VirtualBox VMs": "Steam, ~/VirtualBox VMs"
+  },
+  "Stop measuring": {
+    "Stop measuring": "Припинити вимірювання"
+  },
+  "Such as a separate /home.": {
+    "Such as a separate /home.": "Наприклад, окремий /home"
+  },
+  "Support Dux Labs": {
+    "Support Dux Labs": "Підтримати Dux Labs"
+  },
+  "Switch pane": {
+    "Switch pane": "Переключити панель"
+  },
+  "System": {
+    "System": "Система"
+  },
+  "System default": {
+    "System default": "Типове значення системи"
+  },
+  "System preference unavailable, using dark.": {
+    "System preference unavailable, using dark.": "Системне налаштування недоступне, використовується темна тема"
+  },
+  "Terminal": {
+    "Terminal": "Термінал"
+  },
+  "Terminal, drag and thumbnails": {
+    "Terminal, drag and thumbnails": "Термінал, перетягування та мініатюри"
+  },
+  "The Wine prefix of each game.": {
+    "The Wine prefix of each game.": "Wine-префікс кожної гри"
+  },
+  "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": {
+    "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": "Зміни наберуть чинності після перезапуску xdg-desktop-portal. Відкриті діалоги відкриття та збереження інших програм будуть закриті"
+  },
+  "The files themselves stay where they are.": {
+    "The files themselves stay where they are.": "Самі файли залишаються на своїх місцях"
+  },
+  "The portal list is managed by the system.": {
+    "The portal list is managed by the system.": "Список порталів керується системою"
+  },
+  "The session bus refused it.": {
+    "The session bus refused it.": "Сесійна шина відмовила"
+  },
+  "The system application chooser opens instead": {
+    "The system application chooser opens instead": "Натомість відкривається системний вибір програми"
+  },
+  "Theme": {
+    "Theme": "Тема"
+  },
+  "Theme, shape and motion": {
+    "Theme, shape and motion": "Тема, форма та рух"
+  },
+  "Thickness": {
+    "Thickness": "Товщина"
+  },
+  "This file could not be opened": {
+    "This file could not be opened": "Цей файл не вдалося відкрити"
+  },
+  "This folder": {
+    "This folder": "Ця тека"
+  },
+  "This folder is empty": {
+    "This folder is empty": "Ця тека порожня"
+  },
+  "This instance cannot reach the session bus.": {
+    "This instance cannot reach the session bus.": "Цей екземпляр не може отримати доступ до сесійної шини"
+  },
+  "This item already exists": {
+    "This item already exists": "Цей елемент уже існує"
+  },
+  "This month": {
+    "This month": "Цього місяця"
+  },
+  "This session": {
+    "This session": "Ця сесія"
+  },
+  "This step cannot be retried as administrator": {
+    "This step cannot be retried as administrator": "Цей крок неможливо повторити як адміністратор"
+  },
+  "This week": {
+    "This week": "Цього тижня"
+  },
+  "Thumbnails": {
+    "Thumbnails": "Мініатюри"
+  },
+  "Thumbnails on network locations": {
+    "Thumbnails on network locations": "Мініатюри в мережевих розташуваннях"
+  },
+  "Title bars": {
+    "Title bars": "Рядки заголовків"
+  },
+  "Today": {
+    "Today": "Сьогодні"
+  },
+  "Toggle sidebar": {
+    "Toggle sidebar": "Перемкнути бічну панель"
+  },
+  "Trash": {
+    "Trash": "Кошик"
+  },
+  "Trash is empty": {
+    "Trash is empty": "Кошик порожній"
+  },
+  "Trust and run": {
+    "Trust and run": "Довіряти та запустити"
+  },
+  "Try again": {
+    "Try again": "Спробувати ще раз"
+  },
+  "Type": {
+    "Type": "Тип"
+  },
+  "Type a location": {
+    "Type a location": "Введіть розташування"
+  },
+  "Typing in the file list": {
+    "Typing in the file list": "Введення у списку файлів"
+  },
+  "Typography": {
+    "Typography": "Типографіка"
+  },
+  "Unavailable until its drive is mounted": {
+    "Unavailable until its drive is mounted": "Недоступно, поки диск не змонтовано"
+  },
+  "Under 1 MB": {
+    "Under 1 MB": "Менше 1 МБ"
+  },
+  "Undo": {
+    "Undo": "Скасувати"
+  },
+  "Undone": {
+    "Undone": "Скасовано"
+  },
+  "Unknown": {
+    "Unknown": "Невідомо"
+  },
+  "Unlock": {
+    "Unlock": "Розблокувати"
+  },
+  "Unmount": {
+    "Unmount": "Відмонтувати"
+  },
+  "Unpacks into a folder beside it.": {
+    "Unpacks into a folder beside it.": "Розпаковується в теку поруч"
+  },
+  "Untitled document": {
+    "Untitled document": "Неназваний документ"
+  },
+  "Untitled folder": {
+    "Untitled folder": "Неназвана тека"
+  },
+  "Use": {
+    "Use": "Використовувати"
+  },
+  "Use Dux Files for open and save dialogs": {
+    "Use Dux Files for open and save dialogs": "Використовувати Dux Files для діалогів відкриття та збереження"
+  },
+  "Use a bundled color palette.": {
+    "Use a bundled color palette.": "Використовувати вбудовану кольорову палітру"
+  },
+  "Use an image from a web address": {
+    "Use an image from a web address": "Використовувати зображення за веб-адресою"
+  },
+  "Use an image from this computer": {
+    "Use an image from this computer": "Використовувати зображення з цього комп'ютера"
+  },
+  "Use these settings for all folders": {
+    "Use these settings for all folders": "Використовувати ці налаштування для всіх тек"
+  },
+  "Use this folder": {
+    "Use this folder": "Використовувати цю теку"
+  },
+  "Username": {
+    "Username": "Ім'я користувача"
+  },
+  "Using Dux Shell dynamic colors.": {
+    "Using Dux Shell dynamic colors.": "Використання динамічних кольорів Dux Shell"
+  },
+  "Version": {
+    "Version": "Версія"
+  },
+  "Version and capabilities": {
+    "Version and capabilities": "Версія та можливості"
+  },
+  "Video": {
+    "Video": "Відео"
+  },
+  "View": {
+    "View": "Вигляд"
+  },
+  "Views, sorting and defaults": {
+    "Views, sorting and defaults": "Вигляди, сортування та типові значення"
+  },
+  "Vim keys": {
+    "Vim keys": "Клавіші Vim"
+  },
+  "Waiting": {
+    "Waiting": "Очікування"
+  },
+  "Weight": {
+    "Weight": "Вага"
+  },
+  "Where the launcher keeps the games.": {
+    "Where the launcher keeps the games.": "Де запускач зберігає ігри"
+  },
+  "Window": {
+    "Window": "Вікно"
+  },
+  "Window header": {
+    "Window header": "Заголовок вікна"
+  },
+  "Windows": {
+    "Windows": "Вікна"
+  },
+  "Working": {
+    "Working": "Робота"
+  },
+  "Write": {
+    "Write": "Записати"
+  },
+  "Wrong password": {
+    "Wrong password": "Неправильний пароль"
+  },
+  "Zoom in": {
+    "Zoom in": "Наблизити"
+  },
+  "Zoom out": {
+    "Zoom out": "Віддалити"
+  },
+  "accessibility animation disable": {
+    "accessibility animation disable": "вимкнення анімації доступності"
+  },
+  "animation click feedback": {
+    "animation click feedback": "анімація відгуку на клік"
+  },
+  "animation speed motion": {
+    "animation speed motion": "швидкість анімації руху"
+  },
+  "bounce animation motion": {
+    "bounce animation motion": "анімація відскоку"
+  },
+  "capability available sandbox": {
+    "capability available sandbox": "доступна можливість пісочниці"
+  },
+  "config folder launcher wine prefix": {
+    "config folder launcher wine prefix": "wine-префікс теки конфігурації запускача"
+  },
+  "console emulator shell command line": {
+    "console emulator shell command line": "командний рядок оболонки емулятора консолі"
+  },
+  "corners rounding shape square": {
+    "corners rounding shape square": "заокруглення кутів квадрату"
+  },
+  "custom theme json file": {
+    "custom theme json file": "спеціальний JSON-файл теми"
+  },
+  "daemon connected offline socket": {
+    "daemon connected offline socket": "демон підключено до офлайн сокета"
+  },
+  "daemon path unix": {
+    "daemon path unix": "шлях до демона unix"
+  },
+  "daemon protocol": {
+    "daemon protocol": "протокол демона"
+  },
+  "daemon release build": {
+    "daemon release build": "реліз збірки демона"
+  },
+  "dark": {
+    "dark": "темний"
+  },
+  "decorations csd window header": {
+    "decorations csd window header": "декоративні елементи верхньої частини вікна CSD"
+  },
+  "default file manager dbus reveal": {
+    "default file manager dbus reveal": "типовий менеджер файлів dbus reveal"
+  },
+  "delete confirmation prompt": {
+    "delete confirmation prompt": "запит на підтвердження видалення"
+  },
+  "density compact dense spacious comfortable spacing padding rows": {
+    "density compact dense spacious comfortable spacing padding rows": "щільність компактний щільний просторий зручний інтервал відстань рядки"
+  },
+  "directories first sort": {
+    "directories first sort": "спочатку каталоги сортування"
+  },
+  "documentation help manual": {
+    "documentation help manual": "документація допомога посібник"
+  },
+  "dotfiles invisible": {
+    "dotfiles invisible": "приховані dot-файли"
+  },
+  "drag drop copy move ask default action": {
+    "drag drop copy move ask default action": "перетягування копіювання переміщення запит типова дія"
+  },
+  "drives usb volumes sidebar hide": {
+    "drives usb volumes sidebar hide": "диски usb томи бічна панель приховати"
+  },
+  "flatpak app id": {
+    "flatpak app id": "ідентифікатор програми flatpak"
+  },
+  "focus ring width outline": {
+    "focus ring width outline": "ширина кільце фокусу контур"
+  },
+  "folder memory per-folder remember": {
+    "folder memory per-folder remember": "пам'ять теки запам'ятовування для кожної теки"
+  },
+  "font bold typography": {
+    "font bold typography": "жирний шрифт типографіка"
+  },
+  "font family typeface dms system qt": {
+    "font family typeface dms system qt": "сімейство шрифтів гарнітура dms system qt"
+  },
+  "font size text zoom typography": {
+    "font size text zoom typography": "розмір шрифту масштаб тексту типографіка"
+  },
+  "font typeface": {
+    "font typeface": "гарнітура шрифту"
+  },
+  "font typeface code mono": {
+    "font typeface code mono": "моноширинний шрифт для коду"
+  },
+  "font typeface headline title": {
+    "font typeface headline title": "шрифт для заголовків"
+  },
+  "games library steamapps common": {
+    "games library steamapps common": "бібліотека ігор steamapps common"
+  },
+  "gvfs smb sftp remote servers sidebar hide": {
+    "gvfs smb sftp remote servers sidebar hide": "gvfs smb sftp віддалений сервери бічна панель приховати"
+  },
+  "h j k l move, / searches and letters run commands instead of jumping to a name.": {
+    "h j k l move, / searches and letters run commands instead of jumping to a name.": "h j k l переміщення, / пошук і літери запускають команди замість переходу до назви"
+  },
+  "h j k l move, / searches.": {
+    "h j k l move, / searches.": "h j k l переміщення, / пошук"
+  },
+  "heroic epic gog amazon": {
+    "heroic epic gog amazon": "heroic epic gog amazon"
+  },
+  "history recently used opened sidebar": {
+    "history recently used opened sidebar": "історія нещодавно використані відкриті бічна панель"
+  },
+  "hjkl keyboard navigation modal": {
+    "hjkl keyboard navigation modal": "модальна навігація клавіатурою hjkl"
+  },
+  "internal drives udisks home boot": {
+    "internal drives udisks home boot": "внутрішні диски udisks home boot"
+  },
+  "keyboard outline accessibility": {
+    "keyboard outline accessibility": "контур клавіатури доступність"
+  },
+  "keys bindings hotkeys F1": {
+    "keys bindings hotkeys F1": "призначення клавіш гарячі клавіші F1"
+  },
+  "light": {
+    "light": "світлий"
+  },
+  "light dark mode system color scheme": {
+    "light dark mode system color scheme": "світлий темний режим системна кольорова схема"
+  },
+  "list grid columns icons tiles": {
+    "list grid columns icons tiles": "список сітка стовпці іконки плитки"
+  },
+  "locale translation interface": {
+    "locale translation interface": "локаль переклад інтерфейсу"
+  },
+  "lutris wine prefix": {
+    "lutris wine prefix": "wine-префікс lutris"
+  },
+  "mount usb removable sidebar": {
+    "mount usb removable sidebar": "монтування usb знімний диск бічна панель"
+  },
+  "order direction ascending reverse": {
+    "order direction ascending reverse": "напрямок порядку зростання реверс"
+  },
+  "order name size modified type date": {
+    "order name size modified type date": "порядок назва розмір змінено тип дата"
+  },
+  "palette dms preset custom accent": {
+    "palette dms preset custom accent": "палітра dms набір налаштувань спеціальний акцент"
+  },
+  "portal file chooser picker xdg": {
+    "portal file chooser picker xdg": "портал вибір файлів xdg"
+  },
+  "preset palette swatch colors": {
+    "preset palette swatch colors": "набір налаштувань палітра зразки кольорів"
+  },
+  "previews images video pdf": {
+    "previews images video pdf": "попередній перегляд зображення відео pdf"
+  },
+  "quit exit hide daemon keep running": {
+    "quit exit hide daemon keep running": "вийти закрити приховати демон продовжувати роботу"
+  },
+  "remote sftp smb previews": {
+    "remote sftp smb previews": "віддалений sftp smb попередній перегляд"
+  },
+  "reset clear per-folder memory": {
+    "reset clear per-folder memory": "скинути очистити пам'ять для кожної теки"
+  },
+  "search dotfiles recursive": {
+    "search dotfiles recursive": "пошук dot-файлів рекурсивно"
+  },
+  "search exclude ignore": {
+    "search exclude ignore": "пошук виключення ігнорування"
+  },
+  "single double click activate": {
+    "single double click activate": "одиночний подвійний клік активація"
+  },
+  "size column entries": {
+    "size column entries": "записи стовпець розмір"
+  },
+  "source code repository issues": {
+    "source code repository issues": "вихідний код репозиторій проблеми"
+  },
+  "steam heroic lutris proton games sidebar hide": {
+    "steam heroic lutris proton games sidebar hide": "steam heroic lutris proton ігри бічна панель приховати"
+  },
+  "steam proton valve": {
+    "steam proton valve": "steam proton valve"
+  },
+  "suffix type filename": {
+    "suffix type filename": "суфікс тип ім'я файлу"
+  },
+  "tabs external open location": {
+    "tabs external open location": "вкладки зовнішні відкрити розташування"
+  },
+  "thumbnail size limit cap megabytes": {
+    "thumbnail size limit cap megabytes": "ліміт розміру мініатюри мегабайти"
+  },
+  "title bar header hide decorations": {
+    "title bar header hide decorations": "титул панель заголовок приховати прикраси декор"
+  },
+  "type-ahead jump filter search keyboard": {
+    "type-ahead jump filter search keyboard": "попереднє введення перехід фільтр пошук клавіатура"
+  },
+  "wine prefix proton compatdata": {
+    "wine prefix proton compatdata": "wine-префікс proton compatdata"
+  },
+  "xdg-desktop-portal": {
+    "xdg-desktop-portal": "xdg-desktop-portal"
+  },
+  "xdg-open follows the handler on your PATH.": {
+    "xdg-open follows the handler on your PATH.": "xdg-open слідує за обробником у вашому PATH"
+  },
+  "xdg-open handlr mimeo opener default application launch": {
+    "xdg-open handlr mimeo opener default application launch": "xdg-open handlr mimeo opener типова програма запуск"
+  },
+  "zip tar unpack compressed": {
+    "zip tar unpack compressed": "zip tar розпакування стиснення"
+  },
+  "zoom rows": {
+    "zoom rows": "масштаб рядків"
+  },
+  "zoom thumbnails tiles": {
+    "zoom thumbnails tiles": "масштаб мініатюри плитки"
+  }
+}

@@ -29,6 +29,7 @@ LANGUAGES = {
     "hu": "hu.json",
     "zh-Hans": "zh_CN.json",
     "zh-Hant": "zh_TW.json",
+    "uk": "uk.json",
 }
 
 

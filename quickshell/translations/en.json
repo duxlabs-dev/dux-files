@@ -14,7 +14,7 @@
   {
     "term": "%1 bookmarks imported",
     "context": "%1 bookmarks imported",
-    "reference": "Modules/MainWindow.qml:118",
+    "reference": "Modules/MainWindow.qml:119",
     "comment": "toast after importing gtk bookmarks"
   },
   {
@@ -560,7 +560,7 @@
   {
     "term": "Column view",
     "context": "Column view",
-    "reference": "Modules/FilesTopbar.qml:45, Common/Shortcuts.qml:267, Modules/Settings/SettingsContent.qml:87",
+    "reference": "Modules/FilesTopbar.qml:46, Common/Shortcuts.qml:267, Modules/Settings/SettingsContent.qml:87",
     "comment": "view mode showing folders side by side"
   },
   {
@@ -662,7 +662,7 @@
   {
     "term": "Copy location path",
     "context": "Copy location path",
-    "reference": "Modules/FilesTopbar.qml:444, Modules/PlaceMenu.qml:77, Modules/FileContextMenu.qml:259, Common/Shortcuts.qml:515",
+    "reference": "Modules/FilesTopbar.qml:454, Modules/PlaceMenu.qml:77, Modules/FileContextMenu.qml:259, Common/Shortcuts.qml:515",
     "comment": "menu entry copying the current path to the clipboard"
   },
   {
@@ -1100,7 +1100,7 @@
   {
     "term": "File operations",
     "context": "File operations",
-    "reference": "Modules/JobsPopover.qml:39, Modules/JobsButton.qml:14",
+    "reference": "Modules/JobsPopover.qml:39, Modules/JobsButton.qml:16",
     "comment": "jobs popover header"
   },
   {
@@ -1322,7 +1322,7 @@
   {
     "term": "Grid view",
     "context": "Grid view",
-    "reference": "Modules/FilesTopbar.qml:40, Modules/ChooserWindow.qml:554, Common/Shortcuts.qml:260, Modules/Settings/SettingsContent.qml:83",
+    "reference": "Modules/FilesTopbar.qml:41, Modules/ChooserWindow.qml:554, Common/Shortcuts.qml:260, Modules/Settings/SettingsContent.qml:83",
     "comment": "file browser toolbar button switching to the grid | view mode showing items as tiles"
   },
   {
@@ -1382,13 +1382,13 @@
   {
     "term": "Import",
     "context": "Import",
-    "reference": "Modules/MainWindow.qml:116",
+    "reference": "Modules/MainWindow.qml:117",
     "comment": "toast action importing gtk bookmarks"
   },
   {
     "term": "Import your GTK bookmarks?",
     "context": "Import your GTK bookmarks?",
-    "reference": "Modules/MainWindow.qml:115",
+    "reference": "Modules/MainWindow.qml:116",
     "comment": "toast offering to copy the gtk file chooser bookmarks once"
   },
   {
@@ -1484,7 +1484,7 @@
   {
     "term": "Keyboard shortcuts",
     "context": "Keyboard shortcuts",
-    "reference": "Modules/FilesTopbar.qml:466, Modules/ShortcutsOverlay.qml:12, Common/Shortcuts.qml:366, Modules/Settings/SettingsContent.qml:828",
+    "reference": "Modules/FilesTopbar.qml:476, Modules/ShortcutsOverlay.qml:12, Common/Shortcuts.qml:366, Modules/Settings/SettingsContent.qml:828",
     "comment": "overlay listing every keyboard shortcut"
   },
   {
@@ -1544,7 +1544,7 @@
   {
     "term": "List view",
     "context": "List view",
-    "reference": "Modules/FilesTopbar.qml:35, Modules/ChooserWindow.qml:554, Common/Shortcuts.qml:253, Modules/Settings/SettingsContent.qml:79",
+    "reference": "Modules/FilesTopbar.qml:36, Modules/ChooserWindow.qml:554, Common/Shortcuts.qml:253, Modules/Settings/SettingsContent.qml:79",
     "comment": "file browser toolbar button switching to the list | view mode showing one row per item"
   },
   {
@@ -1610,7 +1610,7 @@
   {
     "term": "More actions",
     "context": "More actions",
-    "reference": "Modules/FilesTopbar.qml:314",
+    "reference": "Modules/FilesTopbar.qml:324",
     "comment": "tooltip on the overflow menu button"
   },
   {
@@ -1796,7 +1796,7 @@
   {
     "term": "New window",
     "context": "New window",
-    "reference": "Modules/FilesTopbar.qml:428, Common/Shortcuts.qml:158",
+    "reference": "Modules/FilesTopbar.qml:438, Common/Shortcuts.qml:158",
     "comment": "menu entry opening another file manager window"
   },
   {
@@ -1970,7 +1970,7 @@
   {
     "term": "Open in terminal",
     "context": "Open in terminal",
-    "reference": "Modules/FilesTopbar.qml:459, Modules/FileContextMenu.qml:333, Common/Shortcuts.qml:53, Modules/Settings/SettingsContent.qml:1168, Modules/Settings/SettingsAboutPage.qml:43",
+    "reference": "Modules/FilesTopbar.qml:469, Modules/FileContextMenu.qml:333, Common/Shortcuts.qml:53, Modules/Settings/SettingsContent.qml:1168, Modules/Settings/SettingsAboutPage.qml:43",
     "comment": "context menu entry opening a terminal"
   },
   {
@@ -2012,7 +2012,7 @@
   {
     "term": "Open the preview in a large view",
     "context": "Open the preview in a large view",
-    "reference": "Modules/FilesTopbar.qml:49, Common/Shortcuts.qml:331",
+    "reference": "Modules/FilesTopbar.qml:50, Common/Shortcuts.qml:331",
     "comment": "keyboard shortcut opening the preview overlay"
   },
   {
@@ -2192,7 +2192,7 @@
   {
     "term": "Preview",
     "context": "Preview",
-    "reference": "Modules/FilesTopbar.qml:48, Modules/ChooserWindow.qml:564, Common/Shortcuts.qml:324",
+    "reference": "Modules/FilesTopbar.qml:49, Modules/ChooserWindow.qml:564, Common/Shortcuts.qml:324",
     "comment": "view menu entry and shortcut showing or hiding the preview drawer"
   },
   {
@@ -2210,7 +2210,7 @@
   {
     "term": "Properties",
     "context": "Properties",
-    "reference": "Modules/FilesTopbar.qml:436, Modules/PlaceMenu.qml:87, Modules/FileContextMenu.qml:278, Modules/FileContextMenu.qml:350, Common/Shortcuts.qml:522",
+    "reference": "Modules/FilesTopbar.qml:446, Modules/PlaceMenu.qml:87, Modules/FileContextMenu.qml:278, Modules/FileContextMenu.qml:350, Common/Shortcuts.qml:522",
     "comment": "menu entry showing details about the current folder"
   },
   {
@@ -2306,13 +2306,13 @@
   {
     "term": "Relevance",
     "context": "Relevance",
-    "reference": "Modules/FilesTopbar.qml:58",
+    "reference": "Modules/FilesTopbar.qml:59",
     "comment": "sort criterion for search results, best match first"
   },
   {
     "term": "Reload",
     "context": "Reload",
-    "reference": "Modules/FilesTopbar.qml:451, Modules/FileContextMenu.qml:43, Modules/FileContextMenu.qml:86, Modules/FileContextMenu.qml:327, Common/Shortcuts.qml:359",
+    "reference": "Modules/FilesTopbar.qml:461, Modules/FileContextMenu.qml:43, Modules/FileContextMenu.qml:86, Modules/FileContextMenu.qml:327, Common/Shortcuts.qml:359",
     "comment": "menu entry re-reading the current folder"
   },
   {
@@ -2390,7 +2390,7 @@
   {
     "term": "Reset this folder",
     "context": "Reset this folder",
-    "reference": "Modules/FilesTopbar.qml:51",
+    "reference": "Modules/FilesTopbar.qml:52",
     "comment": "view menu entry dropping this folder's own sort and view"
   },
   {
@@ -2582,7 +2582,7 @@
   {
     "term": "Search in Files",
     "context": "Search in Files",
-    "reference": "Modules/FilesTopbar.qml:491, Modules/ChooserWindow.qml:589, Common/Shortcuts.qml:137, Modules/Settings/SettingsContent.qml:1241",
+    "reference": "Modules/FilesTopbar.qml:501, Modules/ChooserWindow.qml:589, Common/Shortcuts.qml:137, Modules/Settings/SettingsContent.qml:1241",
     "comment": "placeholder in the search field"
   },
   {
@@ -2654,7 +2654,7 @@
   {
     "term": "Settings",
     "context": "Settings",
-    "reference": "Modules/FilesTopbar.qml:473, Common/Shortcuts.qml:373, Modules/Settings/SettingsModal.qml:90",
+    "reference": "Modules/FilesTopbar.qml:483, Common/Shortcuts.qml:373, Modules/Settings/SettingsModal.qml:90",
     "comment": "settings window header title"
   },
   {
@@ -2828,7 +2828,7 @@
   {
     "term": "Split view",
     "context": "Split view",
-    "reference": "Modules/FilesTopbar.qml:292, Modules/FilesTopbar.qml:401, Common/Shortcuts.qml:224",
+    "reference": "Modules/FilesTopbar.qml:293, Modules/FilesTopbar.qml:411, Common/Shortcuts.qml:224",
     "comment": "tooltip on the button showing a second pane"
   },
   {
@@ -3050,7 +3050,7 @@
   {
     "term": "Toggle sidebar",
     "context": "Toggle sidebar",
-    "reference": "Modules/FilesTopbar.qml:236, Modules/ChooserWindow.qml:512, Common/Shortcuts.qml:238",
+    "reference": "Modules/FilesTopbar.qml:237, Modules/ChooserWindow.qml:512, Common/Shortcuts.qml:238",
     "comment": "tooltip on the button showing or hiding the sidebar"
   },
   {
@@ -3194,7 +3194,7 @@
   {
     "term": "Use these settings for all folders",
     "context": "Use these settings for all folders",
-    "reference": "Modules/FilesTopbar.qml:50",
+    "reference": "Modules/FilesTopbar.qml:51",
     "comment": "view menu entry making this folder's sort and view the defaults"
   },
   {
@@ -3236,7 +3236,7 @@
   {
     "term": "View",
     "context": "View",
-    "reference": "Modules/FilesTopbar.qml:263, Common/Shortcuts.qml:583, Modules/Settings/SettingsContent.qml:681",
+    "reference": "Modules/FilesTopbar.qml:264, Common/Shortcuts.qml:583, Modules/Settings/SettingsContent.qml:681",
     "comment": "keyboard shortcut group"
   },
   {
@@ -3308,13 +3308,13 @@
   {
     "term": "Zoom in",
     "context": "Zoom in",
-    "reference": "Modules/PreviewOverlay.qml:316, Modules/FilesTopbar.qml:368",
+    "reference": "Modules/PreviewOverlay.qml:316, Modules/FilesTopbar.qml:378",
     "comment": "menu entry making the file view bigger | tooltip on the button zooming the large preview in"
   },
   {
     "term": "Zoom out",
     "context": "Zoom out",
-    "reference": "Modules/PreviewOverlay.qml:301, Modules/FilesTopbar.qml:375",
+    "reference": "Modules/PreviewOverlay.qml:301, Modules/FilesTopbar.qml:385",
     "comment": "menu entry making the file view smaller | tooltip on the button zooming the large preview out"
   },
   {
