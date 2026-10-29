@@ -337,6 +337,38 @@ ShellRoot {
             check(pane.path, "/");
             pane.back();
             check(pane.path, "/");
+            function jobsButtonIn(item) {
+                if (item instanceof JobsButton)
+                    return item;
+                for (const child of item.children) {
+                    const found = jobsButtonIn(child);
+                    if (found)
+                        return found;
+                }
+                return null;
+            }
+            const topbarJobs = jobsButtonIn(win.topbar);
+            verify(topbarJobs !== null);
+            DC.Host.ownWindowDecorations = false;
+            wait(50);
+            const topbarY = win.topbar.mapToItem(surface, 0, 0).y;
+            FileOpsService.jobs = [
+                {
+                    id: "j1",
+                    state: "running"
+                }
+            ];
+            wait(50);
+            check(win.topbar.mapToItem(surface, 0, 0).y, topbarY);
+            check(topbarJobs.visible, true);
+            DC.Host.ownWindowDecorations = true;
+            wait(50);
+            check(topbarJobs.visible, false);
+            SettingsData.showTitleBar = false;
+            wait(50);
+            check(topbarJobs.visible, true);
+            SettingsData.showTitleBar = true;
+            FileOpsService.jobs = [];
             root.log.info("FIXTURE PASS");
         }
     }

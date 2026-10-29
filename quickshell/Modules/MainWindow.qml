@@ -44,6 +44,7 @@ FloatingWindow {
     readonly property WindowActions actions: actions
     readonly property WindowSidebarHost sidebar: sidebarHost
     readonly property FilesTopbar topbar: topbar
+    readonly property bool headerHostsJobs: header.visible && !header.compositorDecorated
     readonly property PreviewOverlay preview: previewOverlay
     readonly property var activePane: splitView && activePaneIndex === 1 && secondPane ? secondPane : primaryPane
     readonly property string currentPath: activePane.path
@@ -475,6 +476,7 @@ FloatingWindow {
 
             JobsButton {
                 anchors.verticalCenter: parent.verticalCenter
+                hosted: window.headerHostsJobs
             }
         }
 
@@ -533,6 +535,7 @@ FloatingWindow {
                 sortDescending: window.activePane.effectiveSortDescending
                 resultsActive: window.activePane.resultsActive
                 compact: sidebarHost.compact
+                showJobs: !window.headerHostsJobs
                 viewMode: window.activePane.viewMode
                 folderRemembered: window.activePane.folderRemembered
                 folderHasSettings: window.activePane.hasFolderSettings
