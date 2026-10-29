@@ -6,7 +6,9 @@ import qs.DCommon.Widgets
 DActionButton {
     id: button
 
-    visible: FileOpsService.jobs.length > 0
+    property bool hosted: true
+
+    visible: hosted && FileOpsService.jobs.length > 0
     iconName: FileOpsService.activeCount > 0 ? "sync" : "check_circle"
     buttonSize: Theme.buttonHeightXXS
     iconSize: Theme.iconSizeSmall

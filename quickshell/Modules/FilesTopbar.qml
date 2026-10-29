@@ -14,6 +14,7 @@ Item {
     property bool backEnabled: false
     property bool forwardEnabled: false
     property bool compact: false
+    property bool showJobs: false
     property string viewMode: "list"
     property bool previewOpen: false
     property bool previewExpandable: false
@@ -303,6 +304,15 @@ Item {
             showLabel: !topbar.compact
             onSortKeySelected: key => topbar.sortKeySelected(key)
             onDirectionToggled: topbar.sortDirectionToggled()
+        }
+
+        JobsButton {
+            anchors.verticalCenter: parent.verticalCenter
+            hosted: topbar.showJobs
+            focusPolicy: Qt.TabFocus
+            buttonSize: FilesMetrics.topbarControlSize
+            iconSize: Theme.iconSizeMedium
+            backgroundColor: Theme.chipSurface
         }
 
         FlatButton {
