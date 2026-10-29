@@ -37,11 +37,10 @@ jobs:
       - name: Update vendorHash in flake.nix
         run: |
           set -euo pipefail
-          echo "Attempting nix build to get new vendorHash..."
-          if output=$(nix build .#dux-files 2>&1); then
-            echo "Build succeeded, no hash update needed"
-            exit 0
-          fi
+          fake_hash="sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+          sed -i -E "s|vendorHash = [^;]+;|vendorHash = \"${fake_hash}\";|" flake.nix
+          echo "Building go modules with a fake vendorHash to force a fresh hash..."
+          output=$(nix build .#dux-files.goModules 2>&1) && { echo "Expected a hash mismatch"; echo "$output"; exit 1; }
           new_hash=$(echo "$output" | grep -oP "got:\s+\K\S+" | head -n1 || true)
           [ -n "$new_hash" ] || { echo "Could not extract new vendorHash"; echo "$output"; exit 1; }
           sed -i -E "s|vendorHash = [^;]+;|vendorHash = \"${new_hash}\";|" flake.nix
