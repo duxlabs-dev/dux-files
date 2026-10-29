@@ -1,6 +1,6 @@
 {
   "%1 already exist in this folder. Do you want to overwrite them?": {
-    "%1 already exist in this folder. Do you want to overwrite them?": ""
+    "%1 already exist in this folder. Do you want to overwrite them?": "%1 existiert bereits in diesem Ordner. Möchten Sie die diese überschreiben?"
   },
   "%1 already exists in this folder.": {
     "%1 already exists in this folder.": "%1 existiert bereits in diesem Ordner."
@@ -12,7 +12,7 @@
     "%1 can be run as a program. Open it in an editor instead to read it first.": ""
   },
   "%1 folders could not be read": {
-    "%1 folders could not be read": ""
+    "%1 folders could not be read": "%1 Ordner konnten nicht gelesen werden"
   },
   "%1 h %2 min left": {
     "%1 h %2 min left": "%1 h %2 min verbleibend"
@@ -21,7 +21,7 @@
     "%1 has not been marked as trusted. Running it allows it to start any program.": ""
   },
   "%1 hidden": {
-    "%1 hidden": ""
+    "%1 hidden": "%1 ausgeblendet"
   },
   "%1 holds it; Files takes over when it quits.": {
     "%1 holds it; Files takes over when it quits.": ""
@@ -39,7 +39,7 @@
     "%1 items cut": "%1 Elemente ausgeschnitten"
   },
   "%1 levels deep": {
-    "%1 levels deep": ""
+    "%1 levels deep": "%1 Ebenen tief"
   },
   "%1 matching “%2”": {
     "%1 matching “%2”": ""
@@ -99,7 +99,7 @@
     "Accessed": "Zugegriffen"
   },
   "Add or remove one item": {
-    "Add or remove one item": ""
+    "Add or remove one item": "Ein Element hinzufügen oder entfernen"
   },
   "Add or remove the item under the cursor": {
     "Add or remove the item under the cursor": ""
@@ -120,7 +120,7 @@
     "Administrator access is not available because the polkit policy is not installed": ""
   },
   "Administrator access is not available inside the sandbox": {
-    "Administrator access is not available inside the sandbox": "Administratorzugang ist in der Sandbox nicht verfügbar"
+    "Administrator access is not available inside the sandbox": "Administratorzugang ist innerhlab der Sandbox nicht verfügbar"
   },
   "Already here": {
     "Already here": "Existiert bereits"
@@ -129,13 +129,13 @@
     "Always": "Immer"
   },
   "Always use the dark theme.": {
-    "Always use the dark theme.": "Nutze immer das dunkle Design."
+    "Always use the dark theme.": "Immer das dunkle Theme verwenden."
   },
   "Always use the light theme.": {
-    "Always use the light theme.": "Nutze immer das helle Design."
+    "Always use the light theme.": "Immer das helle Theme verwenden."
   },
   "Always use this application": {
-    "Always use this application": "Nutze immer diese Anwendung"
+    "Always use this application": "Immer diese Anwendung verwenden"
   },
   "Amber": {
     "Amber": ""
@@ -150,7 +150,7 @@
     "Any time": "Beliebiger Zeitraum"
   },
   "Appearance": {
-    "Appearance": ""
+    "Appearance": "Erscheinungsbild"
   },
   "Apply": {
     "Apply": "Anwenden"
@@ -174,7 +174,7 @@
     "Ask every time": "Jedes mal fragen"
   },
   "Audio": {
-    "Audio": ""
+    "Audio": "Audio"
   },
   "Auto": {
     "Auto": "Automatisch"
@@ -186,7 +186,7 @@
     "Automatic uses $TERMINAL.": ""
   },
   "Available": {
-    "Available": ""
+    "Available": "Verfügbar"
   },
   "Back": {
     "Back": "Zurück"
@@ -195,7 +195,7 @@
     "Back to the files": ""
   },
   "Backend": {
-    "Backend": ""
+    "Backend": "Backend"
   },
   "Backend: not reachable, no activation file": {
     "Backend: not reachable, no activation file": ""
@@ -231,13 +231,13 @@
     "Cancelled": "Abgebrochen"
   },
   "Capabilities": {
-    "Capabilities": ""
+    "Capabilities": "Fähigkeiten"
   },
   "Changing owner": {
-    "Changing owner": "Ändere Besitzer"
+    "Changing owner": "Ändern des Eigentümers"
   },
   "Changing permissions": {
-    "Changing permissions": "Ändere Berechtigungen"
+    "Changing permissions": "Ändern der Berechtigungen"
   },
   "Choose a JSON color theme file.": {
     "Choose a JSON color theme file.": ""
@@ -267,10 +267,10 @@
     "Close behavior": "Schließverhalten"
   },
   "Close other tabs": {
-    "Close other tabs": "Schließe andere Tabs"
+    "Close other tabs": "Andere Tabs schließen"
   },
   "Close tab": {
-    "Close tab": "Schließe Tab"
+    "Close tab": "Tab schließen"
   },
   "Close tabs to the right": {
     "Close tabs to the right": "Schließe Tabs rechts vom aktuellen"
@@ -297,7 +297,7 @@
     "Compressing": "Komprimieren"
   },
   "Compress…": {
-    "Compress…": "Komprimieren…"
+    "Compress…": "Komprimieren …"
   },
   "Confirm": {
     "Confirm": "Bestätigen"
@@ -312,10 +312,10 @@
     "Connect anonymously": ""
   },
   "Connect to Server": {
-    "Connect to Server": "Verbinde mit Server"
+    "Connect to Server": "Mit Server verbinden"
   },
   "Connect to Server…": {
-    "Connect to Server…": "Verbinde mit Server…"
+    "Connect to Server…": "Mit Server verbinden …"
   },
   "Connected": {
     "Connected": "Verbunden"
@@ -336,13 +336,13 @@
     "Copy location path": ""
   },
   "Copy name": {
-    "Copy name": "Kopiere Name"
+    "Copy name": "Name kopieren"
   },
   "Copy to": {
-    "Copy to": "Kopiere nach"
+    "Copy to": "Kopieren nach"
   },
   "Copy to…": {
-    "Copy to…": "Kopiere nach..."
+    "Copy to…": "Kopieren nach ..."
   },
   "Copying": {
     "Copying": "Kopiert"
@@ -351,19 +351,19 @@
     "Coral": ""
   },
   "Could not read that file, expected a JSON color theme.": {
-    "Could not read that file, expected a JSON color theme.": ""
+    "Could not read that file, expected a JSON color theme.": "Diese Datei konnte nicht gelesen werden, erwartet wurde ein JSON-Farbschema."
   },
   "Count items in folders": {
     "Count items in folders": ""
   },
   "Create": {
-    "Create": "Erstelle"
+    "Create": "Erstellen"
   },
   "Created": {
     "Created": "Erstellt"
   },
   "Creating": {
-    "Creating": "Erstellen"
+    "Creating": "Erstellung"
   },
   "Ctrl copies, Alt asks.": {
     "Ctrl copies, Alt asks.": "Strg kopiert, Alt fragt."
@@ -375,7 +375,7 @@
     "Ctrl+Wheel resizes per window.": ""
   },
   "Custom": {
-    "Custom": ""
+    "Custom": "Benutzerdefiniert"
   },
   "Cut": {
     "Cut": "Ausschneiden"
@@ -447,7 +447,7 @@
     "Documents": "Dokumente"
   },
   "Domain": {
-    "Domain": ""
+    "Domain": "Domain"
   },
   "Double click": {
     "Double click": "Doppelklick"
@@ -471,10 +471,10 @@
     "Dropping without a modifier": ""
   },
   "Duplicate": {
-    "Duplicate": "Dupliziere"
+    "Duplicate": "Duplizieren"
   },
   "Duplicate tab": {
-    "Duplicate tab": "Dupliziere den Tab"
+    "Duplicate tab": "Tab duplizieren"
   },
   "Duplicated": {
     "Duplicated": "Dupliziert"
@@ -483,13 +483,13 @@
     "Duplicating": "Duplizieren"
   },
   "Duration": {
-    "Duration": ""
+    "Duration": "Dauer"
   },
   "Dux Shell not detected, using %1.": {
     "Dux Shell not detected, using %1.": "Dux Shell nicht gefunden, nutze %1."
   },
   "Dux Shell not detected, using the %1 preset.": {
-    "Dux Shell not detected, using the %1 preset.": ""
+    "Dux Shell not detected, using the %1 preset.": "Dux Shell nicht erkannt, daher wird das Preset %1 verwendet."
   },
   "Each launcher's own configuration folder.": {
     "Each launcher's own configuration folder.": ""
@@ -510,7 +510,7 @@
     "Emptying the trash": "Papierkorb wird geleert"
   },
   "Enter filename...": {
-    "Enter filename...": "Dateinamen angeben..."
+    "Enter filename...": "Dateinamen eingeben. .."
   },
   "Estimating…": {
     "Estimating…": ""
@@ -540,7 +540,7 @@
     "Extract to": "Entpacken nach"
   },
   "Extract to…": {
-    "Extract to…": "Entpacken nach…"
+    "Extract to…": "Entpacken nach …"
   },
   "Extracted": {
     "Extracted": "Entpackt"
@@ -681,7 +681,7 @@
     "Home": ""
   },
   "Host filesystem": {
-    "Host filesystem": ""
+    "Host filesystem": "Host-Dateisystem"
   },
   "Icons": {
     "Icons": ""
