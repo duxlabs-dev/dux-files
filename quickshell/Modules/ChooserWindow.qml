@@ -452,7 +452,7 @@ FloatingWindow {
             anchors.top: header.bottom
             anchors.bottom: footer.top
             anchors.left: parent.left
-            width: window.sidebarDocked ? Math.max(FilesMetrics.sidebarMinWidth, Math.min(CacheData.sidebarWidth, surface.width - FilesMetrics.windowMinWidth)) : 0
+            width: window.sidebarDocked ? Math.max(FilesMetrics.sidebarMinWidth, Math.min(CacheData.sidebarWidth, surface.width - Math.max(FilesMetrics.windowMinWidth, topbar.minimumWidth + FilesMetrics.contentMarginH))) : 0
             clip: true
 
             Behavior on width {
@@ -469,6 +469,7 @@ FloatingWindow {
 
                 anchors.fill: parent
                 anchors.margins: FilesMetrics.sidebarPadding
+                anchors.topMargin: 0
                 visible: parent.width > 0
                 currentPath: pane.path
                 onNavigateRequested: path => pane.navigate(path)
@@ -484,14 +485,15 @@ FloatingWindow {
 
             anchors.top: header.bottom
             anchors.bottom: footer.top
-            anchors.left: sidebarSlot.right
+            anchors.left: parent.left
             anchors.right: parent.right
-            anchors.topMargin: FilesMetrics.contentMarginV
-            anchors.leftMargin: FilesMetrics.contentMarginH
+            anchors.leftMargin: Math.max(FilesMetrics.contentMarginH, sidebarSlot.width)
             anchors.rightMargin: FilesMetrics.contentMarginH
 
             Item {
                 id: topbar
+
+                readonly property real minimumWidth: leftActions.width + rightActions.width + FilesMetrics.topbarSpacing * 2 + FilesMetrics.topbarControlSize
 
                 anchors.top: parent.top
                 anchors.left: parent.left

@@ -364,10 +364,6 @@ ShellRoot {
             DC.Host.ownWindowDecorations = true;
             wait(50);
             check(topbarJobs.visible, false);
-            SettingsData.showTitleBar = false;
-            wait(50);
-            check(topbarJobs.visible, true);
-            SettingsData.showTitleBar = true;
             FileOpsService.jobs = [];
             root.log.info("FIXTURE PASS");
         }

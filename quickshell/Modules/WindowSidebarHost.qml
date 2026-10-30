@@ -12,6 +12,7 @@ Item {
     property Item focusItem: null
     property bool overlayOpen: false
     property bool focusPending: false
+    property real contentMinWidth: FilesMetrics.windowMinWidth
 
     readonly property bool compact: width < FilesMetrics.sidebarOverlayBreakpoint
     readonly property bool docked: !SettingsData.sidebarCollapsed && !compact
@@ -69,6 +70,7 @@ Item {
         id: sidebar
 
         anchors.margins: FilesMetrics.sidebarPadding
+        anchors.topMargin: 0
         currentPath: host.mainWindow.currentPath
         onVisibleChanged: {
             if (visible)
@@ -92,7 +94,7 @@ Item {
     Item {
         id: sidebarSlot
 
-        readonly property real maximumWidth: Math.max(FilesMetrics.sidebarMinWidth, host.width - FilesMetrics.windowMinWidth)
+        readonly property real maximumWidth: Math.max(FilesMetrics.sidebarMinWidth, host.width - host.contentMinWidth)
         property real preferredWidth: CacheData.sidebarWidth
 
         anchors.top: parent.top

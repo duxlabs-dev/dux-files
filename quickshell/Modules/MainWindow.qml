@@ -44,7 +44,7 @@ FloatingWindow {
     readonly property WindowActions actions: actions
     readonly property WindowSidebarHost sidebar: sidebarHost
     readonly property FilesTopbar topbar: topbar
-    readonly property bool headerHostsJobs: header.visible && !header.compositorDecorated
+    readonly property bool headerHostsJobs: !header.compositorDecorated
     readonly property PreviewOverlay preview: previewOverlay
     readonly property var activePane: splitView && activePaneIndex === 1 && secondPane ? secondPane : primaryPane
     readonly property string currentPath: activePane.path
@@ -470,23 +470,12 @@ FloatingWindow {
             anchors.right: parent.right
             controls: windowControls
             title: window.title
-            visible: SettingsData.showTitleBar
-            height: visible ? implicitHeight : 0
             onCloseRequested: window.requestClose()
 
             JobsButton {
                 anchors.verticalCenter: parent.verticalCenter
                 hosted: window.headerHostsJobs
             }
-        }
-
-        MouseArea {
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: Theme.spacingS
-            visible: !SettingsData.showTitleBar
-            onPressed: windowControls.tryStartMove()
         }
 
         Item {
@@ -496,9 +485,8 @@ FloatingWindow {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.topMargin: FilesMetrics.contentMarginV
             anchors.bottomMargin: FilesMetrics.contentMarginV
-            anchors.leftMargin: FilesMetrics.contentMarginH + sidebarHost.dockedWidth
+            anchors.leftMargin: Math.max(FilesMetrics.contentMarginH, sidebarHost.dockedWidth)
             anchors.rightMargin: FilesMetrics.contentMarginH
             enabled: !window.preview.open
 
@@ -637,6 +625,7 @@ FloatingWindow {
         WindowSidebarHost {
             id: sidebarHost
 
+            contentMinWidth: Math.max(FilesMetrics.windowMinWidth, topbar.minimumWidth + FilesMetrics.contentMarginH)
             anchors.top: header.bottom
             anchors.bottom: parent.bottom
             anchors.left: parent.left
