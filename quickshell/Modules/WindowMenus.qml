@@ -74,21 +74,10 @@ Item {
         });
     }
 
-    function showNewDocumentMenu() {
-        newDocumentMenu.templates = [];
-        const dir = DirectoryService.templatesDir;
-        if (dir !== "") {
-            DirectoryService.list(dir, {
-                "limit": 100
-            }, result => {
-                if (result.error)
-                    return;
-                newDocumentMenu.templates = (result.entries || []).filter(entry => !entry.isDir);
-            });
-        }
+    function showNewDocumentMenu(pointX, pointY) {
         openWithMenu.close();
         itemMenu.close();
-        newDocumentMenu.openAt(backgroundMenu.x, backgroundMenu.y);
+        newDocumentMenu.present(pointX ?? backgroundMenu.x, pointY ?? backgroundMenu.y);
     }
 
     function showContextMenuAtCursor() {
@@ -103,11 +92,6 @@ Item {
             return;
         }
         showItemMenu(rect.x + Math.min(rect.width, rect.height), rect.y + rect.height, Qt.NoModifier);
-    }
-
-    function createDocument(template) {
-        const name = template ? template.name : I18n.tr("Untitled document", "default name for a new empty file");
-        FileOpsService.newFile(mainWindow.currentPath, name, template?.path ?? "", mainWindow.opScope, true);
     }
 
     function presentPlaceMenu(kind, path, source, pointX, pointY) {
@@ -138,36 +122,12 @@ Item {
         onClosed: live = false
     }
 
-    FileMenu {
+    NewDocumentMenu {
         id: newDocumentMenu
 
-        property var templates: []
-
         anchorItem: menus.anchorItem
-
-        FileMenuItem {
-            text: I18n.tr("Empty file", "new document menu entry creating a blank file")
-            iconName: "draft"
-            onClicked: {
-                newDocumentMenu.close();
-                menus.createDocument(null);
-            }
-        }
-
-        Repeater {
-            model: newDocumentMenu.templates
-
-            FileMenuItem {
-                required property var modelData
-
-                text: modelData.displayName !== "" ? modelData.displayName : modelData.name
-                iconName: "description"
-                onClicked: {
-                    newDocumentMenu.close();
-                    menus.createDocument(modelData);
-                }
-            }
-        }
+        folder: menus.mainWindow.currentPath
+        opScope: menus.mainWindow.opScope
     }
 
     PlaceMenu {

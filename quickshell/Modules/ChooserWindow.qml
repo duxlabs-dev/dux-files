@@ -388,6 +388,7 @@ FloatingWindow {
 
         Keys.onPressed: event => {
             const control = (event.modifiers & Qt.ControlModifier) !== 0;
+            const shift = (event.modifiers & Qt.ShiftModifier) !== 0;
             const alt = (event.modifiers & Qt.AltModifier) !== 0;
             switch (event.key) {
             case Qt.Key_Escape:
@@ -409,6 +410,11 @@ FloatingWindow {
                     return;
                 search.forceActiveFocus();
                 search.selectAll();
+                break;
+            case Qt.Key_N:
+                if (!control || !shift)
+                    return;
+                window.createFolder();
                 break;
             case Qt.Key_Left:
                 if (!alt)
@@ -451,6 +457,7 @@ FloatingWindow {
 
             anchors.top: header.bottom
             anchors.bottom: footer.top
+            anchors.bottomMargin: FilesMetrics.contentSpacing
             anchors.left: parent.left
             width: window.sidebarDocked ? Math.max(FilesMetrics.sidebarMinWidth, Math.min(CacheData.sidebarWidth, surface.width - Math.max(FilesMetrics.windowMinWidth, topbar.minimumWidth + FilesMetrics.contentMarginH))) : 0
             clip: true
@@ -487,6 +494,7 @@ FloatingWindow {
             anchors.bottom: footer.top
             anchors.left: parent.left
             anchors.right: parent.right
+            anchors.bottomMargin: FilesMetrics.contentSpacing
             anchors.leftMargin: Math.max(FilesMetrics.contentMarginH, sidebarSlot.width)
             anchors.rightMargin: FilesMetrics.contentMarginH
 
@@ -629,9 +637,10 @@ FloatingWindow {
                 typeAhead: true
                 dragEnabled: false
                 dropEnabled: false
-                menusEnabled: false
                 onActivateRequested: entry => window.activate(entry)
                 onOpenRequested: entries => window.openEntries(entries)
+                onItemMenuRequested: (index, pointX, pointY, modifiers) => menus.showItemMenu(pointX, pointY)
+                onBackgroundMenuRequested: (pointX, pointY) => menus.showBackgroundMenu(pointX, pointY)
                 onTabRequested: path => pane.navigate(path)
                 onRenameRequested: (target, name) => FileOpsService.rename(target, name, window.opScope)
                 onSortRequested: key => window.setSort(key)
@@ -805,7 +814,8 @@ FloatingWindow {
                     return;
                 }
                 const created = job.created?.[0]?.path ?? "";
-                if (job.kind !== "newFolder" || created === "" || FilePaths.parentOf(created) !== pane.path)
+                const creates = job.kind === "newFolder" || job.kind === "newFile";
+                if (!creates || created === "" || FilePaths.parentOf(created) !== pane.path)
                     return;
                 pane.revealAndRename(created);
             }
@@ -834,6 +844,14 @@ FloatingWindow {
                 if (!window.settled)
                     window.focusStart();
             }
+        }
+
+        ChooserMenus {
+            id: menus
+
+            anchors.fill: parent
+            chooser: window
+            pane: pane
         }
 
         ConnectServerDialog {
