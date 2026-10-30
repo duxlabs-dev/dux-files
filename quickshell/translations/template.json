@@ -1561,13 +1561,6 @@
     "comment": ""
   },
   {
-    "term": "Hides the title and the window buttons, leaving a thin strip to drag the window.",
-    "translation": "",
-    "context": "window header toggle description",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Home",
     "translation": "",
     "context": "sidebar entry for the user's home folder",
@@ -3129,6 +3122,13 @@
     "comment": ""
   },
   {
+    "term": "Shares on %1",
+    "translation": "",
+    "context": "header above the shares of a browsed server, %1 is the server",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Show",
     "translation": "",
     "context": "toast action revealing the extracted files",
@@ -3507,6 +3507,13 @@
     "comment": ""
   },
   {
+    "term": "This server offers no shares",
+    "translation": "",
+    "context": "connect dialog note when a browsed server lists nothing",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "This session",
     "translation": "",
     "context": "credential dialog option that keeps the password until logout",
@@ -3818,13 +3825,6 @@
     "term": "Window",
     "translation": "",
     "context": "general settings section label",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Window header",
-    "translation": "",
-    "context": "toggle label for the window title and buttons",
     "reference": "",
     "comment": ""
   },
@@ -4334,13 +4334,6 @@
   },
   {
     "term": "thumbnail size limit cap megabytes",
-    "translation": "",
-    "context": "settings search keywords, space separated, add synonyms in your language",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "title bar header hide decorations",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
     "reference": "",

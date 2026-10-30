@@ -266,6 +266,24 @@ ShellRoot {
         check("connect clears the busy flag", NetworkService.connecting, false);
         check("connect refreshes recent servers", lastRequest().method, "network.recent");
 
+        responses["network.connect"] = {
+            "server": "smb://nas/",
+            "shares": [
+                {
+                    "name": "media",
+                    "uri": "smb://nas/media"
+                }
+            ]
+        };
+        let browsed = null;
+        NetworkService.connectTo("smb://nas/", result => browsed = result.shares);
+        check("browsing a server hands back its shares", browsed, [
+            {
+                "name": "media",
+                "uri": "smb://nas/media"
+            }
+        ]);
+
         emit("network", {
             "kind": "mounts",
             "available": true,

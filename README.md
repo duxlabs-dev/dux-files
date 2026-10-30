@@ -101,7 +101,8 @@ Without it, the preview shows an installation hint; image previews and the rest 
 
 ```bash
 dfiles show                     # Show the window, starting dfiles if needed
-dfiles open ~/Downloads         # Open folders, one tab each
+dfiles ~/Downloads              # Open folders, one tab each
+dfiles open ~/Downloads         # Same
 dfiles open --new-window ~/src  # Same, in a new window
 dfiles select ~/notes.txt       # Open the folder with the file selected
 dfiles properties ~/notes.txt   # Properties dialog
