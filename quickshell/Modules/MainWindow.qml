@@ -556,6 +556,11 @@ FloatingWindow {
                 onSortKeySelected: key => window.activePane.sortBy(key)
                 onSortDirectionToggled: window.activePane.flipSort()
                 onCopyPathRequested: window.actions.copyText(window.currentPath)
+                onNewFolderRequested: window.actions.runAction("newFolder")
+                onNewDocumentRequested: (pointX, pointY) => {
+                    const point = topbar.mapToItem(surface, pointX, pointY);
+                    window.menus.showNewDocumentMenu(point.x, point.y);
+                }
                 onViewModeSelected: mode => window.activePane.setViewMode(mode)
                 onZoomRequested: step => window.activePane.body.zoomBy(step)
                 onUseForAllFoldersRequested: window.useForAllFolders()

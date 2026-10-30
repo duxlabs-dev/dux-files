@@ -157,6 +157,8 @@ Item {
     signal useForAllFoldersRequested
     signal resetFolderRequested
     signal propertiesRequested
+    signal newFolderRequested
+    signal newDocumentRequested(real pointX, real pointY)
     signal newWindowRequested
     signal copyPathRequested
     signal reloadRequested
@@ -432,6 +434,30 @@ Item {
                 text: topbar.resetFolderLabel
                 iconName: "restart_alt"
                 onClicked: menu.pick(() => topbar.resetFolderRequested())
+            }
+
+            FileMenuItem {
+                visible: menu.moreRows
+                enabled: !topbar.virtualActive
+                text: I18n.tr("New folder", "new folder dialog header")
+                iconName: "create_new_folder"
+                onClicked: menu.pick(() => topbar.newFolderRequested())
+            }
+
+            FileMenuItem {
+                visible: menu.moreRows
+                enabled: !topbar.virtualActive
+                text: I18n.tr("New document", "context menu entry creating a file from a template")
+                iconName: "note_add"
+                submenu: true
+                onClicked: menu.pick(() => {
+                    const point = rightActions.mapToItem(topbar, menu.x, menu.y);
+                    topbar.newDocumentRequested(point.x, point.y);
+                })
+            }
+
+            FileMenuDivider {
+                visible: menu.moreRows
             }
 
             FileMenuItem {

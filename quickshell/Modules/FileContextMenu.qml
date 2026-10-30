@@ -13,6 +13,7 @@ FileMenu {
     property bool hasClipboard: false
     property bool shiftHeld: false
     property bool forFolder: false
+    property bool forPicker: false
     property bool selectedBookmarked: false
     property bool extractable: false
     property bool inResults: false
@@ -25,10 +26,103 @@ FileMenu {
 
     readonly property bool crossFolder: inResults || inRecent
     readonly property var entries: {
+        if (forPicker)
+            return forFolder ? pickerBackgroundRows : pickerItemRows;
         if (forFolder)
             return inTrash ? trashBackgroundRows : inRecent ? recentBackgroundRows : backgroundRows;
         return inTrash ? trashItemRows : itemRows;
     }
+
+    readonly property var pickerItemRows: [
+        {
+            "id": "open",
+            "icon": "open_in_new",
+            "label": I18n.tr("Open", "context menu entry opening a file"),
+            "enabled": selectionCount > 0
+        },
+        {
+            "id": "rename",
+            "icon": "edit",
+            "label": I18n.tr("Rename", "rename dialog header"),
+            "enabled": selectionCount === 1
+        },
+        {
+            "id": "separator"
+        },
+        {
+            "id": "cut",
+            "icon": "content_cut",
+            "label": I18n.tr("Cut", "context menu entry marking the selection for a move"),
+            "enabled": selectionCount > 0
+        },
+        {
+            "id": "copy",
+            "icon": "content_copy",
+            "label": I18n.tr("Copy", "context menu entry copying the selection"),
+            "enabled": selectionCount > 0
+        },
+        {
+            "id": "pasteInto",
+            "icon": "content_paste",
+            "label": I18n.tr("Paste into folder", "context menu entry pasting the clipboard into the selected folder"),
+            "enabled": hasDirectory && selectionCount === 1 && hasClipboard
+        },
+        {
+            "id": "separator"
+        },
+        {
+            "id": "trash",
+            "icon": "delete",
+            "label": I18n.tr("Move to Trash", "context menu entry trashing the selection"),
+            "enabled": selectionCount > 0
+        },
+        {
+            "id": "separator"
+        },
+        {
+            "id": "copyPath",
+            "icon": "link",
+            "label": I18n.tr("Copy location path", "menu entry copying the current path to the clipboard"),
+            "enabled": selectionCount > 0
+        }
+    ]
+
+    readonly property var pickerBackgroundRows: [
+        {
+            "id": "newFolder",
+            "icon": "create_new_folder",
+            "label": I18n.tr("New folder", "new folder dialog header"),
+            "enabled": true
+        },
+        {
+            "id": "newDocument",
+            "icon": "note_add",
+            "label": I18n.tr("New document", "context menu entry creating a file from a template"),
+            "enabled": true,
+            "submenu": true
+        },
+        {
+            "id": "paste",
+            "icon": "content_paste",
+            "label": I18n.tr("Paste", "context menu entry pasting the clipboard here"),
+            "enabled": hasClipboard
+        },
+        {
+            "id": "separator"
+        },
+        {
+            "id": "showHidden",
+            "icon": "visibility",
+            "label": I18n.tr("Show hidden files", "menu entry listing dot files"),
+            "enabled": true
+        },
+        {
+            "id": "reload",
+            "icon": "refresh",
+            "label": I18n.tr("Reload", "menu entry re-reading the current folder"),
+            "enabled": true
+        }
+    ]
 
     readonly property var recentBackgroundRows: [
         {

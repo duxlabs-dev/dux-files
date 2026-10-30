@@ -3,11 +3,11 @@
     "dank-qml-common": {
       "flake": false,
       "locked": {
-        "lastModified": 1793369095,
-        "narHash": "sha256-fmUYL5zhf+DdNxgVY5y7s+cRF2YySt2rceXKzoVdmUg=",
+        "lastModified": 1793396822,
+        "narHash": "sha256-VYvWEwL6xgq0EkllydEBXTugI+gDfJ29vylvUJWBojE=",
         "owner": "duxlabs-dev",
         "repo": "dux-qml-common",
-        "rev": "43e05926fcdacc53675623169bcef686faa95301",
+        "rev": "79b3786d47879f77bffcef6450274d25b033ab89",
         "type": "github"
       },
       "original": {
