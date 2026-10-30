@@ -379,7 +379,7 @@ FloatingWindow {
         }
         onPreviewToggleRequested: window.actions.runAction("togglePreview")
         onServerDialogRequested: window.dialogs.askServer()
-        onConnectFailed: (uri, result) => window.dialogs.showServerFailure(uri, result)
+        onConnectFailed: (uri, result) => window.dialogs.presentServer(uri, result)
         onRestoreRequested: window.actions.runAction("restore")
         onEmptyTrashRequested: window.actions.runAction("emptyTrash")
         onRemoveFromRecentRequested: window.actions.runAction("removeFromRecent")

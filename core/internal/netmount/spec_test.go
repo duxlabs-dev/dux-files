@@ -19,6 +19,8 @@ var mountables = []Mountable{
 	{Type: "dav+sd", Scheme: "dav+sd"},
 	{Type: "davs+sd", Scheme: "davs+sd"},
 	{Type: "smb-share", Scheme: "smb", HostIsInet: true},
+	{Type: "smb-network", Scheme: "smb"},
+	{Type: "smb-server", Scheme: "smb"},
 	{Type: "archive", Scheme: "archive"},
 	{Type: "mtp", Scheme: "mtp"},
 }

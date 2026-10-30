@@ -53,23 +53,29 @@ Accepted locations:
 		if len(args) == 0 {
 			return callWindow("ui.open", map[string]any{"newWindow": true}, func(location.Env) error { return nil })
 		}
-		targets, err := locationArgs(args)
-		if err != nil {
-			return err
-		}
-		params := map[string]any{"paths": targets}
-		if openNewWindow {
-			params["newWindow"] = true
-		}
-		return callWindow("ui.open", params, func(env location.Env) error {
-			_, err := location.Resolve(targets, nil, env)
-			return err
-		})
+		return openLocations(args)
 	},
 }
 
+func openLocations(args []string) error {
+	targets, err := locationArgs(args)
+	if err != nil {
+		return err
+	}
+	params := map[string]any{"paths": targets}
+	if openNewWindow {
+		params["newWindow"] = true
+	}
+	return callWindow("ui.open", params, func(env location.Env) error {
+		_, err := location.Resolve(targets, nil, env)
+		return err
+	})
+}
+
 func init() {
-	openCmd.Flags().BoolVarP(&openNewWindow, "new-window", "n", false, "Open a new window instead of using the last used one")
+	for _, cmd := range []*cobra.Command{rootCmd, openCmd} {
+		cmd.Flags().BoolVarP(&openNewWindow, "new-window", "n", false, "Open a new window instead of using the last used one")
+	}
 }
 
 var selectCmd = &cobra.Command{

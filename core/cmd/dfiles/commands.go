@@ -7,17 +7,24 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:           "dfiles",
-	Short:         "Dux Files CLI",
-	Long:          "Dux Files is a standalone file manager for the dux desktop.",
-	Args:          cobra.NoArgs,
+	Use:   "dfiles [path|uri...]",
+	Short: "Dux Files CLI",
+	Long: `Dux Files is a standalone file manager for the dux desktop.
+Without arguments it shows the file manager window. With locations it behaves like dfiles open.`,
+	Args:          cobra.ArbitraryArgs,
 	SilenceErrors: true,
 	PersistentPreRun: func(cmd *cobra.Command, _ []string) {
 		cmd.SilenceUsage = true
 	},
+	ValidArgsFunction: func(*cobra.Command, []string, string) ([]string, cobra.ShellCompDirective) {
+		return nil, cobra.ShellCompDirectiveDefault
+	},
 	PreRunE: shellApp.ResolveConfig,
-	RunE: func(_ *cobra.Command, _ []string) error {
-		return shellApp.CallOrLaunch("ui.show", nil)
+	RunE: func(_ *cobra.Command, args []string) error {
+		if len(args) == 0 {
+			return shellApp.CallOrLaunch("ui.show", nil)
+		}
+		return openLocations(args)
 	},
 }
 

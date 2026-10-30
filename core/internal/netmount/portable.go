@@ -73,7 +73,7 @@ func (s *Service) MountPortable(monitor, id string) error {
 	}
 
 	call := conn.Object(monitor, MonitorPath).Call(MonitorIface+".VolumeMount", 0, id, "", uint32(0), "")
-	if call.Err != nil {
+	if call.Err != nil && !alreadyMounted(call.Err) {
 		return wrapDBus(call.Err)
 	}
 	s.reload(conn)

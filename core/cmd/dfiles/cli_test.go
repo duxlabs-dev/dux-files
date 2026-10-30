@@ -171,3 +171,10 @@ func TestFindDevice(t *testing.T) {
 	_, err = findDevice(devices, "/dev/sdc1")
 	assert.Error(t, err)
 }
+
+func TestBareLocationsGoToTheRootCommand(t *testing.T) {
+	cmd, args, err := rootCmd.Find([]string{"/tmp/shots/", "smb://nas/"})
+	require.NoError(t, err)
+	assert.Same(t, rootCmd, cmd)
+	assert.Equal(t, []string{"/tmp/shots/", "smb://nas/"}, args)
+}

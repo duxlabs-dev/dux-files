@@ -35,6 +35,7 @@ type Service struct {
 	available  bool
 	reason     string
 	ops        map[dbus.ObjectPath]*mountOp
+	listers    map[dbus.ObjectPath]*enumerator
 }
 
 type Snapshot struct {
@@ -52,11 +53,12 @@ func NewService(bus Publisher, configDir string) *Service {
 		stop:    make(chan struct{}),
 		reason:  "gvfs is not running",
 		ops:     map[dbus.ObjectPath]*mountOp{},
+		listers: map[dbus.ObjectPath]*enumerator{},
 	}
 }
 
 func (s *Service) Start() error {
-	conn, err := dbus.ConnectSessionBus()
+	conn, err := dbus.ConnectSessionBus(dbus.WithIncomingInterceptor(s.intercept))
 	if err != nil {
 		s.setReason("the session bus is unavailable")
 		return err
@@ -150,8 +152,10 @@ func (s *Service) Snapshot() Snapshot {
 }
 
 type Connected struct {
-	Mount    Mount  `json:"mount"`
-	Location string `json:"location"`
+	Mount    *Mount  `json:"mount,omitempty"`
+	Location string  `json:"location,omitempty"`
+	Server   string  `json:"server,omitempty"`
+	Shares   []Share `json:"shares"`
 }
 
 func (s *Service) Connect(uri, password string) (Connected, error) {
@@ -168,41 +172,74 @@ func (s *Service) Connect(uri, password string) (Connected, error) {
 	if err != nil {
 		return Connected{}, err
 	}
+	if spec.Type() == "smb-server" {
+		return s.browse(conn, remote.URI, password, spec)
+	}
 	mount, err := s.mount(conn, remote.URI, password, spec)
 	if err != nil {
 		return Connected{}, err
 	}
-	return Connected{Mount: mount, Location: LocationIn(mount, URIOf(spec, s.mountableList()))}, nil
+	return Connected{Mount: &mount, Location: LocationIn(mount, URIOf(spec, s.mountableList()))}, nil
 }
 
 func (s *Service) mount(conn *dbus.Conn, uri, password string, spec Spec) (Mount, error) {
 	if mount, found := s.mountedAt(spec); found {
 		return mount, nil
 	}
-
-	op := s.newOp(uri)
-	op.password = password
-	if err := op.export(conn); err != nil {
-		return Mount{}, &files.Error{Code: files.CodeIO, Err: err}
-	}
-	s.trackOp(op)
-	defer s.releaseOp(op, conn)
-
-	source := wireSource{DBusID: conn.Names()[0], Path: op.path}
-	if err := conn.Object(VfsBus, TrackerPath).Call(TrackerIface+".MountLocation", 0, encodeSpec(spec), source).Store(); err != nil {
-		return Mount{}, wrapDBus(err)
+	if err := s.mountLocation(conn, uri, password, spec); err != nil {
+		return Mount{}, err
 	}
 
 	s.reload(conn)
 	mount, found := s.findBySpec(spec)
 	if !found {
-		return Mount{}, fail(files.CodeIO, "%s mounted but gvfs did not report it", uri)
+		return Mount{}, fail(files.CodeNotSupported, "%s is mounted but gvfs offers no folder for it", uri)
 	}
-	if err := s.servers.remember(Server{URI: mount.URI, Name: mount.Name, Scheme: mount.Scheme}); err != nil {
-		log.Warnf("network: saving recent servers: %v", err)
-	}
+	s.remember(Server{URI: mount.URI, Name: mount.Name, Scheme: mount.Scheme})
 	s.publish(s.Snapshot())
 	return mount, nil
+}
+
+// gvfsd-smb-browse keeps a server mount hidden and without a FUSE folder, so its shares are read over D-Bus.
+func (s *Service) browse(conn *dbus.Conn, uri, password string, spec Spec) (Connected, error) {
+	if err := s.mountLocation(conn, uri, password, spec); err != nil {
+		return Connected{}, err
+	}
+
+	var raw wireMount
+	if err := conn.Object(VfsBus, TrackerPath).Call(TrackerIface+".LookupMount", 0, encodeSpec(spec)).Store(&raw); err != nil {
+		return Connected{}, wrapDBus(err)
+	}
+	server := URIOf(spec, s.mountableList())
+	shares, err := s.listShares(conn, raw, server)
+	if err != nil {
+		return Connected{}, err
+	}
+	s.remember(Server{URI: server, Name: raw.DisplayName, Scheme: SchemeOf(spec, s.mountableList())})
+	return Connected{Server: server, Shares: shares}, nil
+}
+
+func (s *Service) mountLocation(conn *dbus.Conn, uri, password string, spec Spec) error {
+	op := s.newOp(uri)
+	op.password = password
+	if err := op.export(conn); err != nil {
+		return &files.Error{Code: files.CodeIO, Err: err}
+	}
+	s.trackOp(op)
+	defer s.releaseOp(op, conn)
+
+	source := wireSource{DBusID: conn.Names()[0], Path: op.path}
+	err := conn.Object(VfsBus, TrackerPath).Call(TrackerIface+".MountLocation", 0, encodeSpec(spec), source).Store()
+	if err != nil && !alreadyMounted(err) {
+		return wrapDBus(err)
+	}
+	return nil
+}
+
+func (s *Service) remember(server Server) {
+	if err := s.servers.remember(server); err != nil {
+		log.Warnf("network: saving recent servers: %v", err)
+	}
 }
 
 func (s *Service) Disconnect(id string) error {

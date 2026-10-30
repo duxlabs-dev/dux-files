@@ -145,15 +145,15 @@ Item {
         connectDialog.ask();
     }
 
-    function showServerFailure(uri, result) {
-        connectDialog.showFailure(uri, result);
+    function presentServer(uri, result) {
+        connectDialog.present(uri, result);
     }
 
     function connectRemote(uri, password) {
         NetworkService.connectTo(uri, result => {
             const path = connectDialog.localPath(result);
             if (path === "") {
-                connectDialog.showFailure(uri, result);
+                connectDialog.present(uri, result);
                 return;
             }
             dialogs.mainWindow.openPath(path, true);
