@@ -68,7 +68,6 @@ Singleton {
     property alias focusRingWidth: adapter.focusRingWidth
     property alias focusRingColor: adapter.focusRingColor
     property alias windowTitleBars: adapter.windowTitleBars
-    property alias showTitleBar: adapter.showTitleBar
     property alias language: adapter.language
     property alias terminal: adapter.terminal
     property alias opener: adapter.opener
@@ -185,7 +184,6 @@ Singleton {
             property real focusRingWidth: 1.5
             property string focusRingColor: "primary"
             property bool windowTitleBars: true
-            property bool showTitleBar: true
             property string language: ""
             property string terminal: ""
             property string opener: ""
