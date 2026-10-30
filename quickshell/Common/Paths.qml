@@ -40,10 +40,71 @@ Singleton {
     }
 
     property var _iconPaths: ({})
+    property var themePaths: ({})
+    property string iconThemeSetting: "auto"
+    property string iconThemeEffective: ""
+    property bool _themePathsLoaded: false
+
+    function applyIconTheme(result) {
+        const changed = iconThemeEffective !== (result.effective || "");
+        iconThemeSetting = result.setting || "auto";
+        iconThemeEffective = result.effective || "";
+        if (changed) {
+            _iconPaths = ({});
+            themePaths = ({});
+            _themePathsLoaded = false;
+            loadThemePaths();
+        }
+    }
+
+    function refreshIconTheme() {
+        DuxFilesService.sendRequest("files.iconThemes", null, response => {
+            if (response.error)
+                return;
+            applyIconTheme(response.result || {});
+            loadThemePaths();
+        });
+    }
+
+    function loadThemePaths() {
+        if (_themePathsLoaded)
+            return;
+        _themePathsLoaded = true;
+        const expectedTheme = iconThemeEffective;
+        DuxFilesService.sendRequest("files.iconThemePaths", null, response => {
+            if (expectedTheme !== iconThemeEffective)
+                return;
+            if (response.error) {
+                _themePathsLoaded = false;
+                return;
+            }
+            themePaths = response.result || ({});
+        });
+    }
+
+    Connections {
+        target: DuxFilesService
+        function onConnectedChanged() {
+            if (DuxFilesService.connected)
+                root.refreshIconTheme();
+        }
+        function onIconThemeUpdate(data) { root.applyIconTheme(data || {}); }
+    }
+
+    Component.onCompleted: {
+        if (DuxFilesService.connected)
+            refreshIconTheme();
+    }
 
     function resolveIconPath(iconName: string): string {
         if (!iconName)
             return "";
+        const literal = literalIconSource(iconName);
+        if (literal)
+            return literal;
+        const themed = themePaths[iconName];
+        if (themed)
+            return Qt.resolvedUrl("file://" + themed).toString();
         const cached = _iconPaths[iconName];
         if (cached !== undefined)
             return cached;

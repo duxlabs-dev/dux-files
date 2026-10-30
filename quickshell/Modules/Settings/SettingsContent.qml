@@ -21,6 +21,9 @@ Item {
 
     signal resultPicked(int page, var row)
     property var terminals: []
+    property var iconThemes: []
+    readonly property string iconThemeSetting: Paths.iconThemeSetting
+    readonly property string iconThemeEffective: Paths.iconThemeEffective
     property var fileManagerStatus: ({})
     property var portalStatus: ({})
     property bool portalBusy: false
@@ -203,6 +206,27 @@ Item {
             if (response.error)
                 return;
             root.terminals = (response.result || {}).terminals || [];
+        });
+    }
+
+    function loadIconThemes() {
+        DuxFilesService.sendRequest("files.iconThemes", null, response => {
+            if (response.error)
+                return;
+            const result = response.result || {};
+            root.iconThemes = result.installed || [];
+            Paths.applyIconTheme(result);
+        });
+    }
+
+    function setIconTheme(name) {
+        DuxFilesService.sendRequest("files.setIconTheme", {
+            "name": name
+        }, response => {
+            if (response.error)
+                return;
+            const result = response.result || {};
+            Paths.applyIconTheme(result);
         });
     }
 
@@ -413,6 +437,7 @@ Item {
 
     Component.onCompleted: {
         loadTerminals();
+        loadIconThemes();
         loadFileManagerStatus();
         loadPortalStatus();
     }
@@ -964,6 +989,21 @@ Item {
                         themePickerLoader.active = true;
                         themePickerLoader.item.open();
                     }
+                }
+
+                OptionDropdownRow {
+                    text: I18n.tr("Icon theme", "icon theme setting label")
+                    keywords: I18n.tr("icons symbols folders badges appearance", "settings search keywords, space separated, add synonyms in your language")
+                    description: root.iconThemeEffective ? I18n.tr("Drawing with %1.", "icon theme setting description showing the theme in use").arg(root.iconThemeEffective) : I18n.tr("The theme the desktop asks for.", "icon theme setting description")
+                    optionList: [{
+                        label: I18n.tr("Automatic", "icon theme option following the desktop"),
+                        value: "auto"
+                    }].concat(root.iconThemes.map(name => ({
+                        label: name,
+                        value: name
+                    })))
+                    current: root.iconThemeSetting
+                    onPicked: value => root.setIconTheme(value)
                 }
             }
 

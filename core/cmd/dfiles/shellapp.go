@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"os"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/icontheme"
 	"github.com/duxlabs-dev/dux-files/core/internal/shellembed"
 	"github.com/duxlabs-dev/dux-go/shellapp"
 )
@@ -29,6 +31,12 @@ func uiEnv(string) []string {
 	}
 	if keepRunning {
 		env = append(env, "DFILES_KEEP_RUNNING=1")
+	}
+	if os.Getenv("QS_ICON_THEME") == "" {
+		home, _ := os.UserHomeDir()
+		if theme := icontheme.Effective(home); theme != "" {
+			env = append(env, "QS_ICON_THEME="+theme)
+		}
 	}
 	return env
 }

@@ -60,6 +60,9 @@ func TestScanFallsBackToEveryThemeWhenTheSelectionIsGone(t *testing.T) {
 	root := t.TempDir()
 	icon(t, root, "Adwaita", "apps", "firefox.svg")
 	icon(t, root, "Paper", "apps", "steam.svg")
+	for _, theme := range []string{"Adwaita", "Paper"} {
+		require.NoError(t, os.WriteFile(filepath.Join(root, theme, "index.theme"), []byte("[Icon Theme]\n"), 0o644))
+	}
 
 	catalog := Scan([]string{root}, "Removed Theme")
 
@@ -147,14 +150,17 @@ func TestSmallSizesDoNotFilterBadges(t *testing.T) {
 	assert.Equal(t, []string{"steam"}, Scan([]string{root}, "Paper").Badges)
 }
 
-func TestInstalledListsAThemeOnceAcrossRoots(t *testing.T) {
+func TestScanFallsBackToEveryThemeWhenNoneIsPicked(t *testing.T) {
 	first, second := t.TempDir(), t.TempDir()
 	for _, root := range []string{first, second} {
 		for _, theme := range []string{"Adwaita", "hicolor"} {
-			require.NoError(t, os.MkdirAll(filepath.Join(root, theme), 0o755))
+			require.NoError(t, os.MkdirAll(filepath.Join(root, theme, "apps"), 0o755))
+			require.NoError(t, os.WriteFile(filepath.Join(root, theme, "index.theme"), []byte("[Icon Theme]\n"), 0o644))
 		}
 	}
-	require.NoError(t, os.MkdirAll(filepath.Join(second, "Paper"), 0o755))
+	require.NoError(t, os.MkdirAll(filepath.Join(second, "Paper", "apps"), 0o755))
+	require.NoError(t, os.WriteFile(filepath.Join(second, "Paper", "index.theme"), []byte("[Icon Theme]\n"), 0o644))
+	require.NoError(t, os.MkdirAll(filepath.Join(second, "Cursors", "cursors"), 0o755))
 
-	assert.Equal(t, []string{"Adwaita", "hicolor", "Paper"}, installed([]string{first, second}))
+	assert.Equal(t, []string{"Adwaita", "Paper", "hicolor"}, Installed([]string{first, second}))
 }

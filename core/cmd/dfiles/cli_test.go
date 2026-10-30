@@ -171,3 +171,18 @@ func TestFindDevice(t *testing.T) {
 	_, err = findDevice(devices, "/dev/sdc1")
 	assert.Error(t, err)
 }
+
+func TestUIEnvSetsIconTheme(t *testing.T) {
+	root := isolate(t)
+	config := filepath.Join(root, "config")
+	require.NoError(t, os.MkdirAll(config, 0o755))
+	require.NoError(t, os.WriteFile(filepath.Join(config, "kdeglobals"), []byte("[Icons]\nTheme=WhiteSur-dark\n"), 0o644))
+
+	t.Setenv("QS_ICON_THEME", "")
+	env := uiEnv("")
+	assert.Contains(t, env, "QS_ICON_THEME=WhiteSur-dark")
+
+	t.Setenv("QS_ICON_THEME", "CustomTheme")
+	env = uiEnv("")
+	assert.NotContains(t, env, "QS_ICON_THEME=WhiteSur-dark")
+}
