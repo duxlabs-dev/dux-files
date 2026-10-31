@@ -93,10 +93,18 @@ FloatingWindow {
     implicitWidth: Math.min(FileBrowserMetrics.pickerWidth, (screen?.width ?? FileBrowserMetrics.pickerWidth) * FileBrowserMetrics.pickerScreenFraction)
     implicitHeight: Math.min(FileBrowserMetrics.pickerHeight, (screen?.height ?? FileBrowserMetrics.pickerHeight) * FileBrowserMetrics.pickerScreenFraction)
     minimumSize: Qt.size(FileBrowserMetrics.pickerMinWidth, FileBrowserMetrics.pickerMinHeight)
-    color: Theme.surface
+    color: Theme.windowSurface
+    surfaceFormat.opaque: false
     visible: request !== null
 
     onClosed: cancel()
+
+    WindowBlur {
+        targetWindow: window
+        blurEnabled: Theme.translucentWindows
+        blurWidth: window.width
+        blurHeight: window.height
+    }
     Component.onCompleted: start()
     Component.onDestruction: FileOpsService.forget(opScope)
 

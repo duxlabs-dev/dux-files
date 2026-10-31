@@ -207,7 +207,7 @@ Item {
         width: Math.max(FilesMetrics.sidebarMinWidth, Math.min(host.width - FilesMetrics.contentMarginH * 2, CacheData.sidebarWidth))
         visible: x > -width
         x: host.overlayOpen ? 0 : -width
-        color: Theme.surfaceContainerLow
+        color: Theme.foregroundColor(Theme.surfaceContainerLow, true)
         topRightRadius: Theme.windowRadius
         bottomRightRadius: Theme.windowRadius
 

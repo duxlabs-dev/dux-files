@@ -31,11 +31,19 @@ FloatingWindow {
 
     onClosed: hide()
 
+    WindowBlur {
+        targetWindow: settingsModal
+        blurEnabled: Theme.translucentWindows
+        blurWidth: settingsModal.width
+        blurHeight: settingsModal.height
+    }
+
     title: I18n.tr("Files Settings", "settings window title")
     minimumSize: Qt.size(SettingsMetrics.windowMinWidth, SettingsMetrics.windowMinHeight)
     implicitWidth: screen ? Math.min(SettingsMetrics.windowWidth, screen.width - Theme.spacingXL * 2) : SettingsMetrics.windowWidth
     implicitHeight: screen ? Math.min(SettingsMetrics.windowHeight, screen.height - Theme.spacingXL * 2) : SettingsMetrics.windowHeight
-    color: Theme.surface
+    color: Theme.windowSurface
+    surfaceFormat.opaque: false
     visible: false
 
     onIsCompactModeChanged: menuVisible = false

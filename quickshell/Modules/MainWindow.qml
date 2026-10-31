@@ -66,10 +66,18 @@ FloatingWindow {
     implicitWidth: SessionData.windowWidth
     implicitHeight: SessionData.windowHeight
     minimumSize: Qt.size(FilesMetrics.windowMinWidth, FilesMetrics.windowMinHeight)
-    color: Theme.surface
+    color: Theme.windowSurface
+    surfaceFormat.opaque: false
     visible: true
 
     onClosed: requestClose()
+
+    WindowBlur {
+        targetWindow: window
+        blurEnabled: Theme.translucentWindows
+        blurWidth: window.width
+        blurHeight: window.height
+    }
     onMaximizedChanged: SessionData.maximized = maximized
 
     onWidthChanged: {

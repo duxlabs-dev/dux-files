@@ -68,6 +68,10 @@ Singleton {
     property alias focusRingWidth: adapter.focusRingWidth
     property alias focusRingColor: adapter.focusRingColor
     property alias windowTitleBars: adapter.windowTitleBars
+    property alias floatingWindowTransparency: adapter.floatingWindowTransparency
+    property alias floatingWindowForegroundLayers: adapter.floatingWindowForegroundLayers
+    property alias floatingWindowForegroundTransparency: adapter.floatingWindowForegroundTransparency
+    property alias blurEnabled: adapter.blurEnabled
     property alias language: adapter.language
     property alias terminal: adapter.terminal
     property alias opener: adapter.opener
@@ -184,6 +188,10 @@ Singleton {
             property real focusRingWidth: 1.5
             property string focusRingColor: "primary"
             property bool windowTitleBars: true
+            property real floatingWindowTransparency: 1.0
+            property bool floatingWindowForegroundLayers: true
+            property real floatingWindowForegroundTransparency: 1.0
+            property bool blurEnabled: false
             property string language: ""
             property string terminal: ""
             property string opener: ""

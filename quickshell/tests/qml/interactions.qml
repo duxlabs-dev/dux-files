@@ -205,14 +205,14 @@ ShellRoot {
             CacheData.sidebarWidth = 240;
             DevicesService.transport = root.fakeTransport;
             NetworkService.transport = root.fakeTransport;
-            wait(200);
+            tryCompare(surface, "width", 1100);
             const pane = win.activePane;
             pane.navigate("/tmp");
             pane.setViewMode("grid");
-            wait(100);
+            tryVerify(() => pane.body.view?.cellWidth > 0);
             entries(pane.body.directory);
-            wait(150);
             let view = pane.body.view;
+            tryVerify(() => view.itemAtIndex(0) !== null);
             dragSpy.target = view;
             view.positionViewAtBeginning();
             const tile = view.itemAtIndex(0);
@@ -220,9 +220,8 @@ ShellRoot {
             check(tile.containsContent(tile.width / 2, blankY), false);
             mousePress(tile, tile.width / 2, blankY);
             mouseMove(view, view.cellWidth * 2 - 2, view.cellHeight - 2);
-            wait(100);
-            check(pane.selection.paths.includes("/tmp/document0"), true);
-            wait(100);
+            tryVerify(() => pane.selection.paths.includes("/tmp/document0"));
+            tryCompare(pane.selection.paths, "length", 2);
             mouseRelease(view, view.cellWidth * 2 - 2, view.cellHeight - 2);
             check(dragSpy.count, 0);
             check(pane.selection.paths.length, 2);
@@ -233,7 +232,6 @@ ShellRoot {
             mouseMove(visual, visual.width / 2 + 40, visual.height / 2);
             mouseRelease(visual, visual.width / 2 + 40, visual.height / 2);
             check(dragSpy.count, 1);
-            wait(50);
             DragService.end();
             pane.selection.select("/tmp/document10");
             mousePress(tile, tile.width / 2, blankY, Qt.LeftButton, Qt.ControlModifier);
@@ -243,23 +241,21 @@ ShellRoot {
             check(pane.selection.paths.includes("/tmp/document1"), true);
             check(view.indicesIn(Qt.rect(view.cellWidth - FileBrowserMetrics.gridGap + 1, 20, FileBrowserMetrics.gridGap - 2, 20)).length, 0);
             SettingsData.language = "ar";
-            wait(100);
+            tryVerify(() => view.itemAtIndex(0).x > view.width / 2);
             const firstTile = view.itemAtIndex(0);
             check(view.indicesIn(Qt.rect(firstTile.x + 1, firstTile.y + 1, 10, 10)), [0]);
             SettingsData.language = "en";
-            wait(100);
+            tryVerify(() => view.itemAtIndex(0).x < view.width / 2);
             const before = view.contentY;
             mouseWheel(surface, surface.width - 4, 200, 0, -120);
-            wait(100);
-            check(view.contentY > before, true);
+            tryVerify(() => view.contentY > before);
             view.positionViewAtBeginning();
             mousePress(view, view.cellWidth - 2, view.cellHeight - 2);
             mouseMove(view, view.cellWidth - 2, view.height - 2);
-            wait(250);
-            check(view.contentY > view.originY, true);
+            tryVerify(() => view.contentY > view.originY);
             mouseRelease(view, view.cellWidth - 2, view.height - 2);
             pane.setViewMode("list");
-            wait(150);
+            tryVerify(() => pane.body.view !== view && pane.body.view?.itemAtIndex(0) !== null);
             view = pane.body.view;
             dragSpy.target = view;
             dragSpy.clear();
@@ -270,17 +266,15 @@ ShellRoot {
             check(row.containsContent(blankX, row.height / 2), false);
             mousePress(row, blankX, row.height / 2);
             mouseMove(view, view.width - 80, view.rowPitch * 4);
-            wait(100);
-            check(pane.selection.paths.length > 1, true);
+            tryVerify(() => pane.selection.paths.length > 1);
             mouseRelease(view, view.width - 80, view.rowPitch * 4);
             check(dragSpy.count, 0);
             mouseClick(row, blankX, row.height / 2);
             check(pane.selection.paths, ["/tmp/document0"]);
             pane.body.directory.entries.setProperty(0, "isDir", true);
             view.chevrons = true;
-            wait(50);
+            tryVerify(() => row.hitTargets[2].width > 0);
             const chevron = row.hitTargets[2];
-            verify(chevron.width > 0);
             pane.selection.clear();
             mouseClick(chevron, chevron.width / 2, chevron.height / 2);
             check(pane.selection.paths, ["/tmp/document0"]);
@@ -288,8 +282,7 @@ ShellRoot {
             pane.body.directory.entries.setProperty(0, "isDir", false);
             view.positionViewAtBeginning();
             mouseWheel(surface, surface.width - 4, 200, 0, -120);
-            wait(100);
-            check(view.contentY > view.originY, true);
+            tryVerify(() => view.contentY > view.originY);
             function sidebarIn(item) {
                 if (item instanceof Sidebar && item.visible)
                     return item;
@@ -350,7 +343,7 @@ ShellRoot {
             const topbarJobs = jobsButtonIn(win.topbar);
             verify(topbarJobs !== null);
             DC.Host.ownWindowDecorations = false;
-            wait(50);
+            tryCompare(win, "headerHostsJobs", false);
             const topbarY = win.topbar.mapToItem(surface, 0, 0).y;
             FileOpsService.jobs = [
                 {
@@ -358,12 +351,10 @@ ShellRoot {
                     state: "running"
                 }
             ];
-            wait(50);
+            tryCompare(topbarJobs, "visible", true);
             check(win.topbar.mapToItem(surface, 0, 0).y, topbarY);
-            check(topbarJobs.visible, true);
             DC.Host.ownWindowDecorations = true;
-            wait(50);
-            check(topbarJobs.visible, false);
+            tryCompare(topbarJobs, "visible", false);
             FileOpsService.jobs = [];
             root.log.info("FIXTURE PASS");
         }

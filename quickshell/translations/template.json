@@ -483,6 +483,13 @@
     "comment": ""
   },
   {
+    "term": "Background blur",
+    "translation": "",
+    "context": "toggle asking the compositor to blur behind see-through windows",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Badges",
     "translation": "",
     "context": "folder appearance tab listing badge icons",
@@ -514,6 +521,13 @@
     "term": "Blue",
     "translation": "",
     "context": "color palette name",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Blurs what shows through the window. Needs an opacity below 100%.",
+    "translation": "",
+    "context": "background blur toggle description",
     "reference": "",
     "comment": ""
   },
@@ -1400,6 +1414,13 @@
     "comment": ""
   },
   {
+    "term": "Foreground layers",
+    "translation": "",
+    "context": "toggle keeping cards and panes solid over a see-through window",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Forget",
     "translation": "",
     "context": "dialog button clearing the remembered folder settings",
@@ -1715,6 +1736,13 @@
     "comment": ""
   },
   {
+    "term": "Keeps cards and panes solid when the window is see-through.",
+    "translation": "",
+    "context": "foreground layers toggle description",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Keyboard",
     "translation": "",
     "context": "general settings section label",
@@ -1739,6 +1767,20 @@
     "term": "Larger icons",
     "translation": "",
     "context": "keyboard shortcut",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Layer opacity",
+    "translation": "",
+    "context": "foreground layer opacity slider label",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Lets the desktop show through the window. Text and controls stay solid.",
+    "translation": "",
+    "context": "window opacity slider description",
     "reference": "",
     "comment": ""
   },
@@ -2215,6 +2257,13 @@
     "term": "Only the window process serves the portal",
     "translation": "",
     "context": "explanation when a daemon without a window answers a portal question",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Opacity",
+    "translation": "",
+    "context": "window opacity slider label",
     "reference": "",
     "comment": ""
   },
@@ -3857,6 +3906,13 @@
     "comment": ""
   },
   {
+    "term": "Your compositor does not support background blur.",
+    "translation": "",
+    "context": "hint shown instead of the background blur toggle",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Zoom in",
     "translation": "",
     "context": "menu entry making the file view bigger | tooltip on the button zooming the large preview in",
@@ -3900,6 +3956,13 @@
   },
   {
     "term": "capability available sandbox",
+    "translation": "",
+    "context": "settings search keywords, space separated, add synonyms in your language",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "cards panes contrast glass",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
     "reference": "",
@@ -4089,6 +4152,13 @@
   },
   {
     "term": "font typeface headline title",
+    "translation": "",
+    "context": "settings search keywords, space separated, add synonyms in your language",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "frosted glass compositor",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
     "reference": "",
@@ -4334,6 +4404,13 @@
   },
   {
     "term": "thumbnail size limit cap megabytes",
+    "translation": "",
+    "context": "settings search keywords, space separated, add synonyms in your language",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "transparency translucent glass see-through",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
     "reference": "",

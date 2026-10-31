@@ -491,6 +491,7 @@ Item {
                 y: current ? 0 : pagesHost.height
                 active: current || root.searching
                 enabled: current && !root.searching
+                visible: !(current && root.searching)
                 sourceComponent: root.pageComponents[index]
                 onLoaded: rebuild.restart()
             }
@@ -500,7 +501,7 @@ Item {
     Rectangle {
         anchors.fill: pagesHost
         visible: root.searching
-        color: Theme.surface
+        color: "transparent"
 
         SettingsPage {
             StyledText {
@@ -839,6 +840,8 @@ Item {
         SettingsPage {
             id: appearanceFlickable
 
+            Component.onCompleted: BlurService.probe()
+
             SettingsCard {
                 title: I18n.tr("Theme", "appearance settings section label")
 
@@ -1073,6 +1076,50 @@ Item {
                     description: I18n.tr("Off leaves decorations to the compositor. Applies to new windows.", "window title bars toggle description")
                     checked: SettingsData.windowTitleBars
                     onToggled: checked => SettingsData.windowTitleBars = checked
+                }
+
+                SettingsSliderRow {
+                    text: I18n.tr("Opacity", "window opacity slider label")
+                    keywords: I18n.tr("transparency translucent glass see-through", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("Lets the desktop show through the window. Text and controls stay solid.", "window opacity slider description")
+                    minimum: 0
+                    maximum: 100
+                    unit: "%"
+                    value: Math.round(SettingsData.floatingWindowTransparency * 100)
+                    onSliderValueChanged: newValue => SettingsData.floatingWindowTransparency = newValue / 100
+                }
+
+                SettingsToggleRow {
+                    text: I18n.tr("Foreground layers", "toggle keeping cards and panes solid over a see-through window")
+                    keywords: I18n.tr("cards panes contrast glass", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("Keeps cards and panes solid when the window is see-through.", "foreground layers toggle description")
+                    checked: SettingsData.floatingWindowForegroundLayers
+                    onToggled: checked => SettingsData.floatingWindowForegroundLayers = checked
+                }
+
+                SettingsSliderRow {
+                    text: I18n.tr("Layer opacity", "foreground layer opacity slider label")
+                    enabled: SettingsData.floatingWindowForegroundLayers
+                    minimum: 0
+                    maximum: 100
+                    unit: "%"
+                    value: Math.round(SettingsData.floatingWindowForegroundTransparency * 100)
+                    onSliderValueChanged: newValue => SettingsData.floatingWindowForegroundTransparency = newValue / 100
+                }
+
+                SettingsToggleRow {
+                    visible: BlurService.available
+                    text: I18n.tr("Background blur", "toggle asking the compositor to blur behind see-through windows")
+                    keywords: I18n.tr("frosted glass compositor", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("Blurs what shows through the window. Needs an opacity below 100%.", "background blur toggle description")
+                    checked: SettingsData.blurEnabled
+                    onToggled: checked => SettingsData.blurEnabled = checked
+                }
+
+                SettingsRow {
+                    visible: BlurService.probed && !BlurService.available
+                    title: I18n.tr("Background blur", "toggle asking the compositor to blur behind see-through windows")
+                    subtitle: I18n.tr("Your compositor does not support background blur.", "hint shown instead of the background blur toggle")
                 }
             }
 
