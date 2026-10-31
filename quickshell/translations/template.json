@@ -119,6 +119,13 @@
     "comment": ""
   },
   {
+    "term": "%1 running operations will be stopped part way through.",
+    "translation": "",
+    "context": "quit confirmation explanation for several running file operations",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "%1 s left",
     "translation": "",
     "context": "time left for a file operation, in seconds",
@@ -2660,6 +2667,13 @@
     "comment": ""
   },
   {
+    "term": "Quit while file operations are running?",
+    "translation": "",
+    "context": "confirmation header when closing the last window would stop running file operations",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Radius strength",
     "translation": "",
     "context": "global component corner rounding",
@@ -3475,6 +3489,13 @@
     "term": "The portal list is managed by the system.",
     "translation": "",
     "context": "portal chooser setting description when XDG_DESKTOP_PORTAL_DIR is set",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "The running operation will be stopped part way through.",
+    "translation": "",
+    "context": "quit confirmation explanation for a single running file operation",
     "reference": "",
     "comment": ""
   },

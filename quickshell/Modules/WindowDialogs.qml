@@ -12,7 +12,7 @@ Item {
 
     property int propertiesRequest: 0
 
-    readonly property bool anyOpen: conflictDialog.visible || errorDialog.visible || archivePasswordDialog.visible || confirmDialog.visible || openConfirmDialog.visible || openWithDialog.visible || executableDialog.visible || trustDialog.visible || unlockDialog.visible || connectDialog.visible || credentialDialog.visible || propertiesDialog.visible || appearanceDialog.visible || shortcutsOverlay.visible || compressDialog.visible || renameBookmarkDialog.visible || trashConfirmDialog.visible || emptyTrashDialog.visible || clearRecentDialog.visible || (extractPickerLoader.item?.visible ?? false) || (transferPickerLoader.item?.visible ?? false)
+    readonly property bool anyOpen: conflictDialog.visible || errorDialog.visible || archivePasswordDialog.visible || confirmDialog.visible || openConfirmDialog.visible || openWithDialog.visible || executableDialog.visible || trustDialog.visible || unlockDialog.visible || connectDialog.visible || credentialDialog.visible || propertiesDialog.visible || appearanceDialog.visible || shortcutsOverlay.visible || compressDialog.visible || renameBookmarkDialog.visible || trashConfirmDialog.visible || emptyTrashDialog.visible || clearRecentDialog.visible || quitDialog.visible || (extractPickerLoader.item?.visible ?? false) || (transferPickerLoader.item?.visible ?? false)
 
     function openSettings() {
         settingsLoader.active = true;
@@ -104,6 +104,11 @@ Item {
 
     function confirmClearRecent() {
         clearRecentDialog.open();
+    }
+
+    function confirmQuit() {
+        quitDialog.running = FileOpsService.activeCount;
+        quitDialog.open();
     }
 
     function askCompress(paths) {
@@ -355,6 +360,17 @@ Item {
         confirmText: I18n.tr("Clear Recent", "action emptying the recently used list without touching the files")
         danger: false
         onConfirmed: RecentService.clear()
+    }
+
+    ConfirmDialog {
+        id: quitDialog
+
+        property int running: 0
+
+        title: I18n.tr("Quit while file operations are running?", "confirmation header when closing the last window would stop running file operations")
+        message: running === 1 ? I18n.tr("The running operation will be stopped part way through.", "quit confirmation explanation for a single running file operation") : I18n.tr("%1 running operations will be stopped part way through.", "quit confirmation explanation for several running file operations").arg(running)
+        confirmText: I18n.tr("Quit", "close behavior button group option to quit the app")
+        onConfirmed: dialogs.mainWindow.closeRequested(true)
     }
 
     ConfirmDialog {

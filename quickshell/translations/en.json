@@ -2,19 +2,19 @@
   {
     "term": "%1 already exist in this folder. Do you want to overwrite them?",
     "context": "%1 already exist in this folder. Do you want to overwrite them?",
-    "reference": "Modules/ChooserWindow.qml:847",
+    "reference": "Modules/ChooserWindow.qml:848",
     "comment": "file chooser overwrite dialog message, %1 lists the file names"
   },
   {
     "term": "%1 already exists in this folder.",
     "context": "%1 already exists in this folder.",
-    "reference": "Modules/ChooserWindow.qml:847, Modules/ConflictDialog.qml:32",
+    "reference": "Modules/ChooserWindow.qml:848, Modules/ConflictDialog.qml:32",
     "comment": "file conflict dialog explanation"
   },
   {
     "term": "%1 bookmarks imported",
     "context": "%1 bookmarks imported",
-    "reference": "Modules/MainWindow.qml:126",
+    "reference": "Modules/MainWindow.qml:127",
     "comment": "toast after importing gtk bookmarks"
   },
   {
@@ -38,7 +38,7 @@
   {
     "term": "%1 has not been marked as trusted. Running it allows it to start any program.",
     "context": "%1 has not been marked as trusted. Running it allows it to start any program.",
-    "reference": "Modules/WindowDialogs.qml:224",
+    "reference": "Modules/WindowDialogs.qml:229",
     "comment": "untrusted desktop file dialog explanation"
   },
   {
@@ -102,6 +102,12 @@
     "comment": "icon size option"
   },
   {
+    "term": "%1 running operations will be stopped part way through.",
+    "context": "%1 running operations will be stopped part way through.",
+    "reference": "Modules/WindowDialogs.qml:371",
+    "comment": "quit confirmation explanation for several running file operations"
+  },
+  {
     "term": "%1 s left",
     "context": "%1 s left",
     "reference": "Common/FilesFormat.qml:50",
@@ -116,13 +122,13 @@
   {
     "term": "%1 will be deleted permanently. This cannot be undone.",
     "context": "%1 will be deleted permanently. This cannot be undone.",
-    "reference": "Modules/WindowDialogs.qml:345, Modules/WindowDialogs.qml:366",
+    "reference": "Modules/WindowDialogs.qml:350, Modules/WindowDialogs.qml:382",
     "comment": "permanent delete confirmation explanation"
   },
   {
     "term": "%1 will be moved to the trash.",
     "context": "%1 will be moved to the trash.",
-    "reference": "Modules/WindowDialogs.qml:288, Modules/ChooserMenus.qml:141",
+    "reference": "Modules/WindowDialogs.qml:293, Modules/ChooserMenus.qml:141",
     "comment": "trash confirmation explanation"
   },
   {
@@ -464,7 +470,7 @@
   {
     "term": "Cancel",
     "context": "Cancel",
-    "reference": "Modules/DragController.qml:130, Modules/OpenWithDialog.qml:160, Modules/ConfirmDialog.qml:25, Modules/ChooserWindow.qml:800, Modules/JobRow.qml:70, Modules/ArchivePasswordDialog.qml:65, Modules/ConnectServerDialog.qml:163, Modules/NameDialog.qml:39, Modules/OperationErrorDialog.qml:69, Modules/ExecutableDialog.qml:31, Modules/CredentialDialog.qml:147, Modules/ConflictDialog.qml:65, Modules/CompressDialog.qml:105, Modules/UnlockDialog.qml:58",
+    "reference": "Modules/DragController.qml:130, Modules/OpenWithDialog.qml:160, Modules/ConfirmDialog.qml:25, Modules/ChooserWindow.qml:801, Modules/JobRow.qml:70, Modules/ArchivePasswordDialog.qml:65, Modules/ConnectServerDialog.qml:163, Modules/NameDialog.qml:39, Modules/OperationErrorDialog.qml:69, Modules/ExecutableDialog.qml:31, Modules/CredentialDialog.qml:147, Modules/ConflictDialog.qml:65, Modules/CompressDialog.qml:105, Modules/UnlockDialog.qml:58",
     "comment": "dialog button to cancel"
   },
   {
@@ -500,7 +506,7 @@
   {
     "term": "Choose a badge image",
     "context": "Choose a badge image",
-    "reference": "Modules/WindowDialogs.qml:193",
+    "reference": "Modules/WindowDialogs.qml:198",
     "comment": "file picker title for a folder badge image"
   },
   {
@@ -512,7 +518,7 @@
   {
     "term": "Clear Recent",
     "context": "Clear Recent",
-    "reference": "Modules/RecentView.qml:35, Modules/PlaceMenu.qml:109, Modules/WindowDialogs.qml:355, Modules/FileContextMenu.qml:146",
+    "reference": "Modules/RecentView.qml:35, Modules/PlaceMenu.qml:109, Modules/WindowDialogs.qml:360, Modules/FileContextMenu.qml:146",
     "comment": "action emptying the recently used list without touching the files"
   },
   {
@@ -524,7 +530,7 @@
   {
     "term": "Clear the recent files list?",
     "context": "Clear the recent files list?",
-    "reference": "Modules/WindowDialogs.qml:353",
+    "reference": "Modules/WindowDialogs.qml:358",
     "comment": "confirmation header before emptying the recently used list"
   },
   {
@@ -686,7 +692,7 @@
   {
     "term": "Copy to",
     "context": "Copy to",
-    "reference": "Modules/WindowDialogs.qml:324",
+    "reference": "Modules/WindowDialogs.qml:329",
     "comment": "folder picker title for copying the selection"
   },
   {
@@ -830,7 +836,7 @@
   {
     "term": "Delete permanently?",
     "context": "Delete permanently?",
-    "reference": "Modules/WindowDialogs.qml:365",
+    "reference": "Modules/WindowDialogs.qml:381",
     "comment": "permanent delete confirmation header"
   },
   {
@@ -1004,7 +1010,7 @@
   {
     "term": "Empty Trash",
     "context": "Empty Trash",
-    "reference": "Modules/TrashView.qml:33, Modules/PlaceMenu.qml:97, Modules/WindowDialogs.qml:346, Modules/FileContextMenu.qml:189",
+    "reference": "Modules/TrashView.qml:33, Modules/PlaceMenu.qml:97, Modules/WindowDialogs.qml:351, Modules/FileContextMenu.qml:189",
     "comment": "action deleting everything in the trash"
   },
   {
@@ -1016,7 +1022,7 @@
   {
     "term": "Empty the trash?",
     "context": "Empty the trash?",
-    "reference": "Modules/WindowDialogs.qml:344",
+    "reference": "Modules/WindowDialogs.qml:349",
     "comment": "confirmation header before deleting everything in the trash"
   },
   {
@@ -1028,7 +1034,7 @@
   {
     "term": "Enter filename...",
     "context": "Enter filename...",
-    "reference": "Modules/ChooserWindow.qml:781",
+    "reference": "Modules/ChooserWindow.qml:782",
     "comment": "file browser save filename input placeholder"
   },
   {
@@ -1076,7 +1082,7 @@
   {
     "term": "Extract to",
     "context": "Extract to",
-    "reference": "Modules/WindowDialogs.qml:306",
+    "reference": "Modules/WindowDialogs.qml:311",
     "comment": "folder picker title for unpacking archives"
   },
   {
@@ -1178,13 +1184,13 @@
   {
     "term": "Folders open in new tabs and files open in their applications.",
     "context": "Folders open in new tabs and files open in their applications.",
-    "reference": "Modules/WindowDialogs.qml:276",
+    "reference": "Modules/WindowDialogs.qml:281",
     "comment": "explanation in the confirmation before opening many items"
   },
   {
     "term": "Folders open in new tabs, archives are extracted and other files open in their applications.",
     "context": "Folders open in new tabs, archives are extracted and other files open in their applications.",
-    "reference": "Modules/WindowDialogs.qml:276",
+    "reference": "Modules/WindowDialogs.qml:281",
     "comment": "explanation in the confirmation before opening many items, some of them archives"
   },
   {
@@ -1340,7 +1346,7 @@
   {
     "term": "Grid view",
     "context": "Grid view",
-    "reference": "Modules/FilesTopbar.qml:41, Modules/ChooserWindow.qml:571, Common/Shortcuts.qml:260, Modules/Settings/SettingsContent.qml:83",
+    "reference": "Modules/FilesTopbar.qml:41, Modules/ChooserWindow.qml:572, Common/Shortcuts.qml:260, Modules/Settings/SettingsContent.qml:83",
     "comment": "file browser toolbar button switching to the grid | view mode showing items as tiles"
   },
   {
@@ -1394,13 +1400,13 @@
   {
     "term": "Import",
     "context": "Import",
-    "reference": "Modules/MainWindow.qml:124",
+    "reference": "Modules/MainWindow.qml:125",
     "comment": "toast action importing gtk bookmarks"
   },
   {
     "term": "Import your GTK bookmarks?",
     "context": "Import your GTK bookmarks?",
-    "reference": "Modules/MainWindow.qml:123",
+    "reference": "Modules/MainWindow.qml:124",
     "comment": "toast offering to copy the gtk file chooser bookmarks once"
   },
   {
@@ -1574,7 +1580,7 @@
   {
     "term": "List view",
     "context": "List view",
-    "reference": "Modules/FilesTopbar.qml:36, Modules/ChooserWindow.qml:571, Common/Shortcuts.qml:253, Modules/Settings/SettingsContent.qml:79",
+    "reference": "Modules/FilesTopbar.qml:36, Modules/ChooserWindow.qml:572, Common/Shortcuts.qml:253, Modules/Settings/SettingsContent.qml:79",
     "comment": "file browser toolbar button switching to the list | view mode showing one row per item"
   },
   {
@@ -1610,7 +1616,7 @@
   {
     "term": "Menu",
     "context": "Menu",
-    "reference": "Modules/Settings/SettingsModal.qml:104",
+    "reference": "Modules/Settings/SettingsModal.qml:105",
     "comment": "settings header button that shows the section list on narrow windows"
   },
   {
@@ -1700,13 +1706,13 @@
   {
     "term": "Move to",
     "context": "Move to",
-    "reference": "Modules/WindowDialogs.qml:324",
+    "reference": "Modules/WindowDialogs.qml:329",
     "comment": "folder picker title for moving the selection"
   },
   {
     "term": "Move to Trash",
     "context": "Move to Trash",
-    "reference": "Modules/DragActionChip.qml:36, Modules/WindowDialogs.qml:287, Modules/WindowDialogs.qml:289, Modules/ChooserMenus.qml:140, Modules/ChooserMenus.qml:142, Modules/FileContextMenu.qml:76, Modules/FileContextMenu.qml:335, Common/Shortcuts.qml:463",
+    "reference": "Modules/DragActionChip.qml:36, Modules/WindowDialogs.qml:292, Modules/WindowDialogs.qml:294, Modules/ChooserMenus.qml:140, Modules/ChooserMenus.qml:142, Modules/FileContextMenu.qml:76, Modules/FileContextMenu.qml:335, Common/Shortcuts.qml:463",
     "comment": "context menu entry trashing the selection"
   },
   {
@@ -1808,7 +1814,7 @@
   {
     "term": "New folder",
     "context": "New folder",
-    "reference": "Modules/FilesTopbar.qml:442, Modules/ChooserWindow.qml:546, Modules/FileContextMenu.qml:94, Modules/FileContextMenu.qml:381, Common/Shortcuts.qml:501",
+    "reference": "Modules/FilesTopbar.qml:442, Modules/ChooserWindow.qml:547, Modules/FileContextMenu.qml:94, Modules/FileContextMenu.qml:381, Common/Shortcuts.qml:501",
     "comment": "file browser toolbar button creating a folder | new folder dialog header"
   },
   {
@@ -1946,13 +1952,13 @@
   {
     "term": "Open",
     "context": "Open",
-    "reference": "Modules/OpenWithDialog.qml:164, Modules/ChooserWindow.qml:58, Modules/WindowDialogs.qml:277, Modules/FileContextMenu.qml:40, Modules/FileContextMenu.qml:199, Common/Shortcuts.qml:17",
+    "reference": "Modules/OpenWithDialog.qml:164, Modules/ChooserWindow.qml:58, Modules/WindowDialogs.qml:282, Modules/FileContextMenu.qml:40, Modules/FileContextMenu.qml:199, Common/Shortcuts.qml:17",
     "comment": "context menu entry opening a file | file browser open button"
   },
   {
     "term": "Open %1 items?",
     "context": "Open %1 items?",
-    "reference": "Modules/WindowDialogs.qml:275",
+    "reference": "Modules/WindowDialogs.qml:280",
     "comment": "confirmation before opening many selected items at once"
   },
   {
@@ -2228,7 +2234,7 @@
   {
     "term": "Preview",
     "context": "Preview",
-    "reference": "Modules/FilesTopbar.qml:49, Modules/ChooserWindow.qml:581, Common/Shortcuts.qml:324",
+    "reference": "Modules/FilesTopbar.qml:49, Modules/ChooserWindow.qml:582, Common/Shortcuts.qml:324",
     "comment": "view menu entry and shortcut showing or hiding the preview drawer"
   },
   {
@@ -2276,8 +2282,14 @@
   {
     "term": "Quit",
     "context": "Quit",
-    "reference": "Modules/Settings/SettingsContent.qml:593",
+    "reference": "Modules/WindowDialogs.qml:372, Modules/Settings/SettingsContent.qml:593",
     "comment": "close behavior button group option to quit the app"
+  },
+  {
+    "term": "Quit while file operations are running?",
+    "context": "Quit while file operations are running?",
+    "reference": "Modules/WindowDialogs.qml:370",
+    "comment": "confirmation header when closing the last window would stop running file operations"
   },
   {
     "term": "Radius strength",
@@ -2384,7 +2396,7 @@
   {
     "term": "Rename",
     "context": "Rename",
-    "reference": "Modules/PlaceMenu.qml:53, Modules/WindowDialogs.qml:259, Modules/WindowDialogs.qml:260, Modules/FileContextMenu.qml:46, Modules/FileContextMenu.qml:269, Common/Shortcuts.qml:455",
+    "reference": "Modules/PlaceMenu.qml:53, Modules/WindowDialogs.qml:264, Modules/WindowDialogs.qml:265, Modules/FileContextMenu.qml:46, Modules/FileContextMenu.qml:269, Common/Shortcuts.qml:455",
     "comment": "rename dialog header"
   },
   {
@@ -2414,7 +2426,7 @@
   {
     "term": "Replace",
     "context": "Replace",
-    "reference": "Modules/ChooserWindow.qml:848, Modules/ConflictDialog.qml:84",
+    "reference": "Modules/ChooserWindow.qml:849, Modules/ConflictDialog.qml:84",
     "comment": "file conflict dialog button to overwrite the existing item"
   },
   {
@@ -2540,7 +2552,7 @@
   {
     "term": "Run this desktop file?",
     "context": "Run this desktop file?",
-    "reference": "Modules/WindowDialogs.qml:223",
+    "reference": "Modules/WindowDialogs.qml:228",
     "comment": "untrusted desktop file dialog header"
   },
   {
@@ -2582,7 +2594,7 @@
   {
     "term": "Saving %1 into the chosen folder",
     "context": "Saving %1 into the chosen folder",
-    "reference": "Modules/ChooserWindow.qml:753",
+    "reference": "Modules/ChooserWindow.qml:754",
     "comment": "file chooser footer listing the names an app wants to save"
   },
   {
@@ -2618,7 +2630,7 @@
   {
     "term": "Search in Files",
     "context": "Search in Files",
-    "reference": "Modules/FilesTopbar.qml:528, Modules/ChooserWindow.qml:606, Common/Shortcuts.qml:137, Modules/Settings/SettingsContent.qml:1280",
+    "reference": "Modules/FilesTopbar.qml:528, Modules/ChooserWindow.qml:607, Common/Shortcuts.qml:137, Modules/Settings/SettingsContent.qml:1280",
     "comment": "placeholder in the search field"
   },
   {
@@ -2690,7 +2702,7 @@
   {
     "term": "Settings",
     "context": "Settings",
-    "reference": "Modules/FilesTopbar.qml:510, Common/Shortcuts.qml:373, Modules/Settings/SettingsModal.qml:97",
+    "reference": "Modules/FilesTopbar.qml:510, Common/Shortcuts.qml:373, Modules/Settings/SettingsModal.qml:98",
     "comment": "settings window header title"
   },
   {
@@ -2750,7 +2762,7 @@
   {
     "term": "Show hidden files",
     "context": "Show hidden files",
-    "reference": "Modules/ChooserWindow.qml:563, Modules/FileContextMenu.qml:116, Modules/FileContextMenu.qml:415, Modules/SearchChips.qml:157, Common/Shortcuts.qml:316, Modules/Settings/SettingsContent.qml:708",
+    "reference": "Modules/ChooserWindow.qml:564, Modules/FileContextMenu.qml:116, Modules/FileContextMenu.qml:415, Modules/SearchChips.qml:157, Common/Shortcuts.qml:316, Modules/Settings/SettingsContent.qml:708",
     "comment": "file browser toolbar toggle | menu entry listing dot files"
   },
   {
@@ -2972,7 +2984,7 @@
   {
     "term": "The files themselves stay where they are.",
     "context": "The files themselves stay where they are.",
-    "reference": "Modules/WindowDialogs.qml:354",
+    "reference": "Modules/WindowDialogs.qml:359",
     "comment": "explanation under the clear recent confirmation"
   },
   {
@@ -2980,6 +2992,12 @@
     "context": "The portal list is managed by the system.",
     "reference": "Modules/Settings/SettingsContent.qml:247",
     "comment": "portal chooser setting description when XDG_DESKTOP_PORTAL_DIR is set"
+  },
+  {
+    "term": "The running operation will be stopped part way through.",
+    "context": "The running operation will be stopped part way through.",
+    "reference": "Modules/WindowDialogs.qml:371",
+    "comment": "quit confirmation explanation for a single running file operation"
   },
   {
     "term": "The session bus refused it.",
@@ -3038,7 +3056,7 @@
   {
     "term": "This item already exists",
     "context": "This item already exists",
-    "reference": "Modules/ChooserWindow.qml:846, Modules/ConflictDialog.qml:31",
+    "reference": "Modules/ChooserWindow.qml:847, Modules/ConflictDialog.qml:31",
     "comment": "file conflict dialog header"
   },
   {
@@ -3098,7 +3116,7 @@
   {
     "term": "Toggle sidebar",
     "context": "Toggle sidebar",
-    "reference": "Modules/FilesTopbar.qml:240, Modules/ChooserWindow.qml:529, Common/Shortcuts.qml:238",
+    "reference": "Modules/FilesTopbar.qml:240, Modules/ChooserWindow.qml:530, Common/Shortcuts.qml:238",
     "comment": "tooltip on the button showing or hiding the sidebar"
   },
   {
@@ -3116,7 +3134,7 @@
   {
     "term": "Trust and run",
     "context": "Trust and run",
-    "reference": "Modules/WindowDialogs.qml:225",
+    "reference": "Modules/WindowDialogs.qml:230",
     "comment": "untrusted desktop file dialog action"
   },
   {
@@ -3206,7 +3224,7 @@
   {
     "term": "Untitled folder",
     "context": "Untitled folder",
-    "reference": "Modules/WindowActions.qml:309, Modules/WindowActions.qml:486, Modules/ChooserWindow.qml:372",
+    "reference": "Modules/WindowActions.qml:309, Modules/WindowActions.qml:486, Modules/ChooserWindow.qml:373",
     "comment": "default name for a new folder"
   },
   {

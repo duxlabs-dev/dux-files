@@ -12,7 +12,7 @@ import qs.DCommon.FileBrowser
 FloatingWindow {
     id: window
 
-    signal closeRequested
+    signal closeRequested(bool force)
     signal newWindowRequested(var locations)
 
     required property int windowId
@@ -129,7 +129,13 @@ FloatingWindow {
     }
 
     function requestClose() {
-        closeRequested();
+        closeRequested(false);
+    }
+
+    function confirmQuit() {
+        if (!visible)
+            visible = true;
+        dialogs.confirmQuit();
     }
 
     function setSplitRatio(value) {

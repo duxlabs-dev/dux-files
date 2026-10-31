@@ -23,7 +23,7 @@ ShellRoot {
     readonly property bool dbusActivated: Quickshell.env("DFILES_DBUS_ACTIVATED") === "1"
     readonly property bool keepRunning: Quickshell.env("DFILES_KEEP_RUNNING") === "1"
     readonly property bool quitOnLastClose: SettingsData.closeBehavior === "quit" && !keepRunning
-    readonly property bool idle: WindowService.count === 0 && ChooserService.count === 0
+    readonly property bool idle: WindowService.count === 0 && ChooserService.count === 0 && FileOpsService.activeCount === 0
     property bool quitDeferred: false
 
     Component.onCompleted: {
@@ -113,18 +113,33 @@ ShellRoot {
         }
     }
 
-    function closeWindow(windowId) {
-        if (WindowService.count <= 1 && quitOnLastClose) {
-            if (ChooserService.count > 0) {
-                quitDeferred = true;
-                WindowService.close(windowId);
-                return;
-            }
+    function closeOutcome(force) {
+        if (WindowService.count > 1 || !quitOnLastClose)
+            return "close";
+        if (ChooserService.count > 0)
+            return "defer";
+        if (!force && FileOpsService.activeCount > 0)
+            return "confirm";
+        return "quit";
+    }
+
+    function closeWindow(windowId, force) {
+        switch (closeOutcome(force)) {
+        case "close":
+            WindowService.close(windowId);
+            return;
+        case "defer":
+            quitDeferred = true;
+            WindowService.close(windowId);
+            return;
+        case "confirm":
+            windowObject(windowId)?.confirmQuit();
+            return;
+        case "quit":
             FolderHistory.unload();
             DuxFilesService.quit();
             return;
         }
-        WindowService.close(windowId);
     }
 
     function quitWhenIdle() {
@@ -202,7 +217,7 @@ ShellRoot {
 
         MainWindow {
             onNewWindowRequested: locations => WindowService.create(locations)
-            onCloseRequested: root.closeWindow(windowId)
+            onCloseRequested: force => root.closeWindow(windowId, force)
         }
     }
 }

@@ -195,7 +195,7 @@ Singleton {
             property string language: ""
             property string terminal: ""
             property string opener: ""
-            property string closeBehavior: "quit"
+            property string closeBehavior: "hide"
             property string openLocationIn: "current"
             property bool extractOnOpen: true
             property bool registerFileManager: true
