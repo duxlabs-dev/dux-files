@@ -727,6 +727,13 @@ Item {
                 }
 
                 SettingsToggleRow {
+                    text: I18n.tr("Hidden files after other files", "hidden files last toggle label")
+                    keywords: I18n.tr("dotfiles sort last bottom", "settings search keywords, space separated, add synonyms in your language")
+                    checked: SettingsData.hiddenLast
+                    onToggled: checked => SettingsData.hiddenLast = checked
+                }
+
+                SettingsToggleRow {
                     text: I18n.tr("Remember view and sort per folder", "setting label for per-folder sort and view memory")
                     keywords: I18n.tr("folder memory per-folder remember", "settings search keywords, space separated, add synonyms in your language")
                     checked: SettingsData.rememberFolderViews

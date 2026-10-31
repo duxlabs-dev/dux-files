@@ -87,6 +87,7 @@ Singleton {
     property alias showHidden: adapter.showHidden
     property alias showExtensions: adapter.showExtensions
     property alias foldersFirst: adapter.foldersFirst
+    property alias hiddenLast: adapter.hiddenLast
     property alias rememberFolderViews: adapter.rememberFolderViews
     property alias folderCounts: adapter.folderCounts
     property alias confirmTrash: adapter.confirmTrash
@@ -207,6 +208,7 @@ Singleton {
             property bool showHidden: false
             property bool showExtensions: true
             property bool foldersFirst: true
+            property bool hiddenLast: true
             property bool rememberFolderViews: true
             property bool folderCounts: true
             property bool confirmTrash: false

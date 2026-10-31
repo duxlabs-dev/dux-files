@@ -60,7 +60,7 @@ github.com/clipperhouse/uax29/v2/graphemes
 ## explicit; go 1.18
 github.com/cyphar/filepath-securejoin
 github.com/cyphar/filepath-securejoin/internal/consts
-# github.com/duxlabs-dev/dux-go v1.6.3-0.20261029140302-14828dee2d20
+# github.com/duxlabs-dev/dux-go v1.6.3-0.20261031181736-024402301dff
 ## explicit; go 1.27
 github.com/duxlabs-dev/dux-go/dbusutil
 github.com/duxlabs-dev/dux-go/files

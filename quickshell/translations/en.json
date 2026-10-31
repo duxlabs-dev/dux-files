@@ -86,7 +86,7 @@
   {
     "term": "%1 matching “%2”",
     "context": "%1 matching “%2”",
-    "reference": "Modules/RecentView.qml:42, Modules/TrashView.qml:40, Modules/FilesPane.qml:722",
+    "reference": "Modules/RecentView.qml:42, Modules/TrashView.qml:40, Modules/FilesPane.qml:723",
     "comment": "filter bar above a folder listing, count then the typed text"
   },
   {
@@ -176,13 +176,13 @@
   {
     "term": "50 is the Material default.",
     "context": "50 is the Material default.",
-    "reference": "Modules/Settings/SettingsContent.qml:979",
+    "reference": "Modules/Settings/SettingsContent.qml:986",
     "comment": "radius strength slider description"
   },
   {
     "term": "? or F1 in the main window.",
     "context": "? or F1 in the main window.",
-    "reference": "Modules/Settings/SettingsContent.qml:831",
+    "reference": "Modules/Settings/SettingsContent.qml:838",
     "comment": "keyboard shortcuts settings row description"
   },
   {
@@ -266,13 +266,13 @@
   {
     "term": "Always use the dark theme.",
     "context": "Always use the dark theme.",
-    "reference": "Modules/Settings/SettingsContent.qml:856",
+    "reference": "Modules/Settings/SettingsContent.qml:863",
     "comment": "theme mode setting description"
   },
   {
     "term": "Always use the light theme.",
     "context": "Always use the light theme.",
-    "reference": "Modules/Settings/SettingsContent.qml:854",
+    "reference": "Modules/Settings/SettingsContent.qml:861",
     "comment": "theme mode setting description"
   },
   {
@@ -362,7 +362,7 @@
   {
     "term": "Auto",
     "context": "Auto",
-    "reference": "Modules/Settings/SettingsContent.qml:30, Modules/Settings/SettingsContent.qml:45, Modules/Settings/SettingsContent.qml:861",
+    "reference": "Modules/Settings/SettingsContent.qml:30, Modules/Settings/SettingsContent.qml:45, Modules/Settings/SettingsContent.qml:868",
     "comment": "color source button group option following DMS | font source button group option following DMS | theme mode button group option"
   },
   {
@@ -374,7 +374,7 @@
   {
     "term": "Automatic uses $TERMINAL.",
     "context": "Automatic uses $TERMINAL.",
-    "reference": "Modules/Settings/SettingsContent.qml:1212",
+    "reference": "Modules/Settings/SettingsContent.qml:1219",
     "comment": "terminal setting description"
   },
   {
@@ -422,7 +422,7 @@
   {
     "term": "Background blur",
     "context": "Background blur",
-    "reference": "Modules/Settings/SettingsContent.qml:1112, Modules/Settings/SettingsContent.qml:1121",
+    "reference": "Modules/Settings/SettingsContent.qml:1119, Modules/Settings/SettingsContent.qml:1128",
     "comment": "toggle asking the compositor to blur behind see-through windows"
   },
   {
@@ -434,7 +434,7 @@
   {
     "term": "Balanced",
     "context": "Balanced",
-    "reference": "Modules/Settings/SettingsContent.qml:1143",
+    "reference": "Modules/Settings/SettingsContent.qml:1150",
     "comment": "spring bounce option"
   },
   {
@@ -458,7 +458,7 @@
   {
     "term": "Blurs what shows through the window. Needs an opacity below 100%.",
     "context": "Blurs what shows through the window. Needs an opacity below 100%.",
-    "reference": "Modules/Settings/SettingsContent.qml:1114",
+    "reference": "Modules/Settings/SettingsContent.qml:1121",
     "comment": "background blur toggle description"
   },
   {
@@ -500,7 +500,7 @@
   {
     "term": "Choose a JSON color theme file.",
     "context": "Choose a JSON color theme file.",
-    "reference": "Modules/Settings/SettingsContent.qml:959",
+    "reference": "Modules/Settings/SettingsContent.qml:966",
     "comment": "custom theme hint when none selected"
   },
   {
@@ -572,7 +572,7 @@
   {
     "term": "Color source",
     "context": "Color source",
-    "reference": "Modules/Settings/SettingsContent.qml:890",
+    "reference": "Modules/Settings/SettingsContent.qml:897",
     "comment": "color source setting label"
   },
   {
@@ -620,7 +620,7 @@
   {
     "term": "Confirm before moving to the trash",
     "context": "Confirm before moving to the trash",
-    "reference": "Modules/Settings/SettingsContent.qml:789",
+    "reference": "Modules/Settings/SettingsContent.qml:796",
     "comment": "setting label"
   },
   {
@@ -716,13 +716,13 @@
   {
     "term": "Could not read that file, expected a JSON color theme.",
     "context": "Could not read that file, expected a JSON color theme.",
-    "reference": "Modules/Settings/SettingsContent.qml:962",
+    "reference": "Modules/Settings/SettingsContent.qml:969",
     "comment": "custom theme error when file is invalid"
   },
   {
     "term": "Count items in folders",
     "context": "Count items in folders",
-    "reference": "Modules/Settings/SettingsContent.qml:765",
+    "reference": "Modules/Settings/SettingsContent.qml:772",
     "comment": "folder counts toggle label"
   },
   {
@@ -746,7 +746,7 @@
   {
     "term": "Ctrl copies, Alt asks.",
     "context": "Ctrl copies, Alt asks.",
-    "reference": "Modules/Settings/SettingsContent.qml:1238",
+    "reference": "Modules/Settings/SettingsContent.qml:1245",
     "comment": "drag default action setting description"
   },
   {
@@ -758,7 +758,7 @@
   {
     "term": "Ctrl+Wheel resizes per window.",
     "context": "Ctrl+Wheel resizes per window.",
-    "reference": "Modules/Settings/SettingsContent.qml:750",
+    "reference": "Modules/Settings/SettingsContent.qml:757",
     "comment": "icon size setting description"
   },
   {
@@ -782,7 +782,7 @@
   {
     "term": "Dark",
     "context": "Dark",
-    "reference": "Modules/Settings/SettingsContent.qml:861",
+    "reference": "Modules/Settings/SettingsContent.qml:868",
     "comment": "theme mode button group option"
   },
   {
@@ -854,7 +854,7 @@
   {
     "term": "Density",
     "context": "Density",
-    "reference": "Modules/Settings/SettingsContent.qml:990",
+    "reference": "Modules/Settings/SettingsContent.qml:997",
     "comment": "appearance settings section label"
   },
   {
@@ -872,7 +872,7 @@
   {
     "term": "Devices in the sidebar",
     "context": "Devices in the sidebar",
-    "reference": "Modules/Settings/SettingsContent.qml:1315",
+    "reference": "Modules/Settings/SettingsContent.qml:1322",
     "comment": "devices settings section label"
   },
   {
@@ -884,7 +884,7 @@
   {
     "term": "Display family",
     "context": "Display family",
-    "reference": "Modules/Settings/SettingsContent.qml:1038",
+    "reference": "Modules/Settings/SettingsContent.qml:1045",
     "comment": "display font family dropdown label"
   },
   {
@@ -914,19 +914,19 @@
   {
     "term": "Double click",
     "context": "Double click",
-    "reference": "Modules/Settings/SettingsContent.qml:779",
+    "reference": "Modules/Settings/SettingsContent.qml:786",
     "comment": "click to open option"
   },
   {
     "term": "Downloads each file.",
     "context": "Downloads each file.",
-    "reference": "Modules/Settings/SettingsContent.qml:1272",
+    "reference": "Modules/Settings/SettingsContent.qml:1279",
     "comment": "network thumbnails toggle description"
   },
   {
     "term": "Drag and drop",
     "context": "Drag and drop",
-    "reference": "Modules/Settings/SettingsContent.qml:1233",
+    "reference": "Modules/Settings/SettingsContent.qml:1240",
     "comment": "behaviour settings section label"
   },
   {
@@ -950,7 +950,7 @@
   {
     "term": "Dropping without a modifier",
     "context": "Dropping without a modifier",
-    "reference": "Modules/Settings/SettingsContent.qml:1236",
+    "reference": "Modules/Settings/SettingsContent.qml:1243",
     "comment": "drag default action setting label"
   },
   {
@@ -980,25 +980,25 @@
   {
     "term": "Duration",
     "context": "Duration",
-    "reference": "Modules/Settings/SettingsContent.qml:1130",
+    "reference": "Modules/Settings/SettingsContent.qml:1137",
     "comment": "animation duration slider label"
   },
   {
     "term": "Dux Shell not detected, using %1.",
     "context": "Dux Shell not detected, using %1.",
-    "reference": "Modules/Settings/SettingsContent.qml:1016",
+    "reference": "Modules/Settings/SettingsContent.qml:1023",
     "comment": "auto font source status when DMS is missing"
   },
   {
     "term": "Dux Shell not detected, using the %1 preset.",
     "context": "Dux Shell not detected, using the %1 preset.",
-    "reference": "Modules/Settings/SettingsContent.qml:911",
+    "reference": "Modules/Settings/SettingsContent.qml:918",
     "comment": "auto color source status when DMS is missing"
   },
   {
     "term": "Each launcher's own configuration folder.",
     "context": "Each launcher's own configuration folder.",
-    "reference": "Modules/Settings/SettingsContent.qml:1397",
+    "reference": "Modules/Settings/SettingsContent.qml:1404",
     "comment": "games setting description for the settings folders"
   },
   {
@@ -1112,7 +1112,7 @@
   {
     "term": "Family",
     "context": "Family",
-    "reference": "Modules/Settings/SettingsContent.qml:1021",
+    "reference": "Modules/Settings/SettingsContent.qml:1028",
     "comment": "font family dropdown label"
   },
   {
@@ -1130,7 +1130,7 @@
   {
     "term": "Files",
     "context": "Files",
-    "reference": "Modules/TabManager.qml:187, Common/Shortcuts.qml:591, Modules/Settings/SettingsContent.qml:774, Modules/Settings/SettingsAboutPage.qml:96",
+    "reference": "Modules/TabManager.qml:187, Common/Shortcuts.qml:591, Modules/Settings/SettingsContent.qml:781, Modules/Settings/SettingsAboutPage.qml:96",
     "comment": "keyboard shortcut group | main window title"
   },
   {
@@ -1142,7 +1142,7 @@
   {
     "term": "Filter",
     "context": "Filter",
-    "reference": "Modules/Settings/SettingsContent.qml:818",
+    "reference": "Modules/Settings/SettingsContent.qml:825",
     "comment": "typing in the file list option"
   },
   {
@@ -1154,7 +1154,7 @@
   {
     "term": "Focus ring",
     "context": "Focus ring",
-    "reference": "Modules/Settings/SettingsContent.qml:1167, Modules/Settings/SettingsContent.qml:1170",
+    "reference": "Modules/Settings/SettingsContent.qml:1174, Modules/Settings/SettingsContent.qml:1177",
     "comment": "appearance settings section label | focus ring toggle label"
   },
   {
@@ -1196,31 +1196,31 @@
   {
     "term": "Folders to skip",
     "context": "Folders to skip",
-    "reference": "Modules/Settings/SettingsContent.qml:1290",
+    "reference": "Modules/Settings/SettingsContent.qml:1297",
     "comment": "search exclusions setting label"
   },
   {
     "term": "Follow Dux Shell colors, falling back to a preset.",
     "context": "Follow Dux Shell colors, falling back to a preset.",
-    "reference": "Modules/Settings/SettingsContent.qml:899",
+    "reference": "Modules/Settings/SettingsContent.qml:906",
     "comment": "color source description for auto"
   },
   {
     "term": "Following the system color scheme (currently %1).",
     "context": "Following the system color scheme (currently %1).",
-    "reference": "Modules/Settings/SettingsContent.qml:858",
+    "reference": "Modules/Settings/SettingsContent.qml:865",
     "comment": "theme mode setting description"
   },
   {
     "term": "Font source",
     "context": "Font source",
-    "reference": "Modules/Settings/SettingsContent.qml:1005",
+    "reference": "Modules/Settings/SettingsContent.qml:1012",
     "comment": "font source setting label"
   },
   {
     "term": "Foreground layers",
     "context": "Foreground layers",
-    "reference": "Modules/Settings/SettingsContent.qml:1093",
+    "reference": "Modules/Settings/SettingsContent.qml:1100",
     "comment": "toggle keeping cards and panes solid over a see-through window"
   },
   {
@@ -1232,7 +1232,7 @@
   {
     "term": "Forget all folder settings",
     "context": "Forget all folder settings",
-    "reference": "Modules/Settings/SettingsContent.qml:741",
+    "reference": "Modules/Settings/SettingsContent.qml:748",
     "comment": "settings row clearing every remembered folder sort and view"
   },
   {
@@ -1268,13 +1268,13 @@
   {
     "term": "Games and prefixes Heroic installed.",
     "context": "Games and prefixes Heroic installed.",
-    "reference": "Modules/Settings/SettingsContent.qml:1379",
+    "reference": "Modules/Settings/SettingsContent.qml:1386",
     "comment": "heroic games setting description"
   },
   {
     "term": "Games and prefixes Lutris installed.",
     "context": "Games and prefixes Lutris installed.",
-    "reference": "Modules/Settings/SettingsContent.qml:1388",
+    "reference": "Modules/Settings/SettingsContent.qml:1395",
     "comment": "lutris games setting description"
   },
   {
@@ -1286,13 +1286,13 @@
   {
     "term": "Games folders",
     "context": "Games folders",
-    "reference": "Modules/Settings/SettingsContent.qml:1413",
+    "reference": "Modules/Settings/SettingsContent.qml:1420",
     "comment": "games setting label hiding the folders holding the games"
   },
   {
     "term": "Games in the sidebar",
     "context": "Games in the sidebar",
-    "reference": "Modules/Settings/SettingsContent.qml:1357",
+    "reference": "Modules/Settings/SettingsContent.qml:1364",
     "comment": "games settings section label"
   },
   {
@@ -1340,7 +1340,7 @@
   {
     "term": "Grid icon size",
     "context": "Grid icon size",
-    "reference": "Modules/Settings/SettingsContent.qml:748",
+    "reference": "Modules/Settings/SettingsContent.qml:755",
     "comment": "setting label for the grid view icon size"
   },
   {
@@ -1358,8 +1358,14 @@
   {
     "term": "Heroic",
     "context": "Heroic",
-    "reference": "Modules/GamesSection.qml:66, Modules/Settings/SettingsContent.qml:1377",
+    "reference": "Modules/GamesSection.qml:66, Modules/Settings/SettingsContent.qml:1384",
     "comment": "games setting label for the heroic group | games sidebar group holding heroic games"
+  },
+  {
+    "term": "Hidden files after other files",
+    "context": "Hidden files after other files",
+    "reference": "Modules/Settings/SettingsContent.qml:730",
+    "comment": "hidden files last toggle label"
   },
   {
     "term": "Home",
@@ -1412,7 +1418,7 @@
   {
     "term": "Include hidden files",
     "context": "Include hidden files",
-    "reference": "Modules/Settings/SettingsContent.qml:1283",
+    "reference": "Modules/Settings/SettingsContent.qml:1290",
     "comment": "search hidden files toggle label"
   },
   {
@@ -1436,7 +1442,7 @@
   {
     "term": "Interface density",
     "context": "Interface density",
-    "reference": "Modules/Settings/SettingsContent.qml:993",
+    "reference": "Modules/Settings/SettingsContent.qml:1000",
     "comment": "interface density setting label"
   },
   {
@@ -1466,7 +1472,7 @@
   {
     "term": "Jump to name",
     "context": "Jump to name",
-    "reference": "Modules/Settings/SettingsContent.qml:818",
+    "reference": "Modules/Settings/SettingsContent.qml:825",
     "comment": "typing in the file list option"
   },
   {
@@ -1478,7 +1484,7 @@
   {
     "term": "Keep a list of recent files",
     "context": "Keep a list of recent files",
-    "reference": "Modules/Settings/SettingsContent.qml:796",
+    "reference": "Modules/Settings/SettingsContent.qml:803",
     "comment": "setting label for the recently used files list"
   },
   {
@@ -1496,19 +1502,19 @@
   {
     "term": "Keeps cards and panes solid when the window is see-through.",
     "context": "Keeps cards and panes solid when the window is see-through.",
-    "reference": "Modules/Settings/SettingsContent.qml:1095",
+    "reference": "Modules/Settings/SettingsContent.qml:1102",
     "comment": "foreground layers toggle description"
   },
   {
     "term": "Keyboard",
     "context": "Keyboard",
-    "reference": "Modules/Settings/SettingsContent.qml:805",
+    "reference": "Modules/Settings/SettingsContent.qml:812",
     "comment": "general settings section label"
   },
   {
     "term": "Keyboard shortcuts",
     "context": "Keyboard shortcuts",
-    "reference": "Modules/FilesTopbar.qml:503, Modules/ShortcutsOverlay.qml:12, Common/Shortcuts.qml:366, Modules/Settings/SettingsContent.qml:829",
+    "reference": "Modules/FilesTopbar.qml:503, Modules/ShortcutsOverlay.qml:12, Common/Shortcuts.qml:366, Modules/Settings/SettingsContent.qml:836",
     "comment": "overlay listing every keyboard shortcut"
   },
   {
@@ -1526,19 +1532,19 @@
   {
     "term": "Layer opacity",
     "context": "Layer opacity",
-    "reference": "Modules/Settings/SettingsContent.qml:1101",
+    "reference": "Modules/Settings/SettingsContent.qml:1108",
     "comment": "foreground layer opacity slider label"
   },
   {
     "term": "Lets the desktop show through the window. Text and controls stay solid.",
     "context": "Lets the desktop show through the window. Text and controls stay solid.",
-    "reference": "Modules/Settings/SettingsContent.qml:1084",
+    "reference": "Modules/Settings/SettingsContent.qml:1091",
     "comment": "window opacity slider description"
   },
   {
     "term": "Libraries and Proton prefixes.",
     "context": "Libraries and Proton prefixes.",
-    "reference": "Modules/Settings/SettingsContent.qml:1370",
+    "reference": "Modules/Settings/SettingsContent.qml:1377",
     "comment": "steam games setting description"
   },
   {
@@ -1550,7 +1556,7 @@
   {
     "term": "Light",
     "context": "Light",
-    "reference": "Modules/Settings/SettingsContent.qml:861",
+    "reference": "Modules/Settings/SettingsContent.qml:868",
     "comment": "theme mode button group option"
   },
   {
@@ -1574,7 +1580,7 @@
   {
     "term": "List icon size",
     "context": "List icon size",
-    "reference": "Modules/Settings/SettingsContent.qml:757",
+    "reference": "Modules/Settings/SettingsContent.qml:764",
     "comment": "setting label for the list view icon size"
   },
   {
@@ -1586,7 +1592,7 @@
   {
     "term": "Load colors from your own theme file.",
     "context": "Load colors from your own theme file.",
-    "reference": "Modules/Settings/SettingsContent.qml:897",
+    "reference": "Modules/Settings/SettingsContent.qml:904",
     "comment": "color source description for custom"
   },
   {
@@ -1604,7 +1610,7 @@
   {
     "term": "Lutris",
     "context": "Lutris",
-    "reference": "Modules/GamesSection.qml:68, Modules/Settings/SettingsContent.qml:1386",
+    "reference": "Modules/GamesSection.qml:68, Modules/Settings/SettingsContent.qml:1393",
     "comment": "games setting label for the lutris group | games sidebar group holding lutris games"
   },
   {
@@ -1640,7 +1646,7 @@
   {
     "term": "Monospace family",
     "context": "Monospace family",
-    "reference": "Modules/Settings/SettingsContent.qml:1029",
+    "reference": "Modules/Settings/SettingsContent.qml:1036",
     "comment": "monospace font family dropdown label"
   },
   {
@@ -1652,7 +1658,7 @@
   {
     "term": "Motion",
     "context": "Motion",
-    "reference": "Modules/Settings/SettingsContent.qml:1127",
+    "reference": "Modules/Settings/SettingsContent.qml:1134",
     "comment": "appearance settings section label"
   },
   {
@@ -1664,13 +1670,13 @@
   {
     "term": "Mounted and removable drives.",
     "context": "Mounted and removable drives.",
-    "reference": "Modules/Settings/SettingsContent.qml:1320",
+    "reference": "Modules/Settings/SettingsContent.qml:1327",
     "comment": "devices setting description"
   },
   {
     "term": "Mounted network locations and Connect to Server.",
     "context": "Mounted network locations and Connect to Server.",
-    "reference": "Modules/Settings/SettingsContent.qml:1350",
+    "reference": "Modules/Settings/SettingsContent.qml:1357",
     "comment": "network setting description"
   },
   {
@@ -1766,13 +1772,13 @@
   {
     "term": "Name the host terminal to launch.",
     "context": "Name the host terminal to launch.",
-    "reference": "Modules/Settings/SettingsContent.qml:1212",
+    "reference": "Modules/Settings/SettingsContent.qml:1219",
     "comment": "terminal setting description inside flatpak"
   },
   {
     "term": "Names or paths, comma separated. Build and cache folders are skipped anyway.",
     "context": "Names or paths, comma separated. Build and cache folders are skipped anyway.",
-    "reference": "Modules/Settings/SettingsContent.qml:1292",
+    "reference": "Modules/Settings/SettingsContent.qml:1299",
     "comment": "search exclusions setting description"
   },
   {
@@ -1784,7 +1790,7 @@
   {
     "term": "Network in the sidebar",
     "context": "Network in the sidebar",
-    "reference": "Modules/Settings/SettingsContent.qml:1345",
+    "reference": "Modules/Settings/SettingsContent.qml:1352",
     "comment": "network settings section label"
   },
   {
@@ -1844,7 +1850,7 @@
   {
     "term": "No limit",
     "context": "No limit",
-    "reference": "Modules/Settings/SettingsContent.qml:1259",
+    "reference": "Modules/Settings/SettingsContent.qml:1266",
     "comment": "thumbnail size cap slider label at zero"
   },
   {
@@ -1856,7 +1862,7 @@
   {
     "term": "No results",
     "context": "No results",
-    "reference": "Modules/RecentView.qml:186, Modules/TrashView.qml:182, Modules/SearchResults.qml:40, Modules/FilesPane.qml:538, Modules/Settings/SettingsContent.qml:510",
+    "reference": "Modules/RecentView.qml:186, Modules/TrashView.qml:182, Modules/SearchResults.qml:40, Modules/FilesPane.qml:539, Modules/Settings/SettingsContent.qml:510",
     "comment": "search results header when nothing matched"
   },
   {
@@ -1868,7 +1874,7 @@
   {
     "term": "No theme file selected",
     "context": "No theme file selected",
-    "reference": "Modules/Settings/SettingsContent.qml:955",
+    "reference": "Modules/Settings/SettingsContent.qml:962",
     "comment": "custom theme empty state title"
   },
   {
@@ -1910,19 +1916,19 @@
   {
     "term": "Off",
     "context": "Off",
-    "reference": "Modules/Settings/SettingsContent.qml:1132",
+    "reference": "Modules/Settings/SettingsContent.qml:1139",
     "comment": "animation duration slider label at zero"
   },
   {
     "term": "Off leaves decorations to the compositor. Applies to new windows.",
     "context": "Off leaves decorations to the compositor. Applies to new windows.",
-    "reference": "Modules/Settings/SettingsContent.qml:1076",
+    "reference": "Modules/Settings/SettingsContent.qml:1083",
     "comment": "window title bars toggle description"
   },
   {
     "term": "Off only mounts.",
     "context": "Off only mounts.",
-    "reference": "Modules/Settings/SettingsContent.qml:1337",
+    "reference": "Modules/Settings/SettingsContent.qml:1344",
     "comment": "devices setting description"
   },
   {
@@ -1934,7 +1940,7 @@
   {
     "term": "Only launchers with an installed game are listed.",
     "context": "Only launchers with an installed game are listed.",
-    "reference": "Modules/Settings/SettingsContent.qml:1362",
+    "reference": "Modules/Settings/SettingsContent.qml:1369",
     "comment": "games setting description"
   },
   {
@@ -1946,7 +1952,7 @@
   {
     "term": "Opacity",
     "context": "Opacity",
-    "reference": "Modules/Settings/SettingsContent.qml:1082",
+    "reference": "Modules/Settings/SettingsContent.qml:1089",
     "comment": "window opacity slider label"
   },
   {
@@ -1976,13 +1982,13 @@
   {
     "term": "Open files",
     "context": "Open files",
-    "reference": "Modules/ChooserWindow.qml:70, Modules/Settings/SettingsContent.qml:1220",
+    "reference": "Modules/ChooserWindow.qml:70, Modules/Settings/SettingsContent.qml:1227",
     "comment": "behaviour settings section label for the file opener | file chooser default title when picking several files"
   },
   {
     "term": "Open files with",
     "context": "Open files with",
-    "reference": "Modules/Settings/SettingsContent.qml:1223",
+    "reference": "Modules/Settings/SettingsContent.qml:1230",
     "comment": "file opener setting label"
   },
   {
@@ -2012,7 +2018,7 @@
   {
     "term": "Open in terminal",
     "context": "Open in terminal",
-    "reference": "Modules/FilesTopbar.qml:496, Modules/FileContextMenu.qml:427, Common/Shortcuts.qml:53, Modules/Settings/SettingsContent.qml:1207, Modules/Settings/SettingsAboutPage.qml:43",
+    "reference": "Modules/FilesTopbar.qml:496, Modules/FileContextMenu.qml:427, Common/Shortcuts.qml:53, Modules/Settings/SettingsContent.qml:1214, Modules/Settings/SettingsAboutPage.qml:43",
     "comment": "context menu entry opening a terminal"
   },
   {
@@ -2024,7 +2030,7 @@
   {
     "term": "Open items with",
     "context": "Open items with",
-    "reference": "Modules/Settings/SettingsContent.qml:777",
+    "reference": "Modules/Settings/SettingsContent.qml:784",
     "comment": "setting label choosing single or double click"
   },
   {
@@ -2060,7 +2066,7 @@
   {
     "term": "Open unmounted drives on click",
     "context": "Open unmounted drives on click",
-    "reference": "Modules/Settings/SettingsContent.qml:1335",
+    "reference": "Modules/Settings/SettingsContent.qml:1342",
     "comment": "devices setting label"
   },
   {
@@ -2108,7 +2114,7 @@
   {
     "term": "Palette: %1",
     "context": "Palette: %1",
-    "reference": "Modules/Settings/SettingsContent.qml:916",
+    "reference": "Modules/Settings/SettingsContent.qml:923",
     "comment": "selected preset palette name"
   },
   {
@@ -2180,7 +2186,7 @@
   {
     "term": "Playful",
     "context": "Playful",
-    "reference": "Modules/Settings/SettingsContent.qml:1143",
+    "reference": "Modules/Settings/SettingsContent.qml:1150",
     "comment": "spring bounce option"
   },
   {
@@ -2222,7 +2228,7 @@
   {
     "term": "Prefixes",
     "context": "Prefixes",
-    "reference": "Modules/Settings/SettingsContent.qml:1404",
+    "reference": "Modules/Settings/SettingsContent.qml:1411",
     "comment": "games setting label hiding wine prefixes"
   },
   {
@@ -2294,7 +2300,7 @@
   {
     "term": "Radius strength",
     "context": "Radius strength",
-    "reference": "Modules/Settings/SettingsContent.qml:977",
+    "reference": "Modules/Settings/SettingsContent.qml:984",
     "comment": "global component corner rounding"
   },
   {
@@ -2342,7 +2348,7 @@
   {
     "term": "Reduce motion",
     "context": "Reduce motion",
-    "reference": "Modules/Settings/SettingsContent.qml:1159",
+    "reference": "Modules/Settings/SettingsContent.qml:1166",
     "comment": "reduce motion toggle label"
   },
   {
@@ -2372,7 +2378,7 @@
   {
     "term": "Remember view and sort per folder",
     "context": "Remember view and sort per folder",
-    "reference": "Modules/Settings/SettingsContent.qml:730",
+    "reference": "Modules/Settings/SettingsContent.qml:737",
     "comment": "setting label for per-folder sort and view memory"
   },
   {
@@ -2522,7 +2528,7 @@
   {
     "term": "Ripple effects",
     "context": "Ripple effects",
-    "reference": "Modules/Settings/SettingsContent.qml:1152",
+    "reference": "Modules/Settings/SettingsContent.qml:1159",
     "comment": "ripple effects toggle label"
   },
   {
@@ -2600,7 +2606,7 @@
   {
     "term": "Scale",
     "context": "Scale",
-    "reference": "Modules/Settings/SettingsContent.qml:1060",
+    "reference": "Modules/Settings/SettingsContent.qml:1067",
     "comment": "font scale slider label"
   },
   {
@@ -2630,7 +2636,7 @@
   {
     "term": "Search in Files",
     "context": "Search in Files",
-    "reference": "Modules/FilesTopbar.qml:528, Modules/ChooserWindow.qml:607, Common/Shortcuts.qml:137, Modules/Settings/SettingsContent.qml:1280",
+    "reference": "Modules/FilesTopbar.qml:528, Modules/ChooserWindow.qml:607, Common/Shortcuts.qml:137, Modules/Settings/SettingsContent.qml:1287",
     "comment": "placeholder in the search field"
   },
   {
@@ -2648,7 +2654,7 @@
   {
     "term": "Search subfolders",
     "context": "Search subfolders",
-    "reference": "Modules/FilesPane.qml:736",
+    "reference": "Modules/FilesPane.qml:737",
     "comment": "chip that turns the folder filter into a recursive search"
   },
   {
@@ -2714,19 +2720,19 @@
   {
     "term": "Settings folders",
     "context": "Settings folders",
-    "reference": "Modules/Settings/SettingsContent.qml:1395",
+    "reference": "Modules/Settings/SettingsContent.qml:1402",
     "comment": "games setting label hiding the launcher config folders"
   },
   {
     "term": "Shape",
     "context": "Shape",
-    "reference": "Modules/Settings/SettingsContent.qml:974",
+    "reference": "Modules/Settings/SettingsContent.qml:981",
     "comment": "appearance settings section label"
   },
   {
     "term": "Shared with other apps.",
     "context": "Shared with other apps.",
-    "reference": "Modules/Settings/SettingsContent.qml:798",
+    "reference": "Modules/Settings/SettingsContent.qml:805",
     "comment": "setting description for the recently used files list"
   },
   {
@@ -2744,7 +2750,7 @@
   {
     "term": "Show devices",
     "context": "Show devices",
-    "reference": "Modules/Settings/SettingsContent.qml:1318",
+    "reference": "Modules/Settings/SettingsContent.qml:1325",
     "comment": "devices setting label"
   },
   {
@@ -2756,7 +2762,7 @@
   {
     "term": "Show games",
     "context": "Show games",
-    "reference": "Modules/Settings/SettingsContent.qml:1360",
+    "reference": "Modules/Settings/SettingsContent.qml:1367",
     "comment": "games setting label"
   },
   {
@@ -2768,19 +2774,19 @@
   {
     "term": "Show network",
     "context": "Show network",
-    "reference": "Modules/Settings/SettingsContent.qml:1348",
+    "reference": "Modules/Settings/SettingsContent.qml:1355",
     "comment": "network setting label"
   },
   {
     "term": "Show system partitions",
     "context": "Show system partitions",
-    "reference": "Modules/Settings/SettingsContent.qml:1326",
+    "reference": "Modules/Settings/SettingsContent.qml:1333",
     "comment": "devices setting label"
   },
   {
     "term": "Show thumbnails",
     "context": "Show thumbnails",
-    "reference": "Modules/Settings/SettingsContent.qml:1249",
+    "reference": "Modules/Settings/SettingsContent.qml:1256",
     "comment": "thumbnails toggle label"
   },
   {
@@ -2792,7 +2798,7 @@
   {
     "term": "Shown in the size column.",
     "context": "Shown in the size column.",
-    "reference": "Modules/Settings/SettingsContent.qml:767",
+    "reference": "Modules/Settings/SettingsContent.qml:774",
     "comment": "folder counts toggle description"
   },
   {
@@ -2810,7 +2816,7 @@
   {
     "term": "Single click",
     "context": "Single click",
-    "reference": "Modules/Settings/SettingsContent.qml:779",
+    "reference": "Modules/Settings/SettingsContent.qml:786",
     "comment": "click to open option"
   },
   {
@@ -2828,7 +2834,7 @@
   {
     "term": "Skip images larger than",
     "context": "Skip images larger than",
-    "reference": "Modules/Settings/SettingsContent.qml:1257",
+    "reference": "Modules/Settings/SettingsContent.qml:1264",
     "comment": "thumbnail size cap slider label"
   },
   {
@@ -2840,7 +2846,7 @@
   {
     "term": "Smooth",
     "context": "Smooth",
-    "reference": "Modules/Settings/SettingsContent.qml:1143",
+    "reference": "Modules/Settings/SettingsContent.qml:1150",
     "comment": "spring bounce option"
   },
   {
@@ -2888,13 +2894,13 @@
   {
     "term": "Spring",
     "context": "Spring",
-    "reference": "Modules/Settings/SettingsContent.qml:1141",
+    "reference": "Modules/Settings/SettingsContent.qml:1148",
     "comment": "spring bounce setting label"
   },
   {
     "term": "Square",
     "context": "Square",
-    "reference": "Modules/Settings/SettingsContent.qml:980",
+    "reference": "Modules/Settings/SettingsContent.qml:987",
     "comment": "radius strength slider label at zero"
   },
   {
@@ -2906,13 +2912,13 @@
   {
     "term": "Steam",
     "context": "Steam",
-    "reference": "Modules/GamesSection.qml:64, Modules/Settings/SettingsContent.qml:1368",
+    "reference": "Modules/GamesSection.qml:64, Modules/Settings/SettingsContent.qml:1375",
     "comment": "games setting label for the steam group | games sidebar group holding steam libraries"
   },
   {
     "term": "Steam, ~/VirtualBox VMs",
     "context": "Steam, ~/VirtualBox VMs",
-    "reference": "Modules/Settings/SettingsContent.qml:1298",
+    "reference": "Modules/Settings/SettingsContent.qml:1305",
     "comment": "example list in the search exclusions field, folder names or paths separated by commas"
   },
   {
@@ -2924,7 +2930,7 @@
   {
     "term": "Such as a separate /home.",
     "context": "Such as a separate /home.",
-    "reference": "Modules/Settings/SettingsContent.qml:1328",
+    "reference": "Modules/Settings/SettingsContent.qml:1335",
     "comment": "devices setting description"
   },
   {
@@ -2954,13 +2960,13 @@
   {
     "term": "System preference unavailable, using dark.",
     "context": "System preference unavailable, using dark.",
-    "reference": "Modules/Settings/SettingsContent.qml:858",
+    "reference": "Modules/Settings/SettingsContent.qml:865",
     "comment": "theme mode setting description"
   },
   {
     "term": "Terminal",
     "context": "Terminal",
-    "reference": "Modules/Settings/SettingsContent.qml:1210",
+    "reference": "Modules/Settings/SettingsContent.qml:1217",
     "comment": "setting label for the terminal emulator"
   },
   {
@@ -2972,7 +2978,7 @@
   {
     "term": "The Wine prefix of each game.",
     "context": "The Wine prefix of each game.",
-    "reference": "Modules/Settings/SettingsContent.qml:1406",
+    "reference": "Modules/Settings/SettingsContent.qml:1413",
     "comment": "games setting description for the wine prefixes"
   },
   {
@@ -3014,7 +3020,7 @@
   {
     "term": "Theme",
     "context": "Theme",
-    "reference": "Modules/Settings/SettingsContent.qml:846, Modules/Settings/SettingsContent.qml:849",
+    "reference": "Modules/Settings/SettingsContent.qml:853, Modules/Settings/SettingsContent.qml:856",
     "comment": "appearance settings section label | theme mode setting label"
   },
   {
@@ -3026,7 +3032,7 @@
   {
     "term": "Thickness",
     "context": "Thickness",
-    "reference": "Modules/Settings/SettingsContent.qml:1177",
+    "reference": "Modules/Settings/SettingsContent.qml:1184",
     "comment": "focus ring thickness slider label"
   },
   {
@@ -3044,7 +3050,7 @@
   {
     "term": "This folder is empty",
     "context": "This folder is empty",
-    "reference": "Modules/FilesPane.qml:539",
+    "reference": "Modules/FilesPane.qml:540",
     "comment": "empty directory placeholder"
   },
   {
@@ -3092,19 +3098,19 @@
   {
     "term": "Thumbnails",
     "context": "Thumbnails",
-    "reference": "Modules/Settings/SettingsContent.qml:1246, Modules/Settings/SettingsAboutPage.qml:31",
+    "reference": "Modules/Settings/SettingsContent.qml:1253, Modules/Settings/SettingsAboutPage.qml:31",
     "comment": "capability row on the about page"
   },
   {
     "term": "Thumbnails on network locations",
     "context": "Thumbnails on network locations",
-    "reference": "Modules/Settings/SettingsContent.qml:1270",
+    "reference": "Modules/Settings/SettingsContent.qml:1277",
     "comment": "network thumbnails toggle label"
   },
   {
     "term": "Title bars",
     "context": "Title bars",
-    "reference": "Modules/Settings/SettingsContent.qml:1074",
+    "reference": "Modules/Settings/SettingsContent.qml:1081",
     "comment": "window title bars toggle label"
   },
   {
@@ -3158,13 +3164,13 @@
   {
     "term": "Typing in the file list",
     "context": "Typing in the file list",
-    "reference": "Modules/Settings/SettingsContent.qml:816",
+    "reference": "Modules/Settings/SettingsContent.qml:823",
     "comment": "setting label choosing what typed letters do in the file list"
   },
   {
     "term": "Typography",
     "context": "Typography",
-    "reference": "Modules/Settings/SettingsContent.qml:1002",
+    "reference": "Modules/Settings/SettingsContent.qml:1009",
     "comment": "appearance settings section label"
   },
   {
@@ -3242,7 +3248,7 @@
   {
     "term": "Use a bundled color palette.",
     "context": "Use a bundled color palette.",
-    "reference": "Modules/Settings/SettingsContent.qml:895",
+    "reference": "Modules/Settings/SettingsContent.qml:902",
     "comment": "color source description for preset"
   },
   {
@@ -3278,7 +3284,7 @@
   {
     "term": "Using Dux Shell dynamic colors.",
     "context": "Using Dux Shell dynamic colors.",
-    "reference": "Modules/Settings/SettingsContent.qml:911",
+    "reference": "Modules/Settings/SettingsContent.qml:918",
     "comment": "auto color source status when DMS is active"
   },
   {
@@ -3314,7 +3320,7 @@
   {
     "term": "Vim keys",
     "context": "Vim keys",
-    "reference": "Modules/ShortcutsOverlay.qml:101, Modules/Settings/SettingsContent.qml:808",
+    "reference": "Modules/ShortcutsOverlay.qml:101, Modules/Settings/SettingsContent.qml:815",
     "comment": "toggle label for vim style navigation"
   },
   {
@@ -3326,13 +3332,13 @@
   {
     "term": "Weight",
     "context": "Weight",
-    "reference": "Modules/Settings/SettingsContent.qml:1047",
+    "reference": "Modules/Settings/SettingsContent.qml:1054",
     "comment": "font weight slider label"
   },
   {
     "term": "Where the launcher keeps the games.",
     "context": "Where the launcher keeps the games.",
-    "reference": "Modules/Settings/SettingsContent.qml:1415",
+    "reference": "Modules/Settings/SettingsContent.qml:1422",
     "comment": "games setting description for the games folders"
   },
   {
@@ -3344,7 +3350,7 @@
   {
     "term": "Windows",
     "context": "Windows",
-    "reference": "Modules/Settings/SettingsContent.qml:1071",
+    "reference": "Modules/Settings/SettingsContent.qml:1078",
     "comment": "appearance settings section label"
   },
   {
@@ -3368,7 +3374,7 @@
   {
     "term": "Your compositor does not support background blur.",
     "context": "Your compositor does not support background blur.",
-    "reference": "Modules/Settings/SettingsContent.qml:1122",
+    "reference": "Modules/Settings/SettingsContent.qml:1129",
     "comment": "hint shown instead of the background blur toggle"
   },
   {
@@ -3386,25 +3392,25 @@
   {
     "term": "accessibility animation disable",
     "context": "accessibility animation disable",
-    "reference": "Modules/Settings/SettingsContent.qml:1160",
+    "reference": "Modules/Settings/SettingsContent.qml:1167",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "animation click feedback",
     "context": "animation click feedback",
-    "reference": "Modules/Settings/SettingsContent.qml:1153",
+    "reference": "Modules/Settings/SettingsContent.qml:1160",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "animation speed motion",
     "context": "animation speed motion",
-    "reference": "Modules/Settings/SettingsContent.qml:1131",
+    "reference": "Modules/Settings/SettingsContent.qml:1138",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "bounce animation motion",
     "context": "bounce animation motion",
-    "reference": "Modules/Settings/SettingsContent.qml:1142",
+    "reference": "Modules/Settings/SettingsContent.qml:1149",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3416,31 +3422,31 @@
   {
     "term": "cards panes contrast glass",
     "context": "cards panes contrast glass",
-    "reference": "Modules/Settings/SettingsContent.qml:1094",
+    "reference": "Modules/Settings/SettingsContent.qml:1101",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "config folder launcher wine prefix",
     "context": "config folder launcher wine prefix",
-    "reference": "Modules/Settings/SettingsContent.qml:1396",
+    "reference": "Modules/Settings/SettingsContent.qml:1403",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "console emulator shell command line",
     "context": "console emulator shell command line",
-    "reference": "Modules/Settings/SettingsContent.qml:1211",
+    "reference": "Modules/Settings/SettingsContent.qml:1218",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "corners rounding shape square",
     "context": "corners rounding shape square",
-    "reference": "Modules/Settings/SettingsContent.qml:978",
+    "reference": "Modules/Settings/SettingsContent.qml:985",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "custom theme json file",
     "context": "custom theme json file",
-    "reference": "Modules/Settings/SettingsContent.qml:956",
+    "reference": "Modules/Settings/SettingsContent.qml:963",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3470,13 +3476,13 @@
   {
     "term": "dark",
     "context": "dark",
-    "reference": "Modules/Settings/SettingsContent.qml:858",
+    "reference": "Modules/Settings/SettingsContent.qml:865",
     "comment": "current scheme name in theme mode description"
   },
   {
     "term": "decorations csd window header",
     "context": "decorations csd window header",
-    "reference": "Modules/Settings/SettingsContent.qml:1075",
+    "reference": "Modules/Settings/SettingsContent.qml:1082",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3488,13 +3494,13 @@
   {
     "term": "delete confirmation prompt",
     "context": "delete confirmation prompt",
-    "reference": "Modules/Settings/SettingsContent.qml:790",
+    "reference": "Modules/Settings/SettingsContent.qml:797",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "density compact dense spacious comfortable spacing padding rows",
     "context": "density compact dense spacious comfortable spacing padding rows",
-    "reference": "Modules/Settings/SettingsContent.qml:994",
+    "reference": "Modules/Settings/SettingsContent.qml:1001",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3516,15 +3522,21 @@
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
+    "term": "dotfiles sort last bottom",
+    "context": "dotfiles sort last bottom",
+    "reference": "Modules/Settings/SettingsContent.qml:731",
+    "comment": "settings search keywords, space separated, add synonyms in your language"
+  },
+  {
     "term": "drag drop copy move ask default action",
     "context": "drag drop copy move ask default action",
-    "reference": "Modules/Settings/SettingsContent.qml:1237",
+    "reference": "Modules/Settings/SettingsContent.qml:1244",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "drives usb volumes sidebar hide",
     "context": "drives usb volumes sidebar hide",
-    "reference": "Modules/Settings/SettingsContent.qml:1319",
+    "reference": "Modules/Settings/SettingsContent.qml:1326",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3536,67 +3548,67 @@
   {
     "term": "focus ring width outline",
     "context": "focus ring width outline",
-    "reference": "Modules/Settings/SettingsContent.qml:1178",
+    "reference": "Modules/Settings/SettingsContent.qml:1185",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "folder memory per-folder remember",
     "context": "folder memory per-folder remember",
-    "reference": "Modules/Settings/SettingsContent.qml:731",
+    "reference": "Modules/Settings/SettingsContent.qml:738",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "font bold typography",
     "context": "font bold typography",
-    "reference": "Modules/Settings/SettingsContent.qml:1048",
+    "reference": "Modules/Settings/SettingsContent.qml:1055",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "font family typeface dms system qt",
     "context": "font family typeface dms system qt",
-    "reference": "Modules/Settings/SettingsContent.qml:1006",
+    "reference": "Modules/Settings/SettingsContent.qml:1013",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "font size text zoom typography",
     "context": "font size text zoom typography",
-    "reference": "Modules/Settings/SettingsContent.qml:1061",
+    "reference": "Modules/Settings/SettingsContent.qml:1068",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "font typeface",
     "context": "font typeface",
-    "reference": "Modules/Settings/SettingsContent.qml:1022",
+    "reference": "Modules/Settings/SettingsContent.qml:1029",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "font typeface code mono",
     "context": "font typeface code mono",
-    "reference": "Modules/Settings/SettingsContent.qml:1030",
+    "reference": "Modules/Settings/SettingsContent.qml:1037",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "font typeface headline title",
     "context": "font typeface headline title",
-    "reference": "Modules/Settings/SettingsContent.qml:1039",
+    "reference": "Modules/Settings/SettingsContent.qml:1046",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "frosted glass compositor",
     "context": "frosted glass compositor",
-    "reference": "Modules/Settings/SettingsContent.qml:1113",
+    "reference": "Modules/Settings/SettingsContent.qml:1120",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "games library steamapps common",
     "context": "games library steamapps common",
-    "reference": "Modules/Settings/SettingsContent.qml:1414",
+    "reference": "Modules/Settings/SettingsContent.qml:1421",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "gvfs smb sftp remote servers sidebar hide",
     "context": "gvfs smb sftp remote servers sidebar hide",
-    "reference": "Modules/Settings/SettingsContent.qml:1349",
+    "reference": "Modules/Settings/SettingsContent.qml:1356",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3608,55 +3620,55 @@
   {
     "term": "h j k l move, / searches.",
     "context": "h j k l move, / searches.",
-    "reference": "Modules/Settings/SettingsContent.qml:810",
+    "reference": "Modules/Settings/SettingsContent.qml:817",
     "comment": "vim keys toggle description"
   },
   {
     "term": "heroic epic gog amazon",
     "context": "heroic epic gog amazon",
-    "reference": "Modules/Settings/SettingsContent.qml:1378",
+    "reference": "Modules/Settings/SettingsContent.qml:1385",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "history recently used opened sidebar",
     "context": "history recently used opened sidebar",
-    "reference": "Modules/Settings/SettingsContent.qml:797",
+    "reference": "Modules/Settings/SettingsContent.qml:804",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "hjkl keyboard navigation modal",
     "context": "hjkl keyboard navigation modal",
-    "reference": "Modules/Settings/SettingsContent.qml:809",
+    "reference": "Modules/Settings/SettingsContent.qml:816",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "internal drives udisks home boot",
     "context": "internal drives udisks home boot",
-    "reference": "Modules/Settings/SettingsContent.qml:1327",
+    "reference": "Modules/Settings/SettingsContent.qml:1334",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "keyboard outline accessibility",
     "context": "keyboard outline accessibility",
-    "reference": "Modules/Settings/SettingsContent.qml:1171",
+    "reference": "Modules/Settings/SettingsContent.qml:1178",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "keys bindings hotkeys F1",
     "context": "keys bindings hotkeys F1",
-    "reference": "Modules/Settings/SettingsContent.qml:830",
+    "reference": "Modules/Settings/SettingsContent.qml:837",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "light",
     "context": "light",
-    "reference": "Modules/Settings/SettingsContent.qml:858",
+    "reference": "Modules/Settings/SettingsContent.qml:865",
     "comment": "current scheme name in theme mode description"
   },
   {
     "term": "light dark mode system color scheme",
     "context": "light dark mode system color scheme",
-    "reference": "Modules/Settings/SettingsContent.qml:850",
+    "reference": "Modules/Settings/SettingsContent.qml:857",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3674,13 +3686,13 @@
   {
     "term": "lutris wine prefix",
     "context": "lutris wine prefix",
-    "reference": "Modules/Settings/SettingsContent.qml:1387",
+    "reference": "Modules/Settings/SettingsContent.qml:1394",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "mount usb removable sidebar",
     "context": "mount usb removable sidebar",
-    "reference": "Modules/Settings/SettingsContent.qml:1336",
+    "reference": "Modules/Settings/SettingsContent.qml:1343",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3698,7 +3710,7 @@
   {
     "term": "palette dms preset custom accent",
     "context": "palette dms preset custom accent",
-    "reference": "Modules/Settings/SettingsContent.qml:891",
+    "reference": "Modules/Settings/SettingsContent.qml:898",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3710,13 +3722,13 @@
   {
     "term": "preset palette swatch colors",
     "context": "preset palette swatch colors",
-    "reference": "Modules/Settings/SettingsContent.qml:917",
+    "reference": "Modules/Settings/SettingsContent.qml:924",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "previews images video pdf",
     "context": "previews images video pdf",
-    "reference": "Modules/Settings/SettingsContent.qml:1250",
+    "reference": "Modules/Settings/SettingsContent.qml:1257",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3728,37 +3740,37 @@
   {
     "term": "remote sftp smb previews",
     "context": "remote sftp smb previews",
-    "reference": "Modules/Settings/SettingsContent.qml:1271",
+    "reference": "Modules/Settings/SettingsContent.qml:1278",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "reset clear per-folder memory",
     "context": "reset clear per-folder memory",
-    "reference": "Modules/Settings/SettingsContent.qml:742",
+    "reference": "Modules/Settings/SettingsContent.qml:749",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "search dotfiles recursive",
     "context": "search dotfiles recursive",
-    "reference": "Modules/Settings/SettingsContent.qml:1284",
+    "reference": "Modules/Settings/SettingsContent.qml:1291",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "search exclude ignore",
     "context": "search exclude ignore",
-    "reference": "Modules/Settings/SettingsContent.qml:1291",
+    "reference": "Modules/Settings/SettingsContent.qml:1298",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "single double click activate",
     "context": "single double click activate",
-    "reference": "Modules/Settings/SettingsContent.qml:778",
+    "reference": "Modules/Settings/SettingsContent.qml:785",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "size column entries",
     "context": "size column entries",
-    "reference": "Modules/Settings/SettingsContent.qml:766",
+    "reference": "Modules/Settings/SettingsContent.qml:773",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3770,13 +3782,13 @@
   {
     "term": "steam heroic lutris proton games sidebar hide",
     "context": "steam heroic lutris proton games sidebar hide",
-    "reference": "Modules/Settings/SettingsContent.qml:1361",
+    "reference": "Modules/Settings/SettingsContent.qml:1368",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "steam proton valve",
     "context": "steam proton valve",
-    "reference": "Modules/Settings/SettingsContent.qml:1369",
+    "reference": "Modules/Settings/SettingsContent.qml:1376",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3794,25 +3806,25 @@
   {
     "term": "thumbnail size limit cap megabytes",
     "context": "thumbnail size limit cap megabytes",
-    "reference": "Modules/Settings/SettingsContent.qml:1258",
+    "reference": "Modules/Settings/SettingsContent.qml:1265",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "transparency translucent glass see-through",
     "context": "transparency translucent glass see-through",
-    "reference": "Modules/Settings/SettingsContent.qml:1083",
+    "reference": "Modules/Settings/SettingsContent.qml:1090",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "type-ahead jump filter search keyboard",
     "context": "type-ahead jump filter search keyboard",
-    "reference": "Modules/Settings/SettingsContent.qml:817",
+    "reference": "Modules/Settings/SettingsContent.qml:824",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "wine prefix proton compatdata",
     "context": "wine prefix proton compatdata",
-    "reference": "Modules/Settings/SettingsContent.qml:1405",
+    "reference": "Modules/Settings/SettingsContent.qml:1412",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3824,13 +3836,13 @@
   {
     "term": "xdg-open follows the handler on your PATH.",
     "context": "xdg-open follows the handler on your PATH.",
-    "reference": "Modules/Settings/SettingsContent.qml:1225",
+    "reference": "Modules/Settings/SettingsContent.qml:1232",
     "comment": "file opener setting description"
   },
   {
     "term": "xdg-open handlr mimeo opener default application launch",
     "context": "xdg-open handlr mimeo opener default application launch",
-    "reference": "Modules/Settings/SettingsContent.qml:1224",
+    "reference": "Modules/Settings/SettingsContent.qml:1231",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3842,13 +3854,13 @@
   {
     "term": "zoom rows",
     "context": "zoom rows",
-    "reference": "Modules/Settings/SettingsContent.qml:758",
+    "reference": "Modules/Settings/SettingsContent.qml:765",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "zoom thumbnails tiles",
     "context": "zoom thumbnails tiles",
-    "reference": "Modules/Settings/SettingsContent.qml:749",
+    "reference": "Modules/Settings/SettingsContent.qml:756",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   }
 ]

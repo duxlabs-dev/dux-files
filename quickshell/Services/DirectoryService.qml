@@ -207,6 +207,8 @@ Singleton {
             params.desc = opts.sortDesc;
         if (opts.dirsFirst !== undefined)
             params.dirsFirst = opts.dirsFirst;
+        if (opts.hiddenLast !== undefined)
+            params.hiddenLast = opts.hiddenLast;
         if (opts.limit)
             params.limit = opts.limit;
         if (opts.cursor)

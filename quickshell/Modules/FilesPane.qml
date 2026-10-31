@@ -524,6 +524,7 @@ FocusScope {
         typeAheadMode: SettingsData.listTyping
         countFolders: SettingsData.folderCounts
         dirsFirst: SettingsData.foldersFirst
+        hiddenLast: SettingsData.hiddenLast
         thumbnailsEnabled: SettingsData.thumbnails
         thumbnailSizeLimit: pane.thumbnailSizeLimit
         networkThumbnails: SettingsData.networkThumbnails

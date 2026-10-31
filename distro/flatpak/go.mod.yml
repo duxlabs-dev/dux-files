@@ -13,10 +13,10 @@
   type: archive
   url: https://proxy.golang.org/github.com/cavaliergopher/cpio/@v/v1.0.1.zip
 - dest: core/vendor/github.com/duxlabs-dev/dux-go
-  sha256: e55f2d5271dbc799bfd3da5696a26c716ea14e7198791c6c043aeebf40707c18
+  sha256: 1678e5421a278de065470ea644a2e1dbe0dad168b06bcbd07fcd7dfe8b340b5f
   strip-components: 3
   type: archive
-  url: https://proxy.golang.org/github.com/duxlabs-dev/dux-go/@v/v1.6.3-0.20261029140302-14828dee2d20.zip
+  url: https://proxy.golang.org/github.com/duxlabs-dev/dux-go/@v/v1.6.3-0.20261031181736-024402301dff.zip
 - dest: core/vendor/github.com/fsnotify/fsnotify
   sha256: b2c6a334e0d518da2e046066bdd9da34cb26bad6df9f17701802d3de522ab016
   strip-components: 3
