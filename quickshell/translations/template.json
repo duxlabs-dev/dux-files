@@ -917,6 +917,13 @@
     "comment": ""
   },
   {
+    "term": "Date format",
+    "translation": "",
+    "context": "setting label for how file timestamps are shown",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Decrease",
     "translation": "",
     "context": "slider row step down button",
@@ -1606,6 +1613,20 @@
     "term": "Host filesystem",
     "translation": "",
     "context": "capability row on the about page",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "ISO 8601",
+    "translation": "",
+    "context": "date format option, year-month-day hour:minute",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "ISO 8601 with seconds",
+    "translation": "",
+    "context": "date format option, year-month-day hour:minute:second",
     "reference": "",
     "comment": ""
   },
@@ -2751,6 +2772,13 @@
     "comment": ""
   },
   {
+    "term": "Relative",
+    "translation": "",
+    "context": "date format option showing today, yesterday or the weekday",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Relevance",
     "translation": "",
     "context": "sort criterion for search results, best match first",
@@ -3447,6 +3475,13 @@
     "term": "System default",
     "translation": "",
     "context": "language dropdown option that follows the system language",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "System locale",
+    "translation": "",
+    "context": "date format option using the locale's short date and time",
     "reference": "",
     "comment": ""
   },
@@ -4439,6 +4474,13 @@
   },
   {
     "term": "thumbnail size limit cap megabytes",
+    "translation": "",
+    "context": "settings search keywords, space separated, add synonyms in your language",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "time modified timestamp iso relative seconds",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
     "reference": "",

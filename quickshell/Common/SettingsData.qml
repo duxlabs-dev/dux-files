@@ -86,6 +86,7 @@ Singleton {
     property alias defaultSortDescending: adapter.defaultSortDescending
     property alias showHidden: adapter.showHidden
     property alias showExtensions: adapter.showExtensions
+    property alias dateFormat: adapter.dateFormat
     property alias foldersFirst: adapter.foldersFirst
     property alias hiddenLast: adapter.hiddenLast
     property alias rememberFolderViews: adapter.rememberFolderViews
@@ -207,6 +208,7 @@ Singleton {
             property bool defaultSortDescending: false
             property bool showHidden: false
             property bool showExtensions: true
+            property string dateFormat: "locale"
             property bool foldersFirst: true
             property bool hiddenLast: true
             property bool rememberFolderViews: true

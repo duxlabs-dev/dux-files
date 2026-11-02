@@ -16,6 +16,7 @@ Item {
     property var matchCounts: []
 
     readonly property bool searching: searchQuery.trim() !== ""
+    readonly property date sampleTime: new Date()
     readonly property var pageComponents: [generalPage, appearancePage, behaviourPage, devicesPage, aboutPage]
     readonly property var pageLabels: [I18n.tr("General", "settings sidebar tab label"), I18n.tr("Appearance", "settings sidebar tab label"), I18n.tr("Behaviour", "settings sidebar tab label"), I18n.tr("Devices", "sidebar section listing drives and volumes"), I18n.tr("About", "settings sidebar tab label")]
 
@@ -86,6 +87,25 @@ Item {
         {
             label: I18n.tr("Column view", "view mode showing folders side by side"),
             value: "columns"
+        }
+    ]
+
+    readonly property var dateFormatOptions: [
+        {
+            label: I18n.tr("System locale", "date format option using the locale's short date and time"),
+            value: "locale"
+        },
+        {
+            label: I18n.tr("Relative", "date format option showing today, yesterday or the weekday"),
+            value: "relative"
+        },
+        {
+            label: I18n.tr("ISO 8601", "date format option, year-month-day hour:minute"),
+            value: "iso"
+        },
+        {
+            label: I18n.tr("ISO 8601 with seconds", "date format option, year-month-day hour:minute:second"),
+            value: "isoSeconds"
         }
     ]
 
@@ -717,6 +737,15 @@ Item {
                     keywords: I18n.tr("suffix type filename", "settings search keywords, space separated, add synonyms in your language")
                     checked: SettingsData.showExtensions
                     onToggled: checked => SettingsData.showExtensions = checked
+                }
+
+                OptionDropdownRow {
+                    text: I18n.tr("Date format", "setting label for how file timestamps are shown")
+                    keywords: I18n.tr("time modified timestamp iso relative seconds", "settings search keywords, space separated, add synonyms in your language")
+                    description: FileFormat.timestamp(root.sampleTime, SettingsData.dateFormat, root.sampleTime)
+                    optionList: root.dateFormatOptions
+                    current: SettingsData.dateFormat
+                    onPicked: value => SettingsData.dateFormat = value
                 }
 
                 SettingsToggleRow {

@@ -62,6 +62,47 @@ test("extractable mirrors the formats the daemon unpacks", () => {
         assert.equal(ctx.extractable(mime), false, mime);
 });
 
+function timestampContext() {
+    const ctx = vm.createContext({ I18n: { tr: term => term }, Qt: { locale: () => "C" }, Locale: { ShortFormat: 0 } });
+    vm.runInContext(`String.prototype.arg = function (value) {
+        const lowest = Math.min(...[...this.matchAll(/%(\\d)/g)].map(match => Number(match[1])));
+        return this.split("%" + lowest).join(String(value));
+    };
+    Date.prototype.toLocaleTimeString = function () { return "T"; };
+    Date.prototype.toLocaleDateString = function (locale, format) { return format === "dddd" ? "Weekday" : "D"; };
+    Date.prototype.toLocaleString = function () { return "D T"; };`, ctx);
+    for (const name of ["timestamp", "daysBefore", "relativeTimestamp"])
+        lift(fileFormat, name, ctx);
+    return ctx;
+}
+
+const at = (y, m, d, h = 12) => `new Date(${y}, ${m - 1}, ${d}, ${h}, 30)`;
+
+test("the relative format buckets by calendar day, not by elapsed hours", () => {
+    const ctx = timestampContext();
+    const now = at(2026, 10, 29, 0);
+    const rel = date => vm.runInContext(`relativeTimestamp(${date}, ${now})`, ctx);
+    assert.equal(rel(at(2026, 10, 29, 23)), "Today, T");
+    assert.equal(rel(at(2026, 10, 28, 23)), "Yesterday, T");
+    assert.equal(rel(at(2026, 10, 27)), "Weekday, T");
+    assert.equal(rel(at(2026, 10, 23)), "Weekday, T");
+    assert.equal(rel(at(2026, 10, 22)), "D");
+    assert.equal(rel(at(2026, 10, 30)), "D");
+});
+
+test("daysBefore survives a month boundary and a daylight saving shift", () => {
+    const ctx = timestampContext();
+    assert.equal(vm.runInContext(`daysBefore(${at(2026, 9, 30)}, ${at(2026, 10, 1)})`, ctx), 1);
+    assert.equal(vm.runInContext(`daysBefore(${at(2026, 10, 25)}, ${at(2026, 11, 1)})`, ctx), 7);
+});
+
+test("unknown formats fall back to the locale string", () => {
+    const ctx = timestampContext();
+    assert.equal(vm.runInContext(`timestamp(${at(2026, 10, 29)}, "locale", ${at(2026, 10, 29)})`, ctx), "D T");
+    assert.equal(vm.runInContext(`timestamp(${at(2026, 10, 29)}, "", ${at(2026, 10, 29)})`, ctx), "D T");
+    assert.equal(vm.runInContext(`timestamp(${at(2026, 10, 29)}, "relative", ${at(2026, 10, 29)})`, ctx), "Today, T");
+});
+
 function hintContext() {
     const ctx = vm.createContext({ I18n: { tr: term => term } });
     vm.runInContext(`String.prototype.arg = function (value) {
