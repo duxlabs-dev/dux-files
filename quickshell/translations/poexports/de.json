@@ -9,16 +9,16 @@
     "%1 bookmarks imported": "%1 Lesezeichen importiert"
   },
   "%1 can be run as a program. Open it in an editor instead to read it first.": {
-    "%1 can be run as a program. Open it in an editor instead to read it first.": ""
+    "%1 can be run as a program. Open it in an editor instead to read it first.": "%1 kann als ein Programm ausgeführt werden. Öffnen Sie es stattdessen in einem Editor, um dies zunächst zu lesen."
   },
   "%1 folders could not be read": {
     "%1 folders could not be read": "%1 Ordner konnten nicht gelesen werden"
   },
   "%1 h %2 min left": {
-    "%1 h %2 min left": "%1 h %2 min verbleibend"
+    "%1 h %2 min left": "%1 Std. %2 Min. verbleibend"
   },
   "%1 has not been marked as trusted. Running it allows it to start any program.": {
-    "%1 has not been marked as trusted. Running it allows it to start any program.": ""
+    "%1 has not been marked as trusted. Running it allows it to start any program.": "%1 ist nicht als vertrauenswürdig markiert worden. Die Ausführung ermöglicht es, jedes beliebige Programm zu starten."
   },
   "%1 hidden": {
     "%1 hidden": "%1 ausgeblendet"
@@ -27,7 +27,7 @@
     "%1 holds it; Files takes over when it quits.": ""
   },
   "%1 is encrypted. Enter its passphrase to unlock it.": {
-    "%1 is encrypted. Enter its passphrase to unlock it.": ""
+    "%1 is encrypted. Enter its passphrase to unlock it.": "%1 ist verschlüsselt. Geben Sie die Passphrase ein, um diese zu entsperren."
   },
   "%1 is password protected.": {
     "%1 is password protected.": "%1 ist passwortgeschützt."
@@ -42,10 +42,10 @@
     "%1 levels deep": "%1 Ebenen tief"
   },
   "%1 matching “%2”": {
-    "%1 matching “%2”": ""
+    "%1 matching “%2”": "%1 entspricht “%2”"
   },
   "%1 min left": {
-    "%1 min left": "%1 min verbleibend"
+    "%1 min left": "%1 Min. verbleibend"
   },
   "%1 px": {
     "%1 px": "%1 px"
@@ -57,10 +57,10 @@
     "%1 used · %2 free · %3 total": "%1 verwendet · %2 frei · %3 insgesamt"
   },
   "%1 will be deleted permanently. This cannot be undone.": {
-    "%1 will be deleted permanently. This cannot be undone.": ""
+    "%1 will be deleted permanently. This cannot be undone.": "%1 wird endgültig gelöscht. Dies kann nicht rückgängig gemacht werden."
   },
   "%1 will be moved to the trash.": {
-    "%1 will be moved to the trash.": ""
+    "%1 will be moved to the trash.": "%1 wird in den Papierkorb verschoben."
   },
   "%1 · %2": {
     "%1 · %2": "%1 · %2"
@@ -84,10 +84,10 @@
     "1 item cut": "1 Element ausgeschnitten"
   },
   "50 is the Material default.": {
-    "50 is the Material default.": ""
+    "50 is the Material default.": "50 ist die Material-Vorgabe."
   },
   "? or F1 in the main window.": {
-    "? or F1 in the main window.": ""
+    "? or F1 in the main window.": "? oder F1 im Hauptfenster."
   },
   "API": {
     "API": "API"
@@ -102,7 +102,7 @@
     "Add or remove one item": "Ein Element hinzufügen oder entfernen"
   },
   "Add or remove the item under the cursor": {
-    "Add or remove the item under the cursor": ""
+    "Add or remove the item under the cursor": "Das Element unter dem Cursor hinzufügen oder entfernen"
   },
   "Add to bookmarks": {
     "Add to bookmarks": "Zu Lesezeichen hinzufügen"
@@ -117,7 +117,7 @@
     "Administrator access is not available because pkexec is not installed": "Administratorzugang ist nicht verfügbar weil pkexec nicht installiert ist"
   },
   "Administrator access is not available because the polkit policy is not installed": {
-    "Administrator access is not available because the polkit policy is not installed": ""
+    "Administrator access is not available because the polkit policy is not installed": "Administratorzugriff ist nicht verfügbar, da die Polkit-Richtlinie nicht installiert ist"
   },
   "Administrator access is not available inside the sandbox": {
     "Administrator access is not available inside the sandbox": "Administratorzugang ist innerhlab der Sandbox nicht verfügbar"
@@ -129,19 +129,19 @@
     "Always": "Immer"
   },
   "Always use the dark theme.": {
-    "Always use the dark theme.": "Immer das dunkle Theme verwenden."
+    "Always use the dark theme.": "Immer das dunkle Thema verwenden."
   },
   "Always use the light theme.": {
-    "Always use the light theme.": "Immer das helle Theme verwenden."
+    "Always use the light theme.": "Immer das helle Thema verwenden."
   },
   "Always use this application": {
     "Always use this application": "Immer diese Anwendung verwenden"
   },
   "Amber": {
-    "Amber": ""
+    "Amber": "Amber"
   },
   "Another file manager holds it.": {
-    "Another file manager holds it.": ""
+    "Another file manager holds it.": "Ein anderer Dateimanager verwaltet diese"
   },
   "Any size": {
     "Any size": "Beliebige Größe"
@@ -156,7 +156,7 @@
     "Apply": "Anwenden"
   },
   "Apply to everything inside": {
-    "Apply to everything inside": ""
+    "Apply to everything inside": "Auf alles im Inneren anwenden"
   },
   "Archive": {
     "Archive": "Archivieren"
@@ -183,7 +183,7 @@
     "Automatic": "Automatisch"
   },
   "Automatic uses $TERMINAL.": {
-    "Automatic uses $TERMINAL.": ""
+    "Automatic uses $TERMINAL.": "Automatic verwendet $TERMINAL."
   },
   "Available": {
     "Available": "Verfügbar"
@@ -192,25 +192,25 @@
     "Back": "Zurück"
   },
   "Back to the files": {
-    "Back to the files": ""
+    "Back to the files": "Zurück zu den Dateien"
   },
   "Backend": {
     "Backend": "Backend"
   },
   "Backend: not reachable, no activation file": {
-    "Backend: not reachable, no activation file": ""
+    "Backend: not reachable, no activation file": "Backend: nicht erreichbar, keine Aktivierungsdatei"
   },
   "Backend: served by this instance": {
-    "Backend: served by this instance": ""
+    "Backend: served by this instance": "Backend: bedient von dieser Instanz"
   },
   "Backend: started on demand through %1": {
-    "Backend: started on demand through %1": ""
+    "Backend: started on demand through %1": "Backend: gestartet bei Abruf über %1"
   },
   "Badges": {
-    "Badges": ""
+    "Badges": "Badges"
   },
   "Balanced": {
-    "Balanced": ""
+    "Balanced": "Ausgewogen"
   },
   "Behaviour": {
     "Behaviour": "Verhalten"
@@ -222,7 +222,7 @@
     "Blue": "Blau"
   },
   "Bookmark this folder": {
-    "Bookmark this folder": ""
+    "Bookmark this folder": "Diesen Ordner mit Lesezeichen versehen"
   },
   "Cancel": {
     "Cancel": "Abbrechen"
@@ -240,25 +240,25 @@
     "Changing permissions": "Ändern der Berechtigungen"
   },
   "Choose a JSON color theme file.": {
-    "Choose a JSON color theme file.": ""
+    "Choose a JSON color theme file.": "Wählen Sie eine JSON-Farb-Theme-Datei."
   },
   "Choose a badge image": {
-    "Choose a badge image": ""
+    "Choose a badge image": "Ein Badge-Bild wählen"
   },
   "Clear": {
-    "Clear": ""
+    "Clear": "Löschen"
   },
   "Clear Recent": {
-    "Clear Recent": ""
+    "Clear Recent": "Zuletzt verwendet löschen"
   },
   "Clear the clipboard": {
     "Clear the clipboard": ""
   },
   "Clear the recent files list?": {
-    "Clear the recent files list?": ""
+    "Clear the recent files list?": "Die Liste zuletzt verwendeter Dateien löschen?"
   },
   "Clear the selection": {
-    "Clear the selection": ""
+    "Clear the selection": "Die Auswahl aufheben"
   },
   "Close": {
     "Close": "Schließen"
@@ -273,22 +273,22 @@
     "Close tab": "Tab schließen"
   },
   "Close tabs to the right": {
-    "Close tabs to the right": "Schließe Tabs rechts vom aktuellen"
+    "Close tabs to the right": "Tabs zur rechten schließen"
   },
   "Collapse": {
-    "Collapse": ""
+    "Collapse": "Einklappen"
   },
   "Color source": {
-    "Color source": ""
+    "Color source": "Farbquelle"
   },
   "Column view": {
-    "Column view": ""
+    "Column view": "Spaltenansicht"
   },
   "Comfortable": {
-    "Comfortable": ""
+    "Comfortable": "Komfortabel"
   },
   "Compact": {
-    "Compact": ""
+    "Compact": "Kompakt"
   },
   "Compress": {
     "Compress": "Komprimieren"
@@ -303,13 +303,13 @@
     "Confirm": "Bestätigen"
   },
   "Confirm before moving to the trash": {
-    "Confirm before moving to the trash": ""
+    "Confirm before moving to the trash": "Vor dem Verschieben in Papierkorb bestätigen"
   },
   "Connect": {
     "Connect": "Verbinden"
   },
   "Connect anonymously": {
-    "Connect anonymously": ""
+    "Connect anonymously": "Anonym verbinden"
   },
   "Connect to Server": {
     "Connect to Server": "Mit Server verbinden"
@@ -321,10 +321,10 @@
     "Connected": "Verbunden"
   },
   "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": {
-    "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": ""
+    "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": "Verbunden, aber die Freigabe verfügt über keinen lokalen Ordner. Der gvfs-FUSE-Dienst wird möglicherweise nicht ausgeführt."
   },
   "Contents": {
-    "Contents": ""
+    "Contents": "Inhalt"
   },
   "Copied": {
     "Copied": "Kopiert"
@@ -333,7 +333,7 @@
     "Copy": "Kopieren"
   },
   "Copy location path": {
-    "Copy location path": ""
+    "Copy location path": "Pfad zu Ort kopieren"
   },
   "Copy name": {
     "Copy name": "Name kopieren"
@@ -348,7 +348,7 @@
     "Copying": "Kopiert"
   },
   "Coral": {
-    "Coral": ""
+    "Coral": "Coral"
   },
   "Could not read that file, expected a JSON color theme.": {
     "Could not read that file, expected a JSON color theme.": "Diese Datei konnte nicht gelesen werden, erwartet wurde ein JSON-Farbschema."
@@ -369,10 +369,10 @@
     "Ctrl copies, Alt asks.": "Strg kopiert, Alt fragt."
   },
   "Ctrl+H toggles per window.": {
-    "Ctrl+H toggles per window.": ""
+    "Ctrl+H toggles per window.": "Strg+H schaltet pro Fenster um."
   },
   "Ctrl+Wheel resizes per window.": {
-    "Ctrl+Wheel resizes per window.": ""
+    "Ctrl+Wheel resizes per window.": "Strg+Rad ändert die Größe pro Fenster."
   },
   "Custom": {
     "Custom": "Benutzerdefiniert"
@@ -384,25 +384,25 @@
     "Cyan": "Cyan"
   },
   "Dark": {
-    "Dark": ""
+    "Dark": "Dunkel"
   },
   "Decrease": {
-    "Decrease": ""
+    "Decrease": "Verringern"
   },
   "Default": {
-    "Default": ""
+    "Default": "Vorgabe"
   },
   "Default application": {
-    "Default application": ""
+    "Default application": "Standardanwendung"
   },
   "Default applications": {
-    "Default applications": ""
+    "Default applications": "Vorgegeben Anwendungen"
   },
   "Default icon size": {
-    "Default icon size": ""
+    "Default icon size": "Vorgegebene Icon-Größe"
   },
   "Default view": {
-    "Default view": ""
+    "Default view": "Vorgegebene Ansicht"
   },
   "Delete": {
     "Delete": "Löschen"
@@ -417,10 +417,10 @@
     "Deleting": "Löschen"
   },
   "Dense": {
-    "Dense": ""
+    "Dense": "Dicht"
   },
   "Density": {
-    "Density": ""
+    "Density": "Dichte"
   },
   "Details": {
     "Details": "Details"
@@ -429,19 +429,19 @@
     "Devices": "Geräte"
   },
   "Devices in the sidebar": {
-    "Devices in the sidebar": ""
+    "Devices in the sidebar": "Geräte in der Seitenleiste"
   },
   "Disconnect": {
     "Disconnect": "Verbindung trennen"
   },
   "Display family": {
-    "Display family": ""
+    "Display family": "Display-Familie"
   },
   "Do this for the rest": {
     "Do this for the rest": ""
   },
   "Docs": {
-    "Docs": ""
+    "Docs": "Dokumentation"
   },
   "Documents": {
     "Documents": "Dokumente"
@@ -456,16 +456,16 @@
     "Downloads each file.": "Lädt jede Datei herunter."
   },
   "Drag and drop": {
-    "Drag and drop": ""
+    "Drag and drop": "Drag-and-drop"
   },
   "Drives and mounting": {
-    "Drives and mounting": ""
+    "Drives and mounting": "Laufwerke und Mounting"
   },
   "Drives are unavailable because the sandbox cannot reach udisks2": {
-    "Drives are unavailable because the sandbox cannot reach udisks2": ""
+    "Drives are unavailable because the sandbox cannot reach udisks2": "Laufwerke sind nicht verfügbar, da die Sandbox udisks2 nicht erreichen kann"
   },
   "Drives are unavailable because udisks2 is not running": {
-    "Drives are unavailable because udisks2 is not running": ""
+    "Drives are unavailable because udisks2 is not running": "Laufwerke sind nicht verfügbar, da udisks2 nicht ausgeführt wird"
   },
   "Dropping without a modifier": {
     "Dropping without a modifier": ""
@@ -486,13 +486,13 @@
     "Duration": "Dauer"
   },
   "Dux Shell not detected, using %1.": {
-    "Dux Shell not detected, using %1.": "Dux Shell nicht gefunden, nutze %1."
+    "Dux Shell not detected, using %1.": "Dux Shell nicht erkannt, verwendet wird %1."
   },
   "Dux Shell not detected, using the %1 preset.": {
-    "Dux Shell not detected, using the %1 preset.": "Dux Shell nicht erkannt, daher wird das Preset %1 verwendet."
+    "Dux Shell not detected, using the %1 preset.": "Dux Shell nicht erkannt, verwendet wird das Preset %1."
   },
   "Each launcher's own configuration folder.": {
-    "Each launcher's own configuration folder.": ""
+    "Each launcher's own configuration folder.": "Eigener Konfigurationsordner jedes Launchers."
   },
   "Eject": {
     "Eject": "Auswerfen"
@@ -510,10 +510,10 @@
     "Emptying the trash": "Papierkorb wird geleert"
   },
   "Enter filename...": {
-    "Enter filename...": "Dateinamen eingeben. .."
+    "Enter filename...": "Dateinamen eingeben ..."
   },
   "Estimating…": {
-    "Estimating…": ""
+    "Estimating…": "Schätzung ..."
   },
   "Every folder goes back to the default sort and view.": {
     "Every folder goes back to the default sort and view.": ""
@@ -579,7 +579,7 @@
     "Focus the sidebar": "Seitenleiste fokussieren"
   },
   "Folder appearance": {
-    "Folder appearance": ""
+    "Folder appearance": "Ordner-Erscheinungsbild"
   },
   "Folders": {
     "Folders": "Ordner"
@@ -591,16 +591,16 @@
     "Folders open in new tabs and files open in their applications.": "Ordner öffnen in neuen Tabs und Dateien öffnen in ihren Anwendungen."
   },
   "Folders open in new tabs, archives are extracted and other files open in their applications.": {
-    "Folders open in new tabs, archives are extracted and other files open in their applications.": ""
+    "Folders open in new tabs, archives are extracted and other files open in their applications.": "Ordner werden in neuen Tabs geöffnet, Archive werden entpackt und andere Dateien werden in ihren jeweiligen Anwendungen geöffnet."
   },
   "Folders to skip": {
     "Folders to skip": "Ordner zum Überspringen"
   },
   "Follow Dux Shell colors, falling back to a preset.": {
-    "Follow Dux Shell colors, falling back to a preset.": ""
+    "Follow Dux Shell colors, falling back to a preset.": "Farben von Dux Shell folgen, zurückfallend auf ein Preset."
   },
   "Following the system color scheme (currently %1).": {
-    "Following the system color scheme (currently %1).": ""
+    "Following the system color scheme (currently %1).": "Dem Farbschema des Systems folgend (derzeit %1)."
   },
   "Font source": {
     "Font source": "Schriftartquelle"
@@ -618,19 +618,19 @@
     "Forward": "Weiter"
   },
   "From the index": {
-    "From the index": ""
+    "From the index": "Aus dem Index"
   },
   "Fuzzy": {
-    "Fuzzy": ""
+    "Fuzzy": "Schwammig"
   },
   "Games": {
     "Games": "Spiele"
   },
   "Games and prefixes Heroic installed.": {
-    "Games and prefixes Heroic installed.": ""
+    "Games and prefixes Heroic installed.": "Spiele und Präfixe von Heroic installiert."
   },
   "Games and prefixes Lutris installed.": {
-    "Games and prefixes Lutris installed.": ""
+    "Games and prefixes Lutris installed.": "Spiele und Präfixe von Lutrix installiert."
   },
   "Games folder": {
     "Games folder": "Spieleordner"
@@ -654,7 +654,7 @@
     "Go to that tab": "Zu diesem Tab gehen"
   },
   "Go to the home folder": {
-    "Go to the home folder": "Zum Benutzerordner gehen"
+    "Go to the home folder": "Zum Home-Ordner gehen"
   },
   "Go to the parent folder": {
     "Go to the parent folder": "Zum übergeordneten Ordner gehen"
@@ -666,31 +666,31 @@
     "Grid icon size": ""
   },
   "Grid view": {
-    "Grid view": ""
+    "Grid view": "Gitteransicht"
   },
   "Group": {
     "Group": "Gruppe"
   },
   "Heroic": {
-    "Heroic": ""
+    "Heroic": "Heroic"
   },
   "Hides the title and the window buttons, leaving a thin strip to drag the window.": {
-    "Hides the title and the window buttons, leaving a thin strip to drag the window.": ""
+    "Hides the title and the window buttons, leaving a thin strip to drag the window.": "Blendet den Titel und die Fensterschaltflächen aus, wobei ein schmaler Streifen zum Verschieben des Fensters verbleibt."
   },
   "Home": {
-    "Home": ""
+    "Home": "Home"
   },
   "Host filesystem": {
     "Host filesystem": "Host-Dateisystem"
   },
   "Icons": {
-    "Icons": ""
+    "Icons": "Icons"
   },
   "Image pasted": {
     "Image pasted": "Bild eingefügt"
   },
   "Image web address": {
-    "Image web address": ""
+    "Image web address": "Webadresse des Bildes"
   },
   "Images": {
     "Images": "Bilder"
@@ -699,22 +699,22 @@
     "Import": "Importieren"
   },
   "Import your GTK bookmarks?": {
-    "Import your GTK bookmarks?": ""
+    "Import your GTK bookmarks?": "Ihre GTK-Lesezeichen importieren?"
   },
   "Include hidden files": {
-    "Include hidden files": ""
+    "Include hidden files": "Versteckte Dateien einbeziehen"
   },
   "Include ignored": {
-    "Include ignored": ""
+    "Include ignored": "Einbeziehen ignoriert"
   },
   "Increase": {
     "Increase": "Erhöhen"
   },
   "Index is still building, results may be incomplete": {
-    "Index is still building, results may be incomplete": ""
+    "Index is still building, results may be incomplete": "Index wird noch gebildet, Ergebnisse sind möglicherweise unvollständig"
   },
   "Interface density": {
-    "Interface density": ""
+    "Interface density": "Interface density\n"
   },
   "Invert the selection": {
     "Invert the selection": "Auswahl umkehren"
@@ -723,7 +723,7 @@
     "Items in the trash cannot be opened": "Elemente im Papierkorb können nicht geöffnet werden"
   },
   "Jump to a folder you visited": {
-    "Jump to a folder you visited": ""
+    "Jump to a folder you visited": "Zu einem von Ihnen besuchten Ordner springen"
   },
   "Jump to a name or filter the folder with what you type": {
     "Jump to a name or filter the folder with what you type": ""
@@ -732,7 +732,7 @@
     "Jump to name": "Springe zum Namen"
   },
   "Jump to the start, the end or the next screen": {
-    "Jump to the start, the end or the next screen": ""
+    "Jump to the start, the end or the next screen": "Zum Anfang, zum Ende oder zum nächsten Bildschirm springen"
   },
   "Keep a list of recent files": {
     "Keep a list of recent files": "Liste an zuletzt verwendeten Dateien behalten"
@@ -741,7 +741,7 @@
     "Keep both": "Beide behalten"
   },
   "Keep running": {
-    "Keep running": "Laufen lassen"
+    "Keep running": "Am Laufen halten"
   },
   "Keyboard": {
     "Keyboard": "Tastatur"
@@ -753,10 +753,10 @@
     "Language": "Sprache"
   },
   "Larger icons": {
-    "Larger icons": "Größere Symbole"
+    "Larger icons": "Größere Icons"
   },
   "Libraries and Proton prefixes.": {
-    "Libraries and Proton prefixes.": ""
+    "Libraries and Proton prefixes.": "Bibliotheken und Proton-Präfixe."
   },
   "Library · %1": {
     "Library · %1": "Bibliothek · %1"
@@ -780,16 +780,16 @@
     "List view": "Listenansicht"
   },
   "Load colors from your own theme file.": {
-    "Load colors from your own theme file.": ""
+    "Load colors from your own theme file.": "Farben aus Ihrer eigenen Theme-Datei laden."
   },
   "Location": {
-    "Location": ""
+    "Location": "Standort"
   },
   "Lock": {
     "Lock": "Sperren"
   },
   "Lutris": {
-    "Lutris": ""
+    "Lutris": "Lutris"
   },
   "MIT License": {
     "MIT License": "MIT Lizenz"
@@ -801,28 +801,28 @@
     "Merge": "Kombinieren"
   },
   "Modified": {
-    "Modified": ""
+    "Modified": "Modifiziert"
   },
   "Monochrome": {
-    "Monochrome": ""
+    "Monochrome": "Monochrom"
   },
   "Monospace family": {
-    "Monospace family": ""
+    "Monospace family": "Monospace-Familie"
   },
   "More actions": {
     "More actions": "Weitere Aktionen"
   },
   "Motion": {
-    "Motion": ""
+    "Motion": "Bewegung"
   },
   "Mount": {
-    "Mount": ""
+    "Mount": "Einhängen"
   },
   "Mounted and removable drives.": {
-    "Mounted and removable drives.": ""
+    "Mounted and removable drives.": "Eingehängte und entfernbare Laufwerke."
   },
   "Mounted network locations and Connect to Server.": {
-    "Mounted network locations and Connect to Server.": ""
+    "Mounted network locations and Connect to Server.": "Eingehängte Netzwerkspeicherorte und Mit Server verbinden."
   },
   "Move": {
     "Move": "Bewegen"
@@ -834,31 +834,31 @@
     "Move the tab right": ""
   },
   "Move through the folder": {
-    "Move through the folder": ""
+    "Move through the folder": "Durch den Ordner navigieren"
   },
   "Move through the sidebar": {
-    "Move through the sidebar": ""
+    "Move through the sidebar": "Durch die Seitenleiste navigieren"
   },
   "Move to": {
-    "Move to": ""
+    "Move to": "Verschieben nach"
   },
   "Move to Trash": {
-    "Move to Trash": ""
+    "Move to Trash": "In Papierkorb verschieben"
   },
   "Move to the search filters": {
     "Move to the search filters": ""
   },
   "Move to…": {
-    "Move to…": ""
+    "Move to…": "Verschieben nach ..."
   },
   "Move, copy across drives": {
-    "Move, copy across drives": ""
+    "Move, copy across drives": "Verschieben, über Laufwerken hinweg kopieren"
   },
   "Moved": {
-    "Moved": ""
+    "Moved": "Verschoben"
   },
   "Moved to trash": {
-    "Moved to trash": ""
+    "Moved to trash": "In Papierkorb verschoben"
   },
   "Moving": {
     "Moving": ""
@@ -867,25 +867,25 @@
     "Moving to trash": ""
   },
   "Name": {
-    "Name": ""
+    "Name": "Name"
   },
   "Name the host terminal to launch.": {
     "Name the host terminal to launch.": ""
   },
   "Names or paths, comma separated. Build and cache folders are skipped anyway.": {
-    "Names or paths, comma separated. Build and cache folders are skipped anyway.": ""
+    "Names or paths, comma separated. Build and cache folders are skipped anyway.": "Namen oder Pfade, getrennt durch Kommas. Build- und Cache-Ordner werden ohnehin übersprungen."
   },
   "Network": {
-    "Network": ""
+    "Network": "Netzwerk"
   },
   "Network in the sidebar": {
-    "Network in the sidebar": ""
+    "Network in the sidebar": "Netzwerk in der Seitenleiste"
   },
   "Network locations are unavailable because gvfs is not running": {
-    "Network locations are unavailable because gvfs is not running": ""
+    "Network locations are unavailable because gvfs is not running": "Netzwerkstandorte sind nicht verfügbar, da gvfs nicht ausgeführt wird"
   },
   "Network locations are unavailable because the sandbox cannot reach gvfs": {
-    "Network locations are unavailable because the sandbox cannot reach gvfs": ""
+    "Network locations are unavailable because the sandbox cannot reach gvfs": "Netzwerkstandorte sind nicht verfügbar, da die Sandbox gvfs micht erreichen kann"
   },
   "Never": {
     "Never": "Niemals"
@@ -912,34 +912,34 @@
     "No limit": "Kein Limit"
   },
   "No recent files": {
-    "No recent files": "Keine zuletzt benutzten Dateien"
+    "No recent files": "Keine zuletzt verwendeten Dateien"
   },
   "No results": {
     "No results": "Keine Ergebnisse"
   },
   "No session bus.": {
-    "No session bus.": ""
+    "No session bus.": "Kein Session-Bus."
   },
   "No theme file selected": {
-    "No theme file selected": ""
+    "No theme file selected": "Keine Theme-Datei ausgewählt"
   },
   "Not available": {
     "Not available": "Nicht verfügbar"
   },
   "Not available because the sandbox cannot start programs on the host": {
-    "Not available because the sandbox cannot start programs on the host": ""
+    "Not available because the sandbox cannot start programs on the host": "Nicht verfügbar, da die Sandbox Programme auf dem Host nicht starten kann"
   },
   "Not available inside the sandbox": {
-    "Not available inside the sandbox": ""
+    "Not available inside the sandbox": "In der Sandbox nicht verfügbar"
   },
   "Not available without access to the host filesystem": {
-    "Not available without access to the host filesystem": ""
+    "Not available without access to the host filesystem": "Ohne Zugriff auf das Host-Dateisystem nicht verfügbar"
   },
   "Nothing is running": {
-    "Nothing is running": ""
+    "Nothing is running": "Nichts wird ausgeführt"
   },
   "Octal": {
-    "Octal": ""
+    "Octal": "Oktal"
   },
   "Off": {
     "Off": "Aus"
@@ -951,13 +951,13 @@
     "Off only mounts.": ""
   },
   "Offline": {
-    "Offline": ""
+    "Offline": "Offline"
   },
   "Only launchers with an installed game are listed.": {
-    "Only launchers with an installed game are listed.": ""
+    "Only launchers with an installed game are listed.": "Nur Launcher mit einem installierten Spielwerden gelistet."
   },
   "Only the window process serves the portal": {
-    "Only the window process serves the portal": ""
+    "Only the window process serves the portal": "Nur der Fensterprozess bedient das Portal"
   },
   "Open": {
     "Open": "Öffnen"
@@ -966,7 +966,7 @@
     "Open %1 items?": "%1 Elemente öffnen?"
   },
   "Open and save dialogs": {
-    "Open and save dialogs": ""
+    "Open and save dialogs": "Dialoge zum Öffnen und Speichern"
   },
   "Open file": {
     "Open file": "Datei öffnen"
@@ -975,13 +975,13 @@
     "Open files": "Dateien öffnen"
   },
   "Open files with": {
-    "Open files with": ""
+    "Open files with": "Dateien öffnen mit"
   },
   "Open folders from other apps in a new tab": {
-    "Open folders from other apps in a new tab": ""
+    "Open folders from other apps in a new tab": "Ordner aus anderen Apps in einem neuen Tab öffnen"
   },
   "Open in editor": {
-    "Open in editor": ""
+    "Open in editor": "In Editor öffnen"
   },
   "Open in new tab": {
     "Open in new tab": "In neuem Tab öffnen"
@@ -990,28 +990,28 @@
     "Open in new window": "In neuem Fenster öffnen"
   },
   "Open in terminal": {
-    "Open in terminal": ""
+    "Open in terminal": "In Terminal öffnen"
   },
   "Open in the other pane": {
-    "Open in the other pane": ""
+    "Open in the other pane": "Im anderen Fenster öffnen"
   },
   "Open items with": {
-    "Open items with": ""
+    "Open items with": "Elemente öffnen mit"
   },
   "Open the bookmark menu": {
-    "Open the bookmark menu": ""
+    "Open the bookmark menu": "Das Lesezeichen-Menü öffnen"
   },
   "Open the containing folder": {
-    "Open the containing folder": ""
+    "Open the containing folder": "Den beinhaltenden Ordner öffnen"
   },
   "Open the context menu": {
-    "Open the context menu": ""
+    "Open the context menu": "Das Kontextmenü öffnen"
   },
   "Open the place": {
-    "Open the place": ""
+    "Open the place": "Den Ort öffnen"
   },
   "Open the preview in a large view": {
-    "Open the preview in a large view": ""
+    "Open the preview in a large view": "Die Vorschau in einer großen Ansicht öffnen"
   },
   "Open unmounted drives on click": {
     "Open unmounted drives on click": ""
@@ -1035,10 +1035,10 @@
     "Owner": "Besitzer"
   },
   "PDF preview is not available. Install Qt PDF support to view this file.": {
-    "PDF preview is not available. Install Qt PDF support to view this file.": ""
+    "PDF preview is not available. Install Qt PDF support to view this file.": "PDF-Vorschau ist nicht verfügbar. Installieren Sie die Qt-PDF-Unterstützung, um diese Datei anzusehen."
   },
   "Palette: %1": {
-    "Palette: %1": ""
+    "Palette: %1": "Palette: %1"
   },
   "Passphrase": {
     "Passphrase": "Passphrase"
@@ -1059,67 +1059,67 @@
     "Paste into folder": "In Ordner einfügen"
   },
   "Pasted image": {
-    "Pasted image": ""
+    "Pasted image": "Eingefügtes Bild"
   },
   "Pasting image": {
-    "Pasting image": ""
+    "Pasting image": "Einfügen des Bildes"
   },
   "Permissions": {
     "Permissions": "Rechte"
   },
   "Pink": {
-    "Pink": ""
+    "Pink": "Pink"
   },
   "Places": {
     "Places": "Orte"
   },
   "Playful": {
-    "Playful": ""
+    "Playful": "Spielerisch"
   },
   "Portal file: %1": {
-    "Portal file: %1": ""
+    "Portal file: %1": "Portal-Datei: %1"
   },
   "Portal file: not installed": {
-    "Portal file: not installed": ""
+    "Portal file: not installed": "Portal-Datei: nicht installiert"
   },
   "Preference: %1 is used": {
-    "Preference: %1 is used": ""
+    "Preference: %1 is used": "Voreinstellung: %1 wird verwendet"
   },
   "Preference: %1 names Dux Files": {
-    "Preference: %1 names Dux Files": ""
+    "Preference: %1 names Dux Files": "Voreinstellung: %1 benennt Dux Files"
   },
   "Preference: no file chooser backend configured": {
     "Preference: no file chooser backend configured": ""
   },
   "Prefix · %1": {
-    "Prefix · %1": ""
+    "Prefix · %1": "Präfix · %1"
   },
   "Prefixes": {
-    "Prefixes": ""
+    "Prefixes": "Präfixe"
   },
   "Preset": {
-    "Preset": ""
+    "Preset": "Preset"
   },
   "Preview": {
     "Preview": "Vorschau"
   },
   "Preview the next or previous selected item": {
-    "Preview the next or previous selected item": ""
+    "Preview the next or previous selected item": "Vorschau des nächsten oder vorherigen ausgewählten Elements"
   },
   "Previous tab": {
-    "Previous tab": ""
+    "Previous tab": "Vorheriger Tab"
   },
   "Properties": {
-    "Properties": ""
+    "Properties": "Eigenschaften"
   },
   "Protect with a password": {
-    "Protect with a password": ""
+    "Protect with a password": "Mit einem Passwort schützen"
   },
   "Protocol": {
-    "Protocol": ""
+    "Protocol": "Protokoll"
   },
   "Proton · %1": {
-    "Proton · %1": ""
+    "Proton · %1": " Proton · %1"
   },
   "Purple": {
     "Purple": "Lila"
@@ -1128,37 +1128,37 @@
     "Quit": "Beenden"
   },
   "Radius strength": {
-    "Radius strength": ""
+    "Radius strength": "Radiusstärke"
   },
   "Read": {
     "Read": "Lesen"
   },
   "Recent": {
-    "Recent": "Zuletzt"
+    "Recent": "Zuletzt verwendet"
   },
   "Recently used": {
-    "Recently used": "Zuletzt verwendet"
+    "Recently used": "Kürzlich verwendet"
   },
   "Recommended": {
     "Recommended": "Empfohlen"
   },
   "Red": {
-    "Red": ""
+    "Red": "Rot"
   },
   "Redo": {
-    "Redo": ""
+    "Redo": "Wiederherstellen"
   },
   "Redone": {
     "Redone": ""
   },
   "Reduce motion": {
-    "Reduce motion": ""
+    "Reduce motion": "Bewegung reduzieren"
   },
   "Register as the session file manager": {
-    "Register as the session file manager": ""
+    "Register as the session file manager": "Als Sitzungsdateimanager registrieren"
   },
   "Relevance": {
-    "Relevance": ""
+    "Relevance": "Relevanz"
   },
   "Reload": {
     "Reload": "Neuladen"
@@ -1167,16 +1167,16 @@
     "Remember password": "Passwort speichern"
   },
   "Remember view and sort per folder": {
-    "Remember view and sort per folder": ""
+    "Remember view and sort per folder": "Ansicht und Sortierung pro Ordner merken"
   },
   "Remove bookmark": {
     "Remove bookmark": "Lesezeichen entfernen"
   },
   "Remove from Recent": {
-    "Remove from Recent": "Von zuletzt entfernen"
+    "Remove from Recent": "Aus zuletzt verwendet entfernen"
   },
   "Remove the bookmark or eject the drive": {
-    "Remove the bookmark or eject the drive": ""
+    "Remove the bookmark or eject the drive": "Das Lesezeichen entfernen oder das Laufwerk auswerfen"
   },
   "Rename": {
     "Rename": "Umbenennen"
@@ -1200,28 +1200,28 @@
     "Reset the view": "Ansicht zurücksetzen"
   },
   "Reset this folder": {
-    "Reset this folder": "Ordner zurücksetzen"
+    "Reset this folder": "Diesen Ordner zurücksetzen"
   },
   "Resize icons": {
-    "Resize icons": ""
+    "Resize icons": "Icons in Größe ändern"
   },
   "Resize the preview, or reset its width": {
-    "Resize the preview, or reset its width": ""
+    "Resize the preview, or reset its width": "Vorschau in der Größe ändern oder deren Breite zurücksetzen"
   },
   "Restart": {
-    "Restart": "Neustarten"
+    "Restart": "Neustart"
   },
   "Restart the portal service": {
-    "Restart the portal service": ""
+    "Restart the portal service": "Neustart des Portal-Dienstes"
   },
   "Restart the portal service?": {
-    "Restart the portal service?": ""
+    "Restart the portal service?": "Den Portal-Dienst neu starten?"
   },
   "Restore": {
     "Restore": "Wiederherstellen"
   },
   "Restore default": {
-    "Restore default": ""
+    "Restore default": "Vorgabe wiederherstellen"
   },
   "Restored": {
     "Restored": "Wiederhergestellt"
@@ -1230,25 +1230,25 @@
     "Restoring": "Wiederherstellen"
   },
   "Results for “%1” in %2": {
-    "Results for “%1” in %2": ""
+    "Results for “%1” in %2": "Ergebnisse für “%1” in %2"
   },
   "Results in %1": {
-    "Results in %1": ""
+    "Results in %1": "Ergebnisse in %1"
   },
   "Retry as administrator": {
-    "Retry as administrator": "Als Administrator neu versuchen"
+    "Retry as administrator": "Als Administrator wiederholen"
   },
   "Reverse the sort order": {
-    "Reverse the sort order": ""
+    "Reverse the sort order": "Die Sortierreihenfolge umkehren"
   },
   "Ripple effects": {
-    "Ripple effects": ""
+    "Ripple effects": "Welleneffekte"
   },
   "Rotate left": {
-    "Rotate left": ""
+    "Rotate left": "Links drehen"
   },
   "Rotate right": {
-    "Rotate right": ""
+    "Rotate right": "Rechts drehen"
   },
   "Run": {
     "Run": "Ausführen"
@@ -1257,13 +1257,13 @@
     "Run programs": "Programme ausführen"
   },
   "Run this desktop file?": {
-    "Run this desktop file?": ""
+    "Run this desktop file?": "Diese Desktop-Datei ausführen?"
   },
   "Run this file?": {
     "Run this file?": "Diese Datei ausführen?"
   },
   "Sandbox": {
-    "Sandbox": ""
+    "Sandbox": "Sandbox"
   },
   "Save": {
     "Save": "Speichern"
@@ -1278,22 +1278,22 @@
     "Save here": "Hier speichern"
   },
   "Saving %1 into the chosen folder": {
-    "Saving %1 into the chosen folder": "Speichere %1 im ausgewählten Ordner"
+    "Saving %1 into the chosen folder": "%1 wird im gewählten Ordner gespeichert"
   },
   "Scale": {
     "Scale": "Skalieren"
   },
   "Scroll the preview": {
-    "Scroll the preview": ""
+    "Scroll the preview": "Durch Vorschau scrollen"
   },
   "Search applications": {
-    "Search applications": "Suche Anwendungen"
+    "Search applications": "Anwendungen suchen"
   },
   "Search icon": {
-    "Search icon": ""
+    "Search icon": "Such-Icon"
   },
   "Search icons": {
-    "Search icons": ""
+    "Search icons": "Such-Icons"
   },
   "Search in Files": {
     "Search in Files": "Suche in Dateien"
@@ -1302,22 +1302,22 @@
     "Search results": "Suchergebnisse"
   },
   "Search settings": {
-    "Search settings": "Suche Einstellungen"
+    "Search settings": "Sucheinstellungen"
   },
   "Search subfolders": {
-    "Search subfolders": "Suche in Unterordnern"
+    "Search subfolders": "Unterordner suchen"
   },
   "Search the disk": {
-    "Search the disk": ""
+    "Search the disk": "Die Festplatte durchsuchen"
   },
   "Search with the danksearch index": {
-    "Search with the danksearch index": ""
+    "Search with the danksearch index": "Mit dem danksearch-Index suchen"
   },
   "Search your home folder": {
-    "Search your home folder": ""
+    "Search your home folder": "Ihren Home-Ordner durchsuchen"
   },
   "Searching…": {
-    "Searching…": "Suchen…"
+    "Searching…": "Suchen …"
   },
   "Select a range": {
     "Select a range": "Einen Bereich auswählen"
@@ -1344,34 +1344,34 @@
     "Shape": "Form"
   },
   "Shared with other apps.": {
-    "Shared with other apps.": ""
+    "Shared with other apps.": "Geteilt mit anderen Apps."
   },
   "Show": {
     "Show": "Zeigen"
   },
   "Show devices": {
-    "Show devices": ""
+    "Show devices": "Geräte zeigen"
   },
   "Show file extensions": {
-    "Show file extensions": ""
+    "Show file extensions": "Dateierweiterungen zeigen"
   },
   "Show games": {
-    "Show games": ""
+    "Show games": "Spiele zeigen"
   },
   "Show hidden files": {
-    "Show hidden files": "Versteckte Dateien zeigen"
+    "Show hidden files": "Ausgeblendete Dateien zeigen"
   },
   "Show network": {
-    "Show network": ""
+    "Show network": "Netzwerk zeigen"
   },
   "Show system partitions": {
-    "Show system partitions": ""
+    "Show system partitions": "Systempartitionen zeigen"
   },
   "Show thumbnails": {
-    "Show thumbnails": ""
+    "Show thumbnails": "Thumbnails zeigen"
   },
   "Showing the first %1 results": {
-    "Showing the first %1 results": ""
+    "Showing the first %1 results": "Die ersten %1 Ergebnisse werden angezeigt"
   },
   "Shown in the size column.": {
     "Shown in the size column.": ""
@@ -1383,7 +1383,7 @@
     "Sign in": "Einloggen"
   },
   "Single click": {
-    "Single click": ""
+    "Single click": "Einzelklick"
   },
   "Size": {
     "Size": "Größe"
@@ -1392,43 +1392,43 @@
     "Skip": "Überspringen"
   },
   "Skip images larger than": {
-    "Skip images larger than": "Überspringe Bilder größer als"
+    "Skip images larger than": "Bilder überspringen größer als"
   },
   "Smaller icons": {
-    "Smaller icons": "Kleinere Symbole"
+    "Smaller icons": "Kleinere Icons"
   },
   "Smooth": {
-    "Smooth": ""
+    "Smooth": "Glätten"
   },
   "Socket": {
-    "Socket": ""
+    "Socket": "Socket"
   },
   "Some matches may be missing": {
-    "Some matches may be missing": ""
+    "Some matches may be missing": "Einige Übereinstimmungen fehlen möglicherweise"
   },
   "Sort by": {
-    "Sort by": "Sortiere nach"
+    "Sort by": "Sortieren nach"
   },
   "Sort by the next column": {
-    "Sort by the next column": "Sortiere nach der nächsten Spalte"
+    "Sort by the next column": "Sortieren nach nächster Spalte"
   },
   "Sort descending": {
-    "Sort descending": "Sortiere absteigend"
+    "Sort descending": "Absteigend sortieren"
   },
   "Spacious": {
-    "Spacious": ""
+    "Spacious": "Großzügig"
   },
   "Split view": {
-    "Split view": ""
+    "Split view": "Geteilte Ansicht"
   },
   "Spring": {
     "Spring": ""
   },
   "Square": {
-    "Square": ""
+    "Square": "Quadrat"
   },
   "Status": {
-    "Status": ""
+    "Status": "Status"
   },
   "Steam": {
     "Steam": "Steam"
@@ -1440,7 +1440,7 @@
     "Stop measuring": ""
   },
   "Such as a separate /home.": {
-    "Such as a separate /home.": ""
+    "Such as a separate /home.": "Wie zum Beispiel ein separates /home-Verzeichnis."
   },
   "Support Dux Labs": {
     "Support Dux Labs": "Dux Labs unterstützen"
@@ -1455,43 +1455,43 @@
     "System default": "Systemstandard"
   },
   "System preference unavailable, using dark.": {
-    "System preference unavailable, using dark.": ""
+    "System preference unavailable, using dark.": "Systemvoreinstellung nicht verfügbar, verwendet wird dunkel."
   },
   "Terminal": {
-    "Terminal": ""
+    "Terminal": "Terminal"
   },
   "Terminal, drag and thumbnails": {
-    "Terminal, drag and thumbnails": ""
+    "Terminal, drag and thumbnails": "Terminal, Ziehen und Thumbnails"
   },
   "The Wine prefix of each game.": {
-    "The Wine prefix of each game.": ""
+    "The Wine prefix of each game.": "Das Wine-Präfix von jedem Spiel."
   },
   "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": {
-    "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": ""
+    "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": "Die Änderung wird nach dem Neustart von xdg-desktop-portal wirksam. Öffnen- und Speichern-Dialoge, die in anderen Anwendungen geöffnet sind, werden geschlossen."
   },
   "The files themselves stay where they are.": {
-    "The files themselves stay where they are.": ""
+    "The files themselves stay where they are.": "Die Dateien selbst bleiben, wo sie sind."
   },
   "The portal list is managed by the system.": {
-    "The portal list is managed by the system.": ""
+    "The portal list is managed by the system.": "Die Portal-Liste wird vom System verwaltet."
   },
   "The session bus refused it.": {
-    "The session bus refused it.": ""
+    "The session bus refused it.": "Der Session-Bus hat dies abgelehnt."
   },
   "The system application chooser opens instead": {
     "The system application chooser opens instead": ""
   },
   "Theme": {
-    "Theme": ""
+    "Theme": "Theme"
   },
   "Theme, shape and motion": {
-    "Theme, shape and motion": ""
+    "Theme, shape and motion": "Theme, Form und Bewegung"
   },
   "Thickness": {
-    "Thickness": ""
+    "Thickness": "Dicke"
   },
   "This file could not be opened": {
-    "This file could not be opened": ""
+    "This file could not be opened": "Diese Datei konnte nicht geöffnet werden"
   },
   "This folder": {
     "This folder": "Dieser Ordner"
@@ -1500,10 +1500,10 @@
     "This folder is empty": "Dieser Ordner ist leer"
   },
   "This instance cannot reach the session bus.": {
-    "This instance cannot reach the session bus.": ""
+    "This instance cannot reach the session bus.": "Diese Instanz kann den Session-Bus nicht erreichen."
   },
   "This item already exists": {
-    "This item already exists": ""
+    "This item already exists": "Dieses Element existiert bereits"
   },
   "This month": {
     "This month": "Diesen Monat"
@@ -1512,25 +1512,25 @@
     "This session": "Diese Sitzung"
   },
   "This step cannot be retried as administrator": {
-    "This step cannot be retried as administrator": ""
+    "This step cannot be retried as administrator": "Dieser Schritt kann nicht als Administrator wiederholt werden"
   },
   "This week": {
     "This week": "Diese Woche"
   },
   "Thumbnails": {
-    "Thumbnails": ""
+    "Thumbnails": "Thumbnails"
   },
   "Thumbnails on network locations": {
-    "Thumbnails on network locations": ""
+    "Thumbnails on network locations": "Thumbnails an Netzwerkspeicherorten"
   },
   "Title bars": {
-    "Title bars": "Titelbars"
+    "Title bars": "Titelleisten"
   },
   "Today": {
     "Today": "Heute"
   },
   "Toggle sidebar": {
-    "Toggle sidebar": ""
+    "Toggle sidebar": "Seitenleiste ein-/ausblenden"
   },
   "Trash": {
     "Trash": "Papierkorb"
@@ -1554,10 +1554,10 @@
     "Typing in the file list": ""
   },
   "Typography": {
-    "Typography": ""
+    "Typography": "Typografie"
   },
   "Unavailable until its drive is mounted": {
-    "Unavailable until its drive is mounted": ""
+    "Unavailable until its drive is mounted": "Nicht verfügbar, bis das Laufwerk eingehängt ist"
   },
   "Under 1 MB": {
     "Under 1 MB": "Unter 1 MB"
@@ -1581,43 +1581,43 @@
     "Unpacks into a folder beside it.": ""
   },
   "Untitled document": {
-    "Untitled document": "Unbenanntes Dokument"
+    "Untitled document": "Unbetiteltes Dokument"
   },
   "Untitled folder": {
-    "Untitled folder": "Unbenannter Ordner"
+    "Untitled folder": "Unbetitelter Ordner"
   },
   "Use": {
-    "Use": ""
+    "Use": "Verwenden"
   },
   "Use Dux Files for open and save dialogs": {
-    "Use Dux Files for open and save dialogs": ""
+    "Use Dux Files for open and save dialogs": "Dux Files für Öffnen- und Speichern-Dialoge verwenden"
   },
   "Use a bundled color palette.": {
-    "Use a bundled color palette.": ""
+    "Use a bundled color palette.": "Eine gebundelte Farbpalette verwenden"
   },
   "Use an image from a web address": {
-    "Use an image from a web address": ""
+    "Use an image from a web address": "Ein Bild von einer Webadresse verwenden"
   },
   "Use an image from this computer": {
-    "Use an image from this computer": ""
+    "Use an image from this computer": "Ein Bild von diesem Computer verwenden"
   },
   "Use these settings for all folders": {
-    "Use these settings for all folders": ""
+    "Use these settings for all folders": "Diese Einstellungen für alle Ordner verwenden"
   },
   "Use this folder": {
-    "Use this folder": ""
+    "Use this folder": "Diesen Ordner verwenden"
   },
   "Username": {
     "Username": "Benutzername"
   },
   "Using Dux Shell dynamic colors.": {
-    "Using Dux Shell dynamic colors.": ""
+    "Using Dux Shell dynamic colors.": "Verwendung dynamischer Farben in Dux Shell."
   },
   "Version": {
     "Version": "Version"
   },
   "Version and capabilities": {
-    "Version and capabilities": ""
+    "Version and capabilities": "Version und Fähigkeiten"
   },
   "Video": {
     "Video": "Video"
@@ -1626,31 +1626,31 @@
     "View": "Ansicht"
   },
   "Views, sorting and defaults": {
-    "Views, sorting and defaults": ""
+    "Views, sorting and defaults": "Ansichten, Sortierung und Vorgaben"
   },
   "Vim keys": {
-    "Vim keys": ""
+    "Vim keys": "Vim-Keys"
   },
   "Waiting": {
     "Waiting": "Warten"
   },
   "Weight": {
-    "Weight": ""
+    "Weight": "Wichtung"
   },
   "Where the launcher keeps the games.": {
-    "Where the launcher keeps the games.": ""
+    "Where the launcher keeps the games.": "Wo der Launcher die Spiele behält."
   },
   "Window": {
     "Window": "Fenster"
   },
   "Window header": {
-    "Window header": ""
+    "Window header": "Fensterkopfzeile"
   },
   "Windows": {
     "Windows": "Fenster"
   },
   "Working": {
-    "Working": ""
+    "Working": "in Arbeit"
   },
   "Write": {
     "Write": "Schreiben"
@@ -1689,7 +1689,7 @@
     "corners rounding shape square": ""
   },
   "custom theme json file": {
-    "custom theme json file": ""
+    "custom theme json file": "Benutzerdefinierte Theme-JSON-Datei"
   },
   "daemon connected offline socket": {
     "daemon connected offline socket": ""
@@ -1698,7 +1698,7 @@
     "daemon path unix": ""
   },
   "daemon protocol": {
-    "daemon protocol": ""
+    "daemon protocol": "Daemon-Protokoll"
   },
   "daemon release build": {
     "daemon release build": ""
@@ -1713,19 +1713,19 @@
     "default file manager dbus reveal": ""
   },
   "delete confirmation prompt": {
-    "delete confirmation prompt": ""
+    "delete confirmation prompt": "Bestätigungsaufforderung zum Löschen"
   },
   "density compact dense spacious comfortable spacing padding rows": {
     "density compact dense spacious comfortable spacing padding rows": ""
   },
   "directories first sort": {
-    "directories first sort": ""
+    "directories first sort": "Verzeichnisse zuerst sortieren"
   },
   "documentation help manual": {
-    "documentation help manual": ""
+    "documentation help manual": "Dokumentation, Hilfe, Handbuch"
   },
   "dotfiles invisible": {
-    "dotfiles invisible": ""
+    "dotfiles invisible": "Dotfiles unsichtbar"
   },
   "drag drop copy move ask default action": {
     "drag drop copy move ask default action": ""
@@ -1734,7 +1734,7 @@
     "drives usb volumes sidebar hide": ""
   },
   "flatpak app id": {
-    "flatpak app id": ""
+    "flatpak app id": "Flatpak-App-ID"
   },
   "focus ring width outline": {
     "focus ring width outline": ""
@@ -1767,16 +1767,16 @@
     "gvfs smb sftp remote servers sidebar hide": ""
   },
   "h j k l move, / searches and letters run commands instead of jumping to a name.": {
-    "h j k l move, / searches and letters run commands instead of jumping to a name.": ""
+    "h j k l move, / searches and letters run commands instead of jumping to a name.": "h j k l verschieben, / sucht und Buchstaben führen Befehle aus, anstatt zu einem Namen zu springen."
   },
   "h j k l move, / searches.": {
-    "h j k l move, / searches.": ""
+    "h j k l move, / searches.": " h j k l verschieben, / sucht."
   },
   "heroic epic gog amazon": {
     "heroic epic gog amazon": "heroic epic gog amazon"
   },
   "history recently used opened sidebar": {
-    "history recently used opened sidebar": ""
+    "history recently used opened sidebar": "Historie kürzlich verwendeter, geöffneter Seitenleiste"
   },
   "hjkl keyboard navigation modal": {
     "hjkl keyboard navigation modal": ""
@@ -1800,7 +1800,7 @@
     "list grid columns icons tiles": ""
   },
   "locale translation interface": {
-    "locale translation interface": ""
+    "locale translation interface": "Interface für lokale Übersetzung"
   },
   "lutris wine prefix": {
     "lutris wine prefix": ""
@@ -1815,7 +1815,7 @@
     "order name size modified type date": ""
   },
   "palette dms preset custom accent": {
-    "palette dms preset custom accent": ""
+    "palette dms preset custom accent": "Palette, DMS, Preset, benutzerdefiniert, Akzent"
   },
   "portal file chooser picker xdg": {
     "portal file chooser picker xdg": ""
@@ -1875,10 +1875,10 @@
     "wine prefix proton compatdata": ""
   },
   "xdg-desktop-portal": {
-    "xdg-desktop-portal": ""
+    "xdg-desktop-portal": "xdg-desktop-portal "
   },
   "xdg-open follows the handler on your PATH.": {
-    "xdg-open follows the handler on your PATH.": ""
+    "xdg-open follows the handler on your PATH.": "xdg-open folgt dem Handler auf Ihrem PATH."
   },
   "xdg-open handlr mimeo opener default application launch": {
     "xdg-open handlr mimeo opener default application launch": ""
