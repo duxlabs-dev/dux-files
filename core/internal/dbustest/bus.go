@@ -2,6 +2,7 @@ package dbustest
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -17,7 +18,8 @@ const busConfig = `<!DOCTYPE busconfig PUBLIC "-//freedesktop//DTD D-Bus Bus Con
  "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
 <busconfig>
   <type>session</type>
-  <listen>unix:dir=%s</listen>
+  <listen>unix:dir=%[1]s</listen>
+  <servicedir>%[1]s/services</servicedir>
   <auth>EXTERNAL</auth>
   <policy context="default">
     <allow send_destination="*" eavesdrop="true"/>
@@ -28,6 +30,12 @@ const busConfig = `<!DOCTYPE busconfig PUBLIC "-//freedesktop//DTD D-Bus Bus Con
 </busconfig>`
 
 func Bus(t *testing.T) string {
+	address, _ := ActivatingBus(t)
+	return address
+}
+
+// ActivatingBus also hands back the directory where a .service file makes a name activatable.
+func ActivatingBus(t *testing.T) (address, serviceDir string) {
 	t.Helper()
 	bin, err := exec.LookPath("dbus-daemon")
 	switch {
@@ -37,8 +45,10 @@ func Bus(t *testing.T) string {
 		t.Skip("dbus-daemon not installed")
 	}
 	dir := t.TempDir()
+	serviceDir = filepath.Join(dir, "services")
+	require.NoError(t, os.Mkdir(serviceDir, 0o700))
 	config := filepath.Join(dir, "bus.conf")
-	require.NoError(t, os.WriteFile(config, []byte(strings.Replace(busConfig, "%s", dir, 1)), 0o600))
+	require.NoError(t, os.WriteFile(config, []byte(fmt.Sprintf(busConfig, dir)), 0o600))
 
 	cmd := exec.Command(bin, "--config-file="+config, "--nofork", "--nopidfile", "--print-address")
 	cmd.SysProcAttr = &syscall.SysProcAttr{Pdeathsig: syscall.SIGKILL}
@@ -50,9 +60,9 @@ func Bus(t *testing.T) string {
 		_ = cmd.Wait()
 	})
 
-	address, err := bufio.NewReader(stdout).ReadString('\n')
+	line, err := bufio.NewReader(stdout).ReadString('\n')
 	require.NoError(t, err)
-	return strings.TrimSpace(address)
+	return strings.TrimSpace(line), serviceDir
 }
 
 func Connect(t *testing.T, address string) *dbus.Conn {

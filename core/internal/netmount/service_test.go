@@ -57,6 +57,19 @@ func gvfsEntry(name, comment, target string, fileType uint32) []wireAttribute {
 
 func trackedService(t *testing.T, tracker *fakeTracker) *Service {
 	t.Helper()
+	address, _ := trackedBus(t, tracker)
+
+	svc := NewService(nil, t.TempDir())
+	conn, err := dbus.Connect(address, dbus.WithIncomingInterceptor(svc.intercept))
+	require.NoError(t, err)
+	t.Cleanup(func() { _ = conn.Close() })
+	svc.conn = conn
+	svc.mountables = mountables
+	return svc
+}
+
+func trackedBus(t *testing.T, tracker *fakeTracker) (string, *dbus.Conn) {
+	t.Helper()
 	address := dbustest.Bus(t)
 	daemon := dbustest.Connect(t, address)
 	require.NoError(t, daemon.Export(tracker, TrackerPath, TrackerIface))
@@ -75,14 +88,7 @@ func trackedService(t *testing.T, tracker *fakeTracker) *Service {
 	reply, err := daemon.RequestName(VfsBus, dbus.NameFlagDoNotQueue)
 	require.NoError(t, err)
 	require.Equal(t, dbus.RequestNameReplyPrimaryOwner, reply)
-
-	svc := NewService(nil, t.TempDir())
-	conn, err := dbus.Connect(address, dbus.WithIncomingInterceptor(svc.intercept))
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = conn.Close() })
-	svc.conn = conn
-	svc.mountables = mountables
-	return svc
+	return address, daemon
 }
 
 func gvfsMount(uri string, visible bool) wireMount {

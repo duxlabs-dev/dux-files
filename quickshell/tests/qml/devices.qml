@@ -292,6 +292,14 @@ ShellRoot {
         check("mount events replace the list", NetworkService.mounts.length, 0);
         check("portables survive a mounts event", NetworkService.portables.length, 1);
 
+        emit("network", {
+            "kind": "mounts",
+            "available": true,
+            "mounts": [],
+            "portables": []
+        });
+        check("mount events carrying portables replace them", NetworkService.portables.length, 0);
+
         if (failures === 0)
             log.info("FIXTURE PASS");
         Qt.callLater(Qt.quit);

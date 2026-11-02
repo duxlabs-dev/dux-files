@@ -39,11 +39,12 @@ type Service struct {
 }
 
 type Snapshot struct {
-	Kind      string   `json:"kind"`
-	Available bool     `json:"available"`
-	Reason    string   `json:"reason,omitempty"`
-	Schemes   []string `json:"schemes"`
-	Mounts    []Mount  `json:"mounts"`
+	Kind      string     `json:"kind"`
+	Available bool       `json:"available"`
+	Reason    string     `json:"reason,omitempty"`
+	Schemes   []string   `json:"schemes"`
+	Mounts    []Mount    `json:"mounts"`
+	Portables []Portable `json:"portables"`
 }
 
 func NewService(bus Publisher, configDir string) *Service {
@@ -64,19 +65,33 @@ func (s *Service) Start() error {
 		return err
 	}
 
+	s.run(conn)
+	return nil
+}
+
+func (s *Service) run(conn *dbus.Conn) {
 	s.mu.Lock()
 	s.conn = conn
 	s.mu.Unlock()
 
-	if err := conn.AddMatchSignal(dbus.WithMatchInterface(TrackerIface)); err != nil {
-		log.Debugf("network: gvfs signals unavailable: %v", err)
-	}
+	s.watch(conn)
 	signals := make(chan *dbus.Signal, 16)
 	conn.Signal(signals)
 
 	s.reload(conn)
 	go s.loop(conn, signals)
-	return nil
+}
+
+func (s *Service) watch(conn *dbus.Conn) {
+	rules := [][]dbus.MatchOption{{dbus.WithMatchInterface(TrackerIface)}}
+	for _, monitor := range portableMonitors {
+		rules = append(rules, []dbus.MatchOption{dbus.WithMatchInterface(MonitorIface), dbus.WithMatchArg(0, monitor)})
+	}
+	for _, rule := range rules {
+		if err := conn.AddMatchSignal(rule...); err != nil {
+			log.Debugf("network: gvfs signals unavailable: %v", err)
+		}
+	}
 }
 
 func (s *Service) Close() {
@@ -95,7 +110,7 @@ func (s *Service) loop(conn *dbus.Conn, signals chan *dbus.Signal) {
 			if !ok {
 				return
 			}
-			if sig.Name != TrackerIface+".Mounted" && sig.Name != TrackerIface+".Unmounted" {
+			if !refreshes(sig.Name) {
 				continue
 			}
 			if flush == nil {
@@ -104,9 +119,17 @@ func (s *Service) loop(conn *dbus.Conn, signals chan *dbus.Signal) {
 		case <-flush:
 			flush = nil
 			s.reload(s.connection())
-			s.publish(s.Snapshot())
+			s.publishMounts()
 		}
 	}
+}
+
+func refreshes(signal string) bool {
+	switch signal {
+	case TrackerIface + ".Mounted", TrackerIface + ".Unmounted":
+		return true
+	}
+	return strings.HasPrefix(signal, MonitorIface+".Volume")
 }
 
 func (s *Service) reload(conn *dbus.Conn) {
@@ -196,7 +219,7 @@ func (s *Service) mount(conn *dbus.Conn, uri, password string, spec Spec) (Mount
 		return Mount{}, fail(files.CodeNotSupported, "%s is mounted but gvfs offers no folder for it", uri)
 	}
 	s.remember(Server{URI: mount.URI, Name: mount.Name, Scheme: mount.Scheme})
-	s.publish(s.Snapshot())
+	s.publishMounts()
 	return mount, nil
 }
 
@@ -265,7 +288,7 @@ func (s *Service) Disconnect(id string) error {
 	}
 
 	s.reload(conn)
-	s.publish(s.Snapshot())
+	s.publishMounts()
 	return nil
 }
 
@@ -366,6 +389,12 @@ func (s *Service) setReason(reason string) {
 	defer s.mu.Unlock()
 	s.available = false
 	s.reason = reason
+}
+
+func (s *Service) publishMounts() {
+	snapshot := s.Snapshot()
+	snapshot.Portables = s.Portables()
+	s.publish(snapshot)
 }
 
 func (s *Service) publish(data any) {

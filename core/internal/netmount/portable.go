@@ -77,7 +77,7 @@ func (s *Service) MountPortable(monitor, id string) error {
 		return wrapDBus(call.Err)
 	}
 	s.reload(conn)
-	s.publish(s.Snapshot())
+	s.publishMounts()
 	return nil
 }
 
@@ -86,7 +86,7 @@ func listVolumes(conn *dbus.Conn, monitor string) []wireVolume {
 	var volumes []wireVolume
 	var mounts []dbus.Variant
 
-	err := conn.Object(monitor, MonitorPath).Call(MonitorIface+".List", dbus.FlagNoAutoStart).Store(&drives, &volumes, &mounts)
+	err := conn.Object(monitor, MonitorPath).Call(MonitorIface+".List", 0).Store(&drives, &volumes, &mounts)
 	switch {
 	case err == nil:
 		return volumes
