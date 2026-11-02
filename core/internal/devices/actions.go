@@ -122,6 +122,11 @@ func (s *Service) Lock(id string) error {
 	if !device.Unlocked {
 		return nil
 	}
+	if device.Mounted {
+		if err := s.Unmount(id, false); err != nil {
+			return err
+		}
+	}
 	return wrapDBus(s.call(dbus.ObjectPath(id), CryptoIface+".Lock", noOptions).Store())
 }
 
