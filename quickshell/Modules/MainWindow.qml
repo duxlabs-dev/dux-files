@@ -575,6 +575,10 @@ FloatingWindow {
                     const point = topbar.mapToItem(surface, pointX, pointY);
                     window.menus.showNewDocumentMenu(point.x, point.y);
                 }
+                onColumnsMenuRequested: (pointX, pointY) => {
+                    const point = topbar.mapToItem(window.activePane, pointX, pointY);
+                    window.menus.showColumnsMenu(point.x, point.y);
+                }
                 onViewModeSelected: mode => window.activePane.setViewMode(mode)
                 onZoomRequested: step => window.activePane.body.zoomBy(step)
                 onUseForAllFoldersRequested: window.useForAllFolders()

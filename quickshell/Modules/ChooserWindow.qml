@@ -118,6 +118,7 @@ FloatingWindow {
         sortDescending = saved.sortDesc;
         showHidden = saved.showHidden ?? SettingsData.showHidden;
         sidebarShown = saved.showSidebar;
+        previewOpen = saved.showPreview;
         restoring = false;
         filterIndex = request.currentFilter >= 0 ? request.currentFilter : (filters.length > 0 ? 0 : -1);
         const values = ({});
@@ -200,6 +201,13 @@ FloatingWindow {
         sidebarShown = show;
         persist({
             "showSidebar": show
+        });
+    }
+
+    function setPreviewOpen(open) {
+        previewOpen = open;
+        persist({
+            "showPreview": open
         });
     }
 
@@ -580,7 +588,7 @@ FloatingWindow {
                         iconColor: window.previewOpen ? Theme.onPrimary : Theme.surfaceText
                         backgroundColor: window.previewOpen ? Theme.primary : Theme.chipSurface
                         tooltipText: I18n.tr("Preview", "view menu entry and shortcut showing or hiding the preview drawer")
-                        onClicked: window.previewOpen = !window.previewOpen
+                        onClicked: window.setPreviewOpen(!window.previewOpen)
                     }
 
                     FileSortButton {
@@ -652,7 +660,7 @@ FloatingWindow {
                 onTabRequested: path => pane.navigate(path)
                 onRenameRequested: (target, name) => FileOpsService.rename(target, name, window.opScope)
                 onSortRequested: key => window.setSort(key)
-                onPreviewToggleRequested: window.previewOpen = !window.previewOpen
+                onPreviewToggleRequested: window.setPreviewOpen(!window.previewOpen)
                 onServerDialogRequested: connectDialog.ask()
                 onConnectFailed: (uri, result) => connectDialog.showFailure(uri, result)
                 onNameFilterChanged: {

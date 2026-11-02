@@ -217,6 +217,18 @@ ShellRoot {
         browser.navigate("/home");
         check("outside home the chain starts at /", columns().ancestors, ["/"]);
 
+        browser.viewMode = "list";
+        browser.listColumns = ["size", "modified", "type"];
+        browser.columnWidths = ({
+                "size": 1646
+            });
+        check("a stored width wider than the window keeps its column on screen", browser.body.fittingColumns, ["size"]);
+        check("and shrinks it to the room left", browser.body.fittingWidths.size < 1200, true);
+        check("a resize cannot grow past the room left", browser.body.clampColumnWidth("size", 5000), browser.body.fittingWidths.size);
+        browser.columnWidths = ({});
+        check("default widths all fit", browser.body.fittingColumns, ["size", "modified", "type"]);
+        check("the free space is what a resize may take", browser.body.clampColumnWidth("size", 5000), browser.body.fittingWidths.size + browser.body.fitting.slack);
+
         if (failures === 0)
             log.info("FIXTURE PASS");
         Qt.callLater(Qt.quit);

@@ -469,7 +469,7 @@ Item {
     Item {
         id: pageHeader
 
-        width: Math.min(SettingsMetrics.contentMaxWidth, parent.width - Theme.spacingL * 2)
+        width: Math.min(SettingsMetrics.contentMaxWidth, parent.width)
         anchors.horizontalCenter: parent.horizontalCenter
         height: Math.max(SettingsMetrics.pageHeaderHeight, pageHeading.implicitHeight + Theme.spacingM * 2)
 

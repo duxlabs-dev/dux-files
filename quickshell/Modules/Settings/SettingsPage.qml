@@ -24,7 +24,7 @@ DFlickable {
     Column {
         id: column
         topPadding: Theme.spacingXS
-        width: Math.min(root.contentMaxWidth, parent.width - Theme.spacingL * 2)
+        width: Math.min(root.contentMaxWidth, parent.width)
         bottomPadding: SettingsMetrics.pagePaddingV
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: SettingsMetrics.cardGap

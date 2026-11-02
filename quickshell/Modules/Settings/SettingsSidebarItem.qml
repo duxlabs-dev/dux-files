@@ -52,8 +52,8 @@ Rectangle {
         if (active)
             return SettingsMetrics.selectedRowColor;
         if (highlighted)
-            return Theme.blend(SettingsMetrics.rowColor, Theme.primary, SettingsMetrics.highlightBlend);
-        return SettingsMetrics.rowColor;
+            return Theme.blend(SettingsMetrics.sidebarRowColor, Theme.primary, SettingsMetrics.highlightBlend);
+        return SettingsMetrics.sidebarRowColor;
     }
 
     Behavior on color {

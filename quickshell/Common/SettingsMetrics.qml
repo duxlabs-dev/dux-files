@@ -15,6 +15,9 @@ Singleton {
     readonly property real windowMinHeight: 400
     readonly property real pagePaddingV: Theme.spacingXL + Theme.densityStepM
     readonly property real pageHeaderHeight: Theme.fontSizeXXLarge + Theme.spacingXL + Theme.spacingM
+    readonly property real paneMargin: Theme.windowInset
+    readonly property real panePadding: Theme.spacingXL
+    readonly property real paneRadius: Theme.cornerRadiusL
     readonly property real rowPaddingH: Theme.spacingL + Theme.spacingXS + Theme.densityStepS
     readonly property real rowPaddingV: Theme.spacingL + Theme.densityStepS
     readonly property real rowMinHeight: Math.max(Theme.listItemHeight + Theme.densityStepM, Theme.buttonHeightS + Theme.spacingXS)
@@ -31,7 +34,10 @@ Singleton {
     readonly property real dropdownChrome: Theme.spacingS * 2 + Theme.spacingXS + Theme.iconSize + Theme.spacingM
     readonly property real disabledOpacity: 0.38
     readonly property real highlightBlend: 0.2
-    readonly property color rowColor: Theme.foregroundColor(Theme.cardSurface, true)
+    readonly property color paneColor: Theme.floatingWindowPaneSurface
+    readonly property color sidebarRowColor: Theme.floatingWindowPaneSurface
+    readonly property color rowColor: Theme.foregroundColor(Theme.chipSurface, true)
+    readonly property color controlSurface: Theme.chipSurfaceNested
     readonly property color selectedRowColor: Theme.blend(rowColor, Theme.onSurface, Theme.stateLayerDrag)
     readonly property int transitionDuration: Theme.expressiveDurations.expressiveFastSpatial
     readonly property int fadeDuration: Theme.expressiveDurations.expressiveEffects

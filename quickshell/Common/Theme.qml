@@ -546,6 +546,7 @@ Singleton {
     readonly property bool connectedSurfaceBlurEnabled: true
 
     readonly property color windowSurface: withAlpha(surface, floatingWindowTransparency)
+    readonly property color floatingWindowPaneSurface: withAlpha(surfaceContainer, floatingWindowForegroundAlpha)
     readonly property color floatingSurface: withAlpha(surfaceContainer, popupTransparency)
     readonly property color nestedSurface: withAlpha(surfaceContainerHigh, foregroundAlpha)
     readonly property color floatingWindowSurface: withAlpha(surfaceContainer, floatingWindowTransparency)

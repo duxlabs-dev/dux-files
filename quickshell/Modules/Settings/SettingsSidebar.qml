@@ -91,17 +91,8 @@ Item {
     implicitWidth: SettingsMetrics.sidebarWidth
     implicitHeight: fieldOnly ? searchField.height + navColumn.padding * 2 : 0
 
-    Rectangle {
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        width: Theme.dividerWidth
-        color: Theme.outlineVariant
-    }
-
     DFlickable {
         anchors.fill: parent
-        anchors.rightMargin: Theme.dividerWidth
         clip: true
         contentWidth: width
         contentHeight: navColumn.height
@@ -109,7 +100,7 @@ Item {
         Column {
             id: navColumn
             width: parent.width
-            padding: Theme.spacingL
+            padding: SettingsMetrics.paneMargin
             spacing: SettingsMetrics.sidebarGroupGap
 
             DSearchField {

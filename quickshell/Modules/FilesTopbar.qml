@@ -159,6 +159,7 @@ Item {
     signal propertiesRequested
     signal newFolderRequested
     signal newDocumentRequested(real pointX, real pointY)
+    signal columnsMenuRequested(real pointX, real pointY)
     signal newWindowRequested
     signal copyPathRequested
     signal reloadRequested
@@ -415,6 +416,17 @@ Item {
                 iconName: "splitscreen_vertical_add"
                 checked: topbar.splitView
                 onClicked: menu.pick(() => topbar.splitToggled())
+            }
+
+            FileMenuItem {
+                visible: menu.viewRows && topbar.viewMode === "list" && !topbar.virtualActive && !topbar.resultsActive
+                text: I18n.tr("Columns", "view menu entry choosing which list columns are shown")
+                iconName: "view_column"
+                submenu: true
+                onClicked: menu.pick(() => {
+                    const point = rightActions.mapToItem(topbar, menu.x, menu.y);
+                    topbar.columnsMenuRequested(point.x, point.y);
+                })
             }
 
             FileMenuDivider {
