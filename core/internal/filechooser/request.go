@@ -28,7 +28,7 @@ const (
 
 	maxTitle    = 256
 	maxLabel    = 64
-	maxFilters  = 64
+	maxFilters  = 1024
 	maxPatterns = 256
 	maxText     = 256
 	maxChoices  = 32
