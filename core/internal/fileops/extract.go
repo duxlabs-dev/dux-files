@@ -95,14 +95,50 @@ func (r *runner) unpackWith(archive string, format archiveFormat, password strin
 		return "", false, err
 	}
 	before := r.progress()
-	err = r.unpackInto(kind, in, stream, root, password)
-	_ = root.Close()
-	if err != nil {
-		_ = os.RemoveAll(target)
+	fail := func(holding string, err error) (string, bool, error) {
+		_ = os.RemoveAll(holding)
 		r.restoreProgress(before)
 		return "", false, err
 	}
-	return target, true, nil
+	err = r.unpackInto(kind, in, stream, root, password)
+	_ = root.Close()
+	if err != nil {
+		return fail(target, err)
+	}
+	created, dir, err := r.hoistSoleEntry(target, archiveStem(filepath.Base(archive)))
+	if err != nil {
+		return fail(created, err)
+	}
+	return created, dir, nil
+}
+
+func (r *runner) hoistSoleEntry(target, stem string) (string, bool, error) {
+	entries, err := os.ReadDir(target)
+	if err != nil || len(entries) != 1 || !sameStem(entries[0].Name(), stem) {
+		return target, true, nil
+	}
+	name, dir := entries[0].Name(), entries[0].IsDir()
+	staging := r.tempPath(target)
+	if err := os.Rename(target, staging); err != nil {
+		return target, true, err
+	}
+	final := filepath.Join(r.job.spec.dest, name)
+	if _, err := os.Lstat(final); err == nil {
+		final = uniquePath(final)
+	}
+	if err := os.Rename(filepath.Join(staging, name), final); err != nil {
+		return staging, true, err
+	}
+	_ = os.Remove(staging)
+	return final, dir, nil
+}
+
+func sameStem(name, stem string) bool {
+	if name == stem {
+		return true
+	}
+	inner, _ := splitName(name)
+	return inner == stem
 }
 
 func (r *runner) progress() Progress {

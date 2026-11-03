@@ -84,7 +84,7 @@ func TestExtractIntoAnExistingFolderNameKeepsBoth(t *testing.T) {
 
 	view := run(t, manager, bus, spec{kind: KindExtract, sources: []string{filepath.Join(root, "project.tar.gz")}, dest: filepath.Join(root, "out")})
 	require.Equal(t, StateDone, view.State, view.Error)
-	assert.FileExists(t, filepath.Join(root, "out", "project (copy)", "project", "README.md"))
+	assert.FileExists(t, filepath.Join(root, "out", "project (copy)", "README.md"))
 }
 
 func TestExtractRefusesEntriesThatEscape(t *testing.T) {
@@ -184,7 +184,7 @@ func TestExtractForeignFormats(t *testing.T) {
 			out, view := extractFixture(t, fixture(t, name))
 			require.Equal(t, StateDone, view.State, view.Error)
 			assert.Equal(t, []Created{{Path: filepath.Join(out, "sample"), Dir: true}}, view.Created)
-			assertSampleTree(t, filepath.Join(out, "sample", "sample"))
+			assertSampleTree(t, filepath.Join(out, "sample"))
 			assert.True(t, view.Undoable)
 			assert.Equal(t, 0, view.Progress.FilesTotal-view.Progress.FilesDone)
 		})
@@ -333,4 +333,76 @@ func TestExtractSkipsTheRootEntryOfATar(t *testing.T) {
 	out, view := extractFixture(t, archive)
 	require.Equal(t, StateDone, view.State, view.Error)
 	assert.Equal(t, "hello", read(t, filepath.Join(out, "rooted", "sample", "hello.txt")))
+}
+
+func zipWith(t *testing.T, path string, entries map[string]string) string {
+	t.Helper()
+	f, err := os.Create(path)
+	require.NoError(t, err)
+	w := zip.NewWriter(f)
+	for name, body := range entries {
+		entry, err := w.Create(name)
+		require.NoError(t, err)
+		_, err = entry.Write([]byte(body))
+		require.NoError(t, err)
+	}
+	require.NoError(t, w.Close())
+	require.NoError(t, f.Close())
+	return path
+}
+
+func TestExtractLiftsASoleEntryNamedLikeTheArchive(t *testing.T) {
+	root := t.TempDir()
+	out := filepath.Join(root, "out")
+	require.NoError(t, os.Mkdir(out, 0o755))
+	manager, bus := newHarness(t)
+	extract := func(archive string) View {
+		view := run(t, manager, bus, spec{kind: KindExtract, sources: []string{archive}, dest: out})
+		require.Equal(t, StateDone, view.State, view.Error)
+		assert.Empty(t, tempsIn(t, out))
+		return view
+	}
+
+	project := zipWith(t, filepath.Join(root, "project.zip"), map[string]string{"project/README.md": "hello", "project/src/main.go": "package main"})
+	view := extract(project)
+	assert.Equal(t, []Created{{Path: filepath.Join(out, "project"), Dir: true}}, view.Created)
+	assert.Equal(t, "hello", read(t, filepath.Join(out, "project", "README.md")))
+	assert.Equal(t, "package main", read(t, filepath.Join(out, "project", "src", "main.go")))
+
+	view = extract(project)
+	assert.Equal(t, []Created{{Path: filepath.Join(out, "project (copy)"), Dir: true}}, view.Created)
+	assert.Equal(t, "hello", read(t, filepath.Join(out, "project (copy)", "README.md")))
+
+	release := zipWith(t, filepath.Join(root, "release-1.0.zip"), map[string]string{"release/": "", "release/bin": "x"})
+	extract(release)
+	assert.Equal(t, "x", read(t, filepath.Join(out, "release-1.0", "release", "bin")), "a differently named folder keeps the archive folder")
+
+	notes := zipWith(t, filepath.Join(root, "notes.zip"), map[string]string{"notes.txt": "n"})
+	view = extract(notes)
+	assert.Equal(t, []Created{{Path: filepath.Join(out, "notes.txt"), Dir: false}}, view.Created)
+	assert.Equal(t, "n", read(t, filepath.Join(out, "notes.txt")))
+	view = extract(notes)
+	assert.Equal(t, "n", read(t, filepath.Join(out, "notes (copy).txt")))
+
+	readme := zipWith(t, filepath.Join(root, "docs.zip"), map[string]string{"README.md": "r"})
+	extract(readme)
+	assert.Equal(t, "r", read(t, filepath.Join(out, "docs", "README.md")), "a differently named file keeps the archive folder")
+
+	pair := zipWith(t, filepath.Join(root, "pair.zip"), map[string]string{"pair/x": "1", "other/y": "2"})
+	extract(pair)
+	assert.Equal(t, "1", read(t, filepath.Join(out, "pair", "pair", "x")))
+	assert.Equal(t, "2", read(t, filepath.Join(out, "pair", "other", "y")))
+
+	undo, err := manager.Undo("")
+	require.NoError(t, err)
+	bus.wait(t, undo.ID)
+	assert.NoDirExists(t, filepath.Join(out, "pair"))
+}
+
+func TestSameStem(t *testing.T) {
+	assert.True(t, sameStem("project", "project"))
+	assert.True(t, sameStem("notes.txt", "notes"))
+	assert.True(t, sameStem("inner.tar.gz", "inner"))
+	assert.False(t, sameStem("release", "release-1.0"))
+	assert.False(t, sameStem("Project", "project"))
 }

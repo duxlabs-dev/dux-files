@@ -246,7 +246,7 @@ func TestExtractLzip(t *testing.T) {
 
 	out, view := extractFixture(t, tarLz)
 	require.Equal(t, StateDone, view.State, view.Error)
-	assert.Equal(t, "hello", read(t, filepath.Join(out, "sample", "sample", "README.md")))
+	assert.Equal(t, "hello", read(t, filepath.Join(out, "sample", "README.md")))
 
 	out, view = extractFixture(t, fileLz)
 	require.Equal(t, StateDone, view.State, view.Error)

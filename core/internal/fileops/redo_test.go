@@ -104,7 +104,7 @@ func TestRedoExtractUnpacksAgain(t *testing.T) {
 	run(t, manager, bus, spec{kind: KindCompress, sources: []string{filepath.Join(root, "project")}, dest: root, name: "project", format: FormatZip})
 	archive := filepath.Join(root, "project.zip")
 	run(t, manager, bus, spec{kind: KindExtract, scope: "w1", sources: []string{archive}, dest: out})
-	unpacked := filepath.Join(out, "project", "project", "README.md")
+	unpacked := filepath.Join(out, "project", "README.md")
 	require.FileExists(t, unpacked)
 
 	undo(t, manager, bus, "w1")
