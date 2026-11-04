@@ -34,7 +34,14 @@ FileMenu {
             return "recent";
         return inResults ? "results" : "folder";
     }
-    readonly property var entries: collapse((forFolder ? backgroundRows : itemRows).filter(row => row.visible !== false && (row.id === "separator" || FileActions.available(row.id, context))))
+    readonly property bool trashHidden: SettingsData.hiddenContextMenuItems.includes("item:trash")
+    readonly property bool deletePermanentlyHidden: SettingsData.hiddenContextMenuItems.includes("item:deletePermanently")
+    readonly property string filterScope: context === "picker" || context === "trash" ? "" : forFolder ? (context === "recent" ? "" : "background") : "item"
+    readonly property var entries: collapse((forFolder ? backgroundRows : itemRows).filter(row => row.visible !== false && (row.id === "separator" || (FileActions.available(row.id, context) && !hiddenById(row.id)))))
+
+    function hiddenById(id) {
+        return filterScope !== "" && SettingsData.hiddenContextMenuItems.includes(filterScope + ":" + id);
+    }
 
     readonly property var separator: ({
             "id": "separator"
@@ -90,10 +97,10 @@ FileMenu {
             "enabled": selectionCount > 0
         }), separator, FileActions.row("trash", {
             "enabled": selectionCount > 0,
-            "visible": !shiftHeld && !inTrash
+            "visible": !inTrash && !trashHidden && (deletePermanentlyHidden || !shiftHeld)
         }), FileActions.row("deletePermanently", {
             "enabled": selectionCount > 0,
-            "visible": shiftHeld || inTrash
+            "visible": inTrash || (!deletePermanentlyHidden && (trashHidden || shiftHeld))
         }), separator, FileActions.row("copyPath", {
             "enabled": selectionCount > 0
         }), FileActions.row("copyName", {

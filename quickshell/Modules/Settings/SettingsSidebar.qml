@@ -77,11 +77,18 @@ Item {
                 label: I18n.tr("Devices", "sidebar section listing drives and volumes"),
                 hint: I18n.tr("Drives and mounting", "settings sidebar tab hint"),
                 icon: "hard_drive"
+            },
+            {
+                accent: "green",
+                index: 4,
+                label: I18n.tr("Context menu", "settings sidebar tab label"),
+                hint: I18n.tr("Hide items from right-click menus", "settings sidebar tab hint"),
+                icon: "checklist"
             }
         ], [
             {
                 accent: "purple",
-                index: 4,
+                index: 5,
                 label: I18n.tr("About", "settings sidebar tab label"),
                 hint: I18n.tr("Version and capabilities", "settings sidebar tab hint"),
                 icon: "info"

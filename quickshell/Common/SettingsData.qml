@@ -85,6 +85,7 @@ Singleton {
     property alias vimKeys: adapter.vimKeys
     property alias listTyping: adapter.listTyping
     property alias gtkBookmarksOffered: adapter.gtkBookmarksOffered
+    property alias hiddenContextMenuItems: adapter.hiddenContextMenuItems
 
     function flush() {
         store.flush();
@@ -166,6 +167,7 @@ Singleton {
             property bool vimKeys: false
             property string listTyping: "jump"
             property bool gtkBookmarksOffered: false
+            property var hiddenContextMenuItems: []
         }
     }
 }
