@@ -5,14 +5,30 @@ import { source } from "./qml-script.mjs";
 
 const ctx = vm.createContext({});
 vm.runInContext(source("../Common/PreviewView.js").replace(/^\.pragma.*$/gm, ""), ctx);
-const view = vm.runInContext("({kindFor, clampZoom, steppedZoom, normalizeAngle, panLimit, clampPan})", ctx);
+const view = vm.runInContext("({kindFor, clampZoom, steppedZoom, normalizeAngle, panLimit, clampPan, clock})", ctx);
 
-test("only pdfs and images get a large view", () => {
-    assert.equal(view.kindFor("application/pdf"), "pdf");
-    assert.equal(view.kindFor("image/png"), "image");
-    assert.equal(view.kindFor("text/plain"), "");
-    assert.equal(view.kindFor(""), "");
-    assert.equal(view.kindFor(null), "");
+test("each file type picks its viewer", () => {
+    assert.equal(view.kindFor("application/pdf", false), "pdf");
+    assert.equal(view.kindFor("image/png", false), "image");
+    assert.equal(view.kindFor("video/mp4", false), "video");
+    assert.equal(view.kindFor("audio/flac", false), "audio");
+    assert.equal(view.kindFor("text/markdown", true), "markdown");
+    assert.equal(view.kindFor("text/x-go", true), "text");
+    assert.equal(view.kindFor("application/x-ruby", true), "text");
+});
+
+test("anything else falls back to the file details", () => {
+    assert.equal(view.kindFor("application/zip", false), "generic");
+    assert.equal(view.kindFor("inode/directory", false), "generic");
+    assert.equal(view.kindFor("", false), "generic");
+    assert.equal(view.kindFor(null, false), "generic");
+});
+
+test("playback times read like a player clock", () => {
+    assert.equal(view.clock(0), "0:00");
+    assert.equal(view.clock(65400), "1:05");
+    assert.equal(view.clock(3725000), "1:02:05");
+    assert.equal(view.clock(-5), "0:00");
 });
 
 test("zoom stays inside the rendering window", () => {

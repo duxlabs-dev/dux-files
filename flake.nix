@@ -52,6 +52,8 @@
         pkgs.lib.makeOverridable (
           {
             withPdfPreview ? true,
+            withMediaPreview ? true,
+            withSyntaxHighlighting ? true,
           }:
           let
             version = "2.1.0";
@@ -60,7 +62,11 @@
               ffmpegthumbnailer
               poppler-utils
             ];
-            pdfQmlImportPath = "${pkgs.qt6.qtwebengine}/${pkgs.qt6.qtbase.qtQmlPrefix}";
+            qmlImportPaths = map (pkg: "${pkg}/${pkgs.qt6.qtbase.qtQmlPrefix}") (
+              pkgs.lib.optional withPdfPreview pkgs.qt6.qtwebengine
+              ++ pkgs.lib.optional withMediaPreview pkgs.qt6.qtmultimedia
+              ++ pkgs.lib.optional withSyntaxHighlighting pkgs.kdePackages.syntax-highlighting
+            );
           in
           (pkgs.buildGoModule.override { go = goForPkgs pkgs; }) {
             inherit version;
@@ -136,7 +142,7 @@
                 --zsh <($out/bin/dfiles completion zsh)
 
               wrapProgram $out/bin/dfiles \
-                --prefix PATH : ${pkgs.lib.makeBinPath thumbnailTools} ${pkgs.lib.optionalString withPdfPreview "--prefix NIXPKGS_QT6_QML_IMPORT_PATH : ${pdfQmlImportPath}"}
+                --prefix PATH : ${pkgs.lib.makeBinPath thumbnailTools} ${pkgs.lib.optionalString (qmlImportPaths != [ ]) "--prefix NIXPKGS_QT6_QML_IMPORT_PATH : ${pkgs.lib.concatStringsSep ":" qmlImportPaths}"}
             '';
 
             meta = {
