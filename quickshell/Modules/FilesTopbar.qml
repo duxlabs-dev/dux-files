@@ -29,20 +29,29 @@ Item {
     readonly property bool pathInput: isLocation(search.text)
     property var completions: []
     property int completionRequest: 0
+    property string completionKey: ""
     readonly property var completionTarget: editing && pathInput ? PathCompletion.target(search.text, currentPath, FilePaths.home) : null
     readonly property var pathSuggestions: completionTarget ? PathCompletion.rank(completions, completionTarget, FilePaths.home, FileBrowserMetrics.suggestionCap) : []
 
     onCompletionTargetChanged: fetchCompletions()
 
     function fetchCompletions() {
-        const request = ++completionRequest;
-        completions = [];
         const target = completionTarget;
-        if (!target)
+        if (!target) {
+            completionKey = "";
+            completions = [];
             return;
+        }
+        const hidden = target.prefix.startsWith(".");
+        const key = target.dir + (hidden ? "\u0000." : "");
+        if (key === completionKey)
+            return;
+        completionKey = key;
+        completions = [];
+        const request = ++completionRequest;
         DirectoryService.list(target.dir, {
             limit: FileBrowserMetrics.completionLimit,
-            includeHidden: target.prefix.startsWith("."),
+            includeHidden: hidden,
             dirsFirst: true,
             sortKey: "name"
         }, result => {
@@ -242,7 +251,10 @@ Item {
         searchCleared();
     }
 
-    onCurrentPathChanged: resetInput()
+    onCurrentPathChanged: {
+        editing = false;
+        search.text = filterText;
+    }
 
     function openRecent(path) {
         DirectoryService.resolveLocation(path, currentPath, result => {
@@ -629,14 +641,20 @@ Item {
         backgroundColor: Theme.surfaceContainerLowest
         placeholderText: I18n.tr("Search or enter a path", "placeholder in the combined address and search field")
         keyForwardTargets: [topbar]
-        onFocusStateChanged: hasFocus => topbar.searchFocused = hasFocus
+        onFocusStateChanged: hasFocus => {
+            topbar.searchFocused = hasFocus;
+            if (hasFocus || topbar.filterText !== "")
+                return;
+            topbar.editing = false;
+            text = "";
+        }
         onTextChanged: {
             recentPopup.highlightIndex = -1;
             if (text === "" && topbar.editing) {
                 topbar.clearSearch();
                 return;
             }
-            const query = topbar.pathInput ? "" : text;
+            const query = topbar.isLocation(text) ? "" : text;
             if (query !== topbar.filterText)
                 topbar.filterChanged(query);
         }

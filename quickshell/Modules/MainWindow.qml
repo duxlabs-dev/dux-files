@@ -388,9 +388,9 @@ FloatingWindow {
         onSortRequested: key => pane.toggleSort(key)
         onColumnsMenuRequested: (pointX, pointY) => window.menus.showColumnsMenu(pointX, pointY)
         onFocusRequested: {
-            window.activePaneIndex = paneIndex;
-            if (window.sidebarFocused)
+            if (window.sidebarFocused || topbar.searchFocused)
                 pane.focusBody();
+            window.activePaneIndex = paneIndex;
         }
         onPreviewToggleRequested: window.actions.runAction("togglePreview")
         onServerDialogRequested: window.dialogs.askServer()
