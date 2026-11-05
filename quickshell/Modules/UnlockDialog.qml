@@ -60,8 +60,6 @@ OverlayDialog {
         },
         DButton {
             text: I18n.tr("Unlock", "unlock dialog header for an encrypted device")
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             onClicked: root.submit()
         }
     ]

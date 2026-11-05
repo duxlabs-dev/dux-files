@@ -41,8 +41,6 @@ OverlayDialog {
         },
         DButton {
             text: root.acceptText
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             onClicked: root.submit()
         }
     ]
