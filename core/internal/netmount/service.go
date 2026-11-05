@@ -278,11 +278,6 @@ func (s *Service) remember(server Server) {
 }
 
 func (s *Service) Disconnect(id string) error {
-	conn := s.connection()
-	if conn == nil {
-		return fail(files.CodeNotSupported, "gvfs is not running")
-	}
-
 	mount, found := s.find(id)
 	if !found {
 		return fail(files.CodeNotFound, "unknown mount: %s", id)
@@ -298,6 +293,11 @@ func (s *Service) Disconnect(id string) error {
 			s.publishMounts()
 		}
 		return err
+	}
+
+	conn := s.connection()
+	if conn == nil {
+		return fail(files.CodeNotSupported, "gvfs is not running")
 	}
 
 	op := s.newOp(mount.URI)

@@ -203,7 +203,7 @@ FocusScope {
         refresh();
     }
 
-    function refresh() {
+    function reload() {
         if (resultsActive) {
             searchModel.refresh();
             return;
@@ -213,6 +213,18 @@ FocusScope {
             return;
         }
         browser.directory.reload();
+    }
+
+    function refresh() {
+        if (resultsActive) {
+            searchModel.refresh();
+            return;
+        }
+        if (snapshotView) {
+            snapshotView.refresh();
+            return;
+        }
+        browser.refresh();
     }
 
     function editPath() {

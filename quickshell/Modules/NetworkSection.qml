@@ -71,12 +71,14 @@ FilePlaceSection {
                         section.navigateRequested(modelData.path);
                         return;
                     }
-                    section.busyId = modelData.id;
-                    NetworkService.mount(modelData.id, result => {
+                    const id = modelData.id;
+                    const path = modelData.path;
+                    section.busyId = id;
+                    NetworkService.mount(id, result => {
                         section.busyId = "";
                         if (result.error)
                             return;
-                        section.navigateRequested(modelData.path);
+                        section.navigateRequested(path);
                         mountRefresh.restart();
                     });
                 }
@@ -87,16 +89,18 @@ FilePlaceSection {
                         section.navigateRequested(modelData.path);
                 }
                 onActionTriggered: {
-                    section.busyId = modelData.id;
+                    const id = modelData.id;
+                    const mounted = modelData.mounted === true;
+                    section.busyId = id;
                     const done = result => {
                         section.busyId = "";
                         if (!result?.error)
                             mountRefresh.restart();
                     };
-                    if (modelData.mounted)
-                        NetworkService.disconnect(modelData.id, done);
+                    if (mounted)
+                        NetworkService.disconnect(id, done);
                     else
-                        NetworkService.mount(modelData.id, done);
+                        NetworkService.mount(id, done);
                 }
             }
 
