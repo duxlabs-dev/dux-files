@@ -679,6 +679,13 @@
     "comment": ""
   },
   {
+    "term": "Columns",
+    "translation": "",
+    "context": "view menu entry choosing which list columns are shown",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Comfortable",
     "translation": "",
     "context": "interface density option with the default spacing",
@@ -773,6 +780,13 @@
     "term": "Contents",
     "translation": "",
     "context": "search chip matching the text inside indexed files",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Context menu",
+    "translation": "",
+    "context": "settings sidebar tab label",
     "reference": "",
     "comment": ""
   },
@@ -1190,6 +1204,13 @@
     "comment": ""
   },
   {
+    "term": "Empty area menu",
+    "translation": "",
+    "context": "context menu settings section label for the folder background right-click menu",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Empty file",
     "translation": "",
     "context": "new document menu entry creating a blank file",
@@ -1305,6 +1326,13 @@
     "term": "Family",
     "translation": "",
     "context": "font family dropdown label",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "File and folder menu",
+    "translation": "",
+    "context": "context menu settings section label for the item right-click menu",
     "reference": "",
     "comment": ""
   },
@@ -1599,6 +1627,13 @@
     "term": "Hidden files after other files",
     "translation": "",
     "context": "hidden files last toggle label",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Hide items from right-click menus",
+    "translation": "",
+    "context": "settings sidebar tab hint",
     "reference": "",
     "comment": ""
   },
@@ -4040,6 +4075,13 @@
   },
   {
     "term": "console emulator shell command line",
+    "translation": "",
+    "context": "settings search keywords, space separated, add synonyms in your language",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "context menu hide show right click",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
     "reference": "",

@@ -17,8 +17,8 @@ Item {
 
     readonly property bool searching: searchQuery.trim() !== ""
     readonly property date sampleTime: new Date()
-    readonly property var pageComponents: [generalPage, appearancePage, behaviourPage, devicesPage, aboutPage]
-    readonly property var pageLabels: [I18n.tr("General", "settings sidebar tab label"), I18n.tr("Appearance", "settings sidebar tab label"), I18n.tr("Behaviour", "settings sidebar tab label"), I18n.tr("Devices", "sidebar section listing drives and volumes"), I18n.tr("About", "settings sidebar tab label")]
+    readonly property var pageComponents: [generalPage, appearancePage, behaviourPage, devicesPage, contextMenuPage, aboutPage]
+    readonly property var pageLabels: [I18n.tr("General", "settings sidebar tab label"), I18n.tr("Appearance", "settings sidebar tab label"), I18n.tr("Behaviour", "settings sidebar tab label"), I18n.tr("Devices", "sidebar section listing drives and volumes"), I18n.tr("Context menu", "settings sidebar tab label"), I18n.tr("About", "settings sidebar tab label")]
 
     signal resultPicked(int page, var row)
     property var terminals: []
@@ -327,6 +327,18 @@ Item {
         if ((status.reason ?? "") !== "")
             return I18n.tr("The session bus refused it.", "file manager registration setting description when requesting the name failed");
         return "";
+    }
+
+    function setContextMenuItemHidden(scope, id, hidden) {
+        const key = scope + ":" + id;
+        const current = SettingsData.hiddenContextMenuItems;
+        if (hidden) {
+            if (!current.includes(key))
+                SettingsData.hiddenContextMenuItems = current.concat([key]);
+            return;
+        }
+        if (current.includes(key))
+            SettingsData.hiddenContextMenuItems = current.filter(entry => entry !== key);
     }
 
     function collectRows(item, out, state) {
@@ -1434,6 +1446,54 @@ Item {
                 iconName: "info"
                 iconColor: Theme.surfaceVariantText
                 title: FilesFormat.featureUnavailable(SandboxService.reason("devices"))
+            }
+        }
+    }
+
+    Component {
+        id: contextMenuPage
+        SettingsPage {
+            FileContextMenu {
+                id: catalogSource
+                visible: false
+                selectionCount: 1
+                hasDirectory: true
+                hasClipboard: true
+                extractable: true
+            }
+
+            SettingsCard {
+                title: I18n.tr("File and folder menu", "context menu settings section label for the item right-click menu")
+
+                Repeater {
+                    model: catalogSource.itemRows.filter(row => row.id !== "separator" && (FileActions.available(row.id, "folder") || FileActions.available(row.id, "recent") || FileActions.available(row.id, "results")))
+
+                    SettingsToggleRow {
+                        required property var modelData
+                        text: modelData.label
+                        iconName: modelData.icon
+                        keywords: I18n.tr("context menu hide show right click", "settings search keywords, space separated, add synonyms in your language")
+                        checked: !SettingsData.hiddenContextMenuItems.includes("item:" + modelData.id)
+                        onToggled: checked => root.setContextMenuItemHidden("item", modelData.id, !checked)
+                    }
+                }
+            }
+
+            SettingsCard {
+                title: I18n.tr("Empty area menu", "context menu settings section label for the folder background right-click menu")
+
+                Repeater {
+                    model: catalogSource.backgroundRows.filter(row => row.id !== "separator" && FileActions.available(row.id, "folder"))
+
+                    SettingsToggleRow {
+                        required property var modelData
+                        text: modelData.label
+                        iconName: modelData.icon
+                        keywords: I18n.tr("context menu hide show right click", "settings search keywords, space separated, add synonyms in your language")
+                        checked: !SettingsData.hiddenContextMenuItems.includes("background:" + modelData.id)
+                        onToggled: checked => root.setContextMenuItemHidden("background", modelData.id, !checked)
+                    }
+                }
             }
         }
     }
