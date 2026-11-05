@@ -7,6 +7,8 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/xdg"
+
 	"github.com/go-git/go-billy/v5/osfs"
 	"github.com/go-git/go-git/v5/plumbing/format/gitignore"
 )
@@ -79,14 +81,7 @@ func globalPatterns() []ignorePattern {
 		}
 		return patterns
 	}
-	config := os.Getenv("XDG_CONFIG_HOME")
-	if home, _ := os.UserHomeDir(); config == "" && home != "" {
-		config = filepath.Join(home, ".config")
-	}
-	if config == "" {
-		return nil
-	}
-	return readPatterns(filepath.Join(config, "git", "ignore"), nil)
+	return readPatterns(filepath.Join(xdg.ConfigHome(), "git", "ignore"), nil)
 }
 
 func (r ignoreRules) skipsDir(name, full string) bool {

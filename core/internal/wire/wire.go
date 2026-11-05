@@ -2,6 +2,7 @@ package wire
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/duxlabs-dev/dux-go/ipc"
@@ -35,4 +36,8 @@ func StringList(p map[string]any, key string) []string {
 		return []string{value}
 	}
 	return params.StringSlice(p, key)
+}
+
+func Fail(code files.Code, format string, args ...any) error {
+	return &files.Error{Code: code, Err: fmt.Errorf(format, args...)}
 }

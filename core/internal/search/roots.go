@@ -5,7 +5,8 @@ import (
 	"path/filepath"
 	"slices"
 	"sort"
-	"strings"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/pathutil"
 )
 
 func roots(scope, root string, mounts func() []string) []string {
@@ -41,20 +42,10 @@ func dedupeRoots(paths []string) []string {
 	sort.Strings(cleaned)
 	var out []string
 	for _, p := range cleaned {
-		if slices.ContainsFunc(out, func(kept string) bool { return inside(p, kept) }) {
+		if slices.ContainsFunc(out, func(kept string) bool { return pathutil.Within(p, kept) }) {
 			continue
 		}
 		out = append(out, p)
 	}
 	return out
-}
-
-func inside(path, root string) bool {
-	if path == root {
-		return true
-	}
-	if root == "/" {
-		return true
-	}
-	return strings.HasPrefix(path, root+"/")
 }

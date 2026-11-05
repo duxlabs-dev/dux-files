@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import qs.Services
 import "FolderJump.js" as FolderJump
 
@@ -34,41 +33,31 @@ Singleton {
             return true;
         if (!wanted)
             return false;
-        historyFile.path = historyPath;
-        const parsed = FolderJump.parse(historyFile.text() ?? "");
+        store.path = historyPath;
+        const parsed = FolderJump.parse(store.read());
         entries = parsed ?? FolderJump.seed(SessionData.legacyRecentDirs, Date.now());
         SessionData.legacyRecentDirs = [];
         loaded = true;
         if (parsed === null && entries.length > 0)
-            save();
+            store.write();
         return true;
     }
 
     function unload() {
         if (!loaded)
             return;
-        if (writeDebounce.running) {
-            writeDebounce.stop();
-            save();
-        }
+        store.flush();
         loaded = false;
         entries = [];
         verifiedAt = {};
         cache.entries = null;
         cache.prepared = [];
-        historyFile.path = "";
-    }
-
-    function save() {
-        historyFile.setText(JSON.stringify({
-            "version": 1,
-            "folders": entries
-        }));
+        store.path = "";
     }
 
     function change(next) {
         entries = next;
-        writeDebounce.restart();
+        store.save();
     }
 
     function visit(path) {
@@ -114,18 +103,14 @@ Singleton {
         unload();
     }
 
-    Timer {
-        id: writeDebounce
+    JsonStore {
+        id: store
 
+        name: "folder history"
         interval: FilesMetrics.folderHistoryWriteDelay
-        onTriggered: root.save()
-    }
-
-    FileView {
-        id: historyFile
-
-        blockLoading: true
-        atomicWrites: true
-        printErrors: false
+        serialize: () => JSON.stringify({
+                "version": 1,
+                "folders": root.entries
+            })
     }
 }

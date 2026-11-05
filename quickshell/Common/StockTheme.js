@@ -30,8 +30,6 @@ const DARK = {
         surfaceVariant: "#49454e",
         surfaceVariantText: "#cac4cf",
         surfaceTint: "#D0BCFF",
-        background: "#141218",
-        backgroundText: "#e6e0e9",
         outline: "#948f99",
         surfaceContainer: "#211f24",
         surfaceContainerHigh: "#2b292f",
@@ -48,8 +46,6 @@ const DARK = {
         surfaceVariant: "#42474e",
         surfaceVariantText: "#c2c7cf",
         surfaceTint: "#8ab4f8",
-        background: "#101418",
-        backgroundText: "#e0e2e8",
         outline: "#8c9199",
         surfaceContainer: "#1d2024",
         surfaceContainerHigh: "#272a2f",
@@ -66,8 +62,6 @@ const DARK = {
         surfaceVariant: "#424940",
         surfaceVariantText: "#c2c9bd",
         surfaceTint: "#81c995",
-        background: "#10140f",
-        backgroundText: "#e0e4db",
         outline: "#8c9388",
         surfaceContainer: "#1d211b",
         surfaceContainerHigh: "#272b25",
@@ -84,8 +78,6 @@ const DARK = {
         surfaceVariant: "#52443d",
         surfaceVariantText: "#d7c2b9",
         surfaceTint: "#ffb74d",
-        background: "#1a120e",
-        backgroundText: "#f0dfd8",
         outline: "#a08d85",
         surfaceContainer: "#271e1a",
         surfaceContainerHigh: "#322824",
@@ -102,8 +94,6 @@ const DARK = {
         surfaceVariant: "#534341",
         surfaceVariantText: "#d8c2be",
         surfaceTint: "#f28b82",
-        background: "#1a1110",
-        backgroundText: "#f1dedc",
         outline: "#a08c89",
         surfaceContainer: "#271d1c",
         surfaceContainerHigh: "#322826",
@@ -120,8 +110,6 @@ const DARK = {
         surfaceVariant: "#3f484a",
         surfaceVariantText: "#bfc8ca",
         surfaceTint: "#4dd0e1",
-        background: "#0e1416",
-        backgroundText: "#dee3e5",
         outline: "#899295",
         surfaceContainer: "#1b2122",
         surfaceContainerHigh: "#252b2c",
@@ -138,8 +126,6 @@ const DARK = {
         surfaceVariant: "#524345",
         surfaceVariantText: "#d6c2c3",
         surfaceTint: "#f8bbd9",
-        background: "#191112",
-        backgroundText: "#f0dee0",
         outline: "#9f8c8e",
         surfaceContainer: "#261d1e",
         surfaceContainerHigh: "#312829",
@@ -156,8 +142,6 @@ const DARK = {
         surfaceVariant: "#4d4639",
         surfaceVariantText: "#d0c5b4",
         surfaceTint: "#ffd54f",
-        background: "#17130b",
-        backgroundText: "#ebe1d4",
         outline: "#998f80",
         surfaceContainer: "#231f17",
         surfaceContainerHigh: "#2e2921",
@@ -174,8 +158,6 @@ const DARK = {
         surfaceVariant: "#534341",
         surfaceVariantText: "#d8c2bf",
         surfaceTint: "#ffb4ab",
-        background: "#1a1110",
-        backgroundText: "#f1dedc",
         outline: "#a08c8a",
         surfaceContainer: "#271d1c",
         surfaceContainerHigh: "#322826",
@@ -193,7 +175,6 @@ const DARK = {
         surfaceVariantText: "#c8c6c7",
         surfaceTint: "#c2c6d6",
         background: "#131315",
-        backgroundText: "#e4e2e3",
         outline: "#929092",
         surfaceContainer: "#353535",
         surfaceContainerHigh: "#424242",
@@ -203,7 +184,6 @@ const DARK = {
 
 const LIGHT = {
     purple: {
-        name: "Purple",
         primary: "#6750A4",
         primaryText: "#FFFFFF",
         primaryContainer: "#EADDFF",
@@ -213,15 +193,12 @@ const LIGHT = {
         surfaceVariant: "#E7E0EC",
         surfaceVariantText: "#49454F",
         surfaceTint: "#6750A4",
-        background: "#FEF7FF",
-        backgroundText: "#1D1B20",
         outline: "#79747E",
         surfaceContainer: "#F3EDF7",
         surfaceContainerHigh: "#ECE6F0",
         surfaceContainerHighest: "#E6E0E9"
     },
     blue: {
-        name: "Blue",
         primary: "#1976d2",
         primaryText: "#ffffff",
         primaryContainer: "#e3f2fd",
@@ -231,15 +208,12 @@ const LIGHT = {
         surfaceVariant: "#dee3eb",
         surfaceVariantText: "#42474e",
         surfaceTint: "#1976d2",
-        background: "#f7f9ff",
-        backgroundText: "#181c20",
         outline: "#72777f",
         surfaceContainer: "#eceef4",
         surfaceContainerHigh: "#e6e8ee",
         surfaceContainerHighest: "#e0e2e8"
     },
     green: {
-        name: "Green",
         primary: "#2e7d32",
         primaryText: "#ffffff",
         primaryContainer: "#e8f5e8",
@@ -249,15 +223,12 @@ const LIGHT = {
         surfaceVariant: "#dee5d8",
         surfaceVariantText: "#424940",
         surfaceTint: "#2e7d32",
-        background: "#f7fbf1",
-        backgroundText: "#191d17",
         outline: "#72796f",
         surfaceContainer: "#ecefe6",
         surfaceContainerHigh: "#e6e9e0",
         surfaceContainerHighest: "#e0e4db"
     },
     orange: {
-        name: "Orange",
         primary: "#e65100",
         primaryText: "#ffffff",
         primaryContainer: "#ffecb3",
@@ -267,15 +238,12 @@ const LIGHT = {
         surfaceVariant: "#f4ded5",
         surfaceVariantText: "#52443d",
         surfaceTint: "#e65100",
-        background: "#fff8f6",
-        backgroundText: "#221a16",
         outline: "#85736c",
         surfaceContainer: "#fceae3",
         surfaceContainerHigh: "#f6e5de",
         surfaceContainerHighest: "#f0dfd8"
     },
     red: {
-        name: "Red",
         primary: "#d32f2f",
         primaryText: "#ffffff",
         primaryContainer: "#ffebee",
@@ -285,15 +253,12 @@ const LIGHT = {
         surfaceVariant: "#f5ddda",
         surfaceVariantText: "#534341",
         surfaceTint: "#d32f2f",
-        background: "#fff8f7",
-        backgroundText: "#231918",
         outline: "#857370",
         surfaceContainer: "#fceae7",
         surfaceContainerHigh: "#f7e4e1",
         surfaceContainerHighest: "#f1dedc"
     },
     cyan: {
-        name: "Cyan",
         primary: "#0097a7",
         primaryText: "#ffffff",
         primaryContainer: "#e0f2f1",
@@ -303,15 +268,12 @@ const LIGHT = {
         surfaceVariant: "#dbe4e6",
         surfaceVariantText: "#3f484a",
         surfaceTint: "#0097a7",
-        background: "#f5fafc",
-        backgroundText: "#171d1e",
         outline: "#6f797b",
         surfaceContainer: "#e9eff0",
         surfaceContainerHigh: "#e3e9eb",
         surfaceContainerHighest: "#dee3e5"
     },
     pink: {
-        name: "Pink",
         primary: "#c2185b",
         primaryText: "#ffffff",
         primaryContainer: "#fce4ec",
@@ -321,15 +283,12 @@ const LIGHT = {
         surfaceVariant: "#f3dddf",
         surfaceVariantText: "#524345",
         surfaceTint: "#c2185b",
-        background: "#fff8f7",
-        backgroundText: "#22191a",
         outline: "#847375",
         surfaceContainer: "#fbeaeb",
         surfaceContainerHigh: "#f5e4e5",
         surfaceContainerHighest: "#f0dee0"
     },
     amber: {
-        name: "Amber",
         primary: "#ff8f00",
         primaryText: "#000000",
         primaryContainer: "#fff8e1",
@@ -339,15 +298,12 @@ const LIGHT = {
         surfaceVariant: "#ede1cf",
         surfaceVariantText: "#4d4639",
         surfaceTint: "#ff8f00",
-        background: "#fff8f2",
-        backgroundText: "#1f1b13",
         outline: "#7f7667",
         surfaceContainer: "#f6ecdf",
         surfaceContainerHigh: "#f1e7d9",
         surfaceContainerHighest: "#ebe1d4"
     },
     coral: {
-        name: "Coral",
         primary: "#8c1d18",
         primaryText: "#ffffff",
         primaryContainer: "#ffdad6",
@@ -357,15 +313,12 @@ const LIGHT = {
         surfaceVariant: "#f5ddda",
         surfaceVariantText: "#534341",
         surfaceTint: "#8c1d18",
-        background: "#fff8f7",
-        backgroundText: "#231918",
         outline: "#857371",
         surfaceContainer: "#fceae7",
         surfaceContainerHigh: "#f6e4e2",
         surfaceContainerHighest: "#f1dedc"
     },
     monochrome: {
-        name: "Monochrome",
         primary: "#2b303c",
         primaryText: "#ffffff",
         primaryContainer: "#d6d7dc",
@@ -388,7 +341,10 @@ function getPreset(name, isLight) {
     const set = isLight ? LIGHT : DARK;
     const base = set[name] || set.purple;
     const semantic = isLight ? SEMANTIC_LIGHT : SEMANTIC_DARK;
-    return Object.assign({}, semantic, base);
+    return Object.assign({}, semantic, {
+        background: base.surface,
+        backgroundText: base.surfaceText
+    }, base);
 }
 
 function presetNames() {

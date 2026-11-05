@@ -1,6 +1,7 @@
 package netmount
 
 import (
+	"github.com/duxlabs-dev/dux-files/core/internal/wire"
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/duxlabs-dev/dux-go/log"
 	"github.com/godbus/dbus/v5"
@@ -66,10 +67,10 @@ func (s *Service) Portables() []Portable {
 func (s *Service) MountPortable(monitor, id string) error {
 	conn := s.connection()
 	if conn == nil {
-		return fail(files.CodeNotSupported, "gvfs is not running")
+		return wire.Fail(files.CodeNotSupported, "gvfs is not running")
 	}
 	if !knownMonitor(monitor) {
-		return fail(files.CodeInvalid, "unknown volume monitor: %s", monitor)
+		return wire.Fail(files.CodeInvalid, "unknown volume monitor: %s", monitor)
 	}
 
 	call := conn.Object(monitor, MonitorPath).Call(MonitorIface+".VolumeMount", 0, id, "", uint32(0), "")

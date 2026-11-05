@@ -4,28 +4,30 @@ import QtQuick
 import qs.Common
 import qs.Services
 import qs.DCommon.Widgets
-import qs.DCommon.FileBrowser
 
-Rectangle {
+ListingView {
     id: results
 
-    required property SearchModel model
-    property string viewMode: "list"
-    property int gridZoom: 1
-    property int listZoom: 0
-    property var columnWidths: ({})
-    property bool previewOpen: false
-    property real previewWidth: 0
-    property var cutSet: ({})
-    property bool singleClickActivates: false
-    property bool typeAheadEnabled: true
-    property bool dragEnabled: true
-    property bool countFolders: true
-
-    readonly property alias selection: selectionModel
-    readonly property alias body: viewBody
+    property bool indexAvailable: false
     readonly property alias chips: chips
-    readonly property string summary: {
+    readonly property string scopeText: {
+        switch (chips.scope) {
+        case "home":
+            return Paths.shortenHome(Paths.strip(Paths.home));
+        case "everywhere":
+            return I18n.tr("Everywhere", "search scope chip covering home and every mounted local drive");
+        default:
+            return Paths.shortenHome(results.model.rootPath);
+        }
+    }
+
+    function sortBy(key) {
+        model.setSort(key);
+    }
+
+    model: host.searchModel
+    title: model.query !== "" ? I18n.tr("Results for “%1” in %2", "search results header, query then folder").arg(model.query).arg(scopeText) : I18n.tr("Results in %1", "search results header without a query").arg(scopeText)
+    summary: {
         if (model.error !== "")
             return FileFormat.listingError(model.errorCode);
         const notes = [];
@@ -54,105 +56,34 @@ Rectangle {
         }
         return notes.join(" · ");
     }
-    property bool indexAvailable: false
-    readonly property string scopeText: {
-        switch (chips.scope) {
-        case "home":
-            return Paths.shortenHome(Paths.strip(Paths.home));
-        case "everywhere":
-            return I18n.tr("Everywhere", "search scope chip covering home and every mounted local drive");
-        default:
-            return Paths.shortenHome(results.model.rootPath);
+    listColumns: ["location", "size", "modified"]
+    columnSortKeys: ({
+            "location": "location"
+        })
+    showHidden: chips.includeHidden
+    nameHighlight: model.query
+    filtering: false
+    dragEnabled: host.dragEnabled
+    backgroundMenu: false
+
+    DActionButton {
+        buttonSize: Theme.buttonHeightXS
+        iconName: "close"
+        iconSize: Theme.iconSizeSmall
+        iconColor: Theme.surfaceVariantText
+        tooltipText: I18n.tr("Close", "dialog button to close")
+        onClicked: {
+            results.host.closeSearch();
+            results.host.focusBody();
         }
     }
 
-    signal activateRequested(var entry)
-    signal itemMenuRequested(int index, real pointX, real pointY, int modifiers)
-    signal dragRequested(var paths)
-    signal renameRequested(string target, string name)
-    signal zoomRequested(string viewMode, int level)
-    signal columnResizeRequested(string id, real width)
-    signal previewToggleRequested
-    signal previewResized(real width)
-    signal focusRequested
-    signal tabRequested(string path)
-    signal closeRequested
-    signal filtersChanged
-
-    function focusBody() {
-        viewBody.focusBody();
-    }
-
-    radius: FilesMetrics.paneRadius
-    color: Theme.foregroundColor(Theme.cardSurface, true)
-
-    SelectionModel {
-        id: selectionModel
-    }
-
-    Item {
-        id: header
-
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.topMargin: FilesMetrics.paneBodyMargin
-        anchors.leftMargin: FilesMetrics.paneBodyMarginH
-        anchors.rightMargin: FilesMetrics.paneBodyMarginH
-        height: Math.max(FileBrowserMetrics.pathPillHeight, titleColumn.implicitHeight)
-
-        Column {
-            id: titleColumn
-
-            anchors.left: parent.left
-            anchors.right: closeButton.left
-            anchors.rightMargin: Theme.spacingS
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: Theme.spacingXXS
-
-            StyledText {
-                width: parent.width
-                text: results.model.query !== "" ? I18n.tr("Results for “%1” in %2", "search results header, query then folder").arg(results.model.query).arg(results.scopeText) : I18n.tr("Results in %1", "search results header without a query").arg(results.scopeText)
-                color: Theme.surfaceText
-                font.pixelSize: Theme.fontSizeMedium
-                font.weight: Theme.fontWeightMedium
-                elide: Text.ElideMiddle
-            }
-
-            StyledText {
-                width: parent.width
-                text: results.summary
-                color: Theme.surfaceVariantText
-                font.pixelSize: Theme.fontSizeSmall
-                elide: Text.ElideRight
-            }
-        }
-
-        DActionButton {
-            id: closeButton
-
-            anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
-            buttonSize: Theme.buttonHeightXS
-            iconName: "close"
-            iconSize: Theme.iconSizeSmall
-            iconColor: Theme.surfaceVariantText
-            tooltipText: I18n.tr("Close", "dialog button to close")
-            onClicked: results.closeRequested()
-        }
-    }
-
-    SearchChips {
+    extras: SearchChips {
         id: chips
 
-        anchors.top: header.bottom
-        anchors.topMargin: Theme.spacingS
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.leftMargin: FilesMetrics.paneBodyMarginH
-        anchors.rightMargin: FilesMetrics.paneBodyMarginH
+        width: parent.width
         contentsAvailable: results.indexAvailable
-        onChanged: results.filtersChanged()
+        onChanged: results.host.startSearch(results.model.query, chips.filterState)
     }
 
     Connections {
@@ -167,87 +98,5 @@ Rectangle {
             if (!results.indexAvailable)
                 chips.contents = false;
         }
-    }
-
-    FileViewBody {
-        id: viewBody
-
-        anchors.top: chips.bottom
-        anchors.topMargin: Theme.spacingS
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottomMargin: FilesMetrics.paneBodyMargin
-        anchors.leftMargin: FilesMetrics.paneBodyMarginH
-        anchors.rightMargin: FilesMetrics.paneBodyMarginH + drawer.width
-        focus: true
-        directory: results.model
-        selection: selectionModel
-        viewMode: results.viewMode === "columns" ? "list" : results.viewMode
-        gridZoom: results.gridZoom
-        listZoom: results.listZoom
-        listColumns: ["location", "size", "modified"]
-        columnWidths: results.columnWidths
-        previewKeys: true
-        sortKey: results.model.sortKey
-        sortDescending: results.model.sortDescending
-        columnSortKeys: ({
-                "location": "location"
-            })
-        showHidden: chips.includeHidden
-        dragEnabled: results.dragEnabled
-        dropEnabled: false
-        showSelectionFooter: true
-        emptyText: ""
-        surfaceColor: results.color
-        cutSet: results.cutSet
-        singleClickActivates: results.singleClickActivates
-        typeAheadEnabled: results.typeAheadEnabled
-        countFolders: results.countFolders
-        nameHighlight: results.model.query
-        onActivateRequested: entry => results.activateRequested(entry)
-        onItemMenuRequested: (index, pointX, pointY, modifiers) => {
-            results.focusRequested();
-            const point = mapToItem(results, pointX, pointY);
-            results.itemMenuRequested(index, point.x, point.y, modifiers);
-        }
-        onDragRequested: paths => results.dragRequested(paths)
-        onRenameRequested: (target, name) => results.renameRequested(target, name)
-        onSortRequested: key => results.model.setSort(key)
-        onZoomRequested: (mode, level) => results.zoomRequested(mode, level)
-        onColumnResizeRequested: (id, width) => results.columnResizeRequested(id, width)
-        onPreviewKeyRequested: (action, step) => {
-            if (action === "toggle") {
-                results.previewToggleRequested();
-                return;
-            }
-            drawer.handleKey(action, step);
-        }
-        onFocusRequested: results.focusRequested()
-        onTabRequested: target => results.tabRequested(target)
-        onOpenRequested: target => {
-            if (target === "..")
-                return;
-            results.focusRequested();
-            results.activateRequested({
-                "path": target,
-                "isDir": true
-            });
-        }
-    }
-
-    FilePreviewDrawer {
-        id: drawer
-
-        anchors.top: viewBody.top
-        anchors.bottom: viewBody.bottom
-        anchors.right: parent.right
-        anchors.rightMargin: FilesMetrics.paneBodyMarginH
-        body: viewBody
-        open: results.previewOpen
-        available: results.width - FilesMetrics.paneBodyMarginH * 2
-        preferredWidth: results.previewWidth
-        onResized: width => results.previewResized(width)
-        onFocusRequested: results.focusRequested()
     }
 }

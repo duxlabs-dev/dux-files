@@ -9,6 +9,10 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/pathutil"
+
+	"github.com/duxlabs-dev/dux-go/dbusutil"
+
 	"github.com/godbus/dbus/v5"
 )
 
@@ -148,7 +152,7 @@ func parseRequest(method, id, appID, parent, title string, options map[string]db
 		req.CurrentFolder = p.folder("current_folder")
 	case MethodSave:
 		req.Filters, req.CurrentFilter = p.filters()
-		req.CurrentName = validName(clip(p.string("current_name"), maxText))
+		req.CurrentName = sanitizedName(clip(p.string("current_name"), maxText))
 		req.CurrentFolder = p.folder("current_folder")
 		req.CurrentFile = p.file("current_file")
 		if req.CurrentFile != "" {
@@ -182,7 +186,7 @@ func (p *parser) string(key string) string {
 	if !ok {
 		return ""
 	}
-	s, ok := v.Value().(string)
+	s, ok := dbusutil.As[string](v)
 	if !ok {
 		p.fail("option %s must be a string", key)
 		return ""
@@ -195,7 +199,7 @@ func (p *parser) bool(key string, def bool) bool {
 	if !ok {
 		return def
 	}
-	b, ok := v.Value().(bool)
+	b, ok := dbusutil.As[bool](v)
 	if !ok {
 		p.fail("option %s must be a boolean", key)
 		return def
@@ -208,7 +212,7 @@ func (p *parser) bytesPath(key string) string {
 	if !ok {
 		return ""
 	}
-	raw, ok := v.Value().([]byte)
+	raw, ok := dbusutil.As[[]byte](v)
 	if !ok {
 		p.fail("option %s must be a byte array", key)
 		return ""
@@ -238,7 +242,7 @@ func (p *parser) folder(key string) string {
 
 func (p *parser) file(key string) string {
 	path := p.bytesPath(key)
-	if path == "" || validName(filepath.Base(path)) == "" {
+	if path == "" || sanitizedName(filepath.Base(path)) == "" {
 		return ""
 	}
 	info, err := os.Stat(filepath.Dir(path))
@@ -450,7 +454,7 @@ func (p *parser) files() []string {
 	}
 	out := make([]string, 0, len(wire))
 	for _, raw := range wire {
-		name := validName(string(bytes.TrimRight(raw, "\x00")))
+		name := sanitizedName(string(bytes.TrimRight(raw, "\x00")))
 		if name == "" {
 			p.fail("option files holds an invalid file name")
 			return []string{}
@@ -458,18 +462,6 @@ func (p *parser) files() []string {
 		out = append(out, name)
 	}
 	return out
-}
-
-func validName(name string) string {
-	switch {
-	case name == "", name == ".", name == "..":
-		return ""
-	case strings.ContainsAny(name, "/\x00"):
-		return ""
-	case len(name) > 255:
-		return ""
-	}
-	return name
 }
 
 func stripMnemonic(label string) string {
@@ -497,3 +489,10 @@ func clip(s string, max int) string {
 }
 
 var errBadHandle = errors.New("handle is not a portal request path")
+
+func sanitizedName(name string) string {
+	if !pathutil.ValidName(name) {
+		return ""
+	}
+	return name
+}

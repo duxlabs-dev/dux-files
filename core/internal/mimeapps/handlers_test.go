@@ -1,12 +1,13 @@
 package mimeapps
 
 import (
-	"bufio"
 	"context"
-	"encoding/json"
-	"net"
 	"path/filepath"
 	"testing"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/ipctest"
 
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/stretchr/testify/assert"
@@ -15,19 +16,7 @@ import (
 
 func call(t *testing.T, svc *Service, req ipc.Request) map[string]any {
 	t.Helper()
-	client, srv := net.Pipe()
-	t.Cleanup(func() {
-		_ = client.Close()
-		_ = srv.Close()
-	})
-
-	go svc.Handle(context.Background(), ipc.NewConnWriter(srv), req)
-
-	line, err := bufio.NewReader(client).ReadBytes('\n')
-	require.NoError(t, err)
-	var out map[string]any
-	require.NoError(t, json.Unmarshal(line, &out))
-	return out
+	return ipctest.Call(t, func(w *ipc.ConnWriter) { svc.Handle(context.Background(), w, req) })
 }
 
 func resultOf(t *testing.T, out map[string]any) map[string]any {
@@ -56,7 +45,7 @@ func TestHandleForMime(t *testing.T) {
 
 func TestHandleForMimeTypesAPath(t *testing.T) {
 	svc, root := fixture(t)
-	note := writeFile(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
+	note := testfs.WriteBytes(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
 
 	result := resultOf(t, call(t, svc, ipc.Request{ID: 2, Method: "files.apps.forMime", Params: map[string]any{"path": note}}))
 	assert.Equal(t, "text/plain", result["mimeType"])

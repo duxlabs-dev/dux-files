@@ -4,6 +4,9 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/wire"
+	"github.com/duxlabs-dev/dux-go/files"
+
 	"github.com/duxlabs-dev/dux-files/core/internal/filechooser"
 	"github.com/duxlabs-dev/dux-go/ipc/params"
 )
@@ -31,18 +34,18 @@ func HandlePortal(_ context.Context, w *ConnWriter, req Request, deps Deps) {
 	switch req.Method {
 	case "portal.respond":
 		if deps.Portal == nil {
-			w.RespondError(req.ID, "portal backend unavailable")
+			wire.RespondError(w, req.ID, wire.Fail(files.CodeNotSupported, "portal backend unavailable"))
 			return
 		}
 		id := params.StringOpt(req.Params, "id", "")
 		answer, err := answerFrom(req.Params)
 		switch {
 		case id == "":
-			w.RespondError(req.ID, "id is required")
+			wire.RespondError(w, req.ID, wire.Invalid("id is required"))
 		case err != nil:
-			w.RespondError(req.ID, "portal.respond: "+err.Error())
+			wire.RespondError(w, req.ID, err)
 		case !deps.Portal.Answer(id, answer):
-			w.RespondError(req.ID, "no open request "+id)
+			wire.RespondError(w, req.ID, wire.Fail(files.CodeNotFound, "no open request %s", id))
 		default:
 			w.Respond(req.ID, map[string]any{"ok": true})
 		}

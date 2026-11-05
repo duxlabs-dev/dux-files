@@ -1,14 +1,13 @@
 package ipc
 
 import (
-	"bufio"
 	"context"
-	"encoding/json"
-	"net"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/ipctest"
 
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/stretchr/testify/assert"
@@ -17,20 +16,7 @@ import (
 
 func routeAndRead(t *testing.T, req Request, deps Deps) map[string]any {
 	t.Helper()
-	client, srv := net.Pipe()
-	t.Cleanup(func() {
-		_ = client.Close()
-		_ = srv.Close()
-	})
-
-	go Route(context.Background(), NewConnWriter(srv), req, deps)
-
-	line, err := bufio.NewReader(client).ReadBytes('\n')
-	require.NoError(t, err)
-
-	var out map[string]any
-	require.NoError(t, json.Unmarshal(line, &out))
-	return out
+	return ipctest.Call(t, func(w *ConnWriter) { Route(context.Background(), w, req, deps) })
 }
 
 func TestRouteVersion(t *testing.T) {

@@ -2,12 +2,10 @@ package filemanager1
 
 import (
 	"errors"
-	"os"
-	"strconv"
-	"strings"
 	"sync"
 
-	"github.com/duxlabs-dev/dux-go/log"
+	"github.com/duxlabs-dev/dux-files/core/internal/dbusutil"
+
 	"github.com/godbus/dbus/v5"
 	"github.com/godbus/dbus/v5/introspect"
 )
@@ -51,10 +49,9 @@ type Status struct {
 }
 
 type Service struct {
-	mu      sync.Mutex
-	conn    *dbus.Conn
-	enabled bool
-	reason  string
+	mu    sync.Mutex
+	conn  *dbus.Conn
+	owner *dbusutil.NameOwner
 }
 
 type object struct{ handler Handler }
@@ -88,41 +85,14 @@ func New(conn *dbus.Conn, handler Handler) (*Service, error) {
 	if err := conn.Export(introspect.Introspectable(introspection), Path, "org.freedesktop.DBus.Introspectable"); err != nil {
 		return nil, err
 	}
-	return &Service{conn: conn}, nil
+	return &Service{conn: conn, owner: dbusutil.NewNameOwner(conn, Name, "filemanager1")}, nil
 }
 
 func (s *Service) SetEnabled(enabled bool) Status {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	switch {
-	case enabled && !s.enabled:
-		s.request()
-	case !enabled && s.enabled:
-		s.release()
-	}
+	s.owner.SetEnabled(enabled)
 	return s.statusLocked()
-}
-
-func (s *Service) request() {
-	reply, err := s.conn.RequestName(Name, 0)
-	if err != nil {
-		s.reason = err.Error()
-		log.Warnf("filemanager1: request %s: %v", Name, err)
-		return
-	}
-	s.enabled = true
-	s.reason = ""
-	if reply == dbus.RequestNameReplyInQueue {
-		_, holder := s.ownerLocked()
-		log.Infof("filemanager1: %s is held by %s; queued until it lets go", Name, holder)
-	}
-}
-
-func (s *Service) release() {
-	if _, err := s.conn.ReleaseName(Name); err != nil {
-		log.Warnf("filemanager1: release %s: %v", Name, err)
-	}
-	s.enabled = false
 }
 
 func (s *Service) Status() Status {
@@ -132,41 +102,20 @@ func (s *Service) Status() Status {
 }
 
 func (s *Service) statusLocked() Status {
-	owned, holder := s.ownerLocked()
+	owned, holder := s.owner.Owner()
 	return Status{
 		Available: true,
-		Enabled:   s.enabled,
+		Enabled:   s.owner.Enabled(),
 		Owned:     owned,
-		Queued:    s.enabled && !owned,
+		Queued:    s.owner.Enabled() && !owned,
 		Owner:     holder,
-		Reason:    s.reason,
+		Reason:    s.owner.Reason(),
 	}
-}
-
-func (s *Service) ownerLocked() (bool, string) {
-	var unique string
-	if err := s.conn.BusObject().Call("org.freedesktop.DBus.GetNameOwner", 0, Name).Store(&unique); err != nil {
-		return false, ""
-	}
-	if names := s.conn.Names(); len(names) > 0 && names[0] == unique {
-		return true, ""
-	}
-	var pid uint32
-	if err := s.conn.BusObject().Call("org.freedesktop.DBus.GetConnectionUnixProcessID", 0, unique).Store(&pid); err != nil {
-		return false, unique
-	}
-	comm, err := os.ReadFile("/proc/" + strconv.FormatUint(uint64(pid), 10) + "/comm")
-	if err != nil {
-		return false, unique
-	}
-	return false, strings.TrimSpace(string(comm))
 }
 
 func (s *Service) Close() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	if s.enabled {
-		s.release()
-	}
+	s.owner.Release()
 	s.conn.Close()
 }

@@ -44,6 +44,10 @@ Singleton {
         }
     }
 
+    function matching(count, text) {
+        return I18n.tr("%1 matching “%2”", "filter bar above a folder listing, count then the typed text").arg(FileFormat.count(count)).arg(text);
+    }
+
     function timeLeft(seconds) {
         const whole = Math.max(1, Math.ceil(seconds));
         if (whole < 60)

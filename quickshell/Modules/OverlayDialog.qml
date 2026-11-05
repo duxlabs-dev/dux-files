@@ -7,6 +7,9 @@ Popup {
     id: root
 
     property bool takesFocus: true
+    property bool showCancel: true
+    property string cancelText: I18n.tr("Cancel", "dialog button to cancel")
+    property var cancelAction: () => root.close()
     property alias title: dialog.title
     property alias supportingText: dialog.supportingText
     property alias maximumWidth: dialog.maximumWidth
@@ -29,6 +32,12 @@ Popup {
     focus: takesFocus
     closePolicy: Popup.NoAutoClose
     background: null
+
+    actions: TextButton {
+        visible: root.showCancel
+        text: root.cancelText
+        onClicked: root.cancelAction()
+    }
 
     onAboutToShow: dialog.opened = true
     onAboutToHide: dialog.opened = false

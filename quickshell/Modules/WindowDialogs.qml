@@ -12,7 +12,7 @@ Item {
 
     property int propertiesRequest: 0
 
-    readonly property bool anyOpen: conflictDialog.visible || errorDialog.visible || archivePasswordDialog.visible || confirmDialog.visible || openConfirmDialog.visible || openWithDialog.visible || executableDialog.visible || trustDialog.visible || unlockDialog.visible || connectDialog.visible || credentialDialog.visible || propertiesDialog.visible || appearanceDialog.visible || shortcutsOverlay.visible || compressDialog.visible || renameBookmarkDialog.visible || trashConfirmDialog.visible || emptyTrashDialog.visible || clearRecentDialog.visible || quitDialog.visible || (extractPickerLoader.item?.visible ?? false) || (transferPickerLoader.item?.visible ?? false)
+    readonly property bool anyOpen: conflictDialog.visible || errorDialog.visible || archivePasswordDialog.visible || confirmDialog.visible || openConfirmDialog.visible || openWithDialog.visible || executableDialog.visible || trustDialog.visible || unlockDialog.visible || connectDialog.visible || credentialDialog.visible || propertiesDialog.visible || appearanceDialog.visible || shortcutsOverlay.visible || compressDialog.visible || renameBookmarkDialog.visible || mainWindow.paneActions.trashDialogOpen || emptyTrashDialog.visible || clearRecentDialog.visible || quitDialog.visible || (extractPickerLoader.item?.visible ?? false) || (transferPickerLoader.item?.visible ?? false)
 
     function openSettings() {
         settingsLoader.active = true;
@@ -44,23 +44,14 @@ Item {
 
     function showPropertiesFor(paths) {
         const request = ++propertiesRequest;
-        const entries = [];
-        let pending = paths.length;
-        paths.forEach((path, index) => DuxFilesService.sendRequest("files.stat", {
-                "path": path
-            }, response => {
-                if (request !== dialogs.propertiesRequest)
-                    return;
-                pending--;
-                if (response.error)
-                    ToastService.info(FileFormat.operationError(response.code, response.error));
-                entries[index] = (response.result || {}).entry ?? null;
-                if (pending > 0)
-                    return;
-                const found = entries.filter(entry => entry);
-                if (found.length > 0)
-                    propertiesDialog.show(found);
-            }));
+        DirectoryService.statAll(paths, (entries, failures) => {
+            if (request !== dialogs.propertiesRequest)
+                return;
+            for (const failure of failures)
+                ToastService.info(FileFormat.operationError(failure.code, failure.error));
+            if (entries.length > 0)
+                propertiesDialog.show(entries);
+        });
     }
 
     function askOpenWith(mimes, paths) {
@@ -81,12 +72,6 @@ Item {
         openConfirmDialog.pending = plan;
         openConfirmDialog.subject = subject;
         openConfirmDialog.open();
-    }
-
-    function confirmTrash(paths, subject) {
-        trashConfirmDialog.pending = paths;
-        trashConfirmDialog.subject = subject;
-        trashConfirmDialog.open();
     }
 
     function confirmDelete(paths, subject) {
@@ -167,6 +152,7 @@ Item {
 
     Connections {
         target: NetworkService
+        enabled: dialogs.mainWindow.lastActive && ChooserService.requests.length === 0
 
         function onAskRequested(ask) {
             credentialDialog.present(ask);
@@ -282,21 +268,6 @@ Item {
         confirmText: I18n.tr("Open", "context menu entry opening a file")
         danger: false
         onConfirmed: dialogs.mainWindow.openFlow.runOpenPlan(pending)
-    }
-
-    ConfirmDialog {
-        id: trashConfirmDialog
-
-        property var pending: []
-
-        title: I18n.tr("Move to Trash", "context menu entry trashing the selection")
-        message: I18n.tr("%1 will be moved to the trash.", "trash confirmation explanation").arg(subject)
-        confirmText: I18n.tr("Move to Trash", "context menu entry trashing the selection")
-        danger: false
-        onConfirmed: {
-            FileOpsService.trash(pending, dialogs.mainWindow.opScope);
-            pending = [];
-        }
     }
 
     LazyLoader {

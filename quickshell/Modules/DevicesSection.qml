@@ -176,23 +176,8 @@ FilePlaceSection {
     Repeater {
         model: NetworkService.deviceMounts
 
-        FilePlaceRow {
-            required property var modelData
-
-            label: modelData.name
-            iconName: modelData.iconName
-            actionIcon: "eject"
-            actionTooltip: I18n.tr("Disconnect", "network mount action")
-            busy: section.busyId === modelData.id
-            dropPath: modelData.path
-            onClicked: section.navigateRequested(modelData.path)
-            onMiddleClicked: section.tabRequested(modelData.path)
-            onDropped: drop => section.dropRequested(modelData.path, drop)
-            onSpringLoaded: section.navigateRequested(modelData.path)
-            onActionTriggered: {
-                section.busyId = modelData.id;
-                NetworkService.disconnect(modelData.id, () => section.busyId = "");
-            }
+        NetworkMountRow {
+            host: section
         }
     }
 }

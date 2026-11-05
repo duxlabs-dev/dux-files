@@ -120,13 +120,6 @@ func itoa(n int) string {
 	return string(digits)
 }
 
-func writeFile(t *testing.T, path string, data []byte) string {
-	t.Helper()
-	require.NoError(t, os.MkdirAll(filepath.Dir(path), 0o755))
-	require.NoError(t, os.WriteFile(path, data, 0o644))
-	return path
-}
-
 const (
 	waitFor  = 3 * time.Second
 	waitTick = 10 * time.Millisecond

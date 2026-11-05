@@ -27,9 +27,17 @@ Item {
     property bool searchFocused: false
     property bool folderRemembered: false
     property bool folderHasSettings: false
+    property bool showSidebarToggle: true
+    property bool showNewFolder: false
+    property bool showSplit: true
+    property bool showOverflow: true
+    property bool allowColumns: true
+    property bool showHiddenToggle: false
+    property bool hiddenShown: false
 
     readonly property bool virtualActive: trashActive || recentActive
-    readonly property var viewModes: [
+    readonly property var viewModes: allViewModes.filter(mode => allowColumns || mode.value !== "columns")
+    readonly property var allViewModes: [
         {
             "value": "list",
             "icon": "view_list",
@@ -145,6 +153,7 @@ Item {
     readonly property var recentSuggestions: searchFocused && search.text === "" ? FolderHistory.top(FileBrowserMetrics.suggestionRows, currentPath).map(match => PathCompletion.row(match, "visited")) : []
 
     signal sidebarToggled
+    signal hiddenToggled
     signal backRequested
     signal forwardRequested
     signal splitToggled
@@ -237,6 +246,7 @@ Item {
 
         FlatButton {
             anchors.verticalCenter: parent.verticalCenter
+            visible: topbar.showSidebarToggle
             iconName: "menu"
             tooltipText: I18n.tr("Toggle sidebar", "tooltip on the button showing or hiding the sidebar")
             onClicked: topbar.sidebarToggled()
@@ -249,6 +259,16 @@ Item {
             onBackRequested: topbar.backRequested()
             onForwardRequested: topbar.forwardRequested()
         }
+
+        FlatButton {
+            anchors.verticalCenter: parent.verticalCenter
+            visible: topbar.showNewFolder
+            enabled: topbar.currentPath !== "" && !topbar.virtualActive
+            iconName: FileActions.icon("newFolder")
+            backgroundColor: Theme.chipSurface
+            tooltipText: I18n.tr("New folder", "file browser toolbar button creating a folder")
+            onClicked: topbar.newFolderRequested()
+        }
     }
 
     Row {
@@ -257,6 +277,16 @@ Item {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         spacing: FilesMetrics.topbarSpacing
+
+        FlatButton {
+            anchors.verticalCenter: parent.verticalCenter
+            visible: topbar.showHiddenToggle
+            iconName: topbar.hiddenShown ? "visibility" : "visibility_off"
+            iconColor: topbar.hiddenShown ? Theme.onPrimary : Theme.surfaceText
+            backgroundColor: topbar.hiddenShown ? Theme.primary : Theme.chipSurface
+            tooltipText: FileActions.label("showHidden")
+            onClicked: topbar.hiddenToggled()
+        }
 
         FlatButton {
             id: viewButton
@@ -290,7 +320,7 @@ Item {
 
         FlatButton {
             anchors.verticalCenter: parent.verticalCenter
-            visible: !topbar.compact
+            visible: !topbar.compact && topbar.showSplit
             iconName: "splitscreen_vertical_add"
             iconColor: topbar.splitView ? Theme.onPrimary : Theme.surfaceText
             backgroundColor: topbar.splitView ? Theme.primary : Theme.chipSurface
@@ -323,6 +353,7 @@ Item {
             id: overflowButton
 
             anchors.verticalCenter: parent.verticalCenter
+            visible: topbar.showOverflow
             iconName: "more_vert"
             backgroundColor: Theme.chipSurface
             tooltipText: I18n.tr("More actions", "tooltip on the overflow menu button")
@@ -411,7 +442,7 @@ Item {
             }
 
             FileMenuItem {
-                visible: menu.compactRows
+                visible: menu.compactRows && topbar.showSplit
                 text: I18n.tr("Split view", "tooltip on the button showing a second pane")
                 iconName: "splitscreen_vertical_add"
                 checked: topbar.splitView
@@ -419,7 +450,7 @@ Item {
             }
 
             FileMenuItem {
-                visible: menu.viewRows && topbar.viewMode === "list" && !topbar.virtualActive && !topbar.resultsActive
+                visible: menu.viewRows && topbar.allowColumns && topbar.viewMode === "list" && !topbar.virtualActive && !topbar.resultsActive
                 text: I18n.tr("Columns", "view menu entry choosing which list columns are shown")
                 iconName: "view_column"
                 submenu: true
@@ -451,16 +482,16 @@ Item {
             FileMenuItem {
                 visible: menu.moreRows
                 enabled: !topbar.virtualActive
-                text: I18n.tr("New folder", "new folder dialog header")
-                iconName: "create_new_folder"
+                text: FileActions.label("newFolder")
+                iconName: FileActions.icon("newFolder")
                 onClicked: menu.pick(() => topbar.newFolderRequested())
             }
 
             FileMenuItem {
                 visible: menu.moreRows
                 enabled: !topbar.virtualActive
-                text: I18n.tr("New document", "context menu entry creating a file from a template")
-                iconName: "note_add"
+                text: FileActions.label("newDocument")
+                iconName: FileActions.icon("newDocument")
                 submenu: true
                 onClicked: menu.pick(() => {
                     const point = rightActions.mapToItem(topbar, menu.x, menu.y);
@@ -474,53 +505,53 @@ Item {
 
             FileMenuItem {
                 visible: menu.moreRows
-                text: I18n.tr("New window", "menu entry opening another file manager window")
-                iconName: "open_in_new"
+                text: FileActions.label("newWindow")
+                iconName: FileActions.icon("newWindow")
                 onClicked: menu.pick(() => topbar.newWindowRequested())
             }
 
             FileMenuItem {
                 visible: menu.moreRows
                 enabled: !topbar.virtualActive
-                text: I18n.tr("Properties", "menu entry showing details about the current folder")
-                iconName: "info"
+                text: FileActions.label("properties")
+                iconName: FileActions.icon("properties")
                 onClicked: menu.pick(() => topbar.propertiesRequested())
             }
 
             FileMenuItem {
                 visible: menu.moreRows
                 enabled: !topbar.virtualActive
-                text: I18n.tr("Copy location path", "menu entry copying the current path to the clipboard")
-                iconName: "content_copy"
+                text: FileActions.label("copyPath")
+                iconName: FileActions.icon("copyPath")
                 onClicked: menu.pick(() => topbar.copyPathRequested())
             }
 
             FileMenuItem {
                 visible: menu.moreRows
-                text: I18n.tr("Reload", "menu entry re-reading the current folder")
-                iconName: "refresh"
+                text: FileActions.label("reload")
+                iconName: FileActions.icon("reload")
                 onClicked: menu.pick(() => topbar.reloadRequested())
             }
 
             FileMenuItem {
                 visible: menu.moreRows && SandboxService.available("terminal")
                 enabled: !topbar.virtualActive
-                text: I18n.tr("Open in terminal", "context menu entry opening a terminal")
-                iconName: "terminal"
+                text: FileActions.label("openTerminal")
+                iconName: FileActions.icon("openTerminal")
                 onClicked: menu.pick(() => topbar.terminalRequested())
             }
 
             FileMenuItem {
                 visible: menu.moreRows
-                text: I18n.tr("Keyboard shortcuts", "overlay listing every keyboard shortcut")
-                iconName: "keyboard"
+                text: FileActions.label("shortcuts")
+                iconName: FileActions.icon("shortcuts")
                 onClicked: menu.pick(() => topbar.shortcutsRequested())
             }
 
             FileMenuItem {
                 visible: menu.moreRows
-                text: I18n.tr("Settings", "settings window header title")
-                iconName: "settings"
+                text: FileActions.label("settings")
+                iconName: FileActions.icon("settings")
                 onClicked: menu.pick(() => topbar.settingsRequested())
             }
         }

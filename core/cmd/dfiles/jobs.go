@@ -6,45 +6,23 @@ import (
 	"fmt"
 	"os"
 	"slices"
-	"strings"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/pathutil"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/fileops"
 )
 
 const cliScope = "cli"
 
-type jobView struct {
-	ID        string    `json:"id"`
-	Kind      string    `json:"kind"`
-	State     string    `json:"state"`
-	Sources   []string  `json:"sources"`
-	Dest      string    `json:"dest,omitempty"`
-	Skipped   int       `json:"skipped"`
-	Cancelled bool      `json:"cancelled"`
-	Error     string    `json:"error,omitempty"`
-	Code      string    `json:"code,omitempty"`
-	Conflict  *jobPause `json:"conflict,omitempty"`
-	Failure   *jobPause `json:"failure,omitempty"`
-	Password  *jobPause `json:"passwordPrompt,omitempty"`
-}
-
-type jobPause struct {
-	ID      string   `json:"id"`
-	Path    string   `json:"path"`
-	Message string   `json:"message"`
-	Actions []string `json:"actions"`
-	Target  struct {
-		Path string `json:"path"`
-	} `json:"target"`
-}
-
 type jobEvent struct {
-	Kind  string   `json:"kind"`
-	JobID string   `json:"jobId"`
-	Job   *jobView `json:"job"`
+	Kind  string        `json:"kind"`
+	JobID string        `json:"jobId"`
+	Job   *fileops.View `json:"job"`
 }
 
 type jobResult struct {
-	Job    jobView  `json:"job"`
-	Failed []string `json:"failed"`
+	Job    fileops.View `json:"job"`
+	Failed []string     `json:"failed"`
 }
 
 func runJobUnattended(s *session, method string, params map[string]any, onConflict string) (jobResult, error) {
@@ -53,7 +31,7 @@ func runJobUnattended(s *session, method string, params map[string]any, onConfli
 	}
 	params["scope"] = cliScope
 	var started struct {
-		Job jobView `json:"job"`
+		Job fileops.View `json:"job"`
 	}
 	if err := s.call(method, params, &started); err != nil {
 		return jobResult{}, err
@@ -72,15 +50,15 @@ func runJobUnattended(s *session, method string, params map[string]any, onConfli
 		job := *payload.Job
 		result.Job = job
 		switch job.State {
-		case "done", "failed":
+		case fileops.StateDone, fileops.StateFailed:
 			return result, nil
-		case "paused-conflict":
+		case fileops.StatePausedConflict:
 			if job.Conflict == nil || job.Conflict.ID == answered {
 				continue
 			}
 			answered = job.Conflict.ID
 			s.answer(job.ID, job.Conflict.ID, pick(job.Conflict.Actions, onConflict))
-		case "paused-error":
+		case fileops.StatePausedError:
 			if job.Failure == nil || job.Failure.ID == answered {
 				continue
 			}
@@ -88,24 +66,24 @@ func runJobUnattended(s *session, method string, params map[string]any, onConfli
 			fmt.Fprintf(os.Stderr, "dfiles: %s: %s\n", job.Failure.Path, job.Failure.Message)
 			result.Failed = append(result.Failed, job.Failure.Path)
 			s.answer(job.ID, job.Failure.ID, pick(job.Failure.Actions, "skip"))
-		case "paused-password":
-			if job.Password == nil || job.Password.ID == answered {
+		case fileops.StatePausedPassword:
+			if job.PasswordPrompt == nil || job.PasswordPrompt.ID == answered {
 				continue
 			}
-			answered = job.Password.ID
-			fmt.Fprintf(os.Stderr, "dfiles: %s: needs a password\n", job.Password.Path)
-			result.Failed = append(result.Failed, job.Password.Path)
-			s.answer(job.ID, job.Password.ID, pick(job.Password.Actions, "skip"))
+			answered = job.PasswordPrompt.ID
+			fmt.Fprintf(os.Stderr, "dfiles: %s: needs a password\n", job.PasswordPrompt.Path)
+			result.Failed = append(result.Failed, job.PasswordPrompt.Path)
+			s.answer(job.ID, job.PasswordPrompt.ID, pick(job.PasswordPrompt.Actions, "skip"))
 		}
 	}
 	return result, errors.New("lost the connection while the job ran")
 }
 
-func pick(actions []string, preferred string) string {
-	if slices.Contains(actions, preferred) {
+func pick(actions []fileops.Action, preferred string) string {
+	if slices.Contains(actions, fileops.Action(preferred)) {
 		return preferred
 	}
-	if slices.Contains(actions, "skip") {
+	if slices.Contains(actions, fileops.Action("skip")) {
 		return "skip"
 	}
 	return "cancel"
@@ -117,7 +95,7 @@ func (s *session) answer(jobID, id, action string) {
 
 func (r jobResult) err() error {
 	switch {
-	case r.Job.State == "failed":
+	case r.Job.State == fileops.StateFailed:
 		return fmt.Errorf("%s failed: %s", r.Job.Kind, r.Job.Error)
 	case r.Job.Cancelled:
 		return fmt.Errorf("%s was cancelled", r.Job.Kind)
@@ -129,7 +107,7 @@ func (r jobResult) err() error {
 
 func (r jobResult) succeeded(source string) bool {
 	for _, failed := range r.Failed {
-		if failed == source || strings.HasPrefix(failed, source+"/") {
+		if pathutil.Within(failed, source) {
 			return false
 		}
 	}

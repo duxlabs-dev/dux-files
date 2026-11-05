@@ -88,23 +88,14 @@ OverlayDialog {
         }
     }
 
-    DTextField {
+    PasswordField {
         id: passwordField
 
-        width: parent.width
         visible: root.canProtect && root.protect
-        outlined: true
-        echoMode: TextInput.Password
-        showPasswordToggle: true
-        labelText: I18n.tr("Password", "label for a password input")
         onAccepted: root.submit()
     }
 
     actions: [
-        TextButton {
-            text: I18n.tr("Cancel", "dialog button to cancel")
-            onClicked: root.close()
-        },
         DButton {
             text: I18n.tr("Create", "dialog button creating an item")
             onClicked: root.submit()

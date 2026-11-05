@@ -1,17 +1,16 @@
 package ipc
 
 import (
-	"cmp"
 	"context"
 	"os"
 	"path/filepath"
-	"slices"
 	"strconv"
 	"time"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/wire"
+
 	"github.com/duxlabs-dev/dux-files/core/internal/fileops"
 	"github.com/duxlabs-dev/dux-go/files"
-	"github.com/duxlabs-dev/dux-go/paths"
 	"github.com/duxlabs-dev/dux-go/trash"
 )
 
@@ -32,7 +31,7 @@ func HandleTrash(_ context.Context, w *ConnWriter, req Request, deps Deps) {
 	case "trash.list":
 		entries, err := listTrash()
 		if err != nil {
-			w.RespondError(req.ID, "trash.list: "+err.Error())
+			wire.RespondError(w, req.ID, err)
 			return
 		}
 		if entries == nil {
@@ -41,19 +40,19 @@ func HandleTrash(_ context.Context, w *ConnWriter, req Request, deps Deps) {
 		w.Respond(req.ID, map[string]any{"entries": entries})
 	case "trash.entries":
 		if deps.Files == nil {
-			w.RespondError(req.ID, "file service unavailable")
+			wire.RespondError(w, req.ID, wire.Fail(files.CodeNotSupported, "file service unavailable"))
 			return
 		}
 		entries, err := listTrash()
 		if err != nil {
-			w.RespondError(req.ID, "trash.entries: "+err.Error())
+			wire.RespondError(w, req.ID, err)
 			return
 		}
 		w.Respond(req.ID, map[string]any{"entries": trashItems(entries, deps.Files.Stat)})
 	case "trash.count":
 		count, err := trash.Count()
 		if err != nil {
-			w.RespondError(req.ID, "trash.count: "+err.Error())
+			wire.RespondError(w, req.ID, err)
 			return
 		}
 		w.Respond(req.ID, map[string]any{"count": count, "stamp": trashStamp(count)})
@@ -81,15 +80,13 @@ func trashItems(entries []trash.Entry, stat func(string) (files.Entry, error)) [
 			DeletedMs:    deletedMs(e),
 		})
 	}
-	slices.SortStableFunc(items, func(a, b TrashItem) int {
-		return cmp.Or(cmp.Compare(b.DeletedMs, a.DeletedMs), cmp.Compare(a.Name, b.Name))
-	})
+	newestFirst(items, func(i TrashItem) (int64, string) { return i.DeletedMs, i.Name })
 	return items
 }
 
 func trashStamp(count int) string {
 	stamp := strconv.Itoa(count)
-	info, err := os.Stat(filepath.Join(paths.XDGDataHome(), "Trash", "info"))
+	info, err := os.Stat(filepath.Join(fileops.HomeTrash(), "info"))
 	if err != nil {
 		return stamp
 	}

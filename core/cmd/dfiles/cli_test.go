@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/devices"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -153,22 +155,22 @@ func TestSearchStreamsWithoutADaemon(t *testing.T) {
 }
 
 func TestFindDevice(t *testing.T) {
-	devices := []device{
+	list := []devices.Device{
 		{ID: "/org/freedesktop/UDisks2/block_devices/nvme0n1p2", Device: "/dev/nvme0n1p2", Kind: "system", MountPoint: "/"},
 		{ID: "/org/freedesktop/UDisks2/block_devices/sdb1", Device: "/dev/sdb1", Label: "STICK", UUID: "1234-ABCD"},
 	}
 	for _, target := range []string{"/dev/sdb1", "STICK", "1234-ABCD", "/org/freedesktop/UDisks2/block_devices/sdb1"} {
-		dev, err := findDevice(devices, target)
+		dev, err := findDevice(list, target)
 		require.NoError(t, err, target)
 		assert.Equal(t, "/dev/sdb1", dev.Device, target)
 	}
-	dev, err := findDevice(devices, "/")
+	dev, err := findDevice(list, "/")
 	require.NoError(t, err)
 	assert.Equal(t, "system", dev.Kind)
 
-	_, err = findDevice(devices, "")
+	_, err = findDevice(list, "")
 	assert.Error(t, err)
-	_, err = findDevice(devices, "/dev/sdc1")
+	_, err = findDevice(list, "/dev/sdc1")
 	assert.Error(t, err)
 }
 

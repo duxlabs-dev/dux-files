@@ -35,10 +35,6 @@ OverlayDialog {
     }
 
     actions: [
-        TextButton {
-            text: I18n.tr("Cancel", "dialog button to cancel")
-            onClicked: root.close()
-        },
         DButton {
             text: root.acceptText
             onClicked: root.submit()

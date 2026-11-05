@@ -15,13 +15,27 @@ Singleton {
     property string stamp: ""
     property int count: -1
     property int listeners: 0
-    property var _waiting: []
 
     signal changed(var entries)
     signal requestFailed(string message, string code)
 
+    readonly property SnapshotSource _source: SnapshotSource {
+        method: "recent.entries"
+        finishedOnly: true
+        affects: job => root.affects(job)
+        onCheck: root._check()
+        onReconnected: root.invalidate()
+        onAffected: root.invalidate()
+        onFetched: result => {
+            if (result.error)
+                return;
+            root.stamp = result.stamp ?? "";
+            root.count = (result.entries || []).length;
+        }
+    }
+
     function refresh() {
-        checkDelay.restart();
+        _source.refresh();
     }
 
     function invalidate() {
@@ -31,19 +45,7 @@ Singleton {
     }
 
     function fetch(callback) {
-        _waiting.push(callback);
-        if (_waiting.length > 1)
-            return;
-        DuxFilesService.call("recent.entries", {}, result => {
-            if (!result.error) {
-                root.stamp = result.stamp ?? "";
-                root.count = (result.entries || []).length;
-            }
-            const waiting = root._waiting;
-            root._waiting = [];
-            for (const pending of waiting)
-                pending(result);
-        });
+        _source.fetch({}, callback);
     }
 
     function remove(paths) {
@@ -93,29 +95,5 @@ Singleton {
             root.count = (result.entries || []).length;
             root.changed(result.entries || []);
         });
-    }
-
-    Connections {
-        target: DuxFilesService
-
-        function onConnectedChanged() {
-            root.invalidate();
-        }
-    }
-
-    Connections {
-        target: FileOpsService
-
-        function onJobFinished(job) {
-            if (job.state === "done" && root.affects(job))
-                root.invalidate();
-        }
-    }
-
-    Timer {
-        id: checkDelay
-
-        interval: FileBrowserMetrics.settleInterval
-        onTriggered: root._check()
     }
 }

@@ -4,33 +4,16 @@ import qs.Common
 import qs.Services
 import qs.DCommon.Widgets
 
-OverlayDialog {
+PausedJobDialog {
     id: root
 
-    property string opScope: ""
-    property bool catchUnscoped: false
+    readonly property var conflict: prompt
 
-    readonly property var paused: FileOpsService.jobs.filter(job => job.state === "paused-conflict" && (job.scope === opScope || (catchUnscoped && job.scope === "")))
-    readonly property var current: paused.length > 0 ? paused[0] : null
-    readonly property var conflict: current ? current.conflict : null
-    property bool applyToAll: false
-
-    function answer(action) {
-        if (!current || !conflict)
-            return;
-        FileOpsService.respond(current.id, conflict.id, action, applyToAll);
-        applyToAll = false;
-    }
-
-    function offers(action) {
-        return conflict ? (conflict.actions || []).includes(action) : false;
-    }
-
-    onConflictChanged: conflict ? open() : close()
+    pausedState: "paused-conflict"
+    promptKey: "conflict"
     acceptEnabled: offers("keepBoth")
     title: I18n.tr("This item already exists", "file conflict dialog header")
     supportingText: conflict ? I18n.tr("%1 already exists in this folder.", "file conflict dialog explanation").arg(conflict.target.name) : ""
-    closeEnabled: false
     onAccepted: {
         if (offers("keepBoth"))
             answer("keepBoth");
@@ -61,10 +44,6 @@ OverlayDialog {
     }
 
     actions: [
-        TextButton {
-            text: I18n.tr("Cancel", "dialog button to cancel")
-            onClicked: root.answer("cancel")
-        },
         DButton {
             visible: root.offers("merge")
             text: I18n.tr("Merge", "file conflict dialog button to merge folders")

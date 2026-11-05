@@ -3,22 +3,18 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import qs.Services
 import "FolderAppearance.js" as Look
 
 Singleton {
     id: root
 
-    readonly property var log: Log.scoped("FolderAppearances")
-    readonly property string filePath: Paths.strip(Paths.stateDir) + "/folder-appearances.json"
     readonly property int cap: 1000
     readonly property var colors: ["", "#448aff", "#66bb6a", "#ffb74d", "#ef5350", "#ab47bc", "#26a69a", "#ec407a"]
     readonly property var badges: _catalog.badges ?? []
     readonly property var icons: _catalog.icons ?? []
 
     property var entries: ({})
-    property bool _loaded: false
     property var _catalog: ({})
 
     signal changed(string key)
@@ -66,38 +62,30 @@ Singleton {
     function refreshCatalog() {
         if (_catalog.badges)
             return;
-        DuxFilesService.sendRequest("files.iconCatalog", null, response => {
-            if (response.error)
+        DuxFilesService.call("files.iconCatalog", null, result => {
+            if (result.error)
                 return;
-            _catalog = response.result ?? ({});
+            _catalog = result;
         });
+    }
+
+    function moved(pairs) {
+        let next = entries;
+        for (const pair of pairs) {
+            const from = pathKey(pair.from);
+            if (!FolderViews.hasKeysUnder(next, from))
+                continue;
+            next = FolderViews.renameKeys(next, from, pathKey(pair.to));
+        }
+        if (next === entries)
+            return;
+        _commit(next, "");
     }
 
     function _commit(next, key) {
         entries = next;
-        writeDebounce.restart();
+        store.save();
         changed(key);
-    }
-
-    function _apply(text) {
-        _loaded = true;
-        if (text === "")
-            return;
-        try {
-            const data = JSON.parse(text);
-            if (data && typeof data === "object" && !Array.isArray(data))
-                entries = data;
-        } catch (e) {
-            log.warn(`ignoring unreadable folder appearances: ${e}`);
-        }
-    }
-
-    function _write() {
-        if (!_loaded || !Paths.ready) {
-            writeDebounce.restart();
-            return;
-        }
-        file.setText(JSON.stringify(_pruned(entries), null, 1));
     }
 
     function _pruned(table) {
@@ -110,21 +98,25 @@ Singleton {
         return next;
     }
 
-    Component.onCompleted: _apply(file.text() ?? "")
+    Component.onCompleted: store.read()
 
-    Timer {
-        id: writeDebounce
+    Connections {
+        target: FileOpsService
 
-        interval: 400
-        onTriggered: root._write()
+        function onJobFinished(job) {
+            if (job.state !== "done")
+                return;
+            if (job.moved?.length)
+                root.moved(job.moved);
+        }
     }
 
-    FileView {
-        id: file
+    JsonStore {
+        id: store
 
-        path: root.filePath
-        blockLoading: true
-        atomicWrites: true
-        printErrors: false
+        name: "folder appearances"
+        path: Paths.strip(Paths.stateDir) + "/folder-appearances.json"
+        serialize: () => JSON.stringify(root._pruned(root.entries), null, 1)
+        parse: text => root.entries = objectFrom(text) ?? root.entries
     }
 }
