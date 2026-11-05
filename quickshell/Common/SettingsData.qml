@@ -5,48 +5,20 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.Common
+import qs.DCommon.Common as DC
 
 Singleton {
     id: root
 
-    enum AnimationSpeed {
-        None,
-        Short,
-        Medium,
-        Long,
-        Custom
-    }
-
-    enum TextRenderType {
-        Qt,
-        Native,
-        Curve
-    }
-
-    enum TextRenderQuality {
-        Default,
-        Low,
-        Normal,
-        High,
-        VeryHigh
-    }
-
     property bool popoutElevationEnabled: true
     property bool scrollbarsEnabled: true
-    property int textRenderType: SettingsData.TextRenderType.Qt
-    property int textRenderQuality: SettingsData.TextRenderQuality.Default
+    property int textRenderType: DC.Style.TextRenderType.Qt
+    property int textRenderQuality: DC.Style.TextRenderQuality.Default
     property bool blurBorderEnabled: true
     property real blurBorderOpacity: 0.35
     property real blurLayerOutlineOpacity: 0
     property string blurBorderColor: "outline"
     property string blurBorderCustomColor: "#ffffff"
-    property bool powerActionConfirm: true
-    property real powerActionHoldDuration: 0.5
-    property var powerMenuActions: ["reboot", "logout", "poweroff", "lock", "suspend", "restart"]
-    property string powerMenuDefaultAction: "logout"
-    property bool powerMenuGridLayout: false
-
-    readonly property string settingsPath: Paths.configDir + "/ui-settings.json"
 
     property alias themeMode: adapter.themeMode
     property alias colorSource: adapter.colorSource
@@ -116,60 +88,19 @@ Singleton {
     property alias gtkBookmarksOffered: adapter.gtkBookmarksOffered
 
     function flush() {
-        if (!writeDebounce.running)
-            return;
-        writeDebounce.stop();
-        settingsFile.blockWrites = true;
-        settingsFile._write();
+        store.flush();
     }
 
     Component.onDestruction: flush()
 
-    Timer {
-        id: writeDebounce
+    JsonStore {
+        id: store
 
-        interval: 400
-        onTriggered: {
-            if (!Paths.ready) {
-                restart();
-                return;
-            }
-            settingsFile._write();
-        }
-    }
-
-    FileView {
-        id: settingsFile
-        path: root.settingsPath
-        blockLoading: true
-        atomicWrites: true
+        name: "settings"
+        path: Paths.configDir + "/ui-settings.json"
         watchChanges: true
-        printErrors: false
 
-        property bool _loaded: false
-        property bool _selfWrite: false
-
-        onLoaded: _loaded = true
-        onLoadFailed: _loaded = true
-        onFileChanged: {
-            if (_selfWrite) {
-                _selfWrite = false;
-                return;
-            }
-            reload();
-        }
-        onAdapterUpdated: {
-            if (!_loaded)
-                return;
-            writeDebounce.restart();
-        }
-
-        function _write() {
-            _selfWrite = true;
-            writeAdapter();
-        }
-
-        JsonAdapter {
+        adapter: JsonAdapter {
             id: adapter
             property string themeMode: "auto"
             property string colorSource: "auto"

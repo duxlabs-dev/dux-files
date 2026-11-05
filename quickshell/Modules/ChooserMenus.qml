@@ -3,13 +3,13 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.FileBrowser
 
 Item {
     id: menus
 
     required property var chooser
     required property var pane
+    required property PaneActions actions
 
     function showItemMenu(pointX, pointY) {
         if (pane.virtualActive)
@@ -29,6 +29,8 @@ Item {
     }
 
     function runAction(id) {
+        if (!FileActions.available(id, "picker"))
+            return;
         const entries = pane.selectedEntries;
         const paths = entries.map(entry => entry.path);
         switch (id) {
@@ -46,20 +48,19 @@ Item {
             ClipboardService.copy(paths);
             return;
         case "paste":
-            pasteInto(pane.path);
+            actions.pasteInto(pane.path, false);
             return;
         case "pasteInto":
-            pasteInto(entries[0]?.path ?? pane.path);
+            actions.pasteInto(entries[0]?.path ?? pane.path, false);
             return;
         case "trash":
-            trash(paths);
+            actions.trashPaths(paths);
             return;
         case "copyPath":
-            Paths.copyPathToClipboard((paths.length > 0 ? paths : [pane.path]).join("\n"));
-            ClipboardService.clear();
+            actions.copyText((paths.length > 0 ? paths : [pane.path]).join("\n"));
             return;
         case "newFolder":
-            chooser.createFolder();
+            actions.newFolder(pane.virtualActive ? "" : pane.path);
             return;
         case "newDocument":
             newDocumentMenu.present(backgroundMenu.x, backgroundMenu.y);
@@ -70,34 +71,31 @@ Item {
         case "reload":
             pane.refresh();
             return;
-        }
-    }
-
-    function pasteInto(dest) {
-        ClipboardService.read(result => {
-            if (result.paths.length === 0) {
-                FileOpsService.pasteImage(dest, I18n.tr("Pasted image", "file name for an image pasted from the clipboard"), chooser.opScope);
-                return;
-            }
-            if (result.cut) {
-                FileOpsService.move(result.paths, dest, chooser.opScope);
-                ClipboardService.clear();
-                return;
-            }
-            FileOpsService.copy(result.paths, dest, chooser.opScope);
-        });
-    }
-
-    function trash(paths) {
-        if (paths.length === 0)
+        case "selectAll":
+            pane.selection.selectAll(pane.body.directory.entries);
             return;
-        if (!SettingsData.confirmTrash) {
-            FileOpsService.trash(paths, chooser.opScope);
+        case "editPath":
+            pane.editPath();
+            return;
+        case "jump":
+            pane.startJump();
+            return;
+        case "search":
+            chooser.focusSearch();
+            return;
+        case "back":
+            pane.back();
+            return;
+        case "forward":
+            pane.forward();
+            return;
+        case "togglePreview":
+            chooser.setPreviewOpen(!chooser.previewOpen);
+            return;
+        case "toggleSidebar":
+            chooser.setSidebarShown(!chooser.sidebarShown);
             return;
         }
-        trashDialog.pending = paths;
-        trashDialog.subject = paths.length === 1 ? FilePaths.baseName(paths[0]) : FileFormat.count(paths.length);
-        trashDialog.open();
     }
 
     FileContextMenu {
@@ -130,20 +128,5 @@ Item {
         anchorItem: menus
         folder: menus.pane.path
         opScope: menus.chooser.opScope
-    }
-
-    ConfirmDialog {
-        id: trashDialog
-
-        property var pending: []
-
-        title: I18n.tr("Move to Trash", "context menu entry trashing the selection")
-        message: I18n.tr("%1 will be moved to the trash.", "trash confirmation explanation").arg(subject)
-        confirmText: I18n.tr("Move to Trash", "context menu entry trashing the selection")
-        danger: false
-        onConfirmed: {
-            FileOpsService.trash(pending, menus.chooser.opScope);
-            pending = [];
-        }
     }
 }

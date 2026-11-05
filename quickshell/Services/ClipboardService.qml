@@ -27,16 +27,15 @@ Singleton {
     }
 
     function read(callback) {
-        transport.sendRequest("clipboard.paths", null, response => {
-            if (response.error) {
-                root.requestFailed(response.error);
+        transport.call("clipboard.paths", null, result => {
+            if (result.error) {
+                root.requestFailed(result.error);
                 callback({
                     "paths": [],
                     "cut": false
                 });
                 return;
             }
-            const result = response.result || {};
             callback({
                 "paths": result.paths || [],
                 "cut": result.cut === true,
@@ -48,9 +47,9 @@ Singleton {
     function refresh() {
         if (paths.length === 0)
             return;
-        transport.sendRequest("clipboard.paths", null, response => {
-            const source = (response.result || {}).source || "";
-            if (response.error || source === "" || source === "dfiles")
+        transport.call("clipboard.paths", null, result => {
+            const source = result.source || "";
+            if (result.error || source === "" || source === "dfiles")
                 return;
             root.clear();
         });
@@ -59,19 +58,19 @@ Singleton {
     function clear() {
         paths = [];
         cut = false;
-        transport.sendRequest("clipboard.clear", null, null);
+        transport.call("clipboard.clear", null, null);
     }
 
     function _publish(selection, asCut) {
         if (selection.length === 0)
             return;
-        transport.sendRequest("clipboard.copy", {
+        transport.call("clipboard.copy", {
             "paths": selection,
             "cut": asCut
-        }, response => {
-            if (response.error) {
+        }, result => {
+            if (result.error) {
                 root.available = false;
-                root.requestFailed(response.error);
+                root.requestFailed(result.error);
                 return;
             }
             root.available = true;

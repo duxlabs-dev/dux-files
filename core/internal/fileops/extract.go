@@ -30,21 +30,15 @@ const unixSymlinkAttribute = 0xA000
 func (r *runner) extract() error {
 	r.setTotals(0, 0, true)
 
-	for _, archive := range r.job.spec.sources {
-		if r.job.closed() {
-			return nil
-		}
+	return eachSource(r, r.job.spec.sources, func(archive string) error {
 		created, dir, err := r.unpack(archive)
-		switch {
-		case errors.Is(err, errSkipped):
-			continue
-		case err != nil:
-			return skipToNil(err)
+		if err != nil {
+			return err
 		}
 		r.remember(KindDelete, created, "")
 		r.noteCreated(created, dir)
-	}
-	return nil
+		return nil
+	})
 }
 
 func (r *runner) unpack(archive string) (created string, dir bool, err error) {

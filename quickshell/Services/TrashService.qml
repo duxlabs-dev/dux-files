@@ -14,9 +14,20 @@ Singleton {
     property string filesPath: localFilesPath()
     property int count: 0
     property string stamp: ""
-    property var _waiting: []
 
     signal changed
+
+    readonly property SnapshotSource _source: SnapshotSource {
+        method: "trash.entries"
+        affects: job => root.affects(job)
+        onCheck: root._check()
+        onReconnected: {
+            root.stamp = "";
+            root.resolvePath();
+            root.refresh();
+        }
+        onAffected: root.refresh()
+    }
 
     function localFilesPath() {
         const dataHome = String(Quickshell.env("XDG_DATA_HOME") || "").replace(/\/+$/, "");
@@ -25,7 +36,7 @@ Singleton {
     }
 
     function refresh() {
-        checkDelay.restart();
+        _source.refresh();
     }
 
     function resolvePath() {
@@ -37,15 +48,7 @@ Singleton {
     }
 
     function entries(callback) {
-        _waiting.push(callback);
-        if (_waiting.length > 1)
-            return;
-        DuxFilesService.call("trash.entries", {}, result => {
-            const waiting = root._waiting;
-            root._waiting = [];
-            for (const pending of waiting)
-                pending(result);
-        });
+        _source.fetch({}, callback);
     }
 
     function holds(path) {
@@ -88,31 +91,5 @@ Singleton {
     Component.onCompleted: {
         resolvePath();
         refresh();
-    }
-
-    Connections {
-        target: DuxFilesService
-
-        function onConnectedChanged() {
-            root.stamp = "";
-            root.resolvePath();
-            root.refresh();
-        }
-    }
-
-    Connections {
-        target: FileOpsService
-
-        function onJobFinished(job) {
-            if (root.affects(job))
-                root.refresh();
-        }
-    }
-
-    Timer {
-        id: checkDelay
-
-        interval: FileBrowserMetrics.settleInterval
-        onTriggered: root._check()
     }
 }

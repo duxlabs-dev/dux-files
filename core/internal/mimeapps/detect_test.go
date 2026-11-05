@@ -5,6 +5,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -29,32 +31,32 @@ func TestMagicSniffing(t *testing.T) {
 	svc, root := fixture(t)
 	d := svc.Detector()
 
-	png := writeFile(t, filepath.Join(root, "files", "blob"), []byte("\x89PNG\r\n\x1a\n rest"))
+	png := testfs.WriteBytes(t, filepath.Join(root, "files", "blob"), []byte("\x89PNG\r\n\x1a\n rest"))
 	assert.Equal(t, "image/png", d.Sniff(png))
 
-	pdf := writeFile(t, filepath.Join(root, "files", "doc"), []byte("%PDF-1.7 trailing"))
+	pdf := testfs.WriteBytes(t, filepath.Join(root, "files", "doc"), []byte("%PDF-1.7 trailing"))
 	assert.Equal(t, "application/pdf", d.Sniff(pdf))
 
-	wav := writeFile(t, filepath.Join(root, "files", "sound"), []byte("RIFF....WAVEfmt "))
+	wav := testfs.WriteBytes(t, filepath.Join(root, "files", "sound"), []byte("RIFF....WAVEfmt "))
 	assert.Equal(t, "audio/x-wav", d.Sniff(wav), "the nested matchlet picks between two RIFF types")
 
-	avi := writeFile(t, filepath.Join(root, "files", "movie"), []byte("RIFF....AVI LIST"))
+	avi := testfs.WriteBytes(t, filepath.Join(root, "files", "movie"), []byte("RIFF....AVI LIST"))
 	assert.Equal(t, "video/x-msvideo", d.Sniff(avi))
 
-	riff := writeFile(t, filepath.Join(root, "files", "riff"), []byte("RIFF\x00\x00\x00\x00NOPE\x00"))
+	riff := testfs.WriteBytes(t, filepath.Join(root, "files", "riff"), []byte("RIFF\x00\x00\x00\x00NOPE\x00"))
 	assert.Equal(t, "application/octet-stream", d.Sniff(riff), "a parent without a matching child does not match")
 
-	script := writeFile(t, filepath.Join(root, "files", "run"), []byte("#!  /bin/sh\necho hi\n"))
+	script := testfs.WriteBytes(t, filepath.Join(root, "files", "run"), []byte("#!  /bin/sh\necho hi\n"))
 	assert.Equal(t, "application/x-shellscript", d.Sniff(script), "the child matchlet searches its range")
 
-	prose := writeFile(t, filepath.Join(root, "files", "prose"), []byte("héllo wörld\n"))
+	prose := testfs.WriteBytes(t, filepath.Join(root, "files", "prose"), []byte("héllo wörld\n"))
 	assert.Equal(t, "text/plain", d.Sniff(prose))
 
-	blob := writeFile(t, filepath.Join(root, "files", "binary"), []byte{0x00, 0x01, 0x02, 0x7f})
+	blob := testfs.WriteBytes(t, filepath.Join(root, "files", "binary"), []byte{0x00, 0x01, 0x02, 0x7f})
 	assert.Equal(t, "application/octet-stream", d.Sniff(blob))
 
 	assert.Empty(t, d.Sniff(filepath.Join(root, "files", "missing")))
-	assert.Empty(t, d.Sniff(writeFile(t, filepath.Join(root, "files", "empty"), nil)))
+	assert.Empty(t, d.Sniff(testfs.WriteBytes(t, filepath.Join(root, "files", "empty"), nil)))
 }
 
 func TestSniffHonoursMaxExtent(t *testing.T) {
@@ -62,7 +64,7 @@ func TestSniffHonoursMaxExtent(t *testing.T) {
 	d := svc.Detector()
 
 	body := append([]byte(strings.Repeat(".", 600)), []byte("DEEPMARK")...)
-	deep := writeFile(t, filepath.Join(root, "files", "deep"), body)
+	deep := testfs.WriteBytes(t, filepath.Join(root, "files", "deep"), body)
 	assert.Equal(t, "text/x-deep", d.Sniff(deep), "the read reaches the database's furthest rule")
 }
 
@@ -70,17 +72,17 @@ func TestDetectCombinesGlobAndMagic(t *testing.T) {
 	svc, root := fixture(t)
 	d := svc.Detector()
 
-	trap := writeFile(t, filepath.Join(root, "files", "trap.txt"), []byte("\x89PNG\r\n\x1a\n rest"))
+	trap := testfs.WriteBytes(t, filepath.Join(root, "files", "trap.txt"), []byte("\x89PNG\r\n\x1a\n rest"))
 	assert.Equal(t, "text/plain", d.Detect(trap, false), "a low priority magic match does not beat the glob, as gio does it")
 	assert.Equal(t, "image/png", d.Sniff(trap), "an explicit sniff always reports the content type")
 
-	deep := writeFile(t, filepath.Join(root, "files", "deep.txt"), append([]byte(strings.Repeat(".", 600)), []byte("DEEPMARK")...))
+	deep := testfs.WriteBytes(t, filepath.Join(root, "files", "deep.txt"), append([]byte(strings.Repeat(".", 600)), []byte("DEEPMARK")...))
 	assert.Equal(t, "text/plain", d.Detect(deep, false), "a magic subtype of the glob type does not beat the glob either, per the spec's checking order")
 
-	wins := writeFile(t, filepath.Join(root, "files", "wins.txt"), []byte("MAGICWIN and more"))
+	wins := testfs.WriteBytes(t, filepath.Join(root, "files", "wins.txt"), []byte("MAGICWIN and more"))
 	assert.Equal(t, "application/x-magic-wins", d.Detect(wins, false), "priority 90 outranks the glob")
 
-	nameless := writeFile(t, filepath.Join(root, "files", "nameless"), []byte("%PDF-1.4"))
+	nameless := testfs.WriteBytes(t, filepath.Join(root, "files", "nameless"), []byte("%PDF-1.4"))
 	assert.Equal(t, "application/pdf", d.Detect(nameless, false), "with no glob match the magic type stands")
 
 	assert.Equal(t, TypeDirectory, d.Detect(root, true), "directories never read content")

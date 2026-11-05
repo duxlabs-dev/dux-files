@@ -1,9 +1,7 @@
 package ipc
 
 import (
-	"cmp"
 	"context"
-	"slices"
 
 	"github.com/duxlabs-dev/dux-files/core/internal/recent"
 	"github.com/duxlabs-dev/dux-files/core/internal/wire"
@@ -22,13 +20,13 @@ type RecentItem struct {
 func HandleRecent(_ context.Context, w *ConnWriter, req Request, deps Deps) {
 	store := deps.Recent
 	if store == nil {
-		w.RespondError(req.ID, "recent list unavailable")
+		wire.RespondError(w, req.ID, wire.Fail(files.CodeNotSupported, "recent list unavailable"))
 		return
 	}
 	switch req.Method {
 	case "recent.entries":
 		if deps.Files == nil {
-			w.RespondError(req.ID, "file service unavailable")
+			wire.RespondError(w, req.ID, wire.Fail(files.CodeNotSupported, "file service unavailable"))
 			return
 		}
 		if known := params.StringOpt(req.Params, "stamp", ""); known != "" && known == store.Stamp() {
@@ -37,7 +35,7 @@ func HandleRecent(_ context.Context, w *ConnWriter, req Request, deps Deps) {
 		}
 		items, stamp, err := store.Load()
 		if err != nil {
-			w.RespondError(req.ID, "recent.entries: "+err.Error())
+			wire.RespondError(w, req.ID, err)
 			return
 		}
 		w.Respond(req.ID, map[string]any{"stamp": stamp, "entries": recentItems(items, deps.Files.Stat)})
@@ -48,13 +46,13 @@ func HandleRecent(_ context.Context, w *ConnWriter, req Request, deps Deps) {
 			return
 		}
 		if err := store.Remove(targets); err != nil {
-			w.RespondError(req.ID, "recent.remove: "+err.Error())
+			wire.RespondError(w, req.ID, err)
 			return
 		}
 		w.Respond(req.ID, map[string]any{"ok": true, "stamp": store.Stamp()})
 	case "recent.clear":
 		if err := store.Clear(); err != nil {
-			w.RespondError(req.ID, "recent.clear: "+err.Error())
+			wire.RespondError(w, req.ID, err)
 			return
 		}
 		w.Respond(req.ID, map[string]any{"ok": true, "stamp": store.Stamp()})
@@ -82,8 +80,6 @@ func recentItems(items []recent.Item, stat func(string) (files.Entry, error)) []
 		}
 		out = append(out, RecentItem{Entry: entry, URI: item.URI, UsedMs: item.Used().UnixMilli()})
 	}
-	slices.SortStableFunc(out, func(a, b RecentItem) int {
-		return cmp.Or(cmp.Compare(b.UsedMs, a.UsedMs), cmp.Compare(a.Name, b.Name))
-	})
+	newestFirst(out, func(i RecentItem) (int64, string) { return i.UsedMs, i.Name })
 	return out
 }

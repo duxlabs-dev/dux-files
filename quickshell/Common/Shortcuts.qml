@@ -14,7 +14,7 @@ Singleton {
             "keys": ["Return", "Enter"],
             "group": "navigation",
             "scope": "view",
-            "label": I18n.tr("Open", "context menu entry opening a file"),
+            "label": FileActions.label("open"),
             "vim": ["l"]
         },
         {
@@ -22,35 +22,35 @@ Singleton {
             "keys": ["Shift+Return"],
             "group": "navigation",
             "scope": "selection",
-            "label": I18n.tr("Open in new tab", "context menu entry opening a folder in a new tab")
+            "label": FileActions.label("openInNewTab")
         },
         {
             "id": "openInPane",
             "keys": ["Ctrl+Shift+Return"],
             "group": "navigation",
             "scope": "selection",
-            "label": I18n.tr("Open in the other pane", "context menu entry opening a folder beside the current one")
+            "label": FileActions.label("openInPane")
         },
         {
             "id": "openContainingFolder",
             "keys": ["Ctrl+Return"],
             "group": "navigation",
             "scope": "selection",
-            "label": I18n.tr("Open the containing folder", "keyboard shortcut")
+            "label": FileActions.label("openContainingFolder")
         },
         {
             "id": "openWith",
             "keys": ["Ctrl+Shift+O"],
             "group": "navigation",
             "scope": "selection",
-            "label": I18n.tr("Open with", "open with dialog header")
+            "label": FileActions.label("openWith")
         },
         {
             "id": "openTerminal",
             "keys": ["Ctrl+Alt+T"],
             "group": "navigation",
             "scope": "window",
-            "label": I18n.tr("Open in terminal", "context menu entry opening a terminal")
+            "label": FileActions.label("openTerminal")
         },
         {
             "id": "moveCursor",
@@ -113,7 +113,7 @@ Singleton {
             "keys": ["Ctrl+D"],
             "group": "navigation",
             "scope": "window",
-            "label": I18n.tr("Bookmark this folder", "tooltip on the bookmark button")
+            "label": FileActions.label("bookmark")
         },
         {
             "id": "editPath",
@@ -155,7 +155,7 @@ Singleton {
             "keys": ["Ctrl+N"],
             "group": "navigation",
             "scope": "window",
-            "label": I18n.tr("New window", "menu entry opening another file manager window")
+            "label": FileActions.label("newWindow")
         },
         {
             "id": "newTab",
@@ -313,7 +313,7 @@ Singleton {
             "keys": ["Ctrl+H"],
             "group": "view",
             "scope": "window",
-            "label": I18n.tr("Show hidden files", "menu entry listing dot files"),
+            "label": FileActions.label("showHidden"),
             "vim": ["."]
         },
         {
@@ -356,28 +356,28 @@ Singleton {
             "keys": ["F5", "Ctrl+R"],
             "group": "view",
             "scope": "window",
-            "label": I18n.tr("Reload", "menu entry re-reading the current folder")
+            "label": FileActions.label("reload")
         },
         {
             "id": "shortcuts",
             "keys": ["F1", "?"],
             "group": "view",
             "scope": "path",
-            "label": I18n.tr("Keyboard shortcuts", "overlay listing every keyboard shortcut")
+            "label": FileActions.label("shortcuts")
         },
         {
             "id": "settings",
             "keys": ["Ctrl+,"],
             "group": "view",
             "scope": "path",
-            "label": I18n.tr("Settings", "settings window header title")
+            "label": FileActions.label("settings")
         },
         {
             "id": "selectAll",
             "keys": ["Ctrl+A"],
             "group": "selection",
             "scope": "window",
-            "label": I18n.tr("Select all", "menu entry selecting every item in the folder")
+            "label": FileActions.label("selectAll")
         },
         {
             "id": "invertSelection",
@@ -421,7 +421,7 @@ Singleton {
             "keys": ["Ctrl+C"],
             "group": "operations",
             "scope": "selection",
-            "label": I18n.tr("Copy", "context menu entry copying the selection"),
+            "label": FileActions.label("copy"),
             "vim": ["y"]
         },
         {
@@ -429,7 +429,7 @@ Singleton {
             "keys": ["Ctrl+X"],
             "group": "operations",
             "scope": "selection",
-            "label": I18n.tr("Cut", "context menu entry marking the selection for a move"),
+            "label": FileActions.label("cut"),
             "vim": ["x"]
         },
         {
@@ -437,7 +437,7 @@ Singleton {
             "keys": ["Ctrl+V"],
             "group": "operations",
             "scope": "window",
-            "label": I18n.tr("Paste", "context menu entry pasting the clipboard here"),
+            "label": FileActions.label("paste"),
             "vim": ["p"]
         },
         {
@@ -445,14 +445,14 @@ Singleton {
             "keys": ["Ctrl+Shift+V"],
             "group": "operations",
             "scope": "window",
-            "label": I18n.tr("Paste as link", "context menu entry creating symlinks from the clipboard")
+            "label": FileActions.label("pasteLink")
         },
         {
             "id": "rename",
             "keys": ["F2"],
             "group": "operations",
             "scope": "selection",
-            "label": I18n.tr("Rename", "rename dialog header"),
+            "label": FileActions.label("rename"),
             "vim": ["r"]
         },
         {
@@ -460,7 +460,7 @@ Singleton {
             "keys": ["Del"],
             "group": "operations",
             "scope": "selection",
-            "label": I18n.tr("Move to Trash", "context menu entry trashing the selection"),
+            "label": FileActions.label("trash"),
             "vim": ["d"]
         },
         {
@@ -468,7 +468,7 @@ Singleton {
             "keys": ["Shift+Del"],
             "group": "operations",
             "scope": "selection",
-            "label": I18n.tr("Delete permanently", "context menu entry deleting the selection for good"),
+            "label": FileActions.label("deletePermanently"),
             "vim": ["D"]
         },
         {
@@ -491,35 +491,35 @@ Singleton {
             "keys": ["Ctrl+Shift+D"],
             "group": "operations",
             "scope": "selection",
-            "label": I18n.tr("Duplicate", "context menu entry copying the selection beside itself")
+            "label": FileActions.label("duplicate")
         },
         {
             "id": "newFolder",
             "keys": ["Ctrl+Shift+N"],
             "group": "operations",
             "scope": "window",
-            "label": I18n.tr("New folder", "new folder dialog header")
+            "label": FileActions.label("newFolder")
         },
         {
             "id": "newFolderWith",
             "keys": ["Ctrl+Alt+N"],
             "group": "operations",
             "scope": "selection",
-            "label": I18n.tr("New folder with selection", "context menu entry moving the selection into a new folder")
+            "label": FileActions.label("newFolderWith")
         },
         {
             "id": "copyPath",
             "keys": ["Ctrl+Shift+C"],
             "group": "operations",
             "scope": "window",
-            "label": I18n.tr("Copy location path", "menu entry copying the current path to the clipboard")
+            "label": FileActions.label("copyPath")
         },
         {
             "id": "properties",
             "keys": ["Ctrl+I", "Alt+Return"],
             "group": "operations",
             "scope": "window",
-            "label": I18n.tr("Properties", "menu entry showing details about the current folder")
+            "label": FileActions.label("properties")
         },
         {
             "id": "contextMenu",
@@ -595,6 +595,12 @@ Singleton {
             "label": I18n.tr("Sidebar", "keyboard shortcut group")
         }
     ]
+
+    readonly property var chooserIds: ["editPath", "jump", "search", "showHidden", "newFolder", "back", "forward", "togglePreview", "toggleSidebar", "selectAll", "copy", "cut", "paste", "rename"]
+
+    function chooser() {
+        return entries.filter(entry => chooserIds.includes(entry.id));
+    }
 
     function bound(scope) {
         return entries.filter(entry => entry.scope === scope);

@@ -1,15 +1,10 @@
 package main
 
 import (
-	"os"
-
-	"github.com/duxlabs-dev/dux-files/core/internal/devices"
 	"github.com/duxlabs-dev/dux-files/core/internal/fileops"
 	"github.com/duxlabs-dev/dux-files/core/internal/ipc"
 	"github.com/duxlabs-dev/dux-files/core/internal/mimeapps"
 	"github.com/duxlabs-dev/dux-files/core/internal/sandbox"
-	"github.com/duxlabs-dev/dux-files/core/internal/search"
-	"github.com/duxlabs-dev/dux-files/core/internal/settings"
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/duxlabs-dev/dux-go/log"
 )
@@ -28,14 +23,8 @@ func fileServices(bus *ipc.EventBus) (ipc.Deps, func()) {
 
 func searchServices(bus *ipc.EventBus) (ipc.Deps, func()) {
 	fileService := files.NewService(bus, cacheHome(), mimeapps.NewService().Detector())
-	deviceService := devices.NewService(bus, uint32(os.Getuid()))
-	if err := deviceService.Start(); err != nil {
-		log.Debugf("udisks2 unavailable: %v", err)
-	}
-	searchService := search.NewService(bus, fileService)
-	searchService.SetIndexEnabled(!sandbox.Current().Sandboxed)
-	searchService.SetMounts(func() []string { return localMounts(deviceService.Snapshot()) })
-	searchService.SetExcludes(func() []string { return settings.Load(configHome()).SearchExcludes })
+	deviceService := startDevices(bus, log.Debugf)
+	searchService := newSearch(bus, fileService, deviceService, configHome(), sandbox.Current())
 	return ipc.Deps{Files: fileService, Search: searchService}, func() {
 		searchService.Close()
 		deviceService.Close()
@@ -44,9 +33,6 @@ func searchServices(bus *ipc.EventBus) (ipc.Deps, func()) {
 }
 
 func deviceServices(bus *ipc.EventBus) (ipc.Deps, func()) {
-	deviceService := devices.NewService(bus, uint32(os.Getuid()))
-	if err := deviceService.Start(); err != nil {
-		log.Debugf("udisks2 unavailable: %v", err)
-	}
+	deviceService := startDevices(bus, log.Debugf)
 	return ipc.Deps{Devices: deviceService}, deviceService.Close
 }

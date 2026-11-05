@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/pathutil"
+
 	"github.com/duxlabs-dev/dux-files/core/internal/helper"
 	"github.com/duxlabs-dev/dux-files/core/internal/wire"
 	"github.com/duxlabs-dev/dux-go/files"
@@ -106,7 +108,7 @@ func specOf(req ipc.Request) (spec, error) {
 		}
 		s.sources = sources
 		s.name = params.StringOpt(req.Params, "name", "")
-		if len(s.sources) != 1 || !validName(s.name) {
+		if len(s.sources) != 1 || !pathutil.ValidName(s.name) {
 			return spec{}, wire.Invalid("files.op.rename requires an absolute path and a name")
 		}
 	case "files.op.newFolder", "files.op.newFile":
@@ -115,7 +117,7 @@ func specOf(req ipc.Request) (spec, error) {
 		s.name = params.StringOpt(req.Params, "name", "")
 		s.template = params.StringOpt(req.Params, "template", "")
 		s.unique = params.BoolLoose(req.Params, "unique")
-		if !filepath.IsAbs(s.dest) || !validName(s.name) {
+		if !filepath.IsAbs(s.dest) || !pathutil.ValidName(s.name) {
 			return spec{}, wire.Invalid(req.Method + " requires an absolute path and a name")
 		}
 	case "files.op.duplicate":
@@ -144,7 +146,7 @@ func specOf(req ipc.Request) (spec, error) {
 		s.dest = params.StringOpt(req.Params, "path", "")
 		s.name = params.StringOpt(req.Params, "name", "")
 		s.unique = params.BoolLoose(req.Params, "unique")
-		if len(s.sources) == 0 || !filepath.IsAbs(s.dest) || !validName(s.name) {
+		if len(s.sources) == 0 || !filepath.IsAbs(s.dest) || !pathutil.ValidName(s.name) {
 			return spec{}, wire.Invalid("files.op.newFolderWith requires paths, an absolute path and a name")
 		}
 		if nested := nestedSource(s.sources, s.dest); nested != "" {
@@ -168,7 +170,7 @@ func specOf(req ipc.Request) (spec, error) {
 			return spec{}, wire.Invalid("files.op.restore requires names and an absolute trashDir")
 		}
 		for _, name := range s.sources {
-			if !validName(name) {
+			if !pathutil.ValidName(name) {
 				return spec{}, wire.Invalid("not a trash entry name: " + name)
 			}
 		}
@@ -184,7 +186,7 @@ func specOf(req ipc.Request) (spec, error) {
 		s.dest = params.StringOpt(req.Params, "dest", "")
 		s.name = params.StringOpt(req.Params, "name", "")
 		s.format = params.StringOpt(req.Params, "format", FormatZip)
-		if len(s.sources) == 0 || !filepath.IsAbs(s.dest) || !validName(s.name) {
+		if len(s.sources) == 0 || !filepath.IsAbs(s.dest) || !pathutil.ValidName(s.name) {
 			return spec{}, wire.Invalid("files.op.compress requires paths, an absolute dest and a name")
 		}
 		if !slices.Contains(compressFormats, s.format) {
@@ -292,7 +294,7 @@ func (m *Manager) handleRedo(w *ipc.ConnWriter, req ipc.Request) {
 func (m *Manager) handlePasteImage(w *ipc.ConnWriter, req ipc.Request) {
 	dest := params.StringOpt(req.Params, "path", "")
 	stem := params.StringOpt(req.Params, "name", "Pasted image")
-	if !filepath.IsAbs(dest) || !validName(stem) {
+	if !filepath.IsAbs(dest) || !pathutil.ValidName(stem) {
 		wire.RespondError(w, req.ID, wire.Invalid("files.op.pasteImage requires an absolute path and a name"))
 		return
 	}
@@ -359,13 +361,6 @@ func knownAction(action Action) bool {
 	return false
 }
 
-func validName(name string) bool {
-	if name == "" || name == "." || name == ".." {
-		return false
-	}
-	return !strings.ContainsAny(name, "/\x00")
-}
-
 func absPaths(req ipc.Request, key string) ([]string, error) {
 	values := wire.StringList(req.Params, key)
 	if len(values) == 0 {
@@ -384,17 +379,9 @@ func absPaths(req ipc.Request, key string) ([]string, error) {
 
 func nestedSource(sources []string, dest string) string {
 	for _, src := range sources {
-		if dest == src || isUnder(dest, src) {
+		if dest == src || pathutil.Under(dest, src) {
 			return src
 		}
 	}
 	return ""
-}
-
-func isUnder(path, dir string) bool {
-	rel, err := filepath.Rel(dir, path)
-	if err != nil {
-		return false
-	}
-	return rel != "." && rel != ".." && !strings.HasPrefix(rel, ".."+string(filepath.Separator)) && !filepath.IsAbs(rel)
 }

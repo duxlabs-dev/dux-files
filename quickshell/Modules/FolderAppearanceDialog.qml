@@ -169,13 +169,34 @@ OverlayDialog {
                 fillColor: Qt.hsva(root.hue, 1, 1, 1)
                 trackGradient: Gradient {
                     orientation: Gradient.Horizontal
-                    GradientStop { position: 0 / 6; color: Qt.hsva(0 / 6, 1, 1, 1) }
-                    GradientStop { position: 1 / 6; color: Qt.hsva(1 / 6, 1, 1, 1) }
-                    GradientStop { position: 2 / 6; color: Qt.hsva(2 / 6, 1, 1, 1) }
-                    GradientStop { position: 3 / 6; color: Qt.hsva(3 / 6, 1, 1, 1) }
-                    GradientStop { position: 4 / 6; color: Qt.hsva(4 / 6, 1, 1, 1) }
-                    GradientStop { position: 5 / 6; color: Qt.hsva(5 / 6, 1, 1, 1) }
-                    GradientStop { position: 6 / 6; color: Qt.hsva(0, 1, 1, 1) }
+                    GradientStop {
+                        position: 0 / 6
+                        color: Qt.hsva(0 / 6, 1, 1, 1)
+                    }
+                    GradientStop {
+                        position: 1 / 6
+                        color: Qt.hsva(1 / 6, 1, 1, 1)
+                    }
+                    GradientStop {
+                        position: 2 / 6
+                        color: Qt.hsva(2 / 6, 1, 1, 1)
+                    }
+                    GradientStop {
+                        position: 3 / 6
+                        color: Qt.hsva(3 / 6, 1, 1, 1)
+                    }
+                    GradientStop {
+                        position: 4 / 6
+                        color: Qt.hsva(4 / 6, 1, 1, 1)
+                    }
+                    GradientStop {
+                        position: 5 / 6
+                        color: Qt.hsva(5 / 6, 1, 1, 1)
+                    }
+                    GradientStop {
+                        position: 6 / 6
+                        color: Qt.hsva(0, 1, 1, 1)
+                    }
                 }
                 onSliderValueChanged: newValue => {
                     root.hue = newValue / 360;
@@ -189,13 +210,16 @@ OverlayDialog {
 
             DFilterChips {
                 Layout.fillWidth: true
-                model: [{
-                    "value": "badges",
-                    "label": I18n.tr("Badges", "folder appearance tab listing badge icons")
-                }, {
-                    "value": "icons",
-                    "label": I18n.tr("Icons", "folder appearance tab listing folder icons")
-                }]
+                model: [
+                    {
+                        "value": "badges",
+                        "label": I18n.tr("Badges", "folder appearance tab listing badge icons")
+                    },
+                    {
+                        "value": "icons",
+                        "label": I18n.tr("Icons", "folder appearance tab listing folder icons")
+                    }
+                ]
                 currentIndex: root.tab
                 showCounts: false
                 onSelectionChanged: index => root.tab = index
@@ -271,8 +295,6 @@ OverlayDialog {
             DButton {
                 text: I18n.tr("Use", "folder appearance button applying the typed badge web address")
                 enabled: /^https?:\/\/\S+$/.test(address.text.trim())
-                backgroundColor: Theme.primary
-                textColor: Theme.primaryText
                 onClicked: root.applyAddress()
             }
         }
@@ -312,6 +334,7 @@ OverlayDialog {
         }
     }
 
+    showCancel: false
     actions: [
         TextButton {
             text: I18n.tr("Restore default", "folder appearance action dropping color and badge")
@@ -319,8 +342,6 @@ OverlayDialog {
         },
         DButton {
             text: I18n.tr("Close", "dialog button closing the dialog")
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             onClicked: root.close()
         }
     ]

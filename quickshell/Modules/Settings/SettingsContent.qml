@@ -219,31 +219,31 @@ Item {
     }
 
     function loadTerminals() {
-        DuxFilesService.sendRequest("files.apps.terminals", null, response => {
-            if (response.error)
+        DuxFilesService.call("files.apps.terminals", null, result => {
+            if (result.error)
                 return;
-            root.terminals = (response.result || {}).terminals || [];
+            root.terminals = result.terminals || [];
         });
     }
 
     function loadPortalStatus() {
-        DuxFilesService.sendRequest("system.portal.get", null, response => {
-            if (response.error)
+        DuxFilesService.call("system.portal.get", null, result => {
+            if (result.error)
                 return;
-            root.portalStatus = response.result || {};
+            root.portalStatus = result;
         });
     }
 
     function setPortal(enabled) {
         root.portalBusy = true;
-        DuxFilesService.sendRequest(enabled ? "system.portal.install" : "system.portal.uninstall", null, response => {
+        DuxFilesService.call(enabled ? "system.portal.install" : "system.portal.uninstall", null, result => {
             root.portalBusy = false;
-            if (response.error) {
-                ToastService.info(response.error);
+            if (result.error) {
+                ToastService.info(result.error);
                 root.loadPortalStatus();
                 return;
             }
-            root.portalStatus = response.result || {};
+            root.portalStatus = result;
             if (root.portalStatus.frontend?.restartNeeded === true)
                 portalRestartDialog.open();
         });
@@ -251,10 +251,10 @@ Item {
 
     function restartPortal() {
         root.portalBusy = true;
-        DuxFilesService.sendRequest("system.portal.restart", null, response => {
+        DuxFilesService.call("system.portal.restart", null, result => {
             root.portalBusy = false;
-            if (response.error)
-                ToastService.info(response.error);
+            if (result.error)
+                ToastService.info(result.error);
             root.loadPortalStatus();
         });
     }
@@ -296,23 +296,23 @@ Item {
     }
 
     function loadFileManagerStatus() {
-        DuxFilesService.sendRequest("system.fileManager.get", null, response => {
-            if (response.error)
+        DuxFilesService.call("system.fileManager.get", null, result => {
+            if (result.error)
                 return;
-            root.fileManagerStatus = response.result || {};
+            root.fileManagerStatus = result;
         });
     }
 
     function setFileManager(enabled) {
         SettingsData.registerFileManager = enabled;
-        DuxFilesService.sendRequest("system.fileManager.set", {
+        DuxFilesService.call("system.fileManager.set", {
             "enabled": enabled
-        }, response => {
-            if (response.error) {
+        }, result => {
+            if (result.error) {
                 root.loadFileManagerStatus();
                 return;
             }
-            root.fileManagerStatus = response.result || {};
+            root.fileManagerStatus = result;
         });
     }
 
@@ -607,16 +607,21 @@ Item {
             SettingsCard {
                 title: I18n.tr("Window", "general settings section label")
 
-                SettingsButtonGroupRow {
+                OptionGroupRow {
                     text: I18n.tr("Close behavior", "close behavior setting label")
                     keywords: I18n.tr("quit exit hide daemon keep running", "settings search keywords, space separated, add synonyms in your language")
-                    model: [I18n.tr("Keep running", "close behavior button group option keeping the daemon warm"), I18n.tr("Quit", "close behavior button group option to quit the app")]
-                    currentIndex: SettingsData.closeBehavior === "quit" ? 1 : 0
-                    onSelectionChanged: (index, selected) => {
-                        if (!selected)
-                            return;
-                        SettingsData.closeBehavior = index === 1 ? "quit" : "hide";
-                    }
+                    optionList: [
+                        {
+                            "value": "hide",
+                            "label": I18n.tr("Keep running", "close behavior button group option keeping the daemon warm")
+                        },
+                        {
+                            "value": "quit",
+                            "label": I18n.tr("Quit", "close behavior button group option to quit the app")
+                        }
+                    ]
+                    current: SettingsData.closeBehavior
+                    onPicked: value => SettingsData.closeBehavior = value
                 }
 
                 SettingsToggleRow {
@@ -639,8 +644,7 @@ Item {
                     text: I18n.tr("Extract archives on open", "setting label for opening archives")
                     keywords: I18n.tr("zip tar unpack compressed", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Unpacks into a folder beside it.", "setting description for opening archives")
-                    checked: SettingsData.extractOnOpen
-                    onToggled: checked => SettingsData.extractOnOpen = checked
+                    settingKey: "extractOnOpen"
                 }
 
                 OptionDropdownRow {
@@ -720,23 +724,20 @@ Item {
                 SettingsToggleRow {
                     text: I18n.tr("Sort descending", "sort direction option")
                     keywords: I18n.tr("order direction ascending reverse", "settings search keywords, space separated, add synonyms in your language")
-                    checked: SettingsData.defaultSortDescending
-                    onToggled: checked => SettingsData.defaultSortDescending = checked
+                    settingKey: "defaultSortDescending"
                 }
 
                 SettingsToggleRow {
                     text: I18n.tr("Show hidden files", "menu entry listing dot files")
                     keywords: I18n.tr("dotfiles invisible", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Ctrl+H toggles per window.", "show hidden files setting description")
-                    checked: SettingsData.showHidden
-                    onToggled: checked => SettingsData.showHidden = checked
+                    settingKey: "showHidden"
                 }
 
                 SettingsToggleRow {
                     text: I18n.tr("Show file extensions", "toggle showing the file type suffix in names")
                     keywords: I18n.tr("suffix type filename", "settings search keywords, space separated, add synonyms in your language")
-                    checked: SettingsData.showExtensions
-                    onToggled: checked => SettingsData.showExtensions = checked
+                    settingKey: "showExtensions"
                 }
 
                 OptionDropdownRow {
@@ -751,22 +752,19 @@ Item {
                 SettingsToggleRow {
                     text: I18n.tr("Folders before files", "folders first toggle label")
                     keywords: I18n.tr("directories first sort", "settings search keywords, space separated, add synonyms in your language")
-                    checked: SettingsData.foldersFirst
-                    onToggled: checked => SettingsData.foldersFirst = checked
+                    settingKey: "foldersFirst"
                 }
 
                 SettingsToggleRow {
                     text: I18n.tr("Hidden files after other files", "hidden files last toggle label")
                     keywords: I18n.tr("dotfiles sort last bottom", "settings search keywords, space separated, add synonyms in your language")
-                    checked: SettingsData.hiddenLast
-                    onToggled: checked => SettingsData.hiddenLast = checked
+                    settingKey: "hiddenLast"
                 }
 
                 SettingsToggleRow {
                     text: I18n.tr("Remember view and sort per folder", "setting label for per-folder sort and view memory")
                     keywords: I18n.tr("folder memory per-folder remember", "settings search keywords, space separated, add synonyms in your language")
-                    checked: SettingsData.rememberFolderViews
-                    onToggled: checked => SettingsData.rememberFolderViews = checked
+                    settingKey: "rememberFolderViews"
                 }
 
                 SettingsRow {
@@ -801,39 +799,41 @@ Item {
                     text: I18n.tr("Count items in folders", "folder counts toggle label")
                     keywords: I18n.tr("size column entries", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Shown in the size column.", "folder counts toggle description")
-                    checked: SettingsData.folderCounts
-                    onToggled: checked => SettingsData.folderCounts = checked
+                    settingKey: "folderCounts"
                 }
             }
 
             SettingsCard {
                 title: I18n.tr("Files", "keyboard shortcut group")
 
-                SettingsButtonGroupRow {
+                OptionGroupRow {
                     text: I18n.tr("Open items with", "setting label choosing single or double click")
                     keywords: I18n.tr("single double click activate", "settings search keywords, space separated, add synonyms in your language")
-                    model: [I18n.tr("Double click", "click to open option"), I18n.tr("Single click", "click to open option")]
-                    currentIndex: SettingsData.clickToOpen === "single" ? 1 : 0
-                    onSelectionChanged: (index, selected) => {
-                        if (!selected)
-                            return;
-                        SettingsData.clickToOpen = index === 1 ? "single" : "double";
-                    }
+                    optionList: [
+                        {
+                            "value": "double",
+                            "label": I18n.tr("Double click", "click to open option")
+                        },
+                        {
+                            "value": "single",
+                            "label": I18n.tr("Single click", "click to open option")
+                        }
+                    ]
+                    current: SettingsData.clickToOpen
+                    onPicked: value => SettingsData.clickToOpen = value
                 }
 
                 SettingsToggleRow {
                     text: I18n.tr("Confirm before moving to the trash", "setting label")
                     keywords: I18n.tr("delete confirmation prompt", "settings search keywords, space separated, add synonyms in your language")
-                    checked: SettingsData.confirmTrash
-                    onToggled: checked => SettingsData.confirmTrash = checked
+                    settingKey: "confirmTrash"
                 }
 
                 SettingsToggleRow {
                     text: I18n.tr("Keep a list of recent files", "setting label for the recently used files list")
                     keywords: I18n.tr("history recently used opened sidebar", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Shared with other apps.", "setting description for the recently used files list")
-                    checked: SettingsData.recentFiles
-                    onToggled: checked => SettingsData.recentFiles = checked
+                    settingKey: "recentFiles"
                 }
             }
 
@@ -844,21 +844,25 @@ Item {
                     text: I18n.tr("Vim keys", "toggle label for vim style navigation")
                     keywords: I18n.tr("hjkl keyboard navigation modal", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("h j k l move, / searches.", "vim keys toggle description")
-                    checked: SettingsData.vimKeys
-                    onToggled: checked => SettingsData.vimKeys = checked
+                    settingKey: "vimKeys"
                 }
 
-                SettingsButtonGroupRow {
+                OptionGroupRow {
                     text: I18n.tr("Typing in the file list", "setting label choosing what typed letters do in the file list")
                     keywords: I18n.tr("type-ahead jump filter search keyboard", "settings search keywords, space separated, add synonyms in your language")
-                    model: [I18n.tr("Jump to name", "typing in the file list option"), I18n.tr("Filter", "typing in the file list option")]
-                    currentIndex: SettingsData.listTyping === "filter" ? 1 : 0
+                    optionList: [
+                        {
+                            "value": "jump",
+                            "label": I18n.tr("Jump to name", "typing in the file list option")
+                        },
+                        {
+                            "value": "filter",
+                            "label": I18n.tr("Filter", "typing in the file list option")
+                        }
+                    ]
+                    current: SettingsData.listTyping
                     enabled: !SettingsData.vimKeys
-                    onSelectionChanged: (index, selected) => {
-                        if (!selected)
-                            return;
-                        SettingsData.listTyping = index === 1 ? "filter" : "jump";
-                    }
+                    onPicked: value => SettingsData.listTyping = value
                 }
 
                 SettingsRow {
@@ -881,7 +885,7 @@ Item {
             SettingsCard {
                 title: I18n.tr("Theme", "appearance settings section label")
 
-                SettingsButtonGroupRow {
+                OptionGroupRow {
                     text: I18n.tr("Theme", "theme mode setting label")
                     keywords: I18n.tr("light dark mode system color scheme", "settings search keywords, space separated, add synonyms in your language")
                     description: {
@@ -894,32 +898,22 @@ Item {
                             return PortalService.available ? I18n.tr("Following the system color scheme (currently %1).", "theme mode setting description").arg(Theme.isLightMode ? I18n.tr("light", "current scheme name in theme mode description") : I18n.tr("dark", "current scheme name in theme mode description")) : I18n.tr("System preference unavailable, using dark.", "theme mode setting description");
                         }
                     }
-                    model: [I18n.tr("Auto", "theme mode button group option"), I18n.tr("Light", "theme mode button group option"), I18n.tr("Dark", "theme mode button group option")]
-                    currentIndex: {
-                        switch (SettingsData.themeMode) {
-                        case "light":
-                            return 1;
-                        case "dark":
-                            return 2;
-                        default:
-                            return 0;
+                    optionList: [
+                        {
+                            "value": "auto",
+                            "label": I18n.tr("Auto", "theme mode button group option")
+                        },
+                        {
+                            "value": "light",
+                            "label": I18n.tr("Light", "theme mode button group option")
+                        },
+                        {
+                            "value": "dark",
+                            "label": I18n.tr("Dark", "theme mode button group option")
                         }
-                    }
-                    onSelectionChanged: (index, selected) => {
-                        if (!selected)
-                            return;
-                        switch (index) {
-                        case 1:
-                            SettingsData.themeMode = "light";
-                            break;
-                        case 2:
-                            SettingsData.themeMode = "dark";
-                            break;
-                        default:
-                            SettingsData.themeMode = "auto";
-                            break;
-                        }
-                    }
+                    ]
+                    current: SettingsData.themeMode
+                    onPicked: value => SettingsData.themeMode = value
                 }
 
                 OptionGroupRow {
@@ -988,7 +982,7 @@ Item {
                     visible: SettingsData.colorSource === "custom"
                     clickable: true
                     iconName: "folder_open"
-                    title: SettingsData.customThemeFile ? SettingsData.customThemeFile.split('/').pop() : I18n.tr("No theme file selected", "custom theme empty state title")
+                    title: SettingsData.customThemeFile ? FilePaths.baseName(SettingsData.customThemeFile) : I18n.tr("No theme file selected", "custom theme empty state title")
                     keywords: I18n.tr("custom theme json file", "settings search keywords, space separated, add synonyms in your language")
                     subtitle: {
                         if (!SettingsData.customThemeFile)
@@ -1110,8 +1104,7 @@ Item {
                     text: I18n.tr("Title bars", "window title bars toggle label")
                     keywords: I18n.tr("decorations csd window header", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Off leaves decorations to the compositor. Applies to new windows.", "window title bars toggle description")
-                    checked: SettingsData.windowTitleBars
-                    onToggled: checked => SettingsData.windowTitleBars = checked
+                    settingKey: "windowTitleBars"
                 }
 
                 SettingsSliderRow {
@@ -1129,8 +1122,7 @@ Item {
                     text: I18n.tr("Foreground layers", "toggle keeping cards and panes solid over a see-through window")
                     keywords: I18n.tr("cards panes contrast glass", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Keeps cards and panes solid when the window is see-through.", "foreground layers toggle description")
-                    checked: SettingsData.floatingWindowForegroundLayers
-                    onToggled: checked => SettingsData.floatingWindowForegroundLayers = checked
+                    settingKey: "floatingWindowForegroundLayers"
                 }
 
                 SettingsSliderRow {
@@ -1148,8 +1140,7 @@ Item {
                     text: I18n.tr("Background blur", "toggle asking the compositor to blur behind see-through windows")
                     keywords: I18n.tr("frosted glass compositor", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Blurs what shows through the window. Needs an opacity below 100%.", "background blur toggle description")
-                    checked: SettingsData.blurEnabled
-                    onToggled: checked => SettingsData.blurEnabled = checked
+                    settingKey: "blurEnabled"
                 }
 
                 SettingsRow {
@@ -1187,15 +1178,13 @@ Item {
                 SettingsToggleRow {
                     text: I18n.tr("Ripple effects", "ripple effects toggle label")
                     keywords: I18n.tr("animation click feedback", "settings search keywords, space separated, add synonyms in your language")
-                    checked: SettingsData.enableRippleEffects
-                    onToggled: checked => SettingsData.enableRippleEffects = checked
+                    settingKey: "enableRippleEffects"
                 }
 
                 SettingsToggleRow {
                     text: I18n.tr("Reduce motion", "reduce motion toggle label")
                     keywords: I18n.tr("accessibility animation disable", "settings search keywords, space separated, add synonyms in your language")
-                    checked: SettingsData.reduceMotion
-                    onToggled: checked => SettingsData.reduceMotion = checked
+                    settingKey: "reduceMotion"
                 }
             }
 
@@ -1205,8 +1194,7 @@ Item {
                 SettingsToggleRow {
                     text: I18n.tr("Focus ring", "focus ring toggle label")
                     keywords: I18n.tr("keyboard outline accessibility", "settings search keywords, space separated, add synonyms in your language")
-                    checked: SettingsData.focusRingEnabled
-                    onToggled: checked => SettingsData.focusRingEnabled = checked
+                    settingKey: "focusRingEnabled"
                 }
 
                 SettingsSliderRow {
@@ -1285,8 +1273,7 @@ Item {
                     text: I18n.tr("Show thumbnails", "thumbnails toggle label")
                     keywords: I18n.tr("previews images video pdf", "settings search keywords, space separated, add synonyms in your language")
                     description: SandboxService.degraded("thumbnails") ? FilesFormat.featureUnavailable(SandboxService.reason("thumbnails")) : ""
-                    checked: SettingsData.thumbnails
-                    onToggled: checked => SettingsData.thumbnails = checked
+                    settingKey: "thumbnails"
                 }
 
                 SettingsSliderRow {
@@ -1307,8 +1294,7 @@ Item {
                     keywords: I18n.tr("remote sftp smb previews", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Downloads each file.", "network thumbnails toggle description")
                     enabled: SettingsData.thumbnails
-                    checked: SettingsData.networkThumbnails
-                    onToggled: checked => SettingsData.networkThumbnails = checked
+                    settingKey: "networkThumbnails"
                 }
             }
 
@@ -1318,8 +1304,7 @@ Item {
                 SettingsToggleRow {
                     text: I18n.tr("Include hidden files", "search hidden files toggle label")
                     keywords: I18n.tr("search dotfiles recursive", "settings search keywords, space separated, add synonyms in your language")
-                    checked: SettingsData.searchHidden
-                    onToggled: checked => SettingsData.searchHidden = checked
+                    settingKey: "searchHidden"
                 }
 
                 SettingsRow {
@@ -1354,8 +1339,7 @@ Item {
                     text: I18n.tr("Show devices", "devices setting label")
                     keywords: I18n.tr("drives usb volumes sidebar hide", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Mounted and removable drives.", "devices setting description")
-                    checked: SettingsData.showDevicesSection
-                    onToggled: checked => SettingsData.showDevicesSection = checked
+                    settingKey: "showDevicesSection"
                 }
 
                 SettingsToggleRow {
@@ -1363,8 +1347,7 @@ Item {
                     keywords: I18n.tr("internal drives udisks home boot", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Such as a separate /home.", "devices setting description")
                     enabled: SettingsData.showDevicesSection
-                    checked: SettingsData.showSystemPartitions
-                    onToggled: checked => SettingsData.showSystemPartitions = checked
+                    settingKey: "showSystemPartitions"
                 }
 
                 SettingsToggleRow {
@@ -1372,8 +1355,7 @@ Item {
                     keywords: I18n.tr("mount usb removable sidebar", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Off only mounts.", "devices setting description")
                     enabled: SettingsData.showDevicesSection
-                    checked: SettingsData.mountOnClick
-                    onToggled: checked => SettingsData.mountOnClick = checked
+                    settingKey: "mountOnClick"
                 }
             }
 
@@ -1384,8 +1366,7 @@ Item {
                     text: I18n.tr("Show network", "network setting label")
                     keywords: I18n.tr("gvfs smb sftp remote servers sidebar hide", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Mounted network locations and Connect to Server.", "network setting description")
-                    checked: SettingsData.showNetworkSection
-                    onToggled: checked => SettingsData.showNetworkSection = checked
+                    settingKey: "showNetworkSection"
                 }
 
                 SettingsToggleRow {
@@ -1405,8 +1386,7 @@ Item {
                     text: I18n.tr("Show games", "games setting label")
                     keywords: I18n.tr("steam heroic lutris proton games sidebar hide", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Only launchers with an installed game are listed.", "games setting description")
-                    checked: SettingsData.showGamesSidebar
-                    onToggled: checked => SettingsData.showGamesSidebar = checked
+                    settingKey: "showGamesSidebar"
                 }
 
                 SettingsToggleRow {
@@ -1414,8 +1394,7 @@ Item {
                     keywords: I18n.tr("steam proton valve", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Libraries and Proton prefixes.", "steam games setting description")
                     enabled: SettingsData.showGamesSidebar
-                    checked: SettingsData.showSteamGames
-                    onToggled: checked => SettingsData.showSteamGames = checked
+                    settingKey: "showSteamGames"
                 }
 
                 SettingsToggleRow {
@@ -1423,8 +1402,7 @@ Item {
                     keywords: I18n.tr("heroic epic gog amazon", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Games and prefixes Heroic installed.", "heroic games setting description")
                     enabled: SettingsData.showGamesSidebar
-                    checked: SettingsData.showHeroicGames
-                    onToggled: checked => SettingsData.showHeroicGames = checked
+                    settingKey: "showHeroicGames"
                 }
 
                 SettingsToggleRow {
@@ -1432,8 +1410,7 @@ Item {
                     keywords: I18n.tr("lutris wine prefix", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Games and prefixes Lutris installed.", "lutris games setting description")
                     enabled: SettingsData.showGamesSidebar
-                    checked: SettingsData.showLutrisGames
-                    onToggled: checked => SettingsData.showLutrisGames = checked
+                    settingKey: "showLutrisGames"
                 }
 
                 SettingsToggleRow {
@@ -1441,8 +1418,7 @@ Item {
                     keywords: I18n.tr("config folder launcher wine prefix", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Each launcher's own configuration folder.", "games setting description for the settings folders")
                     enabled: SettingsData.showGamesSidebar
-                    checked: SettingsData.showGameSettingsFolders
-                    onToggled: checked => SettingsData.showGameSettingsFolders = checked
+                    settingKey: "showGameSettingsFolders"
                 }
 
                 SettingsToggleRow {
@@ -1450,8 +1426,7 @@ Item {
                     keywords: I18n.tr("wine prefix proton compatdata", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("The Wine prefix of each game.", "games setting description for the wine prefixes")
                     enabled: SettingsData.showGamesSidebar
-                    checked: SettingsData.showGamePrefixes
-                    onToggled: checked => SettingsData.showGamePrefixes = checked
+                    settingKey: "showGamePrefixes"
                 }
 
                 SettingsToggleRow {
@@ -1459,8 +1434,7 @@ Item {
                     keywords: I18n.tr("games library steamapps common", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("Where the launcher keeps the games.", "games setting description for the games folders")
                     enabled: SettingsData.showGamesSidebar
-                    checked: SettingsData.showGameFolders
-                    onToggled: checked => SettingsData.showGameFolders = checked
+                    settingKey: "showGameFolders"
                 }
             }
 

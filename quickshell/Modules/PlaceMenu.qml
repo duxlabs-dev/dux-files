@@ -37,8 +37,8 @@ FileMenu {
     }
 
     FileMenuItem {
-        text: I18n.tr("Open in new tab", "context menu entry opening a folder in a new tab")
-        iconName: "tab"
+        text: FileActions.label("openInNewTab")
+        iconName: FileActions.icon("openInNewTab")
         onClicked: {
             menu.close();
             menu.tabRequested(menu.path);
@@ -46,8 +46,8 @@ FileMenu {
     }
 
     FileMenuItem {
-        text: I18n.tr("Open in new window", "context menu entry opening a folder in another window")
-        iconName: "open_in_new"
+        text: FileActions.label("openInNewWindow")
+        iconName: FileActions.icon("openInNewWindow")
         onClicked: {
             menu.close();
             menu.windowRequested(menu.path);
@@ -56,8 +56,8 @@ FileMenu {
 
     FileMenuItem {
         visible: menu.bookmark
-        text: I18n.tr("Rename", "rename dialog header")
-        iconName: "edit"
+        text: FileActions.label("rename")
+        iconName: FileActions.icon("rename")
         onClicked: {
             menu.close();
             menu.renameRequested(menu.path);
@@ -66,8 +66,8 @@ FileMenu {
 
     FileMenuItem {
         visible: menu.bookmark
-        text: I18n.tr("Remove bookmark", "tooltip on the bookmark button")
-        iconName: "bookmark_remove"
+        text: FileActions.label("removeBookmark")
+        iconName: FileActions.icon("removeBookmark")
         onClicked: {
             menu.close();
             menu.removeRequested(menu.path);
@@ -90,8 +90,8 @@ FileMenu {
 
     FileMenuItem {
         visible: menu.folder
-        text: I18n.tr("Copy location path", "menu entry copying the current path to the clipboard")
-        iconName: "link"
+        text: FileActions.label("copyPath")
+        iconName: FileActions.icon("copyPath")
         onClicked: {
             menu.close();
             menu.copyPathRequested(menu.path);
@@ -100,8 +100,8 @@ FileMenu {
 
     FileMenuItem {
         visible: menu.folder
-        text: I18n.tr("Properties", "menu entry showing details about the current folder")
-        iconName: "info"
+        text: FileActions.label("properties")
+        iconName: FileActions.icon("properties")
         onClicked: {
             menu.close();
             menu.propertiesRequested(menu.path);
@@ -110,9 +110,9 @@ FileMenu {
 
     FileMenuItem {
         visible: menu.trash
-        text: I18n.tr("Empty Trash", "action deleting everything in the trash")
-        iconName: "delete_forever"
-        danger: true
+        text: FileActions.label("emptyTrash")
+        iconName: FileActions.icon("emptyTrash")
+        danger: FileActions.danger("emptyTrash")
         enabled: TrashService.count > 0
         onClicked: {
             menu.close();
@@ -122,8 +122,8 @@ FileMenu {
 
     FileMenuItem {
         visible: menu.recent
-        text: I18n.tr("Clear Recent", "action emptying the recently used list without touching the files")
-        iconName: "delete_sweep"
+        text: FileActions.label("clearRecent")
+        iconName: FileActions.icon("clearRecent")
         enabled: RecentService.count !== 0
         onClicked: {
             menu.close();

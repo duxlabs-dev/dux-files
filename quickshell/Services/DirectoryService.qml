@@ -34,12 +34,8 @@ Singleton {
         DuxFilesService.call("files.watch", Object.assign({
             "path": path
         }, _options(options)), result => {
-            if (result.topic) {
-                const topics = Object.assign({}, root._watchTopics);
-                topics[result.watchId] = result.topic;
-                root._watchTopics = topics;
-                DuxFilesService.subscribeTopic(result.topic, root._eventHandler);
-            }
+            if (result.topic)
+                root._track(root._watchTopics, result.watchId, result.topic, root._eventHandler);
             callback?.(result);
         });
     }
@@ -47,13 +43,7 @@ Singleton {
     function unwatch(watchId) {
         if (!watchId)
             return;
-        const topic = _watchTopics[watchId];
-        if (topic) {
-            const topics = Object.assign({}, _watchTopics);
-            delete topics[watchId];
-            _watchTopics = topics;
-            DuxFilesService.unsubscribeTopic(topic, _eventHandler);
-        }
+        _forget(_watchTopics, watchId, _eventHandler);
         DuxFilesService.call("files.unwatch", {
             "watchId": watchId
         }, null);
@@ -140,12 +130,8 @@ Singleton {
             "query": query
         }, options || {});
         DuxFilesService.call("search.start", params, result => {
-            if (result.topic) {
-                const topics = Object.assign({}, root._searchTopics);
-                topics[result.searchId] = result.topic;
-                root._searchTopics = topics;
-                DuxFilesService.subscribeTopic(result.topic, root._searchHandler);
-            }
+            if (result.topic)
+                root._track(root._searchTopics, result.searchId, result.topic, root._searchHandler);
             callback?.(result);
         });
     }
@@ -153,26 +139,53 @@ Singleton {
     function cancelSearch(searchId) {
         if (!searchId)
             return;
-        _forgetSearch(searchId);
+        _forget(_searchTopics, searchId, _searchHandler);
         DuxFilesService.call("search.cancel", {
             "searchId": searchId
         }, null);
     }
 
-    function _forgetSearch(searchId) {
-        const topic = _searchTopics[searchId];
-        if (!topic)
-            return;
-        const topics = Object.assign({}, _searchTopics);
-        delete topics[searchId];
-        _searchTopics = topics;
-        DuxFilesService.unsubscribeTopic(topic, _searchHandler);
-    }
-
     function _onSearchEvent(data) {
         searchEvent(data);
         if (data.kind === "done")
-            _forgetSearch(data.searchId);
+            _forget(_searchTopics, data.searchId, _searchHandler);
+    }
+
+    function _track(topics, id, topic, handler) {
+        topics[id] = topic;
+        DuxFilesService.subscribeTopic(topic, handler);
+    }
+
+    function _forget(topics, id, handler) {
+        const topic = topics[id];
+        if (!topic)
+            return;
+        delete topics[id];
+        DuxFilesService.unsubscribeTopic(topic, handler);
+    }
+
+    function _forgetAll(topics, handler) {
+        for (const id in topics)
+            _forget(topics, id, handler);
+    }
+
+    function statAll(paths, callback) {
+        const entries = [];
+        let pending = paths.length;
+        if (pending === 0) {
+            callback([], []);
+            return;
+        }
+        const failures = [];
+        paths.forEach((path, index) => stat(path, result => {
+                if (result.error)
+                    failures.push(result);
+                entries[index] = result.entry ?? null;
+                pending--;
+                if (pending > 0)
+                    return;
+                callback(entries.filter(entry => entry), failures);
+            }));
     }
 
     function mkdir(path, callback) {
@@ -225,12 +238,8 @@ Singleton {
         target: DuxFilesService
 
         function onConnectedChanged() {
-            for (const watchId in root._watchTopics)
-                DuxFilesService.unsubscribeTopic(root._watchTopics[watchId], root._eventHandler);
-            root._watchTopics = ({});
-            for (const searchId in root._searchTopics)
-                DuxFilesService.unsubscribeTopic(root._searchTopics[searchId], root._searchHandler);
-            root._searchTopics = ({});
+            root._forgetAll(root._watchTopics, root._eventHandler);
+            root._forgetAll(root._searchTopics, root._searchHandler);
             if (DuxFilesService.connected)
                 root.refreshUserDirs();
         }

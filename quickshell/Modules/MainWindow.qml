@@ -42,6 +42,7 @@ FloatingWindow {
     readonly property DragController drag: drag
     readonly property FileOpenFlow openFlow: openFlow
     readonly property WindowActions actions: actions
+    readonly property PaneActions paneActions: paneActions
     readonly property WindowSidebarHost sidebar: sidebarHost
     readonly property FilesTopbar topbar: topbar
     readonly property bool headerHostsJobs: !header.compositorDecorated
@@ -81,12 +82,12 @@ FloatingWindow {
     onMaximizedChanged: SessionData.maximized = maximized
 
     onWidthChanged: {
-        if (!maximized)
+        if (!maximized && backingWindowVisible)
             SessionData.windowWidth = width;
     }
 
     onHeightChanged: {
-        if (!maximized)
+        if (!maximized && backingWindowVisible)
             SessionData.windowHeight = height;
     }
 
@@ -304,47 +305,15 @@ FloatingWindow {
         }
     }
 
-    Connections {
-        target: DevicesService
-
-        function onRequestFailed(message, code) {
-            ToastService.info(FileFormat.operationError(code, message));
-        }
-    }
-
-    Connections {
-        target: NetworkService
-
-        function onRequestFailed(message, code) {
-            ToastService.info(FileFormat.operationError(code, message));
-        }
+    ServiceErrorToasts {
+        active: window.lastActive
     }
 
     Connections {
         target: BookmarksService
 
-        function onRequestFailed(message) {
-            ToastService.info(message);
-        }
-
         function onImportOfferChanged() {
             window.offerGtkImport();
-        }
-    }
-
-    Connections {
-        target: FileOpsService
-
-        function onRequestFailed(message) {
-            ToastService.info(message);
-        }
-    }
-
-    Connections {
-        target: RecentService
-
-        function onRequestFailed(message, code) {
-            ToastService.info(FileFormat.operationError(code, message));
         }
     }
 
@@ -569,7 +538,7 @@ FloatingWindow {
                 onSplitToggled: window.toggleSplit()
                 onSortKeySelected: key => window.activePane.sortBy(key)
                 onSortDirectionToggled: window.activePane.flipSort()
-                onCopyPathRequested: window.actions.copyText(window.currentPath)
+                onCopyPathRequested: window.paneActions.copyText(window.currentPath)
                 onNewFolderRequested: window.actions.runAction("newFolder")
                 onNewDocumentRequested: (pointX, pointY) => {
                     const point = topbar.mapToItem(surface, pointX, pointY);
@@ -665,7 +634,7 @@ FloatingWindow {
             anchorItem: surface
             opScope: window.opScope
             currentPath: window.currentPath
-            onTrashRequested: (paths, subject) => window.actions.trashPaths(paths, subject)
+            onTrashRequested: (paths, subject) => window.paneActions.trashPaths(paths, subject)
         }
 
         Item {
@@ -680,6 +649,13 @@ FloatingWindow {
                         window.dismissEditors(point.position);
                 }
             }
+        }
+
+        PaneActions {
+            id: paneActions
+
+            opScope: window.opScope
+            panes: [window.activePane].concat(window.panes)
         }
 
         PreviewOverlay {

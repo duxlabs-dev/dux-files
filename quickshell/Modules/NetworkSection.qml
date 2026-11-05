@@ -106,18 +106,17 @@ FilePlaceSection {
 
             Rectangle {
                 visible: modelData.mounted === true
-                width: 8
+                width: Theme.spacingS
                 height: width
                 radius: width / 2
                 anchors.left: parent.left
-                anchors.leftMargin: 36
+                anchors.leftMargin: Theme.spacingS + Theme.iconSize + Theme.spacingXXS
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: Style.spacingS + 1
+                anchors.bottomMargin: Theme.spacingS + Theme.spacingXXS
                 z: 2
-                color: "#4CAF50"
-                border.color: Style.surfaceContainerLowest
-                border.width: 1
-                opacity: 0.9
+                color: Theme.success
+                border.color: Theme.surfaceContainerLowest
+                border.width: Theme.outlineWidth
             }
         }
     }

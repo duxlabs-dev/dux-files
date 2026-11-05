@@ -6,18 +6,33 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/helper"
+
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/duxlabs-dev/dux-go/log"
 )
 
 var errSkipped = errors.New("skipped")
 
-func codeOf(err error) string {
-	var coded *files.Error
-	if errors.As(err, &coded) {
-		return string(coded.Code)
+func eachSource[T any](r *runner, items []T, step func(T) error) error {
+	for _, item := range items {
+		if r.job.closed() {
+			return nil
+		}
+		switch err := step(item); {
+		case errors.Is(err, errSkipped):
+			continue
+		case errors.Is(err, context.Canceled):
+			return nil
+		case err != nil:
+			return err
+		}
 	}
-	return string(files.CodeFromOS(err))
+	return nil
+}
+
+func codeOf(err error) string {
+	return string(helper.CodeOf(err))
 }
 
 type Stater interface {

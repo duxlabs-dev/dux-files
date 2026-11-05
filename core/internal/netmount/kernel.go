@@ -8,6 +8,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/wire"
 	"github.com/duxlabs-dev/dux-go/files"
 )
 
@@ -117,7 +118,7 @@ func sourceOf(fields []string) string {
 
 func unmountKernelMount(path string) error {
 	if path == "" {
-		return fail(files.CodeInvalid, "network mount has no mount point")
+		return wire.Fail(files.CodeInvalid, "network mount has no mount point")
 	}
 	for _, mount := range parseMountedNetworkMounts(readMountInfo()) {
 		if mount.Path != path {
@@ -131,13 +132,13 @@ func unmountKernelMount(path string) error {
 				message = err.Error()
 			}
 			if strings.Contains(strings.ToLower(message), "busy") {
-				return fail(files.CodeBusy, "could not unmount %s: %s", path, message)
+				return wire.Fail(files.CodeBusy, "could not unmount %s: %s", path, message)
 			}
-			return fail(files.CodeIO, "could not unmount %s: %s", path, message)
+			return wire.Fail(files.CodeIO, "could not unmount %s: %s", path, message)
 		}
 		return nil
 	}
-	return fail(files.CodeNotFound, "network mount is no longer mounted: %s", path)
+	return wire.Fail(files.CodeNotFound, "network mount is no longer mounted: %s", path)
 }
 
 func mountKernelMount(path string) error {
@@ -146,11 +147,11 @@ func mountKernelMount(path string) error {
 			continue
 		}
 		if err := exec.CommandContext(context.Background(), "mount", path).Run(); err != nil {
-			return fail(files.CodeIO, "could not mount %s: %v", path, err)
+			return wire.Fail(files.CodeIO, "could not mount %s: %v", path, err)
 		}
 		return nil
 	}
-	return fail(files.CodeNotFound, "network mount is not configured: %s", path)
+	return wire.Fail(files.CodeNotFound, "network mount is not configured: %s", path)
 }
 
 func readMountInfo() string {

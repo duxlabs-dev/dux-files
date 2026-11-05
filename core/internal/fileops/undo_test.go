@@ -6,6 +6,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
 	"github.com/stretchr/testify/require"
 )
 
@@ -18,7 +20,7 @@ func undo(t *testing.T, m *Manager, bus *testBus, scope string) View {
 
 func TestUndoMovePutsFilesBack(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "a")
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
 
@@ -28,13 +30,13 @@ func TestUndoMovePutsFilesBack(t *testing.T) {
 
 	view := undo(t, manager, bus, "w1")
 	require.Equal(t, StateDone, view.State)
-	require.Equal(t, "a", read(t, src))
+	require.Equal(t, "a", testfs.Read(t, src))
 	require.NoFileExists(t, filepath.Join(dest, "a.txt"))
 }
 
 func TestUndoCopyDeletesTheCopies(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "a")
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
 
@@ -44,13 +46,13 @@ func TestUndoCopyDeletesTheCopies(t *testing.T) {
 	view := undo(t, manager, bus, "w1")
 	require.Equal(t, StateDone, view.State)
 	require.NoFileExists(t, filepath.Join(dest, "a.txt"))
-	require.Equal(t, "a", read(t, src))
+	require.Equal(t, "a", testfs.Read(t, src))
 }
 
 func TestUndoTrashRestores(t *testing.T) {
 	trashHome(t)
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "a.txt"), "a")
 
 	manager, bus := newHarness(t)
 	run(t, manager, bus, spec{kind: KindTrash, scope: "w1", sources: []string{src}})
@@ -58,12 +60,12 @@ func TestUndoTrashRestores(t *testing.T) {
 
 	view := undo(t, manager, bus, "w1")
 	require.Equal(t, StateDone, view.State)
-	require.Equal(t, "a", read(t, src))
+	require.Equal(t, "a", testfs.Read(t, src))
 }
 
 func TestUndoStopsWhenTargetChanged(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "a")
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
 
@@ -71,19 +73,19 @@ func TestUndoStopsWhenTargetChanged(t *testing.T) {
 	run(t, manager, bus, spec{kind: KindMove, scope: "w1", sources: []string{src}, dest: dest})
 
 	moved := filepath.Join(dest, "a.txt")
-	write(t, moved, "edited since the move")
+	testfs.Write(t, moved, "edited since the move")
 	require.NoError(t, os.Chtimes(moved, time.Now().Add(time.Hour), time.Now().Add(time.Hour)))
 
 	view := undo(t, manager, bus, "w1")
 	require.Equal(t, StateFailed, view.State)
 	require.Contains(t, view.Error, "changed since")
-	require.Equal(t, "edited since the move", read(t, moved))
+	require.Equal(t, "edited since the move", testfs.Read(t, moved))
 	require.NoFileExists(t, src)
 }
 
 func TestUndoIsPerScopeAndEmptiesOut(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "a")
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
 
@@ -100,7 +102,7 @@ func TestUndoIsPerScopeAndEmptiesOut(t *testing.T) {
 
 func TestUndoOfAnUndoIsNotStacked(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "a")
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
 
@@ -143,30 +145,30 @@ func TestNewFolderRenameLinkAndPermissions(t *testing.T) {
 
 func TestNewFileFromTemplate(t *testing.T) {
 	root := t.TempDir()
-	template := write(t, filepath.Join(root, "templates", "Sheet.csv"), "a,b\n")
+	template := testfs.Write(t, filepath.Join(root, "templates", "Sheet.csv"), "a,b\n")
 
 	manager, bus := newHarness(t)
 	view := run(t, manager, bus, spec{kind: KindNewFile, dest: root, name: "Budget.csv", template: template})
 
 	require.Equal(t, StateDone, view.State)
-	require.Equal(t, "a,b\n", read(t, filepath.Join(root, "Budget.csv")))
+	require.Equal(t, "a,b\n", testfs.Read(t, filepath.Join(root, "Budget.csv")))
 }
 
 func TestRenameRefusesAnExistingName(t *testing.T) {
 	root := t.TempDir()
-	write(t, filepath.Join(root, "a.txt"), "a")
-	write(t, filepath.Join(root, "b.txt"), "b")
+	testfs.Write(t, filepath.Join(root, "a.txt"), "a")
+	testfs.Write(t, filepath.Join(root, "b.txt"), "b")
 
 	manager, bus := newHarness(t)
 	view := run(t, manager, bus, spec{kind: KindRename, sources: []string{filepath.Join(root, "a.txt")}, name: "b.txt"})
 
 	require.Equal(t, StateFailed, view.State)
-	require.Equal(t, "b", read(t, filepath.Join(root, "b.txt")))
+	require.Equal(t, "b", testfs.Read(t, filepath.Join(root, "b.txt")))
 }
 
 func TestPermanentDeleteRemovesTrees(t *testing.T) {
 	root := t.TempDir()
-	write(t, filepath.Join(root, "dir", "a.txt"), "a")
+	testfs.Write(t, filepath.Join(root, "dir", "a.txt"), "a")
 
 	manager, bus := newHarness(t)
 	view := run(t, manager, bus, spec{kind: KindDelete, scope: "w1", sources: []string{filepath.Join(root, "dir")}})
@@ -180,18 +182,18 @@ func TestPermanentDeleteRemovesTrees(t *testing.T) {
 
 func TestNewFileRefusesAnExistingName(t *testing.T) {
 	root := t.TempDir()
-	write(t, filepath.Join(root, "a.txt"), "keep")
+	testfs.Write(t, filepath.Join(root, "a.txt"), "keep")
 
 	manager, bus := newHarness(t)
 	view := run(t, manager, bus, spec{kind: KindNewFile, dest: root, name: "a.txt"})
 
 	require.Equal(t, StateFailed, view.State)
-	require.Equal(t, "keep", read(t, filepath.Join(root, "a.txt")))
+	require.Equal(t, "keep", testfs.Read(t, filepath.Join(root, "a.txt")))
 }
 
 func TestNewItemsReportWhatTheyCreated(t *testing.T) {
 	root := t.TempDir()
-	template := write(t, filepath.Join(root, "templates", "Sheet.csv"), "a,b\n")
+	template := testfs.Write(t, filepath.Join(root, "templates", "Sheet.csv"), "a,b\n")
 	manager, bus := newHarness(t)
 
 	folder := run(t, manager, bus, spec{kind: KindNewFolder, scope: "w1", dest: root, name: "Fresh"})
@@ -209,8 +211,8 @@ func TestUniqueNewItemsAreNumbered(t *testing.T) {
 	root := t.TempDir()
 	require.NoError(t, os.Mkdir(filepath.Join(root, "Untitled folder"), 0o755))
 	require.NoError(t, os.Mkdir(filepath.Join(root, "Untitled folder 2"), 0o755))
-	write(t, filepath.Join(root, "notes.txt"), "kept")
-	write(t, filepath.Join(root, ".env"), "kept")
+	testfs.Write(t, filepath.Join(root, "notes.txt"), "kept")
+	testfs.Write(t, filepath.Join(root, ".env"), "kept")
 	manager, bus := newHarness(t)
 
 	folder := run(t, manager, bus, spec{kind: KindNewFolder, dest: root, name: "Untitled folder", unique: true})
@@ -219,7 +221,7 @@ func TestUniqueNewItemsAreNumbered(t *testing.T) {
 
 	file := run(t, manager, bus, spec{kind: KindNewFile, dest: root, name: "notes.txt", unique: true})
 	require.Equal(t, filepath.Join(root, "notes 2.txt"), file.Created[0].Path)
-	require.Equal(t, "kept", read(t, filepath.Join(root, "notes.txt")))
+	require.Equal(t, "kept", testfs.Read(t, filepath.Join(root, "notes.txt")))
 
 	dotfile := run(t, manager, bus, spec{kind: KindNewFile, dest: root, name: ".env", unique: true})
 	require.Equal(t, filepath.Join(root, ".env 2"), dotfile.Created[0].Path)
@@ -230,7 +232,7 @@ func TestUniqueNewItemsAreNumbered(t *testing.T) {
 
 func TestNewFileWithoutUniqueStillRefusesATakenName(t *testing.T) {
 	root := t.TempDir()
-	write(t, filepath.Join(root, "notes.txt"), "kept")
+	testfs.Write(t, filepath.Join(root, "notes.txt"), "kept")
 	manager, bus := newHarness(t)
 
 	view := run(t, manager, bus, spec{kind: KindNewFile, dest: root, name: "notes.txt"})
@@ -260,9 +262,9 @@ func TestUniqueNameMovesOnWhenAnotherJobTookIt(t *testing.T) {
 
 func TestUndoIsNotOfferedAfterReplacing(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "new")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "new")
 	dest := filepath.Join(root, "dest")
-	write(t, filepath.Join(dest, "a.txt"), "irreplaceable")
+	testfs.Write(t, filepath.Join(dest, "a.txt"), "irreplaceable")
 
 	manager, bus := newHarness(t)
 	bus.onConflict = func(c Conflict) Answer { return Answer{ID: c.ID, Action: ActionReplace} }
@@ -270,7 +272,7 @@ func TestUndoIsNotOfferedAfterReplacing(t *testing.T) {
 
 	require.Equal(t, StateDone, view.State)
 	require.False(t, view.Undoable)
-	require.Equal(t, "new", read(t, filepath.Join(dest, "a.txt")))
+	require.Equal(t, "new", testfs.Read(t, filepath.Join(dest, "a.txt")))
 
 	_, err := manager.Undo("w1")
 	require.Error(t, err, "undoing would delete the copy and the replaced file is already gone")

@@ -33,3 +33,10 @@ func fill(tmp *os.File, data []byte, mode os.FileMode) error {
 	}
 	return tmp.Close()
 }
+
+func WriteFileMkdir(path string, data []byte, mode, dirMode os.FileMode) error {
+	if err := os.MkdirAll(filepath.Dir(path), dirMode); err != nil {
+		return err
+	}
+	return WriteFile(path, data, mode)
+}

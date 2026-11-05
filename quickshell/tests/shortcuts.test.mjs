@@ -7,18 +7,22 @@ import { source } from "./qml-script.mjs";
 const qml = source("../Common/Shortcuts.qml");
 
 const table = qml.slice(qml.indexOf("readonly property var entries:"), qml.indexOf("readonly property var groups:"));
-const entryPattern = /\{\s*"id":\s*"([^"]+)",\s*"keys":\s*\[([^\]]*)\],\s*"group":\s*"([^"]+)",\s*"scope":\s*"([^"]+)",\s*"label":\s*I18n\.tr\("([^"]*)",\s*"([^"]*)"\)(?:,\s*"vim":\s*\[([^\]]*)\])?(?:,\s*"plainOnly":\s*true)?\s*\}/g;
+const entryPattern = /\{\s*"id":\s*"([^"]+)",\s*"keys":\s*\[([^\]]*)\],\s*"group":\s*"([^"]+)",\s*"scope":\s*"([^"]+)",\s*"label":\s*(?:I18n\.tr\("([^"]*)",\s*"([^"]*)"\)|FileActions\.label\("([^"]+)"\))(?:,\s*"vim":\s*\[([^\]]*)\])?(?:,\s*"plainOnly":\s*true)?\s*\}/g;
 
 const keyList = text => [...text.matchAll(/"([^"]*)"/g)].map(key => key[1]);
+
+// Shared actions keep their label in the FileActions catalog.
+const catalog = source("../Common/FileActions.qml");
+const catalogLabels = new Map([...catalog.matchAll(/"(\w+)": \{\s*"icon": "[^"]*",\s*"label": I18n\.tr\("([^"]*)",\s*"([^"]*)"\)/g)].map(match => [match[1], { label: match[2], context: match[3] }]));
 
 const entries = [...table.matchAll(entryPattern)].map(match => ({
     id: match[1],
     keys: keyList(match[2]),
     group: match[3],
     scope: match[4],
-    label: match[5],
-    context: match[6],
-    vim: match[7] === undefined ? [] : keyList(match[7]),
+    label: match[5] ?? catalogLabels.get(match[7])?.label ?? "",
+    context: match[6] ?? catalogLabels.get(match[7])?.context ?? "",
+    vim: match[8] === undefined ? [] : keyList(match[8]),
     plainOnly: match[0].includes('"plainOnly"')
 }));
 

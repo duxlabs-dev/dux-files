@@ -173,7 +173,7 @@ func nameOf(device Device, block, drive map[string]dbus.Variant) string {
 	if model != "" {
 		return model
 	}
-	return humanSize(device.Size)
+	return HumanSize(device.Size)
 }
 
 func iconOf(device Device, drive map[string]dbus.Variant) string {
@@ -271,7 +271,7 @@ func hasIface(ifaces map[string]map[string]dbus.Variant, name string) bool {
 	return ok
 }
 
-func humanSize(size uint64) string {
+func HumanSize(size uint64) string {
 	units := []string{"B", "kB", "MB", "GB", "TB"}
 	value := float64(size)
 	unit := 0

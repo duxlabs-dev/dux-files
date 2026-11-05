@@ -7,10 +7,11 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/pathutil"
+
 	"github.com/duxlabs-dev/dux-files/core/internal/location"
 	"github.com/duxlabs-dev/dux-files/core/internal/wire"
 	"github.com/duxlabs-dev/dux-go/ipc/params"
-	"github.com/duxlabs-dev/dux-go/paths"
 )
 
 const missingCheckLimit = 500
@@ -23,7 +24,7 @@ func HandleLocation(_ context.Context, w *ConnWriter, req Request) {
 	switch req.Method {
 	case "location.resolve":
 		home, _ := os.UserHomeDir()
-		env := location.HostEnv(paths.XDGDataHome(), nil)
+		env := location.HomeEnv(nil)
 		loc, err := location.Typed(params.StringOpt(req.Params, "text", ""), params.StringOpt(req.Params, "cwd", ""), home, env)
 		if err != nil {
 			wire.RespondError(w, req.ID, err)
@@ -59,7 +60,7 @@ func networkMounts(mountinfo string) []string {
 
 func onMount(path string, mounts []string) bool {
 	return slices.ContainsFunc(mounts, func(mount string) bool {
-		return path == mount || strings.HasPrefix(path, strings.TrimSuffix(mount, "/")+"/")
+		return pathutil.Within(path, mount)
 	})
 }
 

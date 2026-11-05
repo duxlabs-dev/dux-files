@@ -25,426 +25,110 @@ FileMenu {
     signal actionTriggered(string id)
 
     readonly property bool crossFolder: inResults || inRecent
-    readonly property var entries: {
+    readonly property string context: {
         if (forPicker)
-            return forFolder ? pickerBackgroundRows : pickerItemRows;
-        if (forFolder)
-            return inTrash ? trashBackgroundRows : inRecent ? recentBackgroundRows : backgroundRows;
-        return inTrash ? trashItemRows : itemRows;
+            return "picker";
+        if (inTrash)
+            return "trash";
+        if (inRecent)
+            return "recent";
+        return inResults ? "results" : "folder";
     }
+    readonly property var entries: collapse((forFolder ? backgroundRows : itemRows).filter(row => row.visible !== false && (row.id === "separator" || FileActions.available(row.id, context))))
 
-    readonly property var pickerItemRows: [
-        {
-            "id": "open",
-            "icon": "open_in_new",
-            "label": I18n.tr("Open", "context menu entry opening a file"),
+    readonly property var separator: ({
+            "id": "separator"
+        })
+
+    readonly property var itemRows: [FileActions.row("restore", {
             "enabled": selectionCount > 0
-        },
-        {
-            "id": "rename",
-            "icon": "edit",
-            "label": I18n.tr("Rename", "rename dialog header"),
+        }), FileActions.row("open", {
+            "enabled": selectionCount > 0
+        }), FileActions.row("openWithMenu", {
+            "enabled": selectionCount > 0
+        }), FileActions.row("openInNewTab", {
+            "enabled": hasDirectory && selectionCount === 1
+        }), FileActions.row("openInNewWindow", {
+            "enabled": hasDirectory && selectionCount === 1
+        }), FileActions.row("openInPane", {
+            "enabled": hasDirectory && selectionCount === 1
+        }), FileActions.row("bookmarkSelected", {
+            "icon": FileActions.icon(selectedBookmarked ? "removeBookmark" : "bookmarkSelected"),
+            "label": FileActions.label(selectedBookmarked ? "removeBookmark" : "bookmarkSelected"),
+            "enabled": hasDirectory && selectionCount === 1
+        }), separator, FileActions.row("cut", {
+            "enabled": selectionCount > 0
+        }), FileActions.row("copy", {
+            "enabled": selectionCount > 0
+        }), FileActions.row("moveTo", {
+            "enabled": selectionCount > 0
+        }), FileActions.row("copyTo", {
+            "enabled": selectionCount > 0
+        }), FileActions.row("pasteInto", {
+            "enabled": hasDirectory && selectionCount === 1 && hasClipboard
+        }), FileActions.row("rename", {
             "enabled": selectionCount === 1
-        },
-        {
-            "id": "separator"
-        },
-        {
-            "id": "cut",
-            "icon": "content_cut",
-            "label": I18n.tr("Cut", "context menu entry marking the selection for a move"),
-            "enabled": selectionCount > 0
-        },
-        {
-            "id": "copy",
-            "icon": "content_copy",
-            "label": I18n.tr("Copy", "context menu entry copying the selection"),
-            "enabled": selectionCount > 0
-        },
-        {
-            "id": "pasteInto",
-            "icon": "content_paste",
-            "label": I18n.tr("Paste into folder", "context menu entry pasting the clipboard into the selected folder"),
-            "enabled": hasDirectory && selectionCount === 1 && hasClipboard
-        },
-        {
-            "id": "separator"
-        },
-        {
-            "id": "trash",
-            "icon": "delete",
-            "label": I18n.tr("Move to Trash", "context menu entry trashing the selection"),
-            "enabled": selectionCount > 0
-        },
-        {
-            "id": "separator"
-        },
-        {
-            "id": "copyPath",
-            "icon": "link",
-            "label": I18n.tr("Copy location path", "menu entry copying the current path to the clipboard"),
-            "enabled": selectionCount > 0
-        }
-    ]
-
-    readonly property var pickerBackgroundRows: [
-        {
-            "id": "newFolder",
-            "icon": "create_new_folder",
-            "label": I18n.tr("New folder", "new folder dialog header"),
-            "enabled": true
-        },
-        {
-            "id": "newDocument",
-            "icon": "note_add",
-            "label": I18n.tr("New document", "context menu entry creating a file from a template"),
-            "enabled": true,
-            "submenu": true
-        },
-        {
-            "id": "paste",
-            "icon": "content_paste",
-            "label": I18n.tr("Paste", "context menu entry pasting the clipboard here"),
-            "enabled": hasClipboard
-        },
-        {
-            "id": "separator"
-        },
-        {
-            "id": "showHidden",
-            "icon": "visibility",
-            "label": I18n.tr("Show hidden files", "menu entry listing dot files"),
-            "enabled": true
-        },
-        {
-            "id": "reload",
-            "icon": "refresh",
-            "label": I18n.tr("Reload", "menu entry re-reading the current folder"),
-            "enabled": true
-        }
-    ]
-
-    readonly property var recentBackgroundRows: [
-        {
-            "id": "selectAll",
-            "icon": "select_all",
-            "label": I18n.tr("Select all", "menu entry selecting every item in the folder"),
-            "enabled": true
-        },
-        {
-            "id": "reload",
-            "icon": "refresh",
-            "label": I18n.tr("Reload", "menu entry re-reading the current folder"),
-            "enabled": true
-        },
-        {
-            "id": "separator"
-        },
-        {
-            "id": "clearRecent",
-            "icon": "delete_sweep",
-            "label": I18n.tr("Clear Recent", "action emptying the recently used list without touching the files"),
-            "enabled": recentCount > 0
-        }
-    ]
-
-    readonly property var trashItemRows: [
-        {
-            "id": "restore",
-            "icon": "restore_from_trash",
-            "label": I18n.tr("Restore", "trash action returning items to where they were deleted from"),
-            "enabled": selectionCount > 0
-        },
-        {
-            "id": "separator"
-        },
-        {
-            "id": "deletePermanently",
-            "icon": "delete_forever",
-            "label": I18n.tr("Delete permanently", "context menu entry deleting the selection for good"),
-            "enabled": selectionCount > 0,
-            "danger": true
-        }
-    ]
-
-    readonly property var trashBackgroundRows: [
-        {
-            "id": "selectAll",
-            "icon": "select_all",
-            "label": I18n.tr("Select all", "menu entry selecting every item in the folder"),
-            "enabled": true
-        },
-        {
-            "id": "reload",
-            "icon": "refresh",
-            "label": I18n.tr("Reload", "menu entry re-reading the current folder"),
-            "enabled": true
-        },
-        {
-            "id": "separator"
-        },
-        {
-            "id": "emptyTrash",
-            "icon": "delete_forever",
-            "label": I18n.tr("Empty Trash", "action deleting everything in the trash"),
-            "enabled": trashCount > 0,
-            "danger": true
-        }
-    ]
-
-    readonly property var itemRows: [
-        {
-            "id": "open",
-            "icon": "open_in_new",
-            "label": I18n.tr("Open", "context menu entry opening a file"),
-            "enabled": selectionCount > 0
-        },
-        {
-            "id": "openWithMenu",
-            "icon": "apps",
-            "label": I18n.tr("Open with", "open with dialog header"),
-            "enabled": selectionCount > 0,
-            "submenu": true
-        },
-        {
-            "id": "openInNewTab",
-            "icon": "tab",
-            "label": I18n.tr("Open in new tab", "context menu entry opening a folder in a new tab"),
-            "enabled": hasDirectory && selectionCount === 1
-        },
-        {
-            "id": "openInNewWindow",
-            "icon": "open_in_new",
-            "label": I18n.tr("Open in new window", "context menu entry opening a folder in another window"),
-            "enabled": hasDirectory && selectionCount === 1
-        },
-        {
-            "id": "openInPane",
-            "icon": "splitscreen_vertical_add",
-            "label": I18n.tr("Open in the other pane", "context menu entry opening a folder beside the current one"),
-            "enabled": hasDirectory && selectionCount === 1
-        },
-        {
-            "id": "bookmarkSelected",
-            "icon": selectedBookmarked ? "bookmark_remove" : "bookmark",
-            "label": selectedBookmarked ? I18n.tr("Remove bookmark", "tooltip on the bookmark button") : I18n.tr("Add to bookmarks", "context menu entry pinning the selected folder to the sidebar"),
-            "enabled": hasDirectory && selectionCount === 1
-        },
-        {
-            "id": "separator"
-        },
-        {
-            "id": "cut",
-            "icon": "content_cut",
-            "label": I18n.tr("Cut", "context menu entry marking the selection for a move"),
-            "enabled": selectionCount > 0
-        },
-        {
-            "id": "copy",
-            "icon": "content_copy",
-            "label": I18n.tr("Copy", "context menu entry copying the selection"),
-            "enabled": selectionCount > 0
-        },
-        {
-            "id": "moveTo",
-            "icon": "drive_file_move",
-            "label": I18n.tr("Move to…", "context menu entry moving the selection into a chosen folder"),
-            "enabled": selectionCount > 0
-        },
-        {
-            "id": "copyTo",
-            "icon": "file_copy",
-            "label": I18n.tr("Copy to…", "context menu entry copying the selection into a chosen folder"),
-            "enabled": selectionCount > 0
-        },
-        {
-            "id": "pasteInto",
-            "icon": "content_paste",
-            "label": I18n.tr("Paste into folder", "context menu entry pasting the clipboard into the selected folder"),
-            "enabled": hasDirectory && selectionCount === 1 && hasClipboard
-        },
-        {
-            "id": "rename",
-            "icon": "edit",
-            "label": I18n.tr("Rename", "rename dialog header"),
-            "enabled": selectionCount === 1,
-            "visible": !inRecent
-        },
-        {
-            "id": "duplicate",
-            "icon": "difference",
-            "label": I18n.tr("Duplicate", "context menu entry copying the selection beside itself"),
+        }), FileActions.row("duplicate", {
             "enabled": selectionCount > 0,
             "visible": !crossFolder
-        },
-        {
-            "id": "newFolderWith",
-            "icon": "create_new_folder",
-            "label": I18n.tr("New folder with selection", "context menu entry moving the selection into a new folder"),
+        }), FileActions.row("newFolderWith", {
             "enabled": selectionCount > 1,
             "visible": selectionCount > 1 && !crossFolder
-        },
-        {
-            "id": "separator"
-        },
-        {
-            "id": "compress",
-            "icon": "folder_zip",
-            "label": I18n.tr("Compress…", "context menu entry packing the selection into an archive"),
+        }), separator, FileActions.row("compress", {
             "enabled": selectionCount > 0,
             "visible": !crossFolder
-        },
-        {
-            "id": "extract",
-            "icon": "unarchive",
-            "label": I18n.tr("Extract here", "context menu entry unpacking the selected archives"),
+        }), FileActions.row("extract", {
             "enabled": selectionCount > 0,
             "visible": extractable && !crossFolder
-        },
-        {
-            "id": "extractTo",
-            "icon": "drive_file_move",
-            "label": I18n.tr("Extract to…", "context menu entry unpacking the selected archives into a chosen folder"),
+        }), FileActions.row("extractTo", {
             "enabled": selectionCount > 0,
             "visible": extractable
-        },
-        {
-            "id": "openContainingFolder",
-            "icon": "folder_open",
-            "label": I18n.tr("Open the containing folder", "keyboard shortcut"),
+        }), FileActions.row("openContainingFolder", {
             "enabled": selectionCount === 1,
             "visible": crossFolder
-        },
-        {
-            "id": "separator",
-            "visible": inRecent
-        },
-        {
-            "id": "removeFromRecent",
-            "icon": "delete_history",
-            "label": I18n.tr("Remove from Recent", "action dropping the selected files from the recently used list without touching the files"),
-            "enabled": selectionCount > 0,
-            "visible": inRecent
-        },
-        {
-            "id": "separator"
-        },
-        {
-            "id": "trash",
-            "icon": "delete",
-            "label": I18n.tr("Move to Trash", "context menu entry trashing the selection"),
-            "enabled": selectionCount > 0,
-            "visible": !shiftHeld
-        },
-        {
-            "id": "deletePermanently",
-            "icon": "delete_forever",
-            "label": I18n.tr("Delete permanently", "context menu entry deleting the selection for good"),
-            "enabled": selectionCount > 0,
-            "visible": shiftHeld,
-            "danger": true
-        },
-        {
-            "id": "separator"
-        },
-        {
-            "id": "copyPath",
-            "icon": "link",
-            "label": I18n.tr("Copy location path", "menu entry copying the current path to the clipboard"),
+        }), separator, FileActions.row("removeFromRecent", {
             "enabled": selectionCount > 0
-        },
-        {
-            "id": "copyName",
-            "icon": "text_fields",
-            "label": I18n.tr("Copy name", "context menu entry copying the selected item names to the clipboard"),
+        }), separator, FileActions.row("trash", {
+            "enabled": selectionCount > 0,
+            "visible": !shiftHeld && !inTrash
+        }), FileActions.row("deletePermanently", {
+            "enabled": selectionCount > 0,
+            "visible": shiftHeld || inTrash
+        }), separator, FileActions.row("copyPath", {
             "enabled": selectionCount > 0
-        },
-        {
-            "id": "customizeFolder",
-            "icon": "palette",
-            "label": I18n.tr("Folder appearance", "context menu entry opening the folder appearance dialog"),
+        }), FileActions.row("copyName", {
+            "enabled": selectionCount > 0
+        }), FileActions.row("customizeFolder", {
             "enabled": selectionCount === 1 && hasDirectory,
             "visible": selectionCount === 1 && hasDirectory && !crossFolder
-        },
-        {
-            "id": "properties",
-            "icon": "info",
-            "label": I18n.tr("Properties", "menu entry showing details about the current folder"),
-            "enabled": true
-        }
-    ]
+        }), FileActions.row("properties")]
 
-    readonly property var backgroundRows: [
-        {
-            "id": "newFolder",
-            "icon": "create_new_folder",
-            "label": I18n.tr("New folder", "new folder dialog header"),
-            "enabled": true
-        },
-        {
-            "id": "newDocument",
-            "icon": "note_add",
-            "label": I18n.tr("New document", "context menu entry creating a file from a template"),
-            "enabled": true,
-            "submenu": true
-        },
-        {
-            "id": "paste",
-            "icon": "content_paste",
-            "label": I18n.tr("Paste", "context menu entry pasting the clipboard here"),
+    readonly property var backgroundRows: [FileActions.row("newFolder"), FileActions.row("newDocument"), FileActions.row("paste", {
             "enabled": hasClipboard
-        },
-        {
-            "id": "pasteLink",
-            "icon": "add_link",
-            "label": I18n.tr("Paste as link", "context menu entry creating symlinks from the clipboard"),
+        }), FileActions.row("pasteLink", {
             "enabled": hasClipboard
-        },
-        {
-            "id": "separator"
-        },
-        {
-            "id": "selectAll",
-            "icon": "select_all",
-            "label": I18n.tr("Select all", "menu entry selecting every item in the folder"),
-            "enabled": true
-        },
-        {
-            "id": "showHidden",
-            "icon": "visibility",
-            "label": I18n.tr("Show hidden files", "menu entry listing dot files"),
-            "enabled": true
-        },
-        {
-            "id": "reload",
-            "icon": "refresh",
-            "label": I18n.tr("Reload", "menu entry re-reading the current folder"),
-            "enabled": true
-        },
-        {
-            "id": "openTerminal",
-            "icon": "terminal",
-            "label": I18n.tr("Open in terminal", "context menu entry opening a terminal"),
-            "enabled": true,
+        }), separator, FileActions.row("selectAll"), FileActions.row("showHidden"), FileActions.row("reload"), FileActions.row("openTerminal", {
             "visible": SandboxService.available("terminal")
-        },
-        {
-            "id": "openFolderWith",
-            "icon": "apps",
-            "label": I18n.tr("Open with", "open with dialog header"),
-            "enabled": true,
-            "submenu": true
-        },
-        {
-            "id": "separator"
-        },
-        {
-            "id": "properties",
-            "icon": "info",
-            "label": I18n.tr("Properties", "menu entry showing details about the current folder"),
-            "enabled": true
+        }), FileActions.row("openFolderWith"), separator, FileActions.row("emptyTrash", {
+            "enabled": trashCount > 0
+        }), FileActions.row("clearRecent", {
+            "enabled": recentCount > 0
+        }), FileActions.row("properties", {
+            "visible": !inRecent
+        })]
+
+    function collapse(rows) {
+        const out = [];
+        for (const row of rows) {
+            const isSeparator = row.id === "separator";
+            if (isSeparator && (out.length === 0 || out[out.length - 1].id === "separator"))
+                continue;
+            out.push(row);
         }
-    ]
+        if (out.length > 0 && out[out.length - 1].id === "separator")
+            out.pop();
+        return out;
+    }
 
     Repeater {
         model: menu.entries
@@ -457,8 +141,7 @@ FileMenu {
             readonly property bool separator: modelData.id === "separator"
 
             width: parent?.width ?? 0
-            visible: modelData.visible !== false
-            height: visible ? (separator ? FileBrowserMetrics.menuDividerHeight : Theme.menuItemHeight) : 0
+            height: separator ? FileBrowserMetrics.menuDividerHeight : Theme.menuItemHeight
 
             FileMenuDivider {
                 visible: slot.separator

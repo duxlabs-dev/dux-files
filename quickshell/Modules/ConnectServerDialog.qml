@@ -159,14 +159,8 @@ OverlayDialog {
     }
 
     actions: [
-        TextButton {
-            text: I18n.tr("Cancel", "dialog button to cancel")
-            onClicked: root.close()
-        },
         DButton {
             text: I18n.tr("Connect", "connect to server dialog action")
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             enabled: !NetworkService.connecting
             onClicked: root.submit("")
         }

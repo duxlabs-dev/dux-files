@@ -1,9 +1,10 @@
 package bookmarks
 
 import (
-	"net/url"
 	"os"
 	"strings"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/fileuri"
 )
 
 // One `file:///path Label` per line, the label optional, the path percent-encoded.
@@ -15,11 +16,11 @@ func ParseGTK(data []byte) []Bookmark {
 			continue
 		}
 		uri, label, _ := strings.Cut(line, " ")
-		parsed, err := url.Parse(uri)
-		if err != nil || parsed.Scheme != "file" || parsed.Path == "" {
+		path, ok := fileuri.Parse(uri)
+		if !ok {
 			continue
 		}
-		out = append(out, Bookmark{Path: parsed.Path, Label: strings.TrimSpace(label)})
+		out = append(out, Bookmark{Path: path, Label: strings.TrimSpace(label)})
 	}
 	return out
 }

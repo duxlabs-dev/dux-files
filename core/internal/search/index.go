@@ -14,6 +14,7 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/pathutil"
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/duxlabs-dev/dux-go/log"
 )
@@ -316,7 +317,7 @@ func rankHits(result indexResult, targets []string, terms []term, opts Options, 
 
 func rootOf(path string, targets []string) (string, bool) {
 	for _, root := range targets {
-		if path != root && inside(path, root) {
+		if path != root && pathutil.Within(path, root) {
 			return strings.TrimSuffix(root, "/"), true
 		}
 	}
@@ -370,7 +371,7 @@ func longestIndexPath(root string, paths []indexPath) *indexPath {
 	var best *indexPath
 	for i := range paths {
 		ip := &paths[i]
-		if ip.Path == "" || !inside(root, filepath.Clean(ip.Path)) {
+		if ip.Path == "" || !pathutil.Within(root, filepath.Clean(ip.Path)) {
 			continue
 		}
 		if best == nil || len(ip.Path) > len(best.Path) {

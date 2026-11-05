@@ -114,10 +114,7 @@ func bootDaemonServices(ctx context.Context, ownsWindow bool) (*daemonServices, 
 	opsManager := fileops.NewManager(bus, fileService)
 	opsManager.SetElevator(elevate.NewClient())
 
-	deviceService := devices.NewService(bus, uint32(os.Getuid()))
-	if err := deviceService.Start(); err != nil {
-		log.Warnf("udisks2 unavailable: %v", err)
-	}
+	deviceService := startDevices(bus, log.Warnf)
 
 	config := configHome()
 	recentStore := wireRecent(appService, chooser, config)
@@ -128,10 +125,7 @@ func bootDaemonServices(ctx context.Context, ownsWindow bool) (*daemonServices, 
 
 	clipboardService := clipboard.NewService()
 	opsManager.SetImageSource(clipboardService)
-	searchService := search.NewService(bus, fileService)
-	searchService.SetIndexEnabled(!caps.Sandboxed)
-	searchService.SetMounts(func() []string { return localMounts(deviceService.Snapshot()) })
-	searchService.SetExcludes(func() []string { return settings.Load(config).SearchExcludes })
+	searchService := newSearch(bus, fileService, deviceService, config, caps)
 	bookmarkStore := bookmarks.New(bus, config, filepath.Join(filepath.Dir(config), "gtk-3.0", "bookmarks"))
 	if err := bookmarkStore.Start(); err != nil {
 		log.Warnf("bookmarks unavailable: %v", err)
@@ -310,4 +304,20 @@ func startIPC(ctx context.Context, deps ipc.Deps) (*ipc.Server, <-chan error, er
 		errCh <- srv.Serve(ctx)
 	}()
 	return srv, errCh, nil
+}
+
+func startDevices(bus *ipc.EventBus, logf func(string, ...any)) *devices.Service {
+	deviceService := devices.NewService(bus, uint32(os.Getuid()))
+	if err := deviceService.Start(); err != nil {
+		logf("udisks2 unavailable: %v", err)
+	}
+	return deviceService
+}
+
+func newSearch(bus *ipc.EventBus, fileService *files.Service, deviceService *devices.Service, config string, caps sandbox.Capabilities) *search.Service {
+	searchService := search.NewService(bus, fileService)
+	searchService.SetIndexEnabled(!caps.Sandboxed)
+	searchService.SetMounts(func() []string { return localMounts(deviceService.Snapshot()) })
+	searchService.SetExcludes(func() []string { return settings.Load(config).SearchExcludes })
+	return searchService
 }

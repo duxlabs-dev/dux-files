@@ -27,14 +27,9 @@ OverlayDialog {
     }
 
     actions: [
-        TextButton {
-            text: I18n.tr("Cancel", "dialog button to cancel")
-            onClicked: root.close()
-        },
         DButton {
             text: I18n.tr("Open in editor", "executable file dialog action opening the file as text")
-            backgroundColor: Theme.secondaryContainer
-            textColor: Theme.onSecondaryContainer
+            variant: "tonal"
             onClicked: {
                 root.editRequested();
                 root.close();
@@ -42,8 +37,6 @@ OverlayDialog {
         },
         DButton {
             text: I18n.tr("Run", "executable file dialog action running the file")
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             onClicked: {
                 root.runRequested();
                 root.close();

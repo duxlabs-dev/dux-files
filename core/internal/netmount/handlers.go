@@ -43,7 +43,7 @@ func (s *Service) Handle(w *ipc.ConnWriter, req ipc.Request) {
 	case "network.mountPortable":
 		s.handleMountPortable(w, req)
 	default:
-		wire.RespondError(w, req.ID, fail(files.CodeNotSupported, "unknown network method: %s", req.Method))
+		wire.RespondError(w, req.ID, wire.Fail(files.CodeNotSupported, "unknown network method: %s", req.Method))
 	}
 }
 
@@ -55,7 +55,7 @@ func (s *Service) handleMount(w *ipc.ConnWriter, req ipc.Request) {
 	}
 	mount, found := s.find(id)
 	if !found || !mount.Kernel || mount.Mounted {
-		wire.RespondError(w, req.ID, fail(files.CodeInvalid, "network mount is not available: %s", id))
+		wire.RespondError(w, req.ID, wire.Fail(files.CodeInvalid, "network mount is not available: %s", id))
 		return
 	}
 	if err := mountKernelMount(mount.Path); err != nil {
