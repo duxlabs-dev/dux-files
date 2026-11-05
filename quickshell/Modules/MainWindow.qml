@@ -560,7 +560,10 @@ FloatingWindow {
                     window.activePane.closeSearch();
                     window.activePane.focusBody();
                 }
+                onResultsClosed: window.activePane.closeSearch()
                 onTabRequested: path => window.openPath(path, true)
+                onItemsDropped: (dest, drop) => window.activePane.dropOn(dest, drop)
+                onPathMenuRequested: (path, pointX, pointY) => window.menus.presentPlaceMenu("folder", path, topbar, pointX, pointY)
                 onLocationRequested: location => {
                     window.openLocation(location, false);
                     window.activePane.focusBody();

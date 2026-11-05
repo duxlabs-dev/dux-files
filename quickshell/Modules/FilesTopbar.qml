@@ -215,14 +215,27 @@ Item {
     signal filterChanged(string text)
     signal searchRequested(string query)
     signal searchCleared
+    signal resultsClosed
     signal locationRequested(var location)
     signal tabRequested(string path)
+    signal itemsDropped(string dest, var drop)
+    signal pathMenuRequested(string path, real pointX, real pointY)
     signal resultsRequested
 
     function focusSearch() {
         editing = true;
         search.forceActiveFocus();
         search.selectAll();
+    }
+
+    function focusRecent() {
+        if (filterText !== "" || resultsActive) {
+            focusSearch();
+            return;
+        }
+        editing = true;
+        search.text = "";
+        search.forceActiveFocus();
     }
 
     function openFilter(text) {
@@ -611,6 +624,12 @@ Item {
         path: topbar.currentPath
         editable: false
         flat: true
+        dropEnabled: !topbar.virtualActive
+        onItemsDropped: (dest, drop) => topbar.itemsDropped(dest, drop)
+        onMenuRequested: (target, pointX, pointY) => {
+            const point = breadcrumb.mapToItem(topbar, pointX, pointY);
+            topbar.pathMenuRequested(target, point.x, point.y);
+        }
         onEditRequested: topbar.focusLocation()
         onNavigated: target => topbar.openRecent(target)
         onTabRequested: target => topbar.tabRequested(target)
@@ -650,8 +669,8 @@ Item {
         }
         onTextChanged: {
             recentPopup.highlightIndex = -1;
-            if (text === "" && topbar.editing) {
-                topbar.clearSearch();
+            if (text === "" && topbar.resultsActive) {
+                topbar.resultsClosed();
                 return;
             }
             const query = topbar.isLocation(text) ? "" : text;

@@ -127,7 +127,7 @@ Singleton {
             "keys": ["Ctrl+Shift+K"],
             "group": "navigation",
             "scope": "path",
-            "label": I18n.tr("Jump to a folder you visited", "keyboard shortcut")
+            "label": I18n.tr("Show recent folders", "keyboard shortcut")
         },
         {
             "id": "search",

@@ -190,7 +190,7 @@ QtObject {
             mainWindow.topbar.focusLocation();
             return;
         case "jump":
-            mainWindow.topbar.focusSearch();
+            mainWindow.topbar.focusRecent();
             return;
         case "search":
             mainWindow.topbar.focusSearch();

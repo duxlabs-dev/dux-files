@@ -494,6 +494,7 @@ FocusScope {
         id: browser
 
         anchors.fill: parent
+        anchors.bottomMargin: statusFooter.visible ? statusFooter.height : 0
         visible: !pane.resultsActive && (!pane.virtualActive || pane.editingPath)
         focus: !pane.resultsActive && (!pane.virtualActive || pane.editingPath)
         showSidebar: false
@@ -533,7 +534,7 @@ FocusScope {
         unlistedPaths: [TrashService.filesPath, RecentService.path]
         header: pane.filtering ? filterHeader : null
         showPathBar: pane.showPathBar
-        pathBarTrailing: paneStatus
+        pathBarTrailing: pane.showPathBar ? paneStatus : null
         emptyText: {
             if (pane.virtualActive)
                 return "";
@@ -690,6 +691,26 @@ FocusScope {
             onFocusRequested: pane.focusRequested()
             onBackRequested: pane.back()
             onForwardRequested: pane.forward()
+        }
+    }
+
+    Item {
+        id: statusFooter
+        objectName: "paneStatusFooter"
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: FileBrowserMetrics.pathPillHeight + FilesMetrics.paneBodyMargin
+        visible: !pane.showPathBar && browser.visible && (statusLoader.item?.implicitWidth ?? 0) > 0
+
+        Loader {
+            id: statusLoader
+
+            anchors.right: parent.right
+            anchors.rightMargin: FilesMetrics.paneBodyMarginH
+            anchors.top: parent.top
+            sourceComponent: paneStatus
         }
     }
 
