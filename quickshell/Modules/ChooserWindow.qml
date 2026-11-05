@@ -216,11 +216,11 @@ FloatingWindow {
         if (settled)
             return;
         settled = true;
+        ChooserService.answer(requestId, answer);
         if (pane.path !== "")
             persist({
                 "lastPath": pane.path
             });
-        ChooserService.answer(requestId, answer);
     }
 
     function cancel() {
