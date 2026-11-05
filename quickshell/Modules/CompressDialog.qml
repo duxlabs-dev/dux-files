@@ -107,8 +107,6 @@ OverlayDialog {
         },
         DButton {
             text: I18n.tr("Create", "dialog button creating an item")
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             onClicked: root.submit()
         }
     ]

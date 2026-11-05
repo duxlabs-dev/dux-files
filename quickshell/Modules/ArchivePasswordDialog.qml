@@ -68,14 +68,11 @@ OverlayDialog {
         DButton {
             visible: root.offers("skip")
             text: I18n.tr("Skip", "file conflict dialog button to leave the item alone")
-            backgroundColor: Theme.secondaryContainer
-            textColor: Theme.onSecondaryContainer
+            variant: "tonal"
             onClicked: root.answer("skip")
         },
         DButton {
             text: I18n.tr("Unlock", "unlock dialog header for an encrypted device")
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             onClicked: root.submit()
         }
     ]

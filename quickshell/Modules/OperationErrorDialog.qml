@@ -72,22 +72,18 @@ OverlayDialog {
         DButton {
             visible: root.offers("skip")
             text: I18n.tr("Skip", "file conflict dialog button to leave the item alone")
-            backgroundColor: Theme.secondaryContainer
-            textColor: Theme.onSecondaryContainer
+            variant: "tonal"
             onClicked: root.answer("skip")
         },
         DButton {
             visible: root.offers("retry")
             text: I18n.tr("Try again", "file operation error dialog button to retry")
-            backgroundColor: root.elevationOffered ? Theme.secondaryContainer : Theme.primary
-            textColor: root.elevationOffered ? Theme.onSecondaryContainer : Theme.primaryText
+            variant: root.elevationOffered ? "tonal" : "filled"
             onClicked: root.answer("retry")
         },
         DButton {
             visible: root.elevationOffered
             text: I18n.tr("Retry as administrator", "file operation error dialog button to retry with elevated rights")
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             onClicked: root.answer("retryElevated")
         }
     ]

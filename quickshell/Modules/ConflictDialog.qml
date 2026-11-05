@@ -68,29 +68,25 @@ OverlayDialog {
         DButton {
             visible: root.offers("merge")
             text: I18n.tr("Merge", "file conflict dialog button to merge folders")
-            backgroundColor: Theme.secondaryContainer
-            textColor: Theme.onSecondaryContainer
+            variant: "tonal"
             onClicked: root.answer("merge")
         },
         DButton {
             visible: root.offers("skip")
             text: I18n.tr("Skip", "file conflict dialog button to leave the item alone")
-            backgroundColor: Theme.secondaryContainer
-            textColor: Theme.onSecondaryContainer
+            variant: "tonal"
             onClicked: root.answer("skip")
         },
         DButton {
             visible: root.offers("replace")
             text: I18n.tr("Replace", "file conflict dialog button to overwrite the existing item")
-            backgroundColor: Theme.errorContainer
-            textColor: Theme.onErrorContainer
+            variant: "tonal"
+            danger: true
             onClicked: root.answer("replace")
         },
         DButton {
             visible: root.offers("keepBoth")
             text: I18n.tr("Keep both", "file conflict dialog button to keep both items")
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             onClicked: root.answer("keepBoth")
         }
     ]

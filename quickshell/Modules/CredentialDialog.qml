@@ -135,8 +135,7 @@ OverlayDialog {
                 required property var modelData
 
                 text: modelData
-                backgroundColor: index === 0 ? Theme.primary : Theme.secondaryContainer
-                textColor: index === 0 ? Theme.primaryText : Theme.onSecondaryContainer
+                variant: index === 0 ? "filled" : "tonal"
                 onClicked: root.choose(index)
             }
         }
@@ -150,8 +149,6 @@ OverlayDialog {
         DButton {
             visible: !root.isQuestion
             text: I18n.tr("Sign in", "credential dialog header")
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             onClicked: root.submit()
         }
     ]
