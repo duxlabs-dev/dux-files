@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
-import qs.DCommon.Widgets
 import qs.DCommon.FileBrowser
 
 FilePlaceSection {
@@ -15,6 +14,8 @@ FilePlaceSection {
     signal tabRequested(string path)
     signal dropRequested(string path, var drop)
     signal connectRequested
+    signal refreshRequested
+    signal menuRequested(string id, string path, real pointX, real pointY)
 
     visible: SettingsData.showNetworkSection
     title: I18n.tr("Network", "sidebar section listing remote locations")
@@ -30,24 +31,81 @@ FilePlaceSection {
     showEmpty: true
 
     Repeater {
-        model: NetworkService.networkMounts
+        model: NetworkService.visibleNetworkMounts
 
-        FilePlaceRow {
+        Item {
             required property var modelData
+            width: section.width
+            height: row.implicitHeight
 
-            label: modelData.name
-            iconName: modelData.iconName
-            actionIcon: "eject"
-            actionTooltip: I18n.tr("Disconnect", "network mount action")
-            busy: section.busyId === modelData.id
-            dropPath: modelData.path
-            onClicked: section.navigateRequested(modelData.path)
-            onMiddleClicked: section.tabRequested(modelData.path)
-            onDropped: drop => section.dropRequested(modelData.path, drop)
-            onSpringLoaded: section.navigateRequested(modelData.path)
-            onActionTriggered: {
-                section.busyId = modelData.id;
-                NetworkService.disconnect(modelData.id, () => section.busyId = "");
+            FilePlaceRow {
+                id: row
+
+                TapHandler {
+                    acceptedButtons: Qt.RightButton
+                    onTapped: point => {
+                        if (!modelData.mounted)
+                            return;
+                        const mapped = row.mapToItem(section, point.position.x, point.position.y);
+                        section.menuRequested(modelData.id, modelData.path, mapped.x, mapped.y);
+                    }
+                }
+
+                anchors.fill: parent
+                label: modelData.name
+                iconName: modelData.iconName
+                actionIcon: modelData.mounted ? "eject" : "play_arrow"
+                actionTooltip: modelData.mounted ? I18n.tr("Disconnect", "network mount action") : I18n.tr("Mount", "network mount action")
+                busy: section.busyId === modelData.id
+                dropPath: modelData.mounted ? modelData.path : ""
+                onClicked: {
+                    if (modelData.mounted) {
+                        section.navigateRequested(modelData.path);
+                        return;
+                    }
+                    section.busyId = modelData.id;
+                    NetworkService.mount(modelData.id, result => {
+                        section.busyId = "";
+                        if (result.error)
+                            return;
+                        section.refreshRequested();
+                        section.navigateRequested(modelData.path);
+                    });
+                }
+                onMiddleClicked: section.tabRequested(modelData.path)
+                onDropped: drop => section.dropRequested(modelData.path, drop)
+                onSpringLoaded: {
+                    if (modelData.mounted)
+                        section.navigateRequested(modelData.path);
+                }
+                onActionTriggered: {
+                    section.busyId = modelData.id;
+                    const done = result => {
+                        section.busyId = "";
+                        if (!result?.error)
+                            section.refreshRequested();
+                    };
+                    if (modelData.mounted)
+                        NetworkService.disconnect(modelData.id, done);
+                    else
+                        NetworkService.mount(modelData.id, done);
+                }
+            }
+
+            Rectangle {
+                visible: modelData.mounted
+                width: 8
+                height: width
+                radius: width / 2
+                anchors.left: parent.left
+                anchors.leftMargin: 36
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: Style.spacingS + 1
+                z: 2
+                color: "#4CAF50"
+                border.color: Style.surfaceContainerLowest
+                border.width: 1
+                opacity: 0.9
             }
         }
     }

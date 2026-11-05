@@ -212,7 +212,7 @@ FocusScope {
             snapshotView.refresh();
             return;
         }
-        browser.refresh();
+        browser.directory.reload();
     }
 
     function editPath() {

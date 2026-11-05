@@ -65,6 +65,7 @@ func trackedService(t *testing.T, tracker *fakeTracker) *Service {
 	t.Cleanup(func() { _ = conn.Close() })
 	svc.conn = conn
 	svc.mountables = mountables
+	svc.kernelMounts = func() []Mount { return nil }
 	return svc
 }
 

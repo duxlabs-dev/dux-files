@@ -9,7 +9,7 @@ import (
 
 func Handles(method string) bool {
 	switch method {
-	case "network.mounts", "network.connect", "network.disconnect", "network.answer",
+	case "network.mounts", "network.mount", "network.connect", "network.disconnect", "network.answer",
 		"network.recent", "network.forget", "network.mountPortable":
 		return true
 	}
@@ -27,6 +27,8 @@ func (s *Service) Handle(w *ipc.ConnWriter, req ipc.Request) {
 			"mounts":    snapshot.Mounts,
 			"portables": s.Portables(),
 		})
+	case "network.mount":
+		s.handleMount(w, req)
 	case "network.connect":
 		s.handleConnect(w, req)
 	case "network.disconnect":
@@ -43,6 +45,25 @@ func (s *Service) Handle(w *ipc.ConnWriter, req ipc.Request) {
 	default:
 		wire.RespondError(w, req.ID, fail(files.CodeNotSupported, "unknown network method: %s", req.Method))
 	}
+}
+
+func (s *Service) handleMount(w *ipc.ConnWriter, req ipc.Request) {
+	id := params.StringOpt(req.Params, "id", "")
+	if id == "" {
+		wire.RespondError(w, req.ID, wire.Invalid("network.mount requires an id"))
+		return
+	}
+	mount, found := s.find(id)
+	if !found || !mount.Kernel || mount.Mounted {
+		wire.RespondError(w, req.ID, fail(files.CodeInvalid, "network mount is not available: %s", id))
+		return
+	}
+	if err := mountKernelMount(mount.Path); err != nil {
+		wire.RespondError(w, req.ID, err)
+		return
+	}
+	s.publishMounts()
+	w.Respond(req.ID, map[string]any{"id": id, "mounted": true, "path": mount.Path})
 }
 
 func (s *Service) handleConnect(w *ipc.ConnWriter, req ipc.Request) {
