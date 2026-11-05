@@ -48,6 +48,9 @@ Singleton {
     property alias terminal: adapter.terminal
     property alias opener: adapter.opener
     property alias closeBehavior: adapter.closeBehavior
+    property alias startupFolder: adapter.startupFolder
+    property alias newWindowFolder: adapter.newWindowFolder
+    property alias newTabFolder: adapter.newTabFolder
     property alias openLocationIn: adapter.openLocationIn
     property alias extractOnOpen: adapter.extractOnOpen
     property alias registerFileManager: adapter.registerFileManager
@@ -86,10 +89,17 @@ Singleton {
     property alias listTyping: adapter.listTyping
     property alias gtkBookmarksOffered: adapter.gtkBookmarksOffered
 
+    function folderFor(setting, fallback) {
+        if (setting === "home")
+            return Paths.strip(Paths.home);
+        return setting.startsWith("/") ? setting : fallback;
+    }
+
     function flush() {
         store.flush();
     }
 
+    Component.onCompleted: store.read()
     Component.onDestruction: flush()
 
     JsonStore {
@@ -129,6 +139,9 @@ Singleton {
             property string terminal: ""
             property string opener: ""
             property string closeBehavior: "hide"
+            property string startupFolder: "last"
+            property string newWindowFolder: "current"
+            property string newTabFolder: "current"
             property string openLocationIn: "current"
             property bool extractOnOpen: true
             property bool registerFileManager: true

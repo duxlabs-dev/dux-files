@@ -84,7 +84,10 @@ QtObject {
             mainWindow.tabManager.newTab("", false);
             return;
         case "newWindow":
-            newWindowAt(currentPath);
+            if (SettingsData.newWindowFolder === "current")
+                newWindowAt(currentPath);
+            else
+                mainWindow.newWindowRequested([]);
             return;
         case "openInNewWindow":
             openSelectionInNewWindow();
