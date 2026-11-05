@@ -3,6 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import qs.Services
+import qs.DCommon.Common
+import qs.DCommon.Widgets
 import qs.DCommon.FileBrowser
 
 FilePlaceSection {
@@ -99,7 +101,7 @@ FilePlaceSection {
             }
 
             Rectangle {
-                visible: modelData.mounted
+                visible: modelData.mounted === true
                 width: 8
                 height: width
                 radius: width / 2
