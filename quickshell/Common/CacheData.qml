@@ -12,7 +12,13 @@ Singleton {
     property alias sidebarWidth: adapter.sidebarWidth
     property alias previewWidth: adapter.previewWidth
 
+    function saveCache() {
+        store.save();
+    }
+
     JsonStore {
+        id: store
+
         name: "cache"
         path: Paths.strip(Paths.cache) + "/cache.json"
 
