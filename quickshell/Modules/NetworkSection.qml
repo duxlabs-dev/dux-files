@@ -30,6 +30,12 @@ FilePlaceSection {
     }
     showEmpty: true
 
+    Timer {
+        id: mountRefresh
+        interval: 100
+        onTriggered: section.refreshRequested()
+    }
+
     Repeater {
         model: NetworkService.visibleNetworkMounts
 
@@ -68,8 +74,8 @@ FilePlaceSection {
                         section.busyId = "";
                         if (result.error)
                             return;
-                        section.refreshRequested();
                         section.navigateRequested(modelData.path);
+                        mountRefresh.restart();
                     });
                 }
                 onMiddleClicked: section.tabRequested(modelData.path)
@@ -83,7 +89,7 @@ FilePlaceSection {
                     const done = result => {
                         section.busyId = "";
                         if (!result?.error)
-                            section.refreshRequested();
+                            mountRefresh.restart();
                     };
                     if (modelData.mounted)
                         NetworkService.disconnect(modelData.id, done);
