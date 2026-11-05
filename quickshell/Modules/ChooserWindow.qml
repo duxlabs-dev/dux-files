@@ -88,6 +88,7 @@ FloatingWindow {
     readonly property bool compact: width < FilesMetrics.sidebarOverlayBreakpoint
     readonly property bool sidebarDocked: sidebarShown && !compact
     readonly property bool textEditing: surface.focusItem instanceof TextInput || surface.focusItem instanceof TextEdit
+    readonly property bool dialogOpen: overwriteDialog.visible || connectDialog.visible || unlockDialog.visible || conflictDialog.visible || errorDialog.visible || credentialDialog.visible || paneActions.trashDialogOpen
 
     title: (request?.title ?? "") !== "" ? request.title : defaultTitle
     implicitWidth: Math.min(FileBrowserMetrics.pickerWidth, (screen?.width ?? FileBrowserMetrics.pickerWidth) * FileBrowserMetrics.pickerScreenFraction)
@@ -329,24 +330,15 @@ FloatingWindow {
             finish([]);
             return;
         }
-        let remaining = targets.length;
-        const existing = [];
-        for (const target of targets) {
-            DirectoryService.stat(target, result => {
-                if (!result.error)
-                    existing.push(target);
-                remaining--;
-                if (remaining > 0)
-                    return;
-                if (existing.length === 0) {
-                    window.finish(targets);
-                    return;
-                }
-                window.pendingTargets = targets;
-                window.overwriteTarget = existing.map(path => FilePaths.baseName(path)).join(", ");
-                overwriteDialog.open();
-            });
-        }
+        DirectoryService.statAll(targets, entries => {
+            if (entries.length === 0) {
+                window.finish(targets);
+                return;
+            }
+            window.pendingTargets = targets;
+            window.overwriteTarget = entries.map(entry => FilePaths.baseName(entry.path)).join(", ");
+            overwriteDialog.open();
+        });
     }
 
     function confirmOverwrite() {
@@ -363,9 +355,11 @@ FloatingWindow {
     }
 
     function clearSearch() {
-        search.text = "";
-        pane.closeSearch();
-        pane.focusBody();
+        topbar.clearSearch();
+    }
+
+    function focusSearch() {
+        topbar.focusSearch();
     }
 
     function escapeBack() {
@@ -373,12 +367,6 @@ FloatingWindow {
             return false;
         clearSearch();
         return true;
-    }
-
-    function createFolder() {
-        if (pane.path === "" || pane.virtualActive)
-            return;
-        FileOpsService.newFolder(pane.path, I18n.tr("Untitled folder", "default name for a new folder"), opScope, true);
     }
 
     function setChoice(id, value) {
@@ -403,44 +391,10 @@ FloatingWindow {
         }
 
         Keys.onPressed: event => {
-            const control = (event.modifiers & Qt.ControlModifier) !== 0;
-            const shift = (event.modifiers & Qt.ShiftModifier) !== 0;
-            const alt = (event.modifiers & Qt.AltModifier) !== 0;
             switch (event.key) {
             case Qt.Key_Escape:
                 if (!window.escapeBack())
                     window.cancel();
-                break;
-            case Qt.Key_L:
-                if (!control)
-                    return;
-                pane.editPath();
-                break;
-            case Qt.Key_H:
-                if (!control)
-                    return;
-                window.setShowHidden(!window.showHidden);
-                break;
-            case Qt.Key_F:
-                if (!control)
-                    return;
-                search.forceActiveFocus();
-                search.selectAll();
-                break;
-            case Qt.Key_N:
-                if (!control || !shift)
-                    return;
-                window.createFolder();
-                break;
-            case Qt.Key_Left:
-                if (!alt)
-                    return;
-                pane.back();
-                break;
-            case Qt.Key_Right:
-                if (!alt)
-                    return;
-                pane.forward();
                 break;
             case Qt.Key_Return:
             case Qt.Key_Enter:
@@ -514,122 +468,56 @@ FloatingWindow {
             anchors.leftMargin: Math.max(FilesMetrics.contentMarginH, sidebarSlot.width)
             anchors.rightMargin: FilesMetrics.contentMarginH
 
-            Item {
+            FilesTopbar {
                 id: topbar
-
-                readonly property real minimumWidth: leftActions.width + rightActions.width + FilesMetrics.topbarSpacing * 2 + FilesMetrics.topbarControlSize
 
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: FilesMetrics.topbarControlSize
-
-                Row {
-                    id: leftActions
-
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: FilesMetrics.topbarGroupSpacing
-
-                    FlatButton {
-                        anchors.verticalCenter: parent.verticalCenter
-                        visible: !window.compact
-                        iconName: "menu"
-                        tooltipText: I18n.tr("Toggle sidebar", "tooltip on the button showing or hiding the sidebar")
-                        onClicked: window.setSidebarShown(!window.sidebarShown)
-                    }
-
-                    NavButtonPair {
-                        anchors.verticalCenter: parent.verticalCenter
-                        backEnabled: pane.canGoBack
-                        forwardEnabled: pane.canGoForward
-                        onBackRequested: pane.back()
-                        onForwardRequested: pane.forward()
-                    }
-
-                    FlatButton {
-                        anchors.verticalCenter: parent.verticalCenter
-                        enabled: pane.path !== "" && !pane.virtualActive
-                        iconName: "create_new_folder"
-                        backgroundColor: Theme.chipSurface
-                        tooltipText: I18n.tr("New folder", "file browser toolbar button creating a folder")
-                        onClicked: window.createFolder()
-                    }
+                showSidebarToggle: !window.compact
+                showNewFolder: true
+                showSplit: false
+                showOverflow: false
+                allowColumns: false
+                showHiddenToggle: true
+                hiddenShown: window.showHidden
+                compact: window.compact
+                backEnabled: pane.canGoBack
+                forwardEnabled: pane.canGoForward
+                sortKey: pane.effectiveSortKey
+                sortDescending: pane.effectiveSortDescending
+                resultsActive: pane.resultsActive
+                viewMode: window.viewMode
+                previewOpen: window.previewOpen
+                trashActive: pane.trashActive
+                recentActive: pane.recentActive
+                filterText: pane.nameFilter
+                currentPath: pane.path
+                onFilterChanged: text => pane.nameFilter = text
+                onSearchRequested: query => pane.startSearch(query, null)
+                onSearchCleared: {
+                    pane.closeSearch();
+                    pane.focusBody();
                 }
-
-                Row {
-                    id: rightActions
-
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: FilesMetrics.topbarSpacing
-
-                    FlatButton {
-                        anchors.verticalCenter: parent.verticalCenter
-                        iconName: window.showHidden ? "visibility" : "visibility_off"
-                        iconColor: window.showHidden ? Theme.onPrimary : Theme.surfaceText
-                        backgroundColor: window.showHidden ? Theme.primary : Theme.chipSurface
-                        tooltipText: I18n.tr("Show hidden files", "file browser toolbar toggle")
-                        onClicked: window.setShowHidden(!window.showHidden)
-                    }
-
-                    FlatButton {
-                        anchors.verticalCenter: parent.verticalCenter
-                        iconName: window.viewMode === "grid" ? "view_list" : "grid_view"
-                        backgroundColor: Theme.chipSurface
-                        tooltipText: window.viewMode === "grid" ? I18n.tr("List view", "file browser toolbar button switching to the list") : I18n.tr("Grid view", "file browser toolbar button switching to the grid")
-                        onClicked: window.setViewMode(window.viewMode === "grid" ? "list" : "grid")
-                    }
-
-                    FlatButton {
-                        anchors.verticalCenter: parent.verticalCenter
-                        visible: !window.compact
-                        iconName: "view_sidebar"
-                        iconColor: window.previewOpen ? Theme.onPrimary : Theme.surfaceText
-                        backgroundColor: window.previewOpen ? Theme.primary : Theme.chipSurface
-                        tooltipText: I18n.tr("Preview", "view menu entry and shortcut showing or hiding the preview drawer")
-                        onClicked: window.setPreviewOpen(!window.previewOpen)
-                    }
-
-                    FileSortButton {
-                        anchors.verticalCenter: parent.verticalCenter
-                        sortKey: window.sortKey
-                        descending: window.sortDescending
-                        showLabel: !window.compact
-                        onSortKeySelected: key => window.setSort(key)
-                        onDirectionToggled: window.setDirection(!window.sortDescending)
-                    }
+                onLocationRequested: location => {
+                    pane.openTypedLocation(location);
+                    pane.focusBody();
                 }
-
-                DSearchField {
-                    id: search
-
-                    anchors.left: leftActions.right
-                    anchors.right: rightActions.left
-                    anchors.leftMargin: FilesMetrics.topbarSpacing
-                    anchors.rightMargin: FilesMetrics.topbarSpacing
-                    anchors.verticalCenter: parent.verticalCenter
-                    fieldHeight: FilesMetrics.topbarControlSize
-                    leftIconSize: Theme.iconSizeMedium
-                    backgroundColor: Theme.surfaceContainerLowest
-                    placeholderText: I18n.tr("Search in Files", "placeholder in the search field")
-                    onTextChanged: {
-                        if (text !== pane.nameFilter)
-                            pane.nameFilter = text;
-                    }
-                    onAccepted: {
-                        if (text.trim() !== "")
-                            pane.startSearch(text.trim(), null);
-                    }
-                    Keys.onEscapePressed: event => {
-                        event.accepted = true;
-                        window.clearSearch();
-                    }
-                    Keys.onDownPressed: event => {
-                        event.accepted = true;
-                        pane.focusBody();
-                    }
+                onResultsRequested: {
+                    pane.focusBody();
+                    pane.body.jumpTo(0, Qt.NoModifier);
                 }
+                onSidebarToggled: window.setSidebarShown(!window.sidebarShown)
+                onHiddenToggled: window.setShowHidden(!window.showHidden)
+                onBackRequested: pane.back()
+                onForwardRequested: pane.forward()
+                onNewFolderRequested: menus.runAction("newFolder")
+                onNewDocumentRequested: (pointX, pointY) => menus.runAction("newDocument")
+                onSortKeySelected: key => window.setSort(key)
+                onSortDirectionToggled: window.setDirection(!window.sortDescending)
+                onViewModeSelected: mode => window.setViewMode(mode)
+                onZoomRequested: step => pane.body.zoomBy(step)
+                onPreviewToggled: window.setPreviewOpen(!window.previewOpen)
             }
 
             FilesPane {
@@ -663,16 +551,8 @@ FloatingWindow {
                 onPreviewToggleRequested: window.setPreviewOpen(!window.previewOpen)
                 onServerDialogRequested: connectDialog.ask()
                 onConnectFailed: (uri, result) => connectDialog.showFailure(uri, result)
-                onNameFilterChanged: {
-                    if (search.text !== nameFilter)
-                        search.text = nameFilter;
-                }
-                onFilterRequested: text => {
-                    search.text = pane.nameFilter + text;
-                    search.forceActiveFocus();
-                    search.cursorPosition = search.text.length;
-                }
-                onFilterFocusRequested: search.forceActiveFocus()
+                onFilterRequested: text => topbar.openFilter(text)
+                onFilterFocusRequested: topbar.focusFilter()
                 onPathChanged: {
                     window.errorText = "";
                     if (path !== "")
@@ -819,22 +699,12 @@ FloatingWindow {
             }
         }
 
-        Connections {
-            target: FileOpsService
+        PaneActions {
+            id: paneActions
 
-            function onJobFinished(job) {
-                if (job.scope !== window.opScope)
-                    return;
-                if (job.state === "failed") {
-                    ToastService.info(FileFormat.operationError(job.code, job.error));
-                    return;
-                }
-                const created = job.created?.[0]?.path ?? "";
-                const creates = job.kind === "newFolder" || job.kind === "newFile";
-                if (!creates || created === "" || FilePaths.parentOf(created) !== pane.path)
-                    return;
-                pane.revealAndRename(created);
-            }
+            opScope: window.opScope
+            panes: [pane]
+            handlesJobs: true
         }
 
         Connections {
@@ -868,6 +738,24 @@ FloatingWindow {
             anchors.fill: parent
             chooser: window
             pane: pane
+            actions: paneActions
+        }
+
+        ServiceErrorToasts {
+            active: surface.Window.active
+        }
+
+        CredentialDialog {
+            id: credentialDialog
+        }
+
+        Connections {
+            target: NetworkService
+            enabled: surface.Window.active
+
+            function onAskRequested(ask) {
+                credentialDialog.present(ask);
+            }
         }
 
         ConnectServerDialog {
@@ -886,16 +774,32 @@ FloatingWindow {
         }
 
         ConflictDialog {
+            id: conflictDialog
+
             opScope: window.opScope
         }
 
         OperationErrorDialog {
+            id: errorDialog
+
             opScope: window.opScope
         }
 
         Toast {
             anchors.fill: parent
             shown: surface.Window.active
+        }
+    }
+
+    Instantiator {
+        model: Shortcuts.chooser()
+
+        Shortcut {
+            required property var modelData
+
+            enabled: !window.dialogOpen && (modelData.scope === "path" || !window.textEditing)
+            sequences: modelData.keys
+            onActivated: menus.runAction(modelData.id)
         }
     }
 

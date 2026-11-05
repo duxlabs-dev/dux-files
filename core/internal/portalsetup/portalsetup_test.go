@@ -9,6 +9,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/ini"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -35,19 +38,6 @@ func testEnv(t *testing.T) Env {
 	}
 }
 
-func write(t *testing.T, path, content string) {
-	t.Helper()
-	require.NoError(t, os.MkdirAll(filepath.Dir(path), 0o755))
-	require.NoError(t, os.WriteFile(path, []byte(content), 0o644))
-}
-
-func read(t *testing.T, path string) string {
-	t.Helper()
-	data, err := os.ReadFile(path)
-	require.NoError(t, err)
-	return string(data)
-}
-
 func sysPortal(env Env, name string) string {
 	return filepath.Join(env.DataDir, "xdg-desktop-portal", "portals", name+".portal")
 }
@@ -63,7 +53,7 @@ func userConfig(env Env, name string) string {
 func withoutPreferredLine(content string) string {
 	var kept []string
 	for _, line := range strings.Split(content, "\n") {
-		if lineKey(line) == Interface {
+		if ini.Key(line) == Interface {
 			continue
 		}
 		kept = append(kept, line)
@@ -88,16 +78,16 @@ func TestInspectEmptyTree(t *testing.T) {
 func TestEffectiveResolution(t *testing.T) {
 	t.Run("system default list picks first installed", func(t *testing.T) {
 		env := testEnv(t)
-		write(t, sysPortal(env, "gtk"), gtkPortal)
-		write(t, sysConfig(env, "niri-portals.conf"), "[preferred]\ndefault=gnome;gtk;\n")
+		testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
+		testfs.Write(t, sysConfig(env, "niri-portals.conf"), "[preferred]\ndefault=gnome;gtk;\n")
 		assert.Equal(t, "gtk", Inspect(env).Config.Effective)
 	})
 	t.Run("user interface key wins", func(t *testing.T) {
 		env := testEnv(t)
-		write(t, sysPortal(env, "gtk"), gtkPortal)
-		write(t, sysPortal(env, "dfiles"), dfilesPortal)
-		write(t, sysConfig(env, "niri-portals.conf"), "[preferred]\ndefault=gtk;\n")
-		write(t, userConfig(env, "niri-portals.conf"), "[preferred]\n"+Interface+"=dfiles;gtk;\n")
+		testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
+		testfs.Write(t, sysPortal(env, "dfiles"), dfilesPortal)
+		testfs.Write(t, sysConfig(env, "niri-portals.conf"), "[preferred]\ndefault=gtk;\n")
+		testfs.Write(t, userConfig(env, "niri-portals.conf"), "[preferred]\n"+Interface+"=dfiles;gtk;\n")
 		status := Inspect(env)
 		assert.Equal(t, "dfiles", status.Config.Effective)
 		assert.Equal(t, []string{"dfiles", "gtk"}, status.Config.Backends)
@@ -105,56 +95,56 @@ func TestEffectiveResolution(t *testing.T) {
 	})
 	t.Run("none stops", func(t *testing.T) {
 		env := testEnv(t)
-		write(t, sysPortal(env, "gtk"), gtkPortal)
-		write(t, userConfig(env, "portals.conf"), "[preferred]\n"+Interface+"=none;\n")
-		write(t, sysConfig(env, "portals.conf"), "[preferred]\ndefault=gtk;\n")
+		testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
+		testfs.Write(t, userConfig(env, "portals.conf"), "[preferred]\n"+Interface+"=none;\n")
+		testfs.Write(t, sysConfig(env, "portals.conf"), "[preferred]\ndefault=gtk;\n")
 		assert.Equal(t, "", Inspect(env).Config.Effective)
 	})
 	t.Run("star picks first installed by name", func(t *testing.T) {
 		env := testEnv(t)
-		write(t, sysPortal(env, "zed"), gtkPortal)
-		write(t, sysPortal(env, "gtk"), gtkPortal)
-		write(t, sysPortal(env, "aaa"), gnomePortal)
-		write(t, sysConfig(env, "portals.conf"), "[preferred]\ndefault=*;\n")
+		testfs.Write(t, sysPortal(env, "zed"), gtkPortal)
+		testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
+		testfs.Write(t, sysPortal(env, "aaa"), gnomePortal)
+		testfs.Write(t, sysConfig(env, "portals.conf"), "[preferred]\ndefault=*;\n")
 		assert.Equal(t, "gtk", Inspect(env).Config.Effective)
 	})
 	t.Run("uninstalled backend falls through to the next file", func(t *testing.T) {
 		env := testEnv(t)
-		write(t, sysPortal(env, "gtk"), gtkPortal)
-		write(t, userConfig(env, "niri-portals.conf"), "[preferred]\n"+Interface+"=kde;\n")
-		write(t, sysConfig(env, "niri-portals.conf"), "[preferred]\ndefault=gtk;\n")
+		testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
+		testfs.Write(t, userConfig(env, "niri-portals.conf"), "[preferred]\n"+Interface+"=kde;\n")
+		testfs.Write(t, sysConfig(env, "niri-portals.conf"), "[preferred]\ndefault=gtk;\n")
 		assert.Equal(t, "gtk", Inspect(env).Config.Effective)
 	})
 	t.Run("backend without the interface is skipped", func(t *testing.T) {
 		env := testEnv(t)
-		write(t, sysPortal(env, "gnome"), gnomePortal)
-		write(t, sysPortal(env, "gtk"), gtkPortal)
-		write(t, sysConfig(env, "portals.conf"), "[preferred]\n"+Interface+"=gnome;gtk;\n")
+		testfs.Write(t, sysPortal(env, "gnome"), gnomePortal)
+		testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
+		testfs.Write(t, sysConfig(env, "portals.conf"), "[preferred]\n"+Interface+"=gnome;gtk;\n")
 		assert.Equal(t, "gtk", Inspect(env).Config.Effective)
 	})
 	t.Run("desktop file beats portals.conf in the same dir", func(t *testing.T) {
 		env := testEnv(t)
-		write(t, sysPortal(env, "gtk"), gtkPortal)
-		write(t, sysPortal(env, "dfiles"), dfilesPortal)
-		write(t, sysConfig(env, "niri-portals.conf"), "[preferred]\ndefault=dfiles;\n")
-		write(t, sysConfig(env, "portals.conf"), "[preferred]\ndefault=gtk;\n")
+		testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
+		testfs.Write(t, sysPortal(env, "dfiles"), dfilesPortal)
+		testfs.Write(t, sysConfig(env, "niri-portals.conf"), "[preferred]\ndefault=dfiles;\n")
+		testfs.Write(t, sysConfig(env, "portals.conf"), "[preferred]\ndefault=gtk;\n")
 		assert.Equal(t, "dfiles", Inspect(env).Config.Effective)
 	})
 	t.Run("file without preferred group is skipped", func(t *testing.T) {
 		env := testEnv(t)
-		write(t, sysPortal(env, "gtk"), gtkPortal)
-		write(t, sysPortal(env, "dfiles"), dfilesPortal)
-		write(t, sysConfig(env, "niri-portals.conf"), "[other]\ndefault=dfiles;\n")
-		write(t, sysConfig(env, "portals.conf"), "[preferred]\ndefault=gtk;\n")
+		testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
+		testfs.Write(t, sysPortal(env, "dfiles"), dfilesPortal)
+		testfs.Write(t, sysConfig(env, "niri-portals.conf"), "[other]\ndefault=dfiles;\n")
+		testfs.Write(t, sysConfig(env, "portals.conf"), "[preferred]\ndefault=gtk;\n")
 		assert.Equal(t, "gtk", Inspect(env).Config.Effective)
 	})
 	t.Run("invalid desktop entries skipped and names lowercased", func(t *testing.T) {
 		env := testEnv(t)
 		env.Desktops = []string{"bad name", "a/b", "Niri", "GNOME"}
-		write(t, sysPortal(env, "gtk"), gtkPortal)
-		write(t, sysPortal(env, "dfiles"), dfilesPortal)
-		write(t, sysConfig(env, "niri-portals.conf"), "[preferred]\ndefault=dfiles;\n")
-		write(t, sysConfig(env, "gnome-portals.conf"), "[preferred]\ndefault=gtk;\n")
+		testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
+		testfs.Write(t, sysPortal(env, "dfiles"), dfilesPortal)
+		testfs.Write(t, sysConfig(env, "niri-portals.conf"), "[preferred]\ndefault=dfiles;\n")
+		testfs.Write(t, sysConfig(env, "gnome-portals.conf"), "[preferred]\ndefault=gtk;\n")
 		assert.Equal(t, "dfiles", Inspect(env).Config.Effective)
 		assert.Equal(t, userConfig(env, "niri-portals.conf"), Inspect(env).Config.Path)
 	})
@@ -165,18 +155,18 @@ func TestEffectiveResolution(t *testing.T) {
 	})
 	t.Run("user portal dir wins over system for the same name", func(t *testing.T) {
 		env := testEnv(t)
-		write(t, filepath.Join(userPortalDir(env), "gtk.portal"), gnomePortal)
-		write(t, sysPortal(env, "gtk"), gtkPortal)
-		write(t, sysConfig(env, "portals.conf"), "[preferred]\ndefault=gtk;\n")
+		testfs.Write(t, filepath.Join(userPortalDir(env), "gtk.portal"), gnomePortal)
+		testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
+		testfs.Write(t, sysConfig(env, "portals.conf"), "[preferred]\ndefault=gtk;\n")
 		assert.Equal(t, "", Inspect(env).Config.Effective)
 	})
 	t.Run("portal dir is exclusive", func(t *testing.T) {
 		env := testEnv(t)
 		env.PortalDir = filepath.Join(env.SysConfDir, "portal-dir")
-		write(t, sysPortal(env, "gtk"), gtkPortal)
-		write(t, filepath.Join(env.PortalDir, "dfiles.portal"), dfilesPortal)
-		write(t, filepath.Join(env.PortalDir, "portals.conf"), "[preferred]\ndefault=gtk;dfiles;\n")
-		write(t, userConfig(env, "niri-portals.conf"), "[preferred]\ndefault=gtk;\n")
+		testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
+		testfs.Write(t, filepath.Join(env.PortalDir, "dfiles.portal"), dfilesPortal)
+		testfs.Write(t, filepath.Join(env.PortalDir, "portals.conf"), "[preferred]\ndefault=gtk;dfiles;\n")
+		testfs.Write(t, userConfig(env, "niri-portals.conf"), "[preferred]\ndefault=gtk;\n")
 		status := Inspect(env)
 		assert.True(t, status.SystemManaged)
 		assert.Equal(t, "dfiles", status.Config.Effective)
@@ -187,17 +177,17 @@ func TestEffectiveResolution(t *testing.T) {
 
 func TestInstallIntoExistingUserFile(t *testing.T) {
 	env := testEnv(t)
-	write(t, sysPortal(env, "gtk"), gtkPortal)
-	write(t, sysConfig(env, "niri-portals.conf"), "[preferred]\ndefault=gnome;gtk;\n")
+	testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
+	testfs.Write(t, sysConfig(env, "niri-portals.conf"), "[preferred]\ndefault=gnome;gtk;\n")
 	path := userConfig(env, "niri-portals.conf")
 	original := "# my portals\n[preferred]\ndefault=gtk;\norg.freedesktop.impl.portal.Screenshot=gnome;\n\n[other]\nk=v\n"
-	write(t, path, original)
+	testfs.Write(t, path, original)
 	require.NoError(t, os.Chmod(path, 0o600))
 
 	status, err := Install(env)
 	require.NoError(t, err)
 
-	updated := read(t, path)
+	updated := testfs.Read(t, path)
 	assert.Equal(t, withoutPreferredLine(original), withoutPreferredLine(updated))
 	line, found := preferredLine(updated)
 	require.True(t, found)
@@ -212,8 +202,8 @@ func TestInstallIntoExistingUserFile(t *testing.T) {
 	assert.Equal(t, []string{"dfiles", "gtk"}, status.Config.Backends)
 	assert.True(t, status.PortalFile.User)
 	assert.True(t, status.Service.User)
-	assert.Equal(t, dfilesPortal, read(t, filepath.Join(userPortalDir(env), PortalFile)))
-	assert.Equal(t, "[D-BUS Service]\nName="+BusName+"\nExec=/tmp/x/dfiles run --hidden --portal-activated\n", read(t, filepath.Join(userServiceDir(env), ServiceFile)))
+	assert.Equal(t, dfilesPortal, testfs.Read(t, filepath.Join(userPortalDir(env), PortalFile)))
+	assert.Equal(t, "[D-BUS Service]\nName="+BusName+"\nExec=/tmp/x/dfiles run --hidden --portal-activated\n", testfs.Read(t, filepath.Join(userServiceDir(env), ServiceFile)))
 
 	state, ok := readState(env)
 	require.True(t, ok)
@@ -225,7 +215,7 @@ func TestInstallIntoExistingUserFile(t *testing.T) {
 	assert.False(t, status.Managed)
 	assert.False(t, status.Active)
 	assert.Equal(t, "gtk", status.Config.Effective)
-	assert.Equal(t, original, read(t, path))
+	assert.Equal(t, original, testfs.Read(t, path))
 	assert.NoFileExists(t, filepath.Join(userPortalDir(env), PortalFile))
 	assert.NoFileExists(t, filepath.Join(userServiceDir(env), ServiceFile))
 	assert.NoFileExists(t, statePath(env))
@@ -234,18 +224,18 @@ func TestInstallIntoExistingUserFile(t *testing.T) {
 
 func TestInstallRestoresExistingLine(t *testing.T) {
 	env := testEnv(t)
-	write(t, sysPortal(env, "gtk"), gtkPortal)
+	testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
 	path := userConfig(env, "portals.conf")
 	original := "[preferred]\n" + Interface + " = gtk ; kde ;\n"
-	write(t, path, original)
+	testfs.Write(t, path, original)
 
 	_, err := Install(env)
 	require.NoError(t, err)
-	assert.Equal(t, "[preferred]\n"+Interface+"=dfiles;gtk;kde;\n", read(t, path))
+	assert.Equal(t, "[preferred]\n"+Interface+"=dfiles;gtk;kde;\n", testfs.Read(t, path))
 
 	_, err = Uninstall(env)
 	require.NoError(t, err)
-	assert.Equal(t, original, read(t, path))
+	assert.Equal(t, original, testfs.Read(t, path))
 }
 
 func TestInstallWithoutUserFile(t *testing.T) {
@@ -254,7 +244,7 @@ func TestInstallWithoutUserFile(t *testing.T) {
 
 	status, err := Install(env)
 	require.NoError(t, err)
-	assert.Equal(t, "[preferred]\n"+Interface+"=dfiles;*;\n", read(t, path))
+	assert.Equal(t, "[preferred]\n"+Interface+"=dfiles;*;\n", testfs.Read(t, path))
 	assert.True(t, status.Active)
 	assert.Equal(t, path, status.Config.Path)
 
@@ -267,8 +257,8 @@ func TestInstallWithoutUserFile(t *testing.T) {
 
 func TestInstallKeepsSystemPortal(t *testing.T) {
 	env := testEnv(t)
-	write(t, sysPortal(env, "dfiles"), dfilesPortal)
-	write(t, filepath.Join(env.DataDirs[0], "dbus-1", "services", ServiceFile), "[D-BUS Service]\nName="+BusName+"\nExec=/usr/bin/dfiles run\n")
+	testfs.Write(t, sysPortal(env, "dfiles"), dfilesPortal)
+	testfs.Write(t, filepath.Join(env.DataDirs[0], "dbus-1", "services", ServiceFile), "[D-BUS Service]\nName="+BusName+"\nExec=/usr/bin/dfiles run\n")
 
 	status, err := Install(env)
 	require.NoError(t, err)
@@ -288,11 +278,11 @@ func TestInstallKeepsSystemPortal(t *testing.T) {
 func TestInstallRewritesMovedServiceExec(t *testing.T) {
 	env := testEnv(t)
 	servicePath := filepath.Join(userServiceDir(env), ServiceFile)
-	write(t, servicePath, "[D-BUS Service]\nName="+BusName+"\nExec=/old/dfiles run --hidden --portal-activated\n")
+	testfs.Write(t, servicePath, "[D-BUS Service]\nName="+BusName+"\nExec=/old/dfiles run --hidden --portal-activated\n")
 
 	_, err := Install(env)
 	require.NoError(t, err)
-	assert.Contains(t, read(t, servicePath), "Exec=/tmp/x/dfiles run --hidden --portal-activated\n")
+	assert.Contains(t, testfs.Read(t, servicePath), "Exec=/tmp/x/dfiles run --hidden --portal-activated\n")
 	state, ok := readState(env)
 	require.True(t, ok)
 	assert.False(t, state.CreatedService)
@@ -304,18 +294,18 @@ func TestInstallRewritesMovedServiceExec(t *testing.T) {
 
 func TestUninstallAfterHandEdit(t *testing.T) {
 	env := testEnv(t)
-	write(t, sysPortal(env, "gtk"), gtkPortal)
+	testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
 	path := userConfig(env, "niri-portals.conf")
 	_, err := Install(env)
 	require.NoError(t, err)
 
-	edited := setPreferred(read(t, path), "dfiles;kde;")
-	write(t, path, edited)
+	edited := setPreferred(testfs.Read(t, path), "dfiles;kde;")
+	testfs.Write(t, path, edited)
 
 	status, err := Uninstall(env)
 	require.NoError(t, err)
 	assert.True(t, status.Kept)
-	assert.Equal(t, edited, read(t, path))
+	assert.Equal(t, edited, testfs.Read(t, path))
 	assert.NoFileExists(t, filepath.Join(userPortalDir(env), PortalFile))
 	assert.NoFileExists(t, filepath.Join(userServiceDir(env), ServiceFile))
 	assert.NoFileExists(t, statePath(env))
@@ -324,34 +314,34 @@ func TestUninstallAfterHandEdit(t *testing.T) {
 func TestUninstallWithoutState(t *testing.T) {
 	env := testEnv(t)
 	path := userConfig(env, "niri-portals.conf")
-	write(t, path, "[preferred]\n"+Interface+"=dfiles;gtk;\n")
+	testfs.Write(t, path, "[preferred]\n"+Interface+"=dfiles;gtk;\n")
 	status, err := Uninstall(env)
 	require.NoError(t, err)
 	assert.False(t, status.Kept)
-	assert.Equal(t, "[preferred]\n"+Interface+"=gtk;\n", read(t, path))
+	assert.Equal(t, "[preferred]\n"+Interface+"=gtk;\n", testfs.Read(t, path))
 
-	write(t, path, "[preferred]\ndefault=gtk;\n"+Interface+"=dfiles\n")
+	testfs.Write(t, path, "[preferred]\ndefault=gtk;\n"+Interface+"=dfiles\n")
 	_, err = Uninstall(env)
 	require.NoError(t, err)
-	assert.Equal(t, "[preferred]\ndefault=gtk;\n", read(t, path))
+	assert.Equal(t, "[preferred]\ndefault=gtk;\n", testfs.Read(t, path))
 
-	write(t, path, "[preferred]\n"+Interface+"=gtk;dfiles;\n")
+	testfs.Write(t, path, "[preferred]\n"+Interface+"=gtk;dfiles;\n")
 	_, err = Uninstall(env)
 	require.NoError(t, err)
-	assert.Equal(t, "[preferred]\n"+Interface+"=gtk;dfiles;\n", read(t, path))
+	assert.Equal(t, "[preferred]\n"+Interface+"=gtk;dfiles;\n", testfs.Read(t, path))
 }
 
 func TestInstallRefusesSymlinkedConfig(t *testing.T) {
 	env := testEnv(t)
 	require.NoError(t, os.MkdirAll(filepath.Join(env.ConfigHome, "xdg-desktop-portal"), 0o755))
 	target := filepath.Join(env.ConfigHome, "generated.conf")
-	write(t, target, "[preferred]\ndefault=gtk;\n")
+	testfs.Write(t, target, "[preferred]\ndefault=gtk;\n")
 	require.NoError(t, os.Symlink(target, filepath.Join(env.ConfigHome, "xdg-desktop-portal", "niri-portals.conf")))
 
 	_, err := Install(env)
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "symlink")
-	assert.Equal(t, "[preferred]\ndefault=gtk;\n", read(t, target))
+	assert.Equal(t, "[preferred]\ndefault=gtk;\n", testfs.Read(t, target))
 }
 
 func TestInstallRefused(t *testing.T) {
@@ -373,16 +363,16 @@ func TestInstallRefused(t *testing.T) {
 
 func TestReinstallKeepsOriginalLine(t *testing.T) {
 	env := testEnv(t)
-	write(t, sysPortal(env, "gtk"), gtkPortal)
+	testfs.Write(t, sysPortal(env, "gtk"), gtkPortal)
 	path := userConfig(env, "niri-portals.conf")
 	original := "[preferred]\n" + Interface + "=gtk;\n"
-	write(t, path, original)
+	testfs.Write(t, path, original)
 
 	_, err := Install(env)
 	require.NoError(t, err)
 	_, err = Install(env)
 	require.NoError(t, err)
-	assert.Equal(t, "[preferred]\n"+Interface+"=dfiles;gtk;\n", read(t, path))
+	assert.Equal(t, "[preferred]\n"+Interface+"=dfiles;gtk;\n", testfs.Read(t, path))
 	state, ok := readState(env)
 	require.True(t, ok)
 	assert.Equal(t, Interface+"=gtk;", state.OriginalLine)
@@ -390,7 +380,7 @@ func TestReinstallKeepsOriginalLine(t *testing.T) {
 
 	_, err = Uninstall(env)
 	require.NoError(t, err)
-	assert.Equal(t, original, read(t, path))
+	assert.Equal(t, original, testfs.Read(t, path))
 }
 
 func TestParseEnviron(t *testing.T) {

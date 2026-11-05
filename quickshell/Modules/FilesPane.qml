@@ -579,35 +579,7 @@ FocusScope {
         anchors.fill: parent
         visible: pane.resultsActive
         focus: pane.resultsActive
-        model: searchModel
-        viewMode: pane.viewMode
-        gridZoom: SessionData.gridZoom
-        listZoom: SessionData.listZoom
-        columnWidths: SessionData.columnWidths
-        previewOpen: pane.previewOpen
-        previewWidth: CacheData.previewWidth
-        cutSet: pane.cutSet
-        dragEnabled: pane.dragEnabled
-        singleClickActivates: pane.singleClickActivates
-        typeAheadEnabled: pane.typeAhead
-        countFolders: SettingsData.folderCounts
-        border.width: pane.showActiveOutline && pane.active ? Theme.outlineWidthFocused : 0
-        border.color: Theme.primary
-        onActivateRequested: entry => pane.activateRequested(entry)
-        onItemMenuRequested: (index, pointX, pointY, modifiers) => pane.requestItemMenu(index, pointX, pointY, modifiers)
-        onDragRequested: paths => pane.dragRequested(paths)
-        onRenameRequested: (target, name) => pane.renameRequested(target, name)
-        onZoomRequested: (mode, level) => pane.setZoom(mode, level)
-        onColumnResizeRequested: (id, width) => pane.setColumnWidth(id, width)
-        onPreviewToggleRequested: pane.previewToggleRequested()
-        onPreviewResized: width => pane.setPreviewWidth(width)
-        onFocusRequested: pane.focusRequested()
-        onTabRequested: target => pane.tabRequested(target)
-        onCloseRequested: {
-            pane.closeSearch();
-            pane.focusBody();
-        }
-        onFiltersChanged: pane.startSearch(searchModel.query, results.chips.filterState)
+        host: pane
     }
 
     Loader {
@@ -617,35 +589,9 @@ FocusScope {
         active: pane.trashActive
         visible: !pane.editingPath
         sourceComponent: TrashView {
-            viewMode: pane.viewMode
-            gridZoom: SessionData.gridZoom
-            listZoom: SessionData.listZoom
-            columnWidths: SessionData.columnWidths
-            previewOpen: pane.previewOpen
-            previewWidth: CacheData.previewWidth
-            nameFilter: pane.nameFilter
-            singleClickActivates: pane.singleClickActivates
-            typeAheadEnabled: pane.typeAhead
-            typeAheadMode: SettingsData.listTyping
-            countFolders: SettingsData.folderCounts
-            thumbnailsEnabled: SettingsData.thumbnails
-            thumbnailSizeLimit: pane.thumbnailSizeLimit
-            outlined: pane.showActiveOutline && pane.active
-            onFilterRequested: text => pane.filterRequested(text)
-            onFilterFocusRequested: pane.filterFocusRequested()
-            onActivateRequested: entry => pane.activateRequested(entry)
-            onItemMenuRequested: (index, pointX, pointY, modifiers) => pane.requestItemMenu(index, pointX, pointY, modifiers)
-            onBackgroundMenuRequested: (pointX, pointY) => pane.requestBackgroundMenu(pointX, pointY)
+            host: pane
             onRestoreRequested: pane.restoreRequested()
             onEmptyRequested: pane.emptyTrashRequested()
-            onItemsDropped: drop => pane.dropOn(TrashService.filesPath, drop)
-            onZoomRequested: (mode, level) => pane.setZoom(mode, level)
-            onColumnResizeRequested: (id, width) => pane.setColumnWidth(id, width)
-            onPreviewToggleRequested: pane.previewToggleRequested()
-            onPreviewResized: width => pane.setPreviewWidth(width)
-            onFocusRequested: pane.focusRequested()
-            onBackRequested: pane.back()
-            onForwardRequested: pane.forward()
         }
     }
 
@@ -656,38 +602,9 @@ FocusScope {
         active: pane.recentActive
         visible: !pane.editingPath
         sourceComponent: RecentView {
-            viewMode: pane.viewMode
-            gridZoom: SessionData.gridZoom
-            listZoom: SessionData.listZoom
-            columnWidths: SessionData.columnWidths
-            previewOpen: pane.previewOpen
-            previewWidth: CacheData.previewWidth
-            cutSet: pane.cutSet
-            nameFilter: pane.nameFilter
-            singleClickActivates: pane.singleClickActivates
-            typeAheadEnabled: pane.typeAhead
-            typeAheadMode: SettingsData.listTyping
-            countFolders: SettingsData.folderCounts
-            thumbnailsEnabled: SettingsData.thumbnails
-            thumbnailSizeLimit: pane.thumbnailSizeLimit
-            dragEnabled: pane.dragEnabled
-            outlined: pane.showActiveOutline && pane.active
-            onFilterRequested: text => pane.filterRequested(text)
-            onFilterFocusRequested: pane.filterFocusRequested()
-            onActivateRequested: entry => pane.activateRequested(entry)
-            onItemMenuRequested: (index, pointX, pointY, modifiers) => pane.requestItemMenu(index, pointX, pointY, modifiers)
-            onBackgroundMenuRequested: (pointX, pointY) => pane.requestBackgroundMenu(pointX, pointY)
+            host: pane
             onRemoveRequested: pane.removeFromRecentRequested()
             onClearRequested: pane.clearRecentRequested()
-            onDragRequested: paths => pane.dragRequested(paths)
-            onTabRequested: target => pane.tabRequested(target)
-            onZoomRequested: (mode, level) => pane.setZoom(mode, level)
-            onColumnResizeRequested: (id, width) => pane.setColumnWidth(id, width)
-            onPreviewToggleRequested: pane.previewToggleRequested()
-            onPreviewResized: width => pane.setPreviewWidth(width)
-            onFocusRequested: pane.focusRequested()
-            onBackRequested: pane.back()
-            onForwardRequested: pane.forward()
         }
     }
 
@@ -720,7 +637,7 @@ FocusScope {
                 StyledText {
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width - subfolderChip.width - parent.spacing
-                    text: I18n.tr("%1 matching “%2”", "filter bar above a folder listing, count then the typed text").arg(FileFormat.count(browser.directory.count)).arg(pane.nameFilter)
+                    text: FilesFormat.matching(browser.directory.count, pane.nameFilter)
                     color: Theme.surfaceVariantText
                     font.pixelSize: Theme.fontSizeSmall
                     elide: Text.ElideMiddle

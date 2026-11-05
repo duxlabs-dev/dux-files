@@ -5,15 +5,11 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
-
-func writeFile(t *testing.T, path, content string) {
-	t.Helper()
-	require.NoError(t, os.MkdirAll(filepath.Dir(path), 0o755))
-	require.NoError(t, os.WriteFile(path, []byte(content), 0o644))
-}
 
 func TestIgnoreRulesSkipHeavyFoldersAndUserExclusions(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())
@@ -33,8 +29,8 @@ func TestIgnoreRulesSkipHeavyFoldersAndUserExclusions(t *testing.T) {
 func TestIgnoreFilesNestNegateAndMatchDirectories(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())
 	root := t.TempDir()
-	writeFile(t, filepath.Join(root, ".gitignore"), "*.log\n!keep.log\nbuild/\n/top-only\n")
-	writeFile(t, filepath.Join(root, "sub", ".ignore"), "secret*\n")
+	testfs.Write(t, filepath.Join(root, ".gitignore"), "*.log\n!keep.log\nbuild/\n/top-only\n")
+	testfs.Write(t, filepath.Join(root, "sub", ".ignore"), "secret*\n")
 	rules := newIgnoreRules(nil, false)
 
 	top := rules.load(root, rules.rootPatterns(root))
@@ -57,9 +53,9 @@ func TestIgnoreRulesHonourAncestorsAndTheGlobalFile(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
-	writeFile(t, filepath.Join(home, ".config", "git", "ignore"), "*.swp\n")
+	testfs.Write(t, filepath.Join(home, ".config", "git", "ignore"), "*.swp\n")
 	repo := filepath.Join(home, "repo")
-	writeFile(t, filepath.Join(repo, ".gitignore"), "generated/\n")
+	testfs.Write(t, filepath.Join(repo, ".gitignore"), "generated/\n")
 	rules := newIgnoreRules(nil, false)
 
 	patterns := rules.rootPatterns(filepath.Join(repo, "core"))

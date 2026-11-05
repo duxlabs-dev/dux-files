@@ -156,10 +156,6 @@ OverlayDialog {
     }
 
     actions: [
-        TextButton {
-            text: I18n.tr("Cancel", "dialog button to cancel")
-            onClicked: root.close()
-        },
         DButton {
             text: I18n.tr("Open", "context menu entry opening a file")
             enabled: root.selectedId !== ""

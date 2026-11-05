@@ -35,10 +35,7 @@ func Install(env Env) (Status, error) {
 	}
 	value := PortalName + ";" + strings.Join(previousBackends(env), ";") + ";"
 	updated := setPreferred(original, value)
-	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
-		return Status{}, err
-	}
-	if err := atomicfile.WriteFile(path, []byte(updated), mode); err != nil {
+	if err := atomicfile.WriteFileMkdir(path, []byte(updated), mode, 0o755); err != nil {
 		return Status{}, err
 	}
 	written, _ := preferredLine(updated)
@@ -244,10 +241,7 @@ func onlyPreferredHeader(content string) bool {
 }
 
 func writeNew(path, content string) error {
-	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
-		return err
-	}
-	return atomicfile.WriteFile(path, []byte(content), 0o644)
+	return atomicfile.WriteFileMkdir(path, []byte(content), 0o644, 0o755)
 }
 
 func removeFile(path string) error {

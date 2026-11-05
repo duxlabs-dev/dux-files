@@ -3,20 +3,16 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import qs.Services
 
 Singleton {
     id: root
 
-    readonly property var log: Log.scoped("FolderViews")
-    readonly property string filePath: Paths.strip(Paths.stateDir) + "/folder-views.json"
     readonly property int cap: 1000
     readonly property int touchGranularityMs: 3600000
     readonly property var valueKeys: ["sortKey", "sortDescending", "viewMode"]
 
     property var entries: ({})
-    property bool _loaded: false
 
     signal changed(string key)
 
@@ -173,24 +169,11 @@ Singleton {
 
     function _commit(next, key) {
         entries = next;
-        writeDebounce.restart();
+        store.save();
         changed(key);
     }
 
-    function _apply(text) {
-        _loaded = true;
-        if (text === "")
-            return;
-        try {
-            const data = JSON.parse(text);
-            if (data && typeof data === "object" && !Array.isArray(data))
-                entries = data;
-        } catch (e) {
-            log.warn(`ignoring unreadable folder views: ${e}`);
-        }
-    }
-
-    Component.onCompleted: _apply(file.text() ?? "")
+    Component.onCompleted: store.read()
 
     Connections {
         target: FileOpsService
@@ -203,37 +186,20 @@ Singleton {
         }
     }
 
-    function _write() {
-        if (!_loaded)
-            return;
-        if (!Paths.ready) {
-            writeDebounce.restart();
-            return;
-        }
-        touchDebounce.stop();
-        file.setText(JSON.stringify(entries, null, 1));
-    }
-
-    Timer {
-        id: writeDebounce
-
-        interval: 400
-        onTriggered: root._write()
-    }
-
     Timer {
         id: touchDebounce
 
         interval: 60000
-        onTriggered: root._write()
+        onTriggered: store.write()
     }
 
-    FileView {
-        id: file
+    JsonStore {
+        id: store
 
-        path: root.filePath
-        blockLoading: true
-        atomicWrites: true
-        printErrors: false
+        name: "folder views"
+        path: Paths.strip(Paths.stateDir) + "/folder-views.json"
+        serialize: () => JSON.stringify(root.entries, null, 1)
+        parse: text => root.entries = objectFrom(text) ?? root.entries
+        onWritten: touchDebounce.stop()
     }
 }

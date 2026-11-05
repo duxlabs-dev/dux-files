@@ -12,39 +12,11 @@ Singleton {
     property alias sidebarWidth: adapter.sidebarWidth
     property alias previewWidth: adapter.previewWidth
 
-    function saveCache() {
-        if (!cacheFile.loaded)
-            return;
-        writeDebounce.restart();
-    }
-
-    Timer {
-        id: writeDebounce
-
-        interval: 400
-        onTriggered: {
-            if (!Paths.ready) {
-                restart();
-                return;
-            }
-            cacheFile.writeAdapter();
-        }
-    }
-
-    FileView {
-        id: cacheFile
-
-        property bool loaded: false
-
+    JsonStore {
+        name: "cache"
         path: Paths.strip(Paths.cache) + "/cache.json"
-        blockLoading: true
-        atomicWrites: true
-        printErrors: false
-        onLoaded: loaded = true
-        onLoadFailed: loaded = true
-        onAdapterUpdated: root.saveCache()
 
-        JsonAdapter {
+        adapter: JsonAdapter {
             id: adapter
 
             property var fileBrowserSettings: ({})

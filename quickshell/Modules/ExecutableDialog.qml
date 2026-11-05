@@ -27,10 +27,6 @@ OverlayDialog {
     }
 
     actions: [
-        TextButton {
-            text: I18n.tr("Cancel", "dialog button to cancel")
-            onClicked: root.close()
-        },
         DButton {
             text: I18n.tr("Open in editor", "executable file dialog action opening the file as text")
             variant: "tonal"

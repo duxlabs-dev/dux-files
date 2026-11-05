@@ -8,10 +8,16 @@ SettingsRow {
     property string text: ""
     property string description: ""
     property color descriptionColor: Theme.surfaceVariantText
-    property bool checked: false
+    property string settingKey: ""
+    property bool checked: settingKey !== "" && SettingsData[settingKey] === true
     property bool toggling: false
 
     signal toggled(bool checked)
+
+    onToggled: checked => {
+        if (settingKey !== "")
+            SettingsData[settingKey] = checked;
+    }
 
     title: text
     subtitle: description

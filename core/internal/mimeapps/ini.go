@@ -1,11 +1,11 @@
 package mimeapps
 
 import (
-	"bufio"
-	"bytes"
 	"os"
 	"strings"
 	"sync"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/ini"
 )
 
 type iniGroup struct {
@@ -33,28 +33,17 @@ func (g *iniGroup) localized(key string) string {
 
 func parseGroups(data []byte) map[string]*iniGroup {
 	groups := map[string]*iniGroup{}
-	var current *iniGroup
-
-	scanner := bufio.NewScanner(bytes.NewReader(data))
-	scanner.Buffer(make([]byte, 0, 64*1024), 1024*1024)
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
+	for line := range ini.Lines(data) {
 		switch {
-		case line == "" || strings.HasPrefix(line, "#"):
-		case strings.HasPrefix(line, "[") && strings.HasSuffix(line, "]"):
-			name := line[1 : len(line)-1]
-			if groups[name] == nil {
-				groups[name] = &iniGroup{keys: map[string]string{}}
+		case line.Header:
+			if groups[line.Group] == nil {
+				groups[line.Group] = &iniGroup{keys: map[string]string{}}
 			}
-			current = groups[name]
-		case current != nil:
-			key, value, ok := strings.Cut(line, "=")
-			if !ok {
-				continue
-			}
-			key = strings.TrimSpace(key)
-			if _, exists := current.keys[key]; !exists {
-				current.keys[key] = strings.TrimSpace(value)
+		case groups[line.Group] == nil:
+		default:
+			keys := groups[line.Group].keys
+			if _, exists := keys[line.Key]; !exists {
+				keys[line.Key] = line.Value
 			}
 		}
 	}

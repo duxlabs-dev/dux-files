@@ -334,6 +334,7 @@ OverlayDialog {
         }
     }
 
+    showCancel: false
     actions: [
         TextButton {
             text: I18n.tr("Restore default", "folder appearance action dropping color and badge")

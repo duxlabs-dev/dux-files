@@ -36,7 +36,7 @@ func (s *Service) Handle(w *ipc.ConnWriter, req ipc.Request) {
 	case "devices.lock":
 		s.handleLock(w, req)
 	default:
-		wire.RespondError(w, req.ID, fail(files.CodeNotSupported, "unknown devices method: %s", req.Method))
+		wire.RespondError(w, req.ID, wire.Fail(files.CodeNotSupported, "unknown devices method: %s", req.Method))
 	}
 }
 

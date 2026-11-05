@@ -7,12 +7,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
 	"github.com/stretchr/testify/require"
 )
 
 func TestCopyPreservesModeAndTime(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "note.txt"), "hello")
+	src := testfs.Write(t, filepath.Join(root, "src", "note.txt"), "hello")
 	require.NoError(t, os.Chmod(src, 0o640))
 	stamp := time.Now().Add(-48 * time.Hour).Truncate(time.Second)
 	require.NoError(t, os.Chtimes(src, stamp, stamp))
@@ -23,8 +25,8 @@ func TestCopyPreservesModeAndTime(t *testing.T) {
 	view := run(t, manager, bus, spec{kind: KindCopy, sources: []string{src}, dest: dest})
 
 	require.Equal(t, StateDone, view.State)
-	require.Equal(t, "hello", read(t, filepath.Join(dest, "note.txt")))
-	require.Equal(t, "hello", read(t, src))
+	require.Equal(t, "hello", testfs.Read(t, filepath.Join(dest, "note.txt")))
+	require.Equal(t, "hello", testfs.Read(t, src))
 
 	info, err := os.Lstat(filepath.Join(dest, "note.txt"))
 	require.NoError(t, err)
@@ -36,7 +38,7 @@ func TestCopyPreservesModeAndTime(t *testing.T) {
 func TestCopyTreeKeepsSymlinksAsLinks(t *testing.T) {
 	root := t.TempDir()
 	src := filepath.Join(root, "src")
-	write(t, filepath.Join(src, "inner", "a.txt"), "a")
+	testfs.Write(t, filepath.Join(src, "inner", "a.txt"), "a")
 	require.NoError(t, os.Symlink("inner/a.txt", filepath.Join(src, "link")))
 	require.NoError(t, os.Symlink("/nowhere", filepath.Join(src, "broken")))
 	dest := filepath.Join(root, "dest")
@@ -53,13 +55,13 @@ func TestCopyTreeKeepsSymlinksAsLinks(t *testing.T) {
 	broken, err := os.Lstat(filepath.Join(dest, "src", "broken"))
 	require.NoError(t, err)
 	require.NotZero(t, broken.Mode()&os.ModeSymlink)
-	require.Equal(t, "a", read(t, filepath.Join(dest, "src", "inner", "a.txt")))
+	require.Equal(t, "a", testfs.Read(t, filepath.Join(dest, "src", "inner", "a.txt")))
 }
 
 func TestMoveSameDeviceRenames(t *testing.T) {
 	root := t.TempDir()
 	src := filepath.Join(root, "src")
-	write(t, filepath.Join(src, "deep", "a.txt"), "a")
+	testfs.Write(t, filepath.Join(src, "deep", "a.txt"), "a")
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
 
@@ -67,7 +69,7 @@ func TestMoveSameDeviceRenames(t *testing.T) {
 	view := run(t, manager, bus, spec{kind: KindMove, sources: []string{src}, dest: dest})
 
 	require.Equal(t, StateDone, view.State)
-	require.Equal(t, "a", read(t, filepath.Join(dest, "src", "deep", "a.txt")))
+	require.Equal(t, "a", testfs.Read(t, filepath.Join(dest, "src", "deep", "a.txt")))
 	_, err := os.Lstat(src)
 	require.True(t, os.IsNotExist(err))
 	require.Zero(t, view.Progress.BytesTotal)
@@ -77,15 +79,15 @@ func TestMoveCrossDeviceCopiesAndRemoves(t *testing.T) {
 	root := t.TempDir()
 	dest := otherDevice(t, root)
 	src := filepath.Join(root, "src")
-	write(t, filepath.Join(src, "a.txt"), "a")
-	write(t, filepath.Join(src, "sub", "b.txt"), "bb")
+	testfs.Write(t, filepath.Join(src, "a.txt"), "a")
+	testfs.Write(t, filepath.Join(src, "sub", "b.txt"), "bb")
 
 	manager, bus := newHarness(t)
 	view := run(t, manager, bus, spec{kind: KindMove, sources: []string{src}, dest: dest})
 
 	require.Equal(t, StateDone, view.State)
-	require.Equal(t, "a", read(t, filepath.Join(dest, "src", "a.txt")))
-	require.Equal(t, "bb", read(t, filepath.Join(dest, "src", "sub", "b.txt")))
+	require.Equal(t, "a", testfs.Read(t, filepath.Join(dest, "src", "a.txt")))
+	require.Equal(t, "bb", testfs.Read(t, filepath.Join(dest, "src", "sub", "b.txt")))
 	_, err := os.Lstat(src)
 	require.True(t, os.IsNotExist(err))
 	require.Equal(t, int64(3), view.Progress.BytesTotal)
@@ -106,21 +108,21 @@ func TestConflictReplaceKeepBothSkip(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(string(tc.action), func(t *testing.T) {
 			root := t.TempDir()
-			src := write(t, filepath.Join(root, "src", "a.txt"), "new")
+			src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "new")
 			dest := filepath.Join(root, "dest")
-			write(t, filepath.Join(dest, "a.txt"), "old")
+			testfs.Write(t, filepath.Join(dest, "a.txt"), "old")
 
 			manager, bus := newHarness(t)
 			bus.onConflict = func(c Conflict) Answer { return Answer{ID: c.ID, Action: tc.action} }
 			view := run(t, manager, bus, spec{kind: KindCopy, sources: []string{src}, dest: dest})
 
 			require.Equal(t, StateDone, view.State)
-			require.Equal(t, tc.body, read(t, filepath.Join(dest, "a.txt")))
+			require.Equal(t, tc.body, testfs.Read(t, filepath.Join(dest, "a.txt")))
 			if tc.extra == "" {
 				require.Empty(t, tempsIn(t, dest))
 				return
 			}
-			require.Equal(t, "new", read(t, filepath.Join(dest, tc.extra)))
+			require.Equal(t, "new", testfs.Read(t, filepath.Join(dest, tc.extra)))
 		})
 	}
 }
@@ -128,9 +130,9 @@ func TestConflictReplaceKeepBothSkip(t *testing.T) {
 func TestConflictMergeKeepsExistingChildren(t *testing.T) {
 	root := t.TempDir()
 	src := filepath.Join(root, "src", "shared")
-	write(t, filepath.Join(src, "new.txt"), "new")
+	testfs.Write(t, filepath.Join(src, "new.txt"), "new")
 	dest := filepath.Join(root, "dest")
-	write(t, filepath.Join(dest, "shared", "old.txt"), "old")
+	testfs.Write(t, filepath.Join(dest, "shared", "old.txt"), "old")
 
 	manager, bus := newHarness(t)
 	var asked int
@@ -143,18 +145,18 @@ func TestConflictMergeKeepsExistingChildren(t *testing.T) {
 
 	require.Equal(t, StateDone, view.State)
 	require.Equal(t, 1, asked)
-	require.Equal(t, "old", read(t, filepath.Join(dest, "shared", "old.txt")))
-	require.Equal(t, "new", read(t, filepath.Join(dest, "shared", "new.txt")))
+	require.Equal(t, "old", testfs.Read(t, filepath.Join(dest, "shared", "old.txt")))
+	require.Equal(t, "new", testfs.Read(t, filepath.Join(dest, "shared", "new.txt")))
 }
 
 func TestConflictApplyToAllAsksOnce(t *testing.T) {
 	root := t.TempDir()
 	src := filepath.Join(root, "src")
-	write(t, filepath.Join(src, "a.txt"), "new")
-	write(t, filepath.Join(src, "b.txt"), "new")
+	testfs.Write(t, filepath.Join(src, "a.txt"), "new")
+	testfs.Write(t, filepath.Join(src, "b.txt"), "new")
 	dest := filepath.Join(root, "dest")
-	write(t, filepath.Join(dest, "a.txt"), "old")
-	write(t, filepath.Join(dest, "b.txt"), "old")
+	testfs.Write(t, filepath.Join(dest, "a.txt"), "old")
+	testfs.Write(t, filepath.Join(dest, "b.txt"), "old")
 
 	manager, bus := newHarness(t)
 	var asked int
@@ -170,13 +172,13 @@ func TestConflictApplyToAllAsksOnce(t *testing.T) {
 
 	require.Equal(t, 1, asked)
 	require.Equal(t, 2, view.Skipped)
-	require.Equal(t, "old", read(t, filepath.Join(dest, "b.txt")))
+	require.Equal(t, "old", testfs.Read(t, filepath.Join(dest, "b.txt")))
 }
 
 func TestErrorPausesAndSkips(t *testing.T) {
 	root := t.TempDir()
 	src := filepath.Join(root, "src")
-	write(t, filepath.Join(src, "a.txt"), "a")
+	testfs.Write(t, filepath.Join(src, "a.txt"), "a")
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
 
@@ -196,7 +198,7 @@ func TestErrorPausesAndSkips(t *testing.T) {
 	require.Equal(t, "ENOENT", seen.Code)
 	require.False(t, seen.Escalatable)
 	require.Equal(t, 1, view.Skipped)
-	require.Equal(t, "a", read(t, filepath.Join(dest, "a.txt")))
+	require.Equal(t, "a", testfs.Read(t, filepath.Join(dest, "a.txt")))
 }
 
 func TestDeniedErrorIsEscalatable(t *testing.T) {
@@ -204,7 +206,7 @@ func TestDeniedErrorIsEscalatable(t *testing.T) {
 		t.Skip("root ignores mode bits")
 	}
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "a.txt"), "a")
 	dest := filepath.Join(root, "locked")
 	require.NoError(t, os.Mkdir(dest, 0o500))
 
@@ -228,7 +230,7 @@ func TestCancelMidCopyLeavesNoTempFile(t *testing.T) {
 	t.Cleanup(func() { copyChunk = previous })
 
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "big.bin"), string(make([]byte, 512<<10)))
+	src := testfs.Write(t, filepath.Join(root, "big.bin"), string(make([]byte, 512<<10)))
 	dest := otherDevice(t, root)
 
 	manager, bus := newHarness(t)
@@ -251,8 +253,8 @@ func TestCancelledCrossDeviceMoveReportsTheSplit(t *testing.T) {
 
 	root := t.TempDir()
 	src := filepath.Join(root, "src")
-	write(t, filepath.Join(src, "a.txt"), "a")
-	write(t, filepath.Join(src, "b.bin"), string(make([]byte, 512<<10)))
+	testfs.Write(t, filepath.Join(src, "a.txt"), "a")
+	testfs.Write(t, filepath.Join(src, "b.bin"), string(make([]byte, 512<<10)))
 	dest := otherDevice(t, root)
 
 	manager, bus := newHarness(t)
@@ -263,7 +265,7 @@ func TestCancelledCrossDeviceMoveReportsTheSplit(t *testing.T) {
 	view := bus.wait(t, job.id)
 
 	require.True(t, view.Cancelled)
-	require.Equal(t, "a", read(t, filepath.Join(dest, "src", "a.txt")))
+	require.Equal(t, "a", testfs.Read(t, filepath.Join(dest, "src", "a.txt")))
 	_, err := os.Lstat(filepath.Join(src, "a.txt"))
 	require.True(t, os.IsNotExist(err), "moved file stays moved")
 	require.FileExists(t, filepath.Join(src, "b.bin"), "unfinished file stays at the source")
@@ -272,19 +274,19 @@ func TestCancelledCrossDeviceMoveReportsTheSplit(t *testing.T) {
 
 func TestUniquePathNaming(t *testing.T) {
 	root := t.TempDir()
-	write(t, filepath.Join(root, "a.txt"), "")
+	testfs.Write(t, filepath.Join(root, "a.txt"), "")
 	require.Equal(t, filepath.Join(root, "a (copy).txt"), uniquePath(filepath.Join(root, "a.txt")))
 
-	write(t, filepath.Join(root, "a (copy).txt"), "")
+	testfs.Write(t, filepath.Join(root, "a (copy).txt"), "")
 	require.Equal(t, filepath.Join(root, "a (copy 2).txt"), uniquePath(filepath.Join(root, "a.txt")))
 
-	write(t, filepath.Join(root, ".bashrc"), "")
+	testfs.Write(t, filepath.Join(root, ".bashrc"), "")
 	require.Equal(t, filepath.Join(root, ".bashrc (copy)"), uniquePath(filepath.Join(root, ".bashrc")))
 
-	write(t, filepath.Join(root, "notes"), "")
+	testfs.Write(t, filepath.Join(root, "notes"), "")
 	require.Equal(t, filepath.Join(root, "notes (copy)"), uniquePath(filepath.Join(root, "notes")))
 
-	write(t, filepath.Join(root, "site.tar.gz"), "")
+	testfs.Write(t, filepath.Join(root, "site.tar.gz"), "")
 	require.Equal(t, filepath.Join(root, "site (copy).tar.gz"), uniquePath(filepath.Join(root, "site.tar.gz")))
 }
 
@@ -298,8 +300,8 @@ func TestTruncateNameKeepsRunesWhole(t *testing.T) {
 
 func TestTransferOntoItselfKeepsTheSource(t *testing.T) {
 	root := t.TempDir()
-	write(t, filepath.Join(root, "dir", "inner.txt"), "keep me")
-	write(t, filepath.Join(root, "a.txt"), "keep me too")
+	testfs.Write(t, filepath.Join(root, "dir", "inner.txt"), "keep me")
+	testfs.Write(t, filepath.Join(root, "a.txt"), "keep me too")
 	sources := []string{filepath.Join(root, "dir"), filepath.Join(root, "a.txt")}
 	manager, bus := newHarness(t)
 	bus.onConflict = func(c Conflict) Answer {
@@ -310,20 +312,20 @@ func TestTransferOntoItselfKeepsTheSource(t *testing.T) {
 	moved := run(t, manager, bus, spec{kind: KindMove, sources: sources, dest: root})
 	require.Equal(t, StateDone, moved.State)
 	require.False(t, moved.Undoable)
-	require.Equal(t, "keep me", read(t, filepath.Join(root, "dir", "inner.txt")))
-	require.Equal(t, "keep me too", read(t, filepath.Join(root, "a.txt")))
+	require.Equal(t, "keep me", testfs.Read(t, filepath.Join(root, "dir", "inner.txt")))
+	require.Equal(t, "keep me too", testfs.Read(t, filepath.Join(root, "a.txt")))
 
 	copied := run(t, manager, bus, spec{kind: KindCopy, sources: sources, dest: root})
 	require.Equal(t, StateDone, copied.State)
-	require.Equal(t, "keep me", read(t, filepath.Join(root, "dir", "inner.txt")))
-	require.Equal(t, "keep me", read(t, filepath.Join(root, "dir (copy)", "inner.txt")))
-	require.Equal(t, "keep me too", read(t, filepath.Join(root, "a (copy).txt")))
+	require.Equal(t, "keep me", testfs.Read(t, filepath.Join(root, "dir", "inner.txt")))
+	require.Equal(t, "keep me", testfs.Read(t, filepath.Join(root, "dir (copy)", "inner.txt")))
+	require.Equal(t, "keep me too", testfs.Read(t, filepath.Join(root, "a (copy).txt")))
 }
 
 func TestFinishedJobsReportMovedFolders(t *testing.T) {
 	root := t.TempDir()
-	write(t, filepath.Join(root, "photos", "a.jpg"), "a")
-	write(t, filepath.Join(root, "note.txt"), "n")
+	testfs.Write(t, filepath.Join(root, "photos", "a.jpg"), "a")
+	testfs.Write(t, filepath.Join(root, "note.txt"), "n")
 	require.NoError(t, os.MkdirAll(filepath.Join(root, "archive"), 0o755))
 	manager, bus := newHarness(t)
 
@@ -349,7 +351,7 @@ func TestFinishedJobsReportMovedFolders(t *testing.T) {
 
 func TestCopyDropsSpecialModeBits(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "tool"), "#!/bin/sh\n")
+	src := testfs.Write(t, filepath.Join(root, "src", "tool"), "#!/bin/sh\n")
 	require.NoError(t, os.Chmod(src, 0o750|os.ModeSetuid|os.ModeSetgid|os.ModeSticky))
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))

@@ -111,9 +111,9 @@ Singleton {
             callback(known);
             return;
         }
-        transport.sendRequest("files.op.dropAction", {
+        transport.call("files.op.dropAction", {
             "paths": sources,
             "dest": dest
-        }, response => callback((response.result || {}).action === "move" ? "move" : "copy"));
+        }, result => callback(result.action === "move" ? "move" : "copy"));
     }
 }

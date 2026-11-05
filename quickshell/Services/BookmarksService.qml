@@ -36,10 +36,9 @@ Singleton {
     }
 
     function refresh() {
-        transport.sendRequest("bookmarks.list", null, response => {
-            if (response.error)
+        transport.call("bookmarks.list", null, result => {
+            if (result.error)
                 return;
-            const result = response.result || {};
             root.entries = result.bookmarks || [];
             root.gtkImportAvailable = result.gtkImportAvailable === true;
             root.importOffer = root.gtkImportAvailable && !SettingsData.gtkBookmarksOffered;
@@ -97,13 +96,12 @@ Singleton {
 
     function importGtk(callback) {
         declineImport();
-        transport.sendRequest("bookmarks.importGtk", null, response => {
-            if (response.error) {
-                root.requestFailed(response.error);
+        transport.call("bookmarks.importGtk", null, result => {
+            if (result.error) {
+                root.requestFailed(result.error);
                 callback?.(0);
                 return;
             }
-            const result = response.result || {};
             root.entries = result.bookmarks || [];
             root.gtkImportAvailable = false;
             callback?.(result.added || 0);
@@ -116,12 +114,12 @@ Singleton {
     }
 
     function _call(method, params) {
-        transport.sendRequest(method, params, response => {
-            if (response.error) {
-                root.requestFailed(response.error);
+        transport.call(method, params, result => {
+            if (result.error) {
+                root.requestFailed(result.error);
                 return;
             }
-            root.entries = (response.result || {}).bookmarks || [];
+            root.entries = result.bookmarks || [];
             root.gtkImportAvailable = false;
         });
     }

@@ -21,10 +21,6 @@ OverlayDialog {
     onAccepted: confirm()
 
     actions: [
-        TextButton {
-            text: I18n.tr("Cancel", "dialog button to cancel")
-            onClicked: root.close()
-        },
         DButton {
             text: root.confirmText
             variant: root.danger ? "tonal" : "filled"

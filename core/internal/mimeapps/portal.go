@@ -6,6 +6,8 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/wire"
+
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/duxlabs-dev/dux-go/portal"
 	"github.com/godbus/dbus/v5"
@@ -78,7 +80,7 @@ func hostSpawn(argv []string, dir string) error {
 		return errors.New("nothing to run")
 	}
 	if _, err := exec.LookPath("flatpak-spawn"); err != nil {
-		return fail(files.CodeSandboxed, "flatpak-spawn %s", sandboxedMsg)
+		return wire.Fail(files.CodeSandboxed, "flatpak-spawn %s", sandboxedMsg)
 	}
 	return spawn(append([]string{"flatpak-spawn", "--host", "--directory=" + dir}, argv...), dir, "", false)
 }

@@ -75,6 +75,14 @@ ShellRoot {
         function unsubscribeTopic(topic, cb) {
         }
 
+        function callReporting(method, params, failed, callback) {
+            call(method, params, result => {
+                if (result.error)
+                    failed(result.error, result.code);
+                callback?.(result);
+            });
+        }
+
         function call(method, params, callback) {
             sendRequest(method, params, response => callback?.(DuxFilesService.unwrap(response)));
         }

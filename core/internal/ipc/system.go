@@ -3,6 +3,9 @@ package ipc
 import (
 	"context"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/wire"
+	"github.com/duxlabs-dev/dux-go/files"
+
 	"github.com/duxlabs-dev/dux-files/core/internal/filemanager1"
 	"github.com/duxlabs-dev/dux-files/core/internal/portal"
 	"github.com/duxlabs-dev/dux-files/core/internal/sandbox"
@@ -70,12 +73,12 @@ func HandleSystem(ctx context.Context, w *ConnWriter, req Request, deps Deps) {
 		w.Respond(req.ID, map[string]any{"restarted": true})
 	case "system.openUri":
 		if deps.Apps == nil {
-			w.RespondError(req.ID, "uri opener unavailable")
+			wire.RespondError(w, req.ID, wire.Fail(files.CodeNotSupported, "uri opener unavailable"))
 			return
 		}
 		uri := params.StringOpt(req.Params, "uri", "")
 		if uri == "" {
-			w.RespondError(req.ID, "uri is required")
+			wire.RespondError(w, req.ID, wire.Invalid("uri is required"))
 			return
 		}
 		if err := deps.Apps.OpenURI(ctx, uri); err != nil {

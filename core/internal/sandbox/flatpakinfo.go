@@ -2,6 +2,8 @@ package sandbox
 
 import (
 	"strings"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/ini"
 )
 
 const flatpakInfoPath = "/.flatpak-info"
@@ -20,35 +22,23 @@ func parseFlatpakInfo(data []byte) flatpakInfo {
 		sessionBus:  map[string]string{},
 		systemBus:   map[string]string{},
 	}
-	section := ""
-	for _, raw := range strings.Split(string(data), "\n") {
-		line := strings.TrimSpace(raw)
-		switch {
-		case line == "" || strings.HasPrefix(line, "#"):
-			continue
-		case strings.HasPrefix(line, "[") && strings.HasSuffix(line, "]"):
-			section = line[1 : len(line)-1]
+	for line := range ini.Lines(data) {
+		if line.Header {
 			continue
 		}
-		key, value, ok := strings.Cut(line, "=")
-		if !ok {
-			continue
-		}
-		key = strings.TrimSpace(key)
-		value = strings.TrimSpace(value)
-		switch section {
+		switch line.Group {
 		case "Application":
-			if key == "name" {
-				info.appID = value
+			if line.Key == "name" {
+				info.appID = line.Value
 			}
 		case "Context":
-			if key == "filesystems" {
-				info.filesystems = parseFilesystems(value)
+			if line.Key == "filesystems" {
+				info.filesystems = parseFilesystems(line.Value)
 			}
 		case "Session Bus Policy":
-			info.sessionBus[key] = value
+			info.sessionBus[line.Key] = line.Value
 		case "System Bus Policy":
-			info.systemBus[key] = value
+			info.systemBus[line.Key] = line.Value
 		}
 	}
 	return info

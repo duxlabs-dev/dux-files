@@ -51,11 +51,11 @@ Singleton {
     }
 
     function answer(id, answer) {
-        DuxFilesService.sendRequest("portal.respond", Object.assign({
+        DuxFilesService.call("portal.respond", Object.assign({
             "id": id
-        }, answer), response => {
-            if (response.error)
-                root.log.warn("portal.respond failed", response.error);
+        }, answer), result => {
+            if (result.error)
+                root.log.warn("portal.respond failed", result.error);
         });
         close(id);
     }

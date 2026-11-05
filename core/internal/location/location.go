@@ -2,7 +2,6 @@ package location
 
 import (
 	"errors"
-	"fmt"
 	"io/fs"
 	"net/url"
 	"os"
@@ -10,6 +9,12 @@ import (
 	"regexp"
 	"slices"
 	"strings"
+
+	"github.com/duxlabs-dev/dux-go/paths"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/wire"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/fileuri"
 
 	"github.com/duxlabs-dev/dux-go/files"
 )
@@ -33,10 +38,6 @@ type Location struct {
 }
 
 const CodeOtherHome files.Code = "EOTHERHOME"
-
-func fail(code files.Code, format string, args ...any) error {
-	return &files.Error{Code: code, Err: fmt.Errorf(format, args...)}
-}
 
 type Env struct {
 	TrashFiles string
@@ -111,7 +112,7 @@ func Resolve(open, sel []string, env Env) ([]Location, error) {
 			return nil, err
 		}
 		if loc.Kind != KindFolder {
-			return nil, fail(files.CodeInvalid, "%s cannot be selected, only opened", redact(raw))
+			return nil, wire.Fail(files.CodeInvalid, "%s cannot be selected, only opened", redact(raw))
 		}
 		if _, err := env.Lstat(loc.Path); err != nil {
 			return nil, describe(loc.Path, err)
@@ -129,7 +130,7 @@ func LocalPaths(targets []string, env Env) ([]string, error) {
 			return nil, err
 		}
 		if loc.Kind != KindFolder {
-			return nil, fail(files.CodeInvalid, "%s is not a local path", redact(raw))
+			return nil, wire.Fail(files.CodeInvalid, "%s is not a local path", redact(raw))
 		}
 		if _, err := env.Lstat(loc.Path); err != nil {
 			return nil, describe(loc.Path, err)
@@ -143,18 +144,18 @@ func Typed(text, cwd, home string, env Env) (Location, error) {
 	raw := strings.TrimSpace(text)
 	switch {
 	case raw == "":
-		return Location{}, fail(files.CodeInvalid, "empty location")
+		return Location{}, wire.Fail(files.CodeInvalid, "empty location")
 	case raw == "~", strings.HasPrefix(raw, "~/"):
 		if !filepath.IsAbs(home) {
-			return Location{}, fail(files.CodeInvalid, "the home folder is unknown")
+			return Location{}, wire.Fail(files.CodeInvalid, "the home folder is unknown")
 		}
 		raw = filepath.Join(home, raw[1:])
 	case strings.HasPrefix(raw, "~"):
 		user, _, _ := strings.Cut(raw, "/")
-		return Location{}, fail(CodeOtherHome, "%s names another user's home folder; use ~ for yours or type the full path", user)
+		return Location{}, wire.Fail(CodeOtherHome, "%s names another user's home folder; use ~ for yours or type the full path", user)
 	case !uriPrefix.MatchString(raw) && !filepath.IsAbs(raw):
 		if !filepath.IsAbs(cwd) {
-			return Location{}, fail(files.CodeInvalid, "%s is relative and there is no folder to resolve it against", raw)
+			return Location{}, wire.Fail(files.CodeInvalid, "%s is relative and there is no folder to resolve it against", raw)
 		}
 		raw = filepath.Join(cwd, raw)
 	}
@@ -175,28 +176,28 @@ func Typed(text, cwd, home string, env Env) (Location, error) {
 func Parse(raw string, env Env) (Location, error) {
 	switch {
 	case raw == "":
-		return Location{}, fail(files.CodeInvalid, "empty location")
+		return Location{}, wire.Fail(files.CodeInvalid, "empty location")
 	case strings.HasPrefix(raw, "/"):
 		return folder(filepath.Clean(raw)), nil
 	}
 
 	u, err := url.Parse(raw)
 	if err != nil || u.Scheme == "" {
-		return Location{}, fail(files.CodeInvalid, "%s is not an absolute path or a supported URI", redact(raw))
+		return Location{}, wire.Fail(files.CodeInvalid, "%s is not an absolute path or a supported URI", redact(raw))
 	}
 
 	scheme := strings.ToLower(u.Scheme)
 	switch scheme {
 	case "file":
-		if u.Host != "" && u.Host != "localhost" {
-			return Location{}, fail(files.CodeNotSupported, "%s is on another host", redact(raw))
+		if !fileuri.LocalHost(u.Host) {
+			return Location{}, wire.Fail(files.CodeNotSupported, "%s is on another host", redact(raw))
 		}
 		return absolute(raw, u.Path)
 	case "admin":
 		return absolute(raw, u.Path)
 	case "trash":
 		if env.TrashFiles == "" {
-			return Location{}, fail(files.CodeNotSupported, "the trash location is unknown")
+			return Location{}, wire.Fail(files.CodeNotSupported, "the trash location is unknown")
 		}
 		return folder(filepath.Join(env.TrashFiles, filepath.Clean("/"+u.Path))), nil
 	case "computer":
@@ -208,10 +209,10 @@ func Parse(raw string, env Env) (Location, error) {
 	}
 
 	if !slices.Contains(remoteSchemes, scheme) {
-		return Location{}, fail(files.CodeNotSupported, "%s:// locations are not supported", scheme)
+		return Location{}, wire.Fail(files.CodeNotSupported, "%s:// locations are not supported", scheme)
 	}
 	if u.Host == "" {
-		return Location{}, fail(files.CodeInvalid, "%s needs a host, for example %s://host/path", redact(raw), scheme)
+		return Location{}, wire.Fail(files.CodeInvalid, "%s needs a host, for example %s://host/path", redact(raw), scheme)
 	}
 	return SplitPassword(raw), nil
 }
@@ -258,7 +259,7 @@ func redact(raw string) string {
 
 func absolute(raw, path string) (Location, error) {
 	if !filepath.IsAbs(path) {
-		return Location{}, fail(files.CodeInvalid, "%s does not name an absolute path", redact(raw))
+		return Location{}, wire.Fail(files.CodeInvalid, "%s does not name an absolute path", redact(raw))
 	}
 	return folder(filepath.Clean(path)), nil
 }
@@ -278,13 +279,17 @@ func folder(path string) Location {
 func describe(path string, err error) error {
 	switch {
 	case errors.Is(err, fs.ErrNotExist):
-		return fail(files.CodeNotFound, "%s does not exist", path)
+		return wire.Fail(files.CodeNotFound, "%s does not exist", path)
 	case errors.Is(err, fs.ErrPermission):
-		return fail(files.CodeAccess, "%s is not accessible", path)
+		return wire.Fail(files.CodeAccess, "%s is not accessible", path)
 	}
-	return fail(files.CodeIO, "%s: %s", path, err)
+	return wire.Fail(files.CodeIO, "%s: %s", path, err)
 }
 
 func HostEnv(dataHome string, isArchive func(string) bool) Env {
 	return Env{TrashFiles: filepath.Join(dataHome, "Trash", "files"), Stat: os.Stat, Lstat: os.Lstat, IsArchive: isArchive}
+}
+
+func HomeEnv(isArchive func(string) bool) Env {
+	return HostEnv(paths.XDGDataHome(), isArchive)
 }

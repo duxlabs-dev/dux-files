@@ -30,7 +30,7 @@ Item {
             return I18n.tr("Estimating…", "file operation is still measuring the work");
         if (finished)
             return I18n.tr("Finished", "file operation completed");
-        return job.progress.currentPath.split("/").pop();
+        return FilePaths.baseName(job.progress.currentPath);
     }
 
     implicitHeight: content.implicitHeight

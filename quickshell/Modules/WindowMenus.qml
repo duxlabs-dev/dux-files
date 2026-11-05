@@ -138,7 +138,7 @@ Item {
         onWindowRequested: path => menus.mainWindow.actions.newWindowAt(path)
         onRenameRequested: path => menus.mainWindow.dialogs.renameBookmark(path)
         onRemoveRequested: path => BookmarksService.remove(path)
-        onCopyPathRequested: path => menus.mainWindow.actions.copyText(path)
+        onCopyPathRequested: path => menus.mainWindow.paneActions.copyText(path)
         onPropertiesRequested: path => menus.mainWindow.dialogs.showPropertiesFor([path])
         onEmptyTrashRequested: menus.mainWindow.dialogs.confirmEmptyTrash()
         onClearRecentRequested: menus.mainWindow.dialogs.confirmClearRecent()

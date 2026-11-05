@@ -2,13 +2,16 @@
 package icontheme
 
 import (
-	"bufio"
 	"io/fs"
 	"os"
 	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/ini"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/xdg"
 )
 
 // Catalog holds the icon names the appearance picker offers, sorted.
@@ -54,25 +57,13 @@ func Theme(home string) string {
 }
 
 func iniValue(path, section, key string) string {
-	file, err := os.Open(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return ""
 	}
-	defer file.Close()
-	current := ""
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if strings.HasPrefix(line, "[") && strings.HasSuffix(line, "]") {
-			current = strings.TrimSuffix(strings.TrimPrefix(line, "["), "]")
-			continue
-		}
-		if current != section {
-			continue
-		}
-		name, value, found := strings.Cut(line, "=")
-		if found && strings.TrimSpace(name) == key {
-			return strings.TrimSpace(value)
+	for line := range ini.Lines(data) {
+		if !line.Header && line.Group == section && line.Key == key {
+			return line.Value
 		}
 	}
 	return ""
@@ -230,5 +221,5 @@ func sorted(set map[string]bool) []string {
 // Default scans the icon theme this user has configured.
 func Default() Catalog {
 	home, _ := os.UserHomeDir()
-	return Scan(Roots(home, os.Getenv("XDG_DATA_HOME"), filepath.SplitList(os.Getenv("XDG_DATA_DIRS"))), Theme(home))
+	return Scan(Roots(home, xdg.DataHome(), xdg.DataDirs()), Theme(home))
 }

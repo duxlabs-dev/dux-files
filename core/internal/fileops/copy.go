@@ -42,29 +42,22 @@ func (r *runner) transferPairs(pairs []pair, move bool) error {
 		r.setTotals(count+len(pairs)-len(needScan), bytes, !complete)
 	}
 
-	for _, p := range pairs {
-		if r.job.closed() {
-			return nil
-		}
+	return eachSource(r, pairs, func(p pair) error {
 		if !r.guarded(p.src) {
 			return errors.New("changed since the operation it would replay: " + p.src)
 		}
 		done, err := r.transfer(p.src, p.dst, move)
-		switch {
-		case errors.Is(err, errSkipped):
-			continue
-		case errors.Is(err, context.Canceled):
-			return nil
-		case err != nil:
+		if err != nil {
 			return err
-		case done.undoable:
+		}
+		if done.undoable {
 			r.remember(inverseOf(move), done.dst, p.src)
 		}
 		if r.job.spec.kind == KindDuplicate && done.dst != "" {
 			r.noteCreated(done.dst, done.dir)
 		}
-	}
-	return nil
+		return nil
+	})
 }
 
 func (r *runner) transfer(src, dst string, move bool) (outcome, error) {
@@ -303,32 +296,15 @@ func (r *runner) copyBytes(src, tmp string, info os.FileInfo, made *creation) er
 		return err
 	}
 
-	buf := make([]byte, copyChunk)
-	for {
-		if r.job.closed() {
-			made.abort(out)
-			return context.Canceled
-		}
-		n, readErr := in.Read(buf)
-		if n > 0 {
-			if _, writeErr := out.Write(buf[:n]); writeErr != nil {
-				made.abort(out)
-				return writeErr
-			}
-			r.advance(src, 0, int64(n))
-		}
-		if readErr == io.EOF {
-			if err := out.Close(); err != nil {
-				made.discard()
-				return err
-			}
-			return nil
-		}
-		if readErr != nil {
-			made.abort(out)
-			return readErr
-		}
+	if err := r.stream(src, in, out); err != nil {
+		made.abort(out)
+		return err
 	}
+	if err := out.Close(); err != nil {
+		made.discard()
+		return err
+	}
+	return nil
 }
 
 func (r *runner) preserve(src, dst string, info os.FileInfo, through FS) {

@@ -23,7 +23,7 @@ func (s *Service) Handle(w *ipc.ConnWriter, req ipc.Request) {
 func (s *Service) handleCopy(w *ipc.ConnWriter, req ipc.Request) {
 	paths := wire.StringList(req.Params, "paths")
 	if len(paths) == 0 {
-		w.RespondError(req.ID, "clipboard.copy requires paths")
+		wire.RespondError(w, req.ID, wire.Invalid("clipboard.copy requires paths"))
 		return
 	}
 	cut := params.BoolLoose(req.Params, "cut")
