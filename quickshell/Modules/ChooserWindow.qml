@@ -379,6 +379,7 @@ FloatingWindow {
         id: surface
 
         readonly property bool isFloatingWindowSurface: true
+        readonly property color surfaceColor: window.color
         readonly property Item focusItem: Window.activeFocusItem
 
         anchors.fill: parent
