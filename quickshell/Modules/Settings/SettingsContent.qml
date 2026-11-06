@@ -608,6 +608,7 @@ Item {
                 title: I18n.tr("Window", "general settings section label")
 
                 OptionGroupRow {
+                    visible: !SettingsData.keepRunning
                     text: I18n.tr("Close behavior", "close behavior setting label")
                     keywords: I18n.tr("quit exit hide daemon keep running", "settings search keywords, space separated, add synonyms in your language")
                     optionList: [
