@@ -98,6 +98,10 @@ Item {
         placeMenu.present(kind, path, source, pointX, pointY);
     }
 
+    function presentNetworkMountMenu(id, path, source, pointX, pointY) {
+        placeMenu.present("network", path, source, pointX, pointY, id, true);
+    }
+
     function presentTabMenu(index, source, pointX, pointY) {
         tabMenu.present(index, source, pointX, pointY);
     }
@@ -140,6 +144,10 @@ Item {
         onRemoveRequested: path => BookmarksService.remove(path)
         onCopyPathRequested: path => menus.mainWindow.paneActions.copyText(path)
         onPropertiesRequested: path => menus.mainWindow.dialogs.showPropertiesFor([path])
+        onUnmountRequested: id => NetworkService.disconnect(id, result => {
+            if (!result?.error)
+                menus.mainWindow.activePane.refresh();
+        })
         onEmptyTrashRequested: menus.mainWindow.dialogs.confirmEmptyTrash()
         onClearRecentRequested: menus.mainWindow.dialogs.confirmClearRecent()
     }

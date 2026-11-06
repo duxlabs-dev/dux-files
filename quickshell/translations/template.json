@@ -679,6 +679,13 @@
     "comment": ""
   },
   {
+    "term": "Columns",
+    "translation": "",
+    "context": "view menu entry choosing which list columns are shown",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Comfortable",
     "translation": "",
     "context": "interface density option with the default spacing",
@@ -1962,7 +1969,7 @@
   {
     "term": "Mount",
     "translation": "",
-    "context": "device action",
+    "context": "device action | network mount action",
     "reference": "",
     "comment": ""
   },
@@ -3234,6 +3241,13 @@
     "comment": ""
   },
   {
+    "term": "Show configured network mounts",
+    "translation": "",
+    "context": "configured network mounts setting label",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Show devices",
     "translation": "",
     "context": "devices setting label",
@@ -3265,6 +3279,13 @@
     "term": "Show network",
     "translation": "",
     "context": "network setting label",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Show network mounts from /etc/fstab, including ones that are not mounted.",
+    "translation": "",
+    "context": "configured network mounts setting description",
     "reference": "",
     "comment": ""
   },
@@ -3782,7 +3803,7 @@
   {
     "term": "Unmount",
     "translation": "",
-    "context": "device action",
+    "context": "context menu action for a mounted network folder | device action",
     "reference": "",
     "comment": ""
   },
@@ -4229,6 +4250,13 @@
   },
   {
     "term": "frosted glass compositor",
+    "translation": "",
+    "context": "settings search keywords, space separated, add synonyms in your language",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "fstab cifs nfs sshfs network mounts sidebar hide",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
     "reference": "",

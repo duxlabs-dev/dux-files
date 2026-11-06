@@ -1368,6 +1368,15 @@ Item {
                     description: I18n.tr("Mounted network locations and Connect to Server.", "network setting description")
                     settingKey: "showNetworkSection"
                 }
+
+                SettingsToggleRow {
+                    text: I18n.tr("Show configured network mounts", "configured network mounts setting label")
+                    keywords: I18n.tr("fstab cifs nfs sshfs network mounts sidebar hide", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("Show network mounts from /etc/fstab, including ones that are not mounted.", "configured network mounts setting description")
+                    enabled: SettingsData.showNetworkSection
+                    checked: SettingsData.showConfiguredNetworkMounts
+                    onToggled: checked => SettingsData.showConfiguredNetworkMounts = checked
+                }
             }
 
             SettingsCard {

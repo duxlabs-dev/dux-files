@@ -72,6 +72,7 @@ Singleton {
     property alias showDevicesSection: adapter.showDevicesSidebar
     property alias showSystemPartitions: adapter.showSystemPartitions
     property alias showNetworkSection: adapter.showNetworkSidebar
+    property alias showConfiguredNetworkMounts: adapter.showConfiguredNetworkMounts
     property alias showGamesSidebar: adapter.showGamesSidebar
     property alias showSteamGames: adapter.showSteamGames
     property alias showHeroicGames: adapter.showHeroicGames
@@ -153,6 +154,7 @@ Singleton {
             property bool showDevicesSidebar: true
             property bool showSystemPartitions: false
             property bool showNetworkSidebar: true
+            property bool showConfiguredNetworkMounts: true
             property bool showGamesSidebar: true
             property bool showSteamGames: true
             property bool showHeroicGames: true

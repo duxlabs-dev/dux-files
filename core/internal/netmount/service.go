@@ -30,14 +30,15 @@ type Service struct {
 	stop      chan struct{}
 	stopped   sync.Once
 
-	mu         sync.RWMutex
-	conn       *dbus.Conn
-	mountables []Mountable
-	mounts     []Mount
-	available  bool
-	reason     string
-	ops        map[dbus.ObjectPath]*mountOp
-	listers    map[dbus.ObjectPath]*enumerator
+	mu           sync.RWMutex
+	conn         *dbus.Conn
+	mountables   []Mountable
+	mounts       []Mount
+	kernelMounts func() []Mount
+	available    bool
+	reason       string
+	ops          map[dbus.ObjectPath]*mountOp
+	listers      map[dbus.ObjectPath]*enumerator
 }
 
 type Snapshot struct {
@@ -51,12 +52,13 @@ type Snapshot struct {
 
 func NewService(bus Publisher, configDir string) *Service {
 	return &Service{
-		bus:     bus,
-		servers: newServerStore(configDir),
-		stop:    make(chan struct{}),
-		reason:  "gvfs is not running",
-		ops:     map[dbus.ObjectPath]*mountOp{},
-		listers: map[dbus.ObjectPath]*enumerator{},
+		bus:          bus,
+		servers:      newServerStore(configDir),
+		stop:         make(chan struct{}),
+		reason:       "gvfs is not running",
+		ops:          map[dbus.ObjectPath]*mountOp{},
+		listers:      map[dbus.ObjectPath]*enumerator{},
+		kernelMounts: kernelNetworkMounts,
 	}
 }
 
@@ -172,8 +174,18 @@ func (s *Service) reload(conn *dbus.Conn) {
 
 func (s *Service) Snapshot() Snapshot {
 	s.mu.RLock()
-	defer s.mu.RUnlock()
-	return Snapshot{Kind: "mounts", Available: s.available, Reason: s.reason, Schemes: availableSchemes(s.mountables), Mounts: s.mounts}
+	mounts := append([]Mount(nil), s.mounts...)
+	available := s.available
+	reason := s.reason
+	schemes := availableSchemes(s.mountables)
+	s.mu.RUnlock()
+
+	kernelMounts := s.kernelMounts
+	if kernelMounts == nil {
+		kernelMounts = kernelNetworkMounts
+	}
+	mounts = append(mounts, kernelMounts()...)
+	return Snapshot{Kind: "mounts", Available: available, Reason: reason, Schemes: schemes, Mounts: mounts}
 }
 
 type Connected struct {
@@ -268,14 +280,26 @@ func (s *Service) remember(server Server) {
 }
 
 func (s *Service) Disconnect(id string) error {
-	conn := s.connection()
-	if conn == nil {
-		return wire.Fail(files.CodeNotSupported, "gvfs is not running")
-	}
-
 	mount, found := s.find(id)
 	if !found {
 		return wire.Fail(files.CodeNotFound, "unknown mount: %s", id)
+	}
+	if mount.Kernel {
+		var err error
+		if mount.Mounted {
+			err = unmountKernelMount(mount.Path)
+		} else {
+			err = mountKernelMount(mount.Path)
+		}
+		if err == nil {
+			s.publishMounts()
+		}
+		return err
+	}
+
+	conn := s.connection()
+	if conn == nil {
+		return wire.Fail(files.CodeNotSupported, "gvfs is not running")
 	}
 
 	op := s.newOp(mount.URI)
@@ -320,8 +344,15 @@ func (s *Service) Forget(uri string) {
 
 func (s *Service) find(id string) (Mount, bool) {
 	s.mu.RLock()
-	defer s.mu.RUnlock()
-	for _, mount := range s.mounts {
+	mounts := append([]Mount(nil), s.mounts...)
+	kernelMounts := s.kernelMounts
+	s.mu.RUnlock()
+
+	if kernelMounts == nil {
+		kernelMounts = kernelNetworkMounts
+	}
+	mounts = append(mounts, kernelMounts()...)
+	for _, mount := range mounts {
 		if mount.ID == id || mount.URI == id || mount.Path == id {
 			return mount, true
 		}

@@ -2,13 +2,13 @@
   {
     "term": "%1 already exist in this folder. Do you want to overwrite them?",
     "context": "%1 already exist in this folder. Do you want to overwrite them?",
-    "reference": "Modules/ChooserWindow.qml:848",
+    "reference": "Modules/ChooserWindow.qml:856",
     "comment": "file chooser overwrite dialog message, %1 lists the file names"
   },
   {
     "term": "%1 already exists in this folder.",
     "context": "%1 already exists in this folder.",
-    "reference": "Modules/ChooserWindow.qml:848, Modules/ConflictDialog.qml:32",
+    "reference": "Modules/ChooserWindow.qml:856, Modules/ConflictDialog.qml:32",
     "comment": "file conflict dialog explanation"
   },
   {
@@ -86,7 +86,7 @@
   {
     "term": "%1 matching “%2”",
     "context": "%1 matching “%2”",
-    "reference": "Modules/RecentView.qml:42, Modules/TrashView.qml:40, Modules/FilesPane.qml:723",
+    "reference": "Modules/FilesPane.qml:723, Modules/RecentView.qml:42, Modules/TrashView.qml:40",
     "comment": "filter bar above a folder listing, count then the typed text"
   },
   {
@@ -128,13 +128,13 @@
   {
     "term": "%1 will be moved to the trash.",
     "context": "%1 will be moved to the trash.",
-    "reference": "Modules/WindowDialogs.qml:293, Modules/ChooserMenus.qml:141",
+    "reference": "Modules/ChooserMenus.qml:141, Modules/WindowDialogs.qml:293",
     "comment": "trash confirmation explanation"
   },
   {
     "term": "%1 · %2",
     "context": "%1 · %2",
-    "reference": "Modules/PaneStatus.qml:22, Modules/PropertiesDialog.qml:106, Common/FilesFormat.qml:62",
+    "reference": "Common/FilesFormat.qml:62, Modules/PaneStatus.qml:22, Modules/PropertiesDialog.qml:106",
     "comment": "folder status: item count then hidden count | properties size row: bytes then item count | transfer speed then time left"
   },
   {
@@ -194,7 +194,7 @@
   {
     "term": "About",
     "context": "About",
-    "reference": "Modules/Settings/SettingsSidebar.qml:85, Modules/Settings/SettingsContent.qml:21",
+    "reference": "Modules/Settings/SettingsContent.qml:21, Modules/Settings/SettingsSidebar.qml:85",
     "comment": "settings sidebar tab label"
   },
   {
@@ -308,7 +308,7 @@
   {
     "term": "Appearance",
     "context": "Appearance",
-    "reference": "Modules/Settings/SettingsSidebar.qml:62, Modules/Settings/SettingsContent.qml:21",
+    "reference": "Modules/Settings/SettingsContent.qml:21, Modules/Settings/SettingsSidebar.qml:62",
     "comment": "settings sidebar tab label"
   },
   {
@@ -440,7 +440,7 @@
   {
     "term": "Behaviour",
     "context": "Behaviour",
-    "reference": "Modules/Settings/SettingsSidebar.qml:69, Modules/Settings/SettingsContent.qml:21",
+    "reference": "Modules/Settings/SettingsContent.qml:21, Modules/Settings/SettingsSidebar.qml:69",
     "comment": "settings sidebar tab label"
   },
   {
@@ -470,7 +470,7 @@
   {
     "term": "Cancel",
     "context": "Cancel",
-    "reference": "Modules/DragController.qml:130, Modules/OpenWithDialog.qml:160, Modules/ConfirmDialog.qml:25, Modules/ChooserWindow.qml:801, Modules/JobRow.qml:70, Modules/ArchivePasswordDialog.qml:65, Modules/ConnectServerDialog.qml:163, Modules/NameDialog.qml:39, Modules/OperationErrorDialog.qml:69, Modules/ExecutableDialog.qml:31, Modules/CredentialDialog.qml:147, Modules/ConflictDialog.qml:65, Modules/CompressDialog.qml:105, Modules/UnlockDialog.qml:58",
+    "reference": "Modules/ArchivePasswordDialog.qml:65, Modules/ChooserWindow.qml:809, Modules/CompressDialog.qml:105, Modules/ConfirmDialog.qml:25, Modules/ConflictDialog.qml:65, Modules/ConnectServerDialog.qml:163, Modules/CredentialDialog.qml:147, Modules/DragController.qml:130, Modules/ExecutableDialog.qml:31, Modules/JobRow.qml:70, Modules/NameDialog.qml:39, Modules/OpenWithDialog.qml:160, Modules/OperationErrorDialog.qml:69, Modules/UnlockDialog.qml:58",
     "comment": "dialog button to cancel"
   },
   {
@@ -518,7 +518,7 @@
   {
     "term": "Clear Recent",
     "context": "Clear Recent",
-    "reference": "Modules/RecentView.qml:35, Modules/PlaceMenu.qml:109, Modules/WindowDialogs.qml:360, Modules/FileContextMenu.qml:146",
+    "reference": "Modules/FileContextMenu.qml:146, Modules/PlaceMenu.qml:125, Modules/RecentView.qml:35, Modules/WindowDialogs.qml:360",
     "comment": "action emptying the recently used list without touching the files"
   },
   {
@@ -542,7 +542,7 @@
   {
     "term": "Close",
     "context": "Close",
-    "reference": "Modules/FolderAppearanceDialog.qml:321, Modules/PreviewOverlay.qml:191, Modules/ShortcutsOverlay.qml:109, Modules/PropertiesDialog.qml:264, Modules/SearchResults.qml:140",
+    "reference": "Modules/FolderAppearanceDialog.qml:321, Modules/PreviewOverlay.qml:191, Modules/PropertiesDialog.qml:264, Modules/SearchResults.qml:140, Modules/ShortcutsOverlay.qml:109",
     "comment": "dialog button closing the dialog | dialog button dismissing a dialog | dialog button to close | tooltip on the button closing the large preview"
   },
   {
@@ -554,19 +554,19 @@
   {
     "term": "Close other tabs",
     "context": "Close other tabs",
-    "reference": "Modules/WindowMenus.qml:192",
+    "reference": "Modules/WindowMenus.qml:200",
     "comment": "tab context menu entry closing every tab but this one"
   },
   {
     "term": "Close tab",
     "context": "Close tab",
-    "reference": "Modules/FilesTab.qml:108, Modules/WindowMenus.qml:182, Common/Shortcuts.qml:173",
+    "reference": "Common/Shortcuts.qml:173, Modules/FilesTab.qml:108, Modules/WindowMenus.qml:190",
     "comment": "tooltip on the button closing a tab"
   },
   {
     "term": "Close tabs to the right",
     "context": "Close tabs to the right",
-    "reference": "Modules/WindowMenus.qml:202",
+    "reference": "Modules/WindowMenus.qml:210",
     "comment": "tab context menu entry closing the tabs after this one"
   },
   {
@@ -578,8 +578,14 @@
   {
     "term": "Column view",
     "context": "Column view",
-    "reference": "Modules/FilesTopbar.qml:46, Common/Shortcuts.qml:267, Modules/Settings/SettingsContent.qml:88",
+    "reference": "Common/Shortcuts.qml:267, Modules/FilesTopbar.qml:46, Modules/Settings/SettingsContent.qml:88",
     "comment": "view mode showing folders side by side"
+  },
+  {
+    "term": "Columns",
+    "context": "Columns",
+    "reference": "Modules/FilesTopbar.qml:423",
+    "comment": "view menu entry choosing which list columns are shown"
   },
   {
     "term": "Comfortable",
@@ -644,7 +650,7 @@
   {
     "term": "Connect to Server…",
     "context": "Connect to Server…",
-    "reference": "Modules/NetworkSection.qml:57",
+    "reference": "Modules/NetworkSection.qml:115",
     "comment": "sidebar entry opening the connect to server dialog"
   },
   {
@@ -674,13 +680,13 @@
   {
     "term": "Copy",
     "context": "Copy",
-    "reference": "Modules/DragController.qml:103, Modules/DragActionChip.qml:30, Modules/FileContextMenu.qml:61, Modules/FileContextMenu.qml:245, Common/Shortcuts.qml:424, Modules/Settings/SettingsContent.qml:147",
+    "reference": "Common/Shortcuts.qml:424, Modules/DragActionChip.qml:30, Modules/DragController.qml:103, Modules/FileContextMenu.qml:61, Modules/FileContextMenu.qml:245, Modules/Settings/SettingsContent.qml:147",
     "comment": "context menu entry copying the selection"
   },
   {
     "term": "Copy location path",
     "context": "Copy location path",
-    "reference": "Modules/FilesTopbar.qml:481, Modules/PlaceMenu.qml:77, Modules/FileContextMenu.qml:85, Modules/FileContextMenu.qml:353, Common/Shortcuts.qml:515",
+    "reference": "Common/Shortcuts.qml:515, Modules/FileContextMenu.qml:85, Modules/FileContextMenu.qml:353, Modules/FilesTopbar.qml:493, Modules/PlaceMenu.qml:93",
     "comment": "menu entry copying the current path to the clipboard"
   },
   {
@@ -770,7 +776,7 @@
   {
     "term": "Cut",
     "context": "Cut",
-    "reference": "Modules/FileContextMenu.qml:55, Modules/FileContextMenu.qml:239, Common/Shortcuts.qml:432",
+    "reference": "Common/Shortcuts.qml:432, Modules/FileContextMenu.qml:55, Modules/FileContextMenu.qml:239",
     "comment": "context menu entry marking the selection for a move"
   },
   {
@@ -836,7 +842,7 @@
   {
     "term": "Delete permanently",
     "context": "Delete permanently",
-    "reference": "Modules/FileContextMenu.qml:164, Modules/FileContextMenu.qml:342, Common/Shortcuts.qml:471",
+    "reference": "Common/Shortcuts.qml:471, Modules/FileContextMenu.qml:164, Modules/FileContextMenu.qml:342",
     "comment": "context menu entry deleting the selection for good"
   },
   {
@@ -872,7 +878,7 @@
   {
     "term": "Devices",
     "context": "Devices",
-    "reference": "Modules/DevicesSection.qml:92, Modules/Settings/SettingsSidebar.qml:77, Modules/Settings/SettingsContent.qml:21, Modules/Settings/SettingsAboutPage.qml:35",
+    "reference": "Modules/DevicesSection.qml:92, Modules/Settings/SettingsAboutPage.qml:35, Modules/Settings/SettingsContent.qml:21, Modules/Settings/SettingsSidebar.qml:77",
     "comment": "sidebar section listing drives and volumes"
   },
   {
@@ -884,7 +890,7 @@
   {
     "term": "Disconnect",
     "context": "Disconnect",
-    "reference": "Modules/DevicesSection.qml:185, Modules/NetworkSection.qml:41",
+    "reference": "Modules/DevicesSection.qml:185, Modules/NetworkSection.qml:58",
     "comment": "network mount action"
   },
   {
@@ -896,7 +902,7 @@
   {
     "term": "Do this for the rest",
     "context": "Do this for the rest",
-    "reference": "Modules/OperationErrorDialog.qml:61, Modules/ConflictDialog.qml:57",
+    "reference": "Modules/ConflictDialog.qml:57, Modules/OperationErrorDialog.qml:61",
     "comment": "file conflict dialog option to reuse the answer"
   },
   {
@@ -962,13 +968,13 @@
   {
     "term": "Duplicate",
     "context": "Duplicate",
-    "reference": "Modules/FileContextMenu.qml:276, Common/Shortcuts.qml:494",
+    "reference": "Common/Shortcuts.qml:494, Modules/FileContextMenu.qml:276",
     "comment": "context menu entry copying the selection beside itself"
   },
   {
     "term": "Duplicate tab",
     "context": "Duplicate tab",
-    "reference": "Modules/WindowMenus.qml:161",
+    "reference": "Modules/WindowMenus.qml:169",
     "comment": "tab context menu entry opening a copy of this tab beside it"
   },
   {
@@ -1004,7 +1010,7 @@
   {
     "term": "Each launcher's own configuration folder.",
     "context": "Each launcher's own configuration folder.",
-    "reference": "Modules/Settings/SettingsContent.qml:1433",
+    "reference": "Modules/Settings/SettingsContent.qml:1442",
     "comment": "games setting description for the settings folders"
   },
   {
@@ -1016,7 +1022,7 @@
   {
     "term": "Empty Trash",
     "context": "Empty Trash",
-    "reference": "Modules/TrashView.qml:33, Modules/PlaceMenu.qml:97, Modules/WindowDialogs.qml:351, Modules/FileContextMenu.qml:189",
+    "reference": "Modules/FileContextMenu.qml:189, Modules/PlaceMenu.qml:113, Modules/TrashView.qml:33, Modules/WindowDialogs.qml:351",
     "comment": "action deleting everything in the trash"
   },
   {
@@ -1040,7 +1046,7 @@
   {
     "term": "Enter filename...",
     "context": "Enter filename...",
-    "reference": "Modules/ChooserWindow.qml:782",
+    "reference": "Modules/ChooserWindow.qml:790",
     "comment": "file browser save filename input placeholder"
   },
   {
@@ -1064,7 +1070,7 @@
   {
     "term": "Everywhere",
     "context": "Everywhere",
-    "reference": "Modules/SearchResults.qml:63, Common/SearchFilters.qml:56",
+    "reference": "Common/SearchFilters.qml:56, Modules/SearchResults.qml:63",
     "comment": "search scope chip covering home and every mounted local drive"
   },
   {
@@ -1124,7 +1130,7 @@
   {
     "term": "File operations",
     "context": "File operations",
-    "reference": "Modules/JobsPopover.qml:39, Modules/JobsButton.qml:16",
+    "reference": "Modules/JobsButton.qml:16, Modules/JobsPopover.qml:39",
     "comment": "jobs popover header"
   },
   {
@@ -1136,7 +1142,7 @@
   {
     "term": "Files",
     "context": "Files",
-    "reference": "Modules/TabManager.qml:187, Common/Shortcuts.qml:591, Modules/Settings/SettingsContent.qml:810, Modules/Settings/SettingsAboutPage.qml:96",
+    "reference": "Common/Shortcuts.qml:591, Modules/TabManager.qml:187, Modules/Settings/SettingsAboutPage.qml:96, Modules/Settings/SettingsContent.qml:810",
     "comment": "keyboard shortcut group | main window title"
   },
   {
@@ -1172,7 +1178,7 @@
   {
     "term": "Folder appearance",
     "context": "Folder appearance",
-    "reference": "Modules/FolderAppearanceDialog.qml:29, Modules/FileContextMenu.qml:365",
+    "reference": "Modules/FileContextMenu.qml:365, Modules/FolderAppearanceDialog.qml:29",
     "comment": "context menu entry opening the folder appearance dialog | folder appearance dialog title"
   },
   {
@@ -1274,13 +1280,13 @@
   {
     "term": "Games and prefixes Heroic installed.",
     "context": "Games and prefixes Heroic installed.",
-    "reference": "Modules/Settings/SettingsContent.qml:1415",
+    "reference": "Modules/Settings/SettingsContent.qml:1424",
     "comment": "heroic games setting description"
   },
   {
     "term": "Games and prefixes Lutris installed.",
     "context": "Games and prefixes Lutris installed.",
-    "reference": "Modules/Settings/SettingsContent.qml:1424",
+    "reference": "Modules/Settings/SettingsContent.qml:1433",
     "comment": "lutris games setting description"
   },
   {
@@ -1292,19 +1298,19 @@
   {
     "term": "Games folders",
     "context": "Games folders",
-    "reference": "Modules/Settings/SettingsContent.qml:1449",
+    "reference": "Modules/Settings/SettingsContent.qml:1458",
     "comment": "games setting label hiding the folders holding the games"
   },
   {
     "term": "Games in the sidebar",
     "context": "Games in the sidebar",
-    "reference": "Modules/Settings/SettingsContent.qml:1393",
+    "reference": "Modules/Settings/SettingsContent.qml:1402",
     "comment": "games settings section label"
   },
   {
     "term": "General",
     "context": "General",
-    "reference": "Modules/Settings/SettingsSidebar.qml:55, Modules/Settings/SettingsContent.qml:21",
+    "reference": "Modules/Settings/SettingsContent.qml:21, Modules/Settings/SettingsSidebar.qml:55",
     "comment": "settings sidebar tab label"
   },
   {
@@ -1352,7 +1358,7 @@
   {
     "term": "Grid view",
     "context": "Grid view",
-    "reference": "Modules/FilesTopbar.qml:41, Modules/ChooserWindow.qml:572, Common/Shortcuts.qml:260, Modules/Settings/SettingsContent.qml:84",
+    "reference": "Common/Shortcuts.qml:260, Modules/ChooserWindow.qml:580, Modules/FilesTopbar.qml:41, Modules/Settings/SettingsContent.qml:84",
     "comment": "file browser toolbar button switching to the grid | view mode showing items as tiles"
   },
   {
@@ -1364,7 +1370,7 @@
   {
     "term": "Heroic",
     "context": "Heroic",
-    "reference": "Modules/GamesSection.qml:66, Modules/Settings/SettingsContent.qml:1413",
+    "reference": "Modules/GamesSection.qml:66, Modules/Settings/SettingsContent.qml:1422",
     "comment": "games setting label for the heroic group | games sidebar group holding heroic games"
   },
   {
@@ -1376,7 +1382,7 @@
   {
     "term": "Home",
     "context": "Home",
-    "reference": "Modules/TabManager.qml:193, Modules/BookmarksSection.qml:55, Common/SearchFilters.qml:51",
+    "reference": "Common/SearchFilters.qml:51, Modules/BookmarksSection.qml:55, Modules/TabManager.qml:193",
     "comment": "sidebar entry for the user's home folder"
   },
   {
@@ -1532,7 +1538,7 @@
   {
     "term": "Keyboard shortcuts",
     "context": "Keyboard shortcuts",
-    "reference": "Modules/FilesTopbar.qml:503, Modules/ShortcutsOverlay.qml:12, Common/Shortcuts.qml:366, Modules/Settings/SettingsContent.qml:865",
+    "reference": "Common/Shortcuts.qml:366, Modules/FilesTopbar.qml:515, Modules/ShortcutsOverlay.qml:12, Modules/Settings/SettingsContent.qml:865",
     "comment": "overlay listing every keyboard shortcut"
   },
   {
@@ -1562,7 +1568,7 @@
   {
     "term": "Libraries and Proton prefixes.",
     "context": "Libraries and Proton prefixes.",
-    "reference": "Modules/Settings/SettingsContent.qml:1406",
+    "reference": "Modules/Settings/SettingsContent.qml:1415",
     "comment": "steam games setting description"
   },
   {
@@ -1580,7 +1586,7 @@
   {
     "term": "Link",
     "context": "Link",
-    "reference": "Modules/DragController.qml:121, Modules/DragActionChip.qml:32",
+    "reference": "Modules/DragActionChip.qml:32, Modules/DragController.qml:121",
     "comment": "drag label for creating a symlink"
   },
   {
@@ -1604,7 +1610,7 @@
   {
     "term": "List view",
     "context": "List view",
-    "reference": "Modules/FilesTopbar.qml:36, Modules/ChooserWindow.qml:572, Common/Shortcuts.qml:253, Modules/Settings/SettingsContent.qml:80",
+    "reference": "Common/Shortcuts.qml:253, Modules/ChooserWindow.qml:580, Modules/FilesTopbar.qml:36, Modules/Settings/SettingsContent.qml:80",
     "comment": "file browser toolbar button switching to the list | view mode showing one row per item"
   },
   {
@@ -1628,7 +1634,7 @@
   {
     "term": "Lutris",
     "context": "Lutris",
-    "reference": "Modules/GamesSection.qml:68, Modules/Settings/SettingsContent.qml:1422",
+    "reference": "Modules/GamesSection.qml:68, Modules/Settings/SettingsContent.qml:1431",
     "comment": "games setting label for the lutris group | games sidebar group holding lutris games"
   },
   {
@@ -1670,7 +1676,7 @@
   {
     "term": "More actions",
     "context": "More actions",
-    "reference": "Modules/FilesTopbar.qml:327",
+    "reference": "Modules/FilesTopbar.qml:328",
     "comment": "tooltip on the overflow menu button"
   },
   {
@@ -1682,8 +1688,8 @@
   {
     "term": "Mount",
     "context": "Mount",
-    "reference": "Modules/DevicesSection.qml:80, Modules/DevicesSection.qml:166",
-    "comment": "device action"
+    "reference": "Modules/DevicesSection.qml:80, Modules/DevicesSection.qml:166, Modules/NetworkSection.qml:58",
+    "comment": "device action | network mount action"
   },
   {
     "term": "Mounted and removable drives.",
@@ -1700,7 +1706,7 @@
   {
     "term": "Move",
     "context": "Move",
-    "reference": "Modules/DragController.qml:112, Modules/DragActionChip.qml:38, Modules/Settings/SettingsContent.qml:151",
+    "reference": "Modules/DragActionChip.qml:38, Modules/DragController.qml:112, Modules/Settings/SettingsContent.qml:151",
     "comment": "drag label for moving files"
   },
   {
@@ -1736,7 +1742,7 @@
   {
     "term": "Move to Trash",
     "context": "Move to Trash",
-    "reference": "Modules/DragActionChip.qml:36, Modules/WindowDialogs.qml:292, Modules/WindowDialogs.qml:294, Modules/ChooserMenus.qml:140, Modules/ChooserMenus.qml:142, Modules/FileContextMenu.qml:76, Modules/FileContextMenu.qml:335, Common/Shortcuts.qml:463",
+    "reference": "Common/Shortcuts.qml:463, Modules/ChooserMenus.qml:140, Modules/ChooserMenus.qml:142, Modules/DragActionChip.qml:36, Modules/FileContextMenu.qml:76, Modules/FileContextMenu.qml:335, Modules/WindowDialogs.qml:292, Modules/WindowDialogs.qml:294",
     "comment": "context menu entry trashing the selection"
   },
   {
@@ -1784,7 +1790,7 @@
   {
     "term": "Name",
     "context": "Name",
-    "reference": "Modules/PropertiesDialog.qml:190, Modules/NameDialog.qml:33, Modules/CompressDialog.qml:67, Modules/Settings/SettingsContent.qml:124",
+    "reference": "Modules/CompressDialog.qml:67, Modules/NameDialog.qml:33, Modules/PropertiesDialog.qml:190, Modules/Settings/SettingsContent.qml:124",
     "comment": "file browser sort criterion option | label for a file name input"
   },
   {
@@ -1802,7 +1808,7 @@
   {
     "term": "Network",
     "context": "Network",
-    "reference": "Modules/NetworkSection.qml:20, Modules/Settings/SettingsAboutPage.qml:39",
+    "reference": "Modules/NetworkSection.qml:21, Modules/Settings/SettingsAboutPage.qml:39",
     "comment": "sidebar section listing network locations | sidebar section listing remote locations"
   },
   {
@@ -1814,7 +1820,7 @@
   {
     "term": "Network locations are unavailable because gvfs is not running",
     "context": "Network locations are unavailable because gvfs is not running",
-    "reference": "Modules/NetworkSection.qml:28",
+    "reference": "Modules/NetworkSection.qml:29",
     "comment": "sidebar explanation when the network service is missing"
   },
   {
@@ -1832,31 +1838,31 @@
   {
     "term": "New document",
     "context": "New document",
-    "reference": "Modules/FilesTopbar.qml:450, Modules/FileContextMenu.qml:100, Modules/FileContextMenu.qml:387",
+    "reference": "Modules/FileContextMenu.qml:100, Modules/FileContextMenu.qml:387, Modules/FilesTopbar.qml:462",
     "comment": "context menu entry creating a file from a template"
   },
   {
     "term": "New folder",
     "context": "New folder",
-    "reference": "Modules/FilesTopbar.qml:442, Modules/ChooserWindow.qml:547, Modules/FileContextMenu.qml:94, Modules/FileContextMenu.qml:381, Common/Shortcuts.qml:501",
+    "reference": "Common/Shortcuts.qml:501, Modules/ChooserWindow.qml:555, Modules/FileContextMenu.qml:94, Modules/FileContextMenu.qml:381, Modules/FilesTopbar.qml:454",
     "comment": "file browser toolbar button creating a folder | new folder dialog header"
   },
   {
     "term": "New folder with selection",
     "context": "New folder with selection",
-    "reference": "Modules/FileContextMenu.qml:283, Common/Shortcuts.qml:508",
+    "reference": "Common/Shortcuts.qml:508, Modules/FileContextMenu.qml:283",
     "comment": "context menu entry moving the selection into a new folder"
   },
   {
     "term": "New tab",
     "context": "New tab",
-    "reference": "Modules/TabRow.qml:223, Common/Shortcuts.qml:165",
+    "reference": "Common/Shortcuts.qml:165, Modules/TabRow.qml:223",
     "comment": "context menu entry opening a folder in a new tab | tooltip on the button opening a new tab"
   },
   {
     "term": "New window",
     "context": "New window",
-    "reference": "Modules/FilesTopbar.qml:465, Common/Shortcuts.qml:158",
+    "reference": "Common/Shortcuts.qml:158, Modules/FilesTopbar.qml:477",
     "comment": "menu entry opening another file manager window"
   },
   {
@@ -1874,13 +1880,13 @@
   {
     "term": "No recent files",
     "context": "No recent files",
-    "reference": "Modules/RecentView.qml:186, Modules/BookmarksSection.qml:93",
+    "reference": "Modules/BookmarksSection.qml:93, Modules/RecentView.qml:186",
     "comment": "recent files view placeholder when nothing was opened yet"
   },
   {
     "term": "No results",
     "context": "No results",
-    "reference": "Modules/RecentView.qml:186, Modules/TrashView.qml:182, Modules/SearchResults.qml:40, Modules/FilesPane.qml:539, Modules/Settings/SettingsContent.qml:530",
+    "reference": "Modules/FilesPane.qml:539, Modules/RecentView.qml:186, Modules/SearchResults.qml:40, Modules/TrashView.qml:182, Modules/Settings/SettingsContent.qml:530",
     "comment": "search results header when nothing matched"
   },
   {
@@ -1898,7 +1904,7 @@
   {
     "term": "Not available",
     "context": "Not available",
-    "reference": "Modules/PropertiesOpenWith.qml:35, Common/FilesFormat.qml:43",
+    "reference": "Common/FilesFormat.qml:43, Modules/PropertiesOpenWith.qml:35",
     "comment": "explanation for a feature the environment does not permit"
   },
   {
@@ -1958,7 +1964,7 @@
   {
     "term": "Only launchers with an installed game are listed.",
     "context": "Only launchers with an installed game are listed.",
-    "reference": "Modules/Settings/SettingsContent.qml:1398",
+    "reference": "Modules/Settings/SettingsContent.qml:1407",
     "comment": "games setting description"
   },
   {
@@ -1976,7 +1982,7 @@
   {
     "term": "Open",
     "context": "Open",
-    "reference": "Modules/OpenWithDialog.qml:164, Modules/ChooserWindow.qml:58, Modules/WindowDialogs.qml:282, Modules/FileContextMenu.qml:40, Modules/FileContextMenu.qml:199, Common/Shortcuts.qml:17",
+    "reference": "Common/Shortcuts.qml:17, Modules/ChooserWindow.qml:58, Modules/FileContextMenu.qml:40, Modules/FileContextMenu.qml:199, Modules/OpenWithDialog.qml:164, Modules/WindowDialogs.qml:282",
     "comment": "context menu entry opening a file | file browser open button"
   },
   {
@@ -2024,25 +2030,25 @@
   {
     "term": "Open in new tab",
     "context": "Open in new tab",
-    "reference": "Modules/PlaceMenu.qml:34, Modules/FileContextMenu.qml:212, Common/Shortcuts.qml:25",
+    "reference": "Common/Shortcuts.qml:25, Modules/FileContextMenu.qml:212, Modules/PlaceMenu.qml:40",
     "comment": "context menu entry opening a folder in a new tab"
   },
   {
     "term": "Open in new window",
     "context": "Open in new window",
-    "reference": "Modules/PlaceMenu.qml:43, Modules/FileContextMenu.qml:218",
+    "reference": "Modules/FileContextMenu.qml:218, Modules/PlaceMenu.qml:49",
     "comment": "context menu entry opening a folder in another window"
   },
   {
     "term": "Open in terminal",
     "context": "Open in terminal",
-    "reference": "Modules/FilesTopbar.qml:496, Modules/FileContextMenu.qml:427, Common/Shortcuts.qml:53, Modules/Settings/SettingsContent.qml:1243, Modules/Settings/SettingsAboutPage.qml:43",
+    "reference": "Common/Shortcuts.qml:53, Modules/FileContextMenu.qml:427, Modules/FilesTopbar.qml:508, Modules/Settings/SettingsAboutPage.qml:43, Modules/Settings/SettingsContent.qml:1243",
     "comment": "context menu entry opening a terminal"
   },
   {
     "term": "Open in the other pane",
     "context": "Open in the other pane",
-    "reference": "Modules/FileContextMenu.qml:224, Common/Shortcuts.qml:32",
+    "reference": "Common/Shortcuts.qml:32, Modules/FileContextMenu.qml:224",
     "comment": "context menu entry opening a folder beside the current one"
   },
   {
@@ -2060,7 +2066,7 @@
   {
     "term": "Open the containing folder",
     "context": "Open the containing folder",
-    "reference": "Modules/FileContextMenu.qml:314, Common/Shortcuts.qml:39",
+    "reference": "Common/Shortcuts.qml:39, Modules/FileContextMenu.qml:314",
     "comment": "keyboard shortcut"
   },
   {
@@ -2078,7 +2084,7 @@
   {
     "term": "Open the preview in a large view",
     "context": "Open the preview in a large view",
-    "reference": "Modules/FilesTopbar.qml:50, Common/Shortcuts.qml:331",
+    "reference": "Common/Shortcuts.qml:331, Modules/FilesTopbar.qml:50",
     "comment": "keyboard shortcut opening the preview overlay"
   },
   {
@@ -2090,7 +2096,7 @@
   {
     "term": "Open with",
     "context": "Open with",
-    "reference": "Modules/OpenWithDialog.qml:94, Modules/PropertiesDialog.qml:143, Modules/FileContextMenu.qml:205, Modules/FileContextMenu.qml:434, Common/Shortcuts.qml:46, Modules/Settings/SettingsAboutPage.qml:51",
+    "reference": "Common/Shortcuts.qml:46, Modules/FileContextMenu.qml:205, Modules/FileContextMenu.qml:434, Modules/OpenWithDialog.qml:94, Modules/PropertiesDialog.qml:143, Modules/Settings/SettingsAboutPage.qml:51",
     "comment": "open with dialog header"
   },
   {
@@ -2108,7 +2114,7 @@
   {
     "term": "Other application…",
     "context": "Other application…",
-    "reference": "Modules/WindowMenus.qml:277",
+    "reference": "Modules/WindowMenus.qml:285",
     "comment": "open with menu entry opening the full application picker"
   },
   {
@@ -2144,7 +2150,7 @@
   {
     "term": "Password",
     "context": "Password",
-    "reference": "Modules/ArchivePasswordDialog.qml:59, Modules/CredentialDialog.qml:102, Modules/CompressDialog.qml:99",
+    "reference": "Modules/ArchivePasswordDialog.qml:59, Modules/CompressDialog.qml:99, Modules/CredentialDialog.qml:102",
     "comment": "label for a password input"
   },
   {
@@ -2156,13 +2162,13 @@
   {
     "term": "Paste",
     "context": "Paste",
-    "reference": "Modules/FileContextMenu.qml:107, Modules/FileContextMenu.qml:394, Common/Shortcuts.qml:440",
+    "reference": "Common/Shortcuts.qml:440, Modules/FileContextMenu.qml:107, Modules/FileContextMenu.qml:394",
     "comment": "context menu entry pasting the clipboard here"
   },
   {
     "term": "Paste as link",
     "context": "Paste as link",
-    "reference": "Modules/FileContextMenu.qml:400, Common/Shortcuts.qml:448",
+    "reference": "Common/Shortcuts.qml:448, Modules/FileContextMenu.qml:400",
     "comment": "context menu entry creating symlinks from the clipboard"
   },
   {
@@ -2174,7 +2180,7 @@
   {
     "term": "Pasted image",
     "context": "Pasted image",
-    "reference": "Modules/WindowActions.qml:540, Modules/ChooserMenus.qml:79",
+    "reference": "Modules/ChooserMenus.qml:79, Modules/WindowActions.qml:540",
     "comment": "file name for an image pasted from the clipboard"
   },
   {
@@ -2246,7 +2252,7 @@
   {
     "term": "Prefixes",
     "context": "Prefixes",
-    "reference": "Modules/Settings/SettingsContent.qml:1440",
+    "reference": "Modules/Settings/SettingsContent.qml:1449",
     "comment": "games setting label hiding wine prefixes"
   },
   {
@@ -2258,7 +2264,7 @@
   {
     "term": "Preview",
     "context": "Preview",
-    "reference": "Modules/FilesTopbar.qml:49, Modules/ChooserWindow.qml:582, Common/Shortcuts.qml:324",
+    "reference": "Common/Shortcuts.qml:324, Modules/ChooserWindow.qml:590, Modules/FilesTopbar.qml:49",
     "comment": "view menu entry and shortcut showing or hiding the preview drawer"
   },
   {
@@ -2276,7 +2282,7 @@
   {
     "term": "Properties",
     "context": "Properties",
-    "reference": "Modules/FilesTopbar.qml:473, Modules/PlaceMenu.qml:87, Modules/FileContextMenu.qml:372, Modules/FileContextMenu.qml:444, Common/Shortcuts.qml:522",
+    "reference": "Common/Shortcuts.qml:522, Modules/FileContextMenu.qml:372, Modules/FileContextMenu.qml:444, Modules/FilesTopbar.qml:485, Modules/PlaceMenu.qml:103",
     "comment": "menu entry showing details about the current folder"
   },
   {
@@ -2330,7 +2336,7 @@
   {
     "term": "Recent",
     "context": "Recent",
-    "reference": "Modules/TabManager.qml:191, Modules/RecentView.qml:110, Modules/BookmarksSection.qml:87, Modules/ConnectServerDialog.qml:138",
+    "reference": "Modules/BookmarksSection.qml:87, Modules/ConnectServerDialog.qml:138, Modules/RecentView.qml:110, Modules/TabManager.qml:191",
     "comment": "header above previously used servers | recent files view header and sidebar entry"
   },
   {
@@ -2354,7 +2360,7 @@
   {
     "term": "Redo",
     "context": "Redo",
-    "reference": "Modules/FileOpenFlow.qml:184, Common/Shortcuts.qml:487",
+    "reference": "Common/Shortcuts.qml:487, Modules/FileOpenFlow.qml:184",
     "comment": "toast action repeating the operation that was just undone"
   },
   {
@@ -2390,7 +2396,7 @@
   {
     "term": "Reload",
     "context": "Reload",
-    "reference": "Modules/FilesTopbar.qml:488, Modules/FileContextMenu.qml:122, Modules/FileContextMenu.qml:137, Modules/FileContextMenu.qml:180, Modules/FileContextMenu.qml:421, Common/Shortcuts.qml:359",
+    "reference": "Common/Shortcuts.qml:359, Modules/FileContextMenu.qml:122, Modules/FileContextMenu.qml:137, Modules/FileContextMenu.qml:180, Modules/FileContextMenu.qml:421, Modules/FilesTopbar.qml:500",
     "comment": "menu entry re-reading the current folder"
   },
   {
@@ -2408,13 +2414,13 @@
   {
     "term": "Remove bookmark",
     "context": "Remove bookmark",
-    "reference": "Modules/PlaceMenu.qml:63, Modules/FileContextMenu.qml:230",
+    "reference": "Modules/FileContextMenu.qml:230, Modules/PlaceMenu.qml:69",
     "comment": "tooltip on the bookmark button"
   },
   {
     "term": "Remove from Recent",
     "context": "Remove from Recent",
-    "reference": "Modules/RecentView.qml:34, Modules/FileContextMenu.qml:325",
+    "reference": "Modules/FileContextMenu.qml:325, Modules/RecentView.qml:34",
     "comment": "action dropping the selected files from the recently used list without touching the files"
   },
   {
@@ -2426,7 +2432,7 @@
   {
     "term": "Rename",
     "context": "Rename",
-    "reference": "Modules/PlaceMenu.qml:53, Modules/WindowDialogs.qml:264, Modules/WindowDialogs.qml:265, Modules/FileContextMenu.qml:46, Modules/FileContextMenu.qml:269, Common/Shortcuts.qml:455",
+    "reference": "Common/Shortcuts.qml:455, Modules/FileContextMenu.qml:46, Modules/FileContextMenu.qml:269, Modules/PlaceMenu.qml:59, Modules/WindowDialogs.qml:264, Modules/WindowDialogs.qml:265",
     "comment": "rename dialog header"
   },
   {
@@ -2450,13 +2456,13 @@
   {
     "term": "Reopen the closed tab",
     "context": "Reopen the closed tab",
-    "reference": "Modules/WindowMenus.qml:170, Common/Shortcuts.qml:180",
+    "reference": "Common/Shortcuts.qml:180, Modules/WindowMenus.qml:178",
     "comment": "keyboard shortcut"
   },
   {
     "term": "Replace",
     "context": "Replace",
-    "reference": "Modules/ChooserWindow.qml:849, Modules/ConflictDialog.qml:84",
+    "reference": "Modules/ChooserWindow.qml:857, Modules/ConflictDialog.qml:84",
     "comment": "file conflict dialog button to overwrite the existing item"
   },
   {
@@ -2504,7 +2510,7 @@
   {
     "term": "Restore",
     "context": "Restore",
-    "reference": "Modules/FileOpenFlow.qml:213, Modules/TrashView.qml:32, Modules/FileContextMenu.qml:155",
+    "reference": "Modules/FileContextMenu.qml:155, Modules/FileOpenFlow.qml:213, Modules/TrashView.qml:32",
     "comment": "trash action returning items to where they were deleted from"
   },
   {
@@ -2624,7 +2630,7 @@
   {
     "term": "Saving %1 into the chosen folder",
     "context": "Saving %1 into the chosen folder",
-    "reference": "Modules/ChooserWindow.qml:754",
+    "reference": "Modules/ChooserWindow.qml:762",
     "comment": "file chooser footer listing the names an app wants to save"
   },
   {
@@ -2660,7 +2666,7 @@
   {
     "term": "Search in Files",
     "context": "Search in Files",
-    "reference": "Modules/FilesTopbar.qml:528, Modules/ChooserWindow.qml:607, Common/Shortcuts.qml:137, Modules/Settings/SettingsContent.qml:1316",
+    "reference": "Common/Shortcuts.qml:137, Modules/ChooserWindow.qml:615, Modules/FilesTopbar.qml:540, Modules/Settings/SettingsContent.qml:1316",
     "comment": "placeholder in the search field"
   },
   {
@@ -2672,7 +2678,7 @@
   {
     "term": "Search settings",
     "context": "Search settings",
-    "reference": "Modules/Settings/SettingsSidebar.qml:120",
+    "reference": "Modules/Settings/SettingsSidebar.qml:111",
     "comment": "placeholder in the settings search field"
   },
   {
@@ -2714,7 +2720,7 @@
   {
     "term": "Select all",
     "context": "Select all",
-    "reference": "Modules/FileContextMenu.qml:131, Modules/FileContextMenu.qml:174, Modules/FileContextMenu.qml:409, Common/Shortcuts.qml:380",
+    "reference": "Common/Shortcuts.qml:380, Modules/FileContextMenu.qml:131, Modules/FileContextMenu.qml:174, Modules/FileContextMenu.qml:409",
     "comment": "menu entry selecting every item in the folder"
   },
   {
@@ -2732,7 +2738,7 @@
   {
     "term": "Settings",
     "context": "Settings",
-    "reference": "Modules/FilesTopbar.qml:510, Common/Shortcuts.qml:373, Modules/Settings/SettingsModal.qml:98",
+    "reference": "Common/Shortcuts.qml:373, Modules/FilesTopbar.qml:522, Modules/Settings/SettingsModal.qml:98",
     "comment": "settings window header title"
   },
   {
@@ -2744,7 +2750,7 @@
   {
     "term": "Settings folders",
     "context": "Settings folders",
-    "reference": "Modules/Settings/SettingsContent.qml:1431",
+    "reference": "Modules/Settings/SettingsContent.qml:1440",
     "comment": "games setting label hiding the launcher config folders"
   },
   {
@@ -2772,6 +2778,12 @@
     "comment": "toast action revealing the extracted files"
   },
   {
+    "term": "Show configured network mounts",
+    "context": "Show configured network mounts",
+    "reference": "Modules/Settings/SettingsContent.qml:1392",
+    "comment": "configured network mounts setting label"
+  },
+  {
     "term": "Show devices",
     "context": "Show devices",
     "reference": "Modules/Settings/SettingsContent.qml:1354",
@@ -2786,13 +2798,13 @@
   {
     "term": "Show games",
     "context": "Show games",
-    "reference": "Modules/Settings/SettingsContent.qml:1396",
+    "reference": "Modules/Settings/SettingsContent.qml:1405",
     "comment": "games setting label"
   },
   {
     "term": "Show hidden files",
     "context": "Show hidden files",
-    "reference": "Modules/ChooserWindow.qml:564, Modules/FileContextMenu.qml:116, Modules/FileContextMenu.qml:415, Modules/SearchChips.qml:157, Common/Shortcuts.qml:316, Modules/Settings/SettingsContent.qml:728",
+    "reference": "Common/Shortcuts.qml:316, Modules/ChooserWindow.qml:572, Modules/FileContextMenu.qml:116, Modules/FileContextMenu.qml:415, Modules/SearchChips.qml:157, Modules/Settings/SettingsContent.qml:728",
     "comment": "file browser toolbar toggle | menu entry listing dot files"
   },
   {
@@ -2800,6 +2812,12 @@
     "context": "Show network",
     "reference": "Modules/Settings/SettingsContent.qml:1384",
     "comment": "network setting label"
+  },
+  {
+    "term": "Show network mounts from /etc/fstab, including ones that are not mounted.",
+    "context": "Show network mounts from /etc/fstab, including ones that are not mounted.",
+    "reference": "Modules/Settings/SettingsContent.qml:1394",
+    "comment": "configured network mounts setting description"
   },
   {
     "term": "Show system partitions",
@@ -2852,7 +2870,7 @@
   {
     "term": "Skip",
     "context": "Skip",
-    "reference": "Modules/ArchivePasswordDialog.qml:70, Modules/OperationErrorDialog.qml:74, Modules/ConflictDialog.qml:77",
+    "reference": "Modules/ArchivePasswordDialog.qml:70, Modules/ConflictDialog.qml:77, Modules/OperationErrorDialog.qml:74",
     "comment": "file conflict dialog button to leave the item alone"
   },
   {
@@ -2912,7 +2930,7 @@
   {
     "term": "Split view",
     "context": "Split view",
-    "reference": "Modules/FilesTopbar.qml:296, Modules/FilesTopbar.qml:414, Common/Shortcuts.qml:224",
+    "reference": "Common/Shortcuts.qml:224, Modules/FilesTopbar.qml:297, Modules/FilesTopbar.qml:415",
     "comment": "tooltip on the button showing a second pane"
   },
   {
@@ -2936,7 +2954,7 @@
   {
     "term": "Steam",
     "context": "Steam",
-    "reference": "Modules/GamesSection.qml:64, Modules/Settings/SettingsContent.qml:1404",
+    "reference": "Modules/GamesSection.qml:64, Modules/Settings/SettingsContent.qml:1413",
     "comment": "games setting label for the steam group | games sidebar group holding steam libraries"
   },
   {
@@ -3008,7 +3026,7 @@
   {
     "term": "The Wine prefix of each game.",
     "context": "The Wine prefix of each game.",
-    "reference": "Modules/Settings/SettingsContent.qml:1442",
+    "reference": "Modules/Settings/SettingsContent.qml:1451",
     "comment": "games setting description for the wine prefixes"
   },
   {
@@ -3092,7 +3110,7 @@
   {
     "term": "This item already exists",
     "context": "This item already exists",
-    "reference": "Modules/ChooserWindow.qml:847, Modules/ConflictDialog.qml:31",
+    "reference": "Modules/ChooserWindow.qml:855, Modules/ConflictDialog.qml:31",
     "comment": "file conflict dialog header"
   },
   {
@@ -3128,7 +3146,7 @@
   {
     "term": "Thumbnails",
     "context": "Thumbnails",
-    "reference": "Modules/Settings/SettingsContent.qml:1282, Modules/Settings/SettingsAboutPage.qml:31",
+    "reference": "Modules/Settings/SettingsAboutPage.qml:31, Modules/Settings/SettingsContent.qml:1282",
     "comment": "capability row on the about page"
   },
   {
@@ -3152,13 +3170,13 @@
   {
     "term": "Toggle sidebar",
     "context": "Toggle sidebar",
-    "reference": "Modules/FilesTopbar.qml:240, Modules/ChooserWindow.qml:530, Common/Shortcuts.qml:238",
+    "reference": "Common/Shortcuts.qml:238, Modules/ChooserWindow.qml:538, Modules/FilesTopbar.qml:241",
     "comment": "tooltip on the button showing or hiding the sidebar"
   },
   {
     "term": "Trash",
     "context": "Trash",
-    "reference": "Modules/TabManager.qml:189, Modules/BookmarksSection.qml:87, Modules/TrashView.qml:107, Modules/Settings/SettingsAboutPage.qml:27",
+    "reference": "Modules/BookmarksSection.qml:87, Modules/TabManager.qml:189, Modules/TrashView.qml:107, Modules/Settings/SettingsAboutPage.qml:27",
     "comment": "capability row on the about page | trash view header and sidebar entry"
   },
   {
@@ -3218,7 +3236,7 @@
   {
     "term": "Undo",
     "context": "Undo",
-    "reference": "Modules/FileOpenFlow.qml:165, Common/Shortcuts.qml:479",
+    "reference": "Common/Shortcuts.qml:479, Modules/FileOpenFlow.qml:165",
     "comment": "toast action reversing the last operation"
   },
   {
@@ -3236,14 +3254,14 @@
   {
     "term": "Unlock",
     "context": "Unlock",
-    "reference": "Modules/DevicesSection.qml:78, Modules/ArchivePasswordDialog.qml:76, Modules/UnlockDialog.qml:39, Modules/UnlockDialog.qml:62",
+    "reference": "Modules/ArchivePasswordDialog.qml:76, Modules/DevicesSection.qml:78, Modules/UnlockDialog.qml:39, Modules/UnlockDialog.qml:62",
     "comment": "unlock dialog header for an encrypted device"
   },
   {
     "term": "Unmount",
     "context": "Unmount",
-    "reference": "Modules/DevicesSection.qml:86",
-    "comment": "device action"
+    "reference": "Modules/DevicesSection.qml:86, Modules/PlaceMenu.qml:83",
+    "comment": "context menu action for a mounted network folder | device action"
   },
   {
     "term": "Unpacks into a folder beside it.",
@@ -3260,7 +3278,7 @@
   {
     "term": "Untitled folder",
     "context": "Untitled folder",
-    "reference": "Modules/WindowActions.qml:309, Modules/WindowActions.qml:486, Modules/ChooserWindow.qml:373",
+    "reference": "Modules/ChooserWindow.qml:381, Modules/WindowActions.qml:309, Modules/WindowActions.qml:486",
     "comment": "default name for a new folder"
   },
   {
@@ -3338,7 +3356,7 @@
   {
     "term": "View",
     "context": "View",
-    "reference": "Modules/FilesTopbar.qml:267, Common/Shortcuts.qml:583, Modules/Settings/SettingsContent.qml:702",
+    "reference": "Common/Shortcuts.qml:583, Modules/FilesTopbar.qml:268, Modules/Settings/SettingsContent.qml:702",
     "comment": "keyboard shortcut group"
   },
   {
@@ -3368,7 +3386,7 @@
   {
     "term": "Where the launcher keeps the games.",
     "context": "Where the launcher keeps the games.",
-    "reference": "Modules/Settings/SettingsContent.qml:1451",
+    "reference": "Modules/Settings/SettingsContent.qml:1460",
     "comment": "games setting description for the games folders"
   },
   {
@@ -3410,13 +3428,13 @@
   {
     "term": "Zoom in",
     "context": "Zoom in",
-    "reference": "Modules/PreviewOverlay.qml:316, Modules/FilesTopbar.qml:381",
+    "reference": "Modules/FilesTopbar.qml:382, Modules/PreviewOverlay.qml:316",
     "comment": "menu entry making the file view bigger | tooltip on the button zooming the large preview in"
   },
   {
     "term": "Zoom out",
     "context": "Zoom out",
-    "reference": "Modules/PreviewOverlay.qml:301, Modules/FilesTopbar.qml:388",
+    "reference": "Modules/FilesTopbar.qml:389, Modules/PreviewOverlay.qml:301",
     "comment": "menu entry making the file view smaller | tooltip on the button zooming the large preview out"
   },
   {
@@ -3458,7 +3476,7 @@
   {
     "term": "config folder launcher wine prefix",
     "context": "config folder launcher wine prefix",
-    "reference": "Modules/Settings/SettingsContent.qml:1432",
+    "reference": "Modules/Settings/SettingsContent.qml:1441",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3630,9 +3648,15 @@
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
+    "term": "fstab cifs nfs sshfs network mounts sidebar hide",
+    "context": "fstab cifs nfs sshfs network mounts sidebar hide",
+    "reference": "Modules/Settings/SettingsContent.qml:1393",
+    "comment": "settings search keywords, space separated, add synonyms in your language"
+  },
+  {
     "term": "games library steamapps common",
     "context": "games library steamapps common",
-    "reference": "Modules/Settings/SettingsContent.qml:1450",
+    "reference": "Modules/Settings/SettingsContent.qml:1459",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3656,7 +3680,7 @@
   {
     "term": "heroic epic gog amazon",
     "context": "heroic epic gog amazon",
-    "reference": "Modules/Settings/SettingsContent.qml:1414",
+    "reference": "Modules/Settings/SettingsContent.qml:1423",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3716,7 +3740,7 @@
   {
     "term": "lutris wine prefix",
     "context": "lutris wine prefix",
-    "reference": "Modules/Settings/SettingsContent.qml:1423",
+    "reference": "Modules/Settings/SettingsContent.qml:1432",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3812,13 +3836,13 @@
   {
     "term": "steam heroic lutris proton games sidebar hide",
     "context": "steam heroic lutris proton games sidebar hide",
-    "reference": "Modules/Settings/SettingsContent.qml:1397",
+    "reference": "Modules/Settings/SettingsContent.qml:1406",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
     "term": "steam proton valve",
     "context": "steam proton valve",
-    "reference": "Modules/Settings/SettingsContent.qml:1405",
+    "reference": "Modules/Settings/SettingsContent.qml:1414",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {
@@ -3860,7 +3884,7 @@
   {
     "term": "wine prefix proton compatdata",
     "context": "wine prefix proton compatdata",
-    "reference": "Modules/Settings/SettingsContent.qml:1441",
+    "reference": "Modules/Settings/SettingsContent.qml:1450",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {

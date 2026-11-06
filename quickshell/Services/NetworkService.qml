@@ -4,6 +4,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import qs.Services
+import qs.Common
 
 Singleton {
     id: root
@@ -19,6 +20,7 @@ Singleton {
     property bool connecting: false
 
     readonly property var networkMounts: mounts.filter(mount => mount.kind === "network")
+    readonly property var visibleNetworkMounts: networkMounts.filter(mount => SettingsData.showConfiguredNetworkMounts || !mount.configured)
     readonly property var deviceMounts: mounts.filter(mount => mount.kind === "device")
 
     signal askRequested(var ask)
@@ -81,6 +83,12 @@ Singleton {
         answer(id, {
             "abort": true
         });
+    }
+
+    function mount(id, callback) {
+        _send("network.mount", {
+            "id": id
+        }, callback);
     }
 
     function disconnect(id, callback) {

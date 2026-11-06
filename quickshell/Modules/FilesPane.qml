@@ -203,6 +203,18 @@ FocusScope {
         refresh();
     }
 
+    function reload() {
+        if (resultsActive) {
+            searchModel.refresh();
+            return;
+        }
+        if (snapshotView) {
+            snapshotView.refresh();
+            return;
+        }
+        browser.directory.reload();
+    }
+
     function refresh() {
         if (resultsActive) {
             searchModel.refresh();
