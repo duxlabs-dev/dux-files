@@ -15,7 +15,7 @@ Singleton {
 
     function indexOf(id) {
         for (let i = 0; i < requests.count; i++) {
-            if (requests.get(i).id === id)
+            if (requests.get(i).requestId === id)
                 return i;
         }
         return -1;
@@ -34,7 +34,7 @@ Singleton {
         all[request.id] = request;
         byId = all;
         requests.append({
-            "id": request.id
+            "requestId": request.id
         });
         log.debug(`chooser ${request.method} opened, ${requests.count} open`);
     }

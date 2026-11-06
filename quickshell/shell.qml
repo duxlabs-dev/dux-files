@@ -3,6 +3,8 @@
 //@ pragma Env QT_QUICK_CONTROLS_STYLE=Material
 //@ pragma UseQApplication
 //@ pragma AppId dev.duxlabs.files
+//@ pragma RenderControl
+//@ pragma DiskCache
 
 pragma ComponentBehavior: Bound
 
@@ -203,9 +205,9 @@ ShellRoot {
         model: ChooserService.requests
 
         ChooserWindow {
-            required property string id
+            required property var model
 
-            request: ChooserService.requestFor(id)
+            request: ChooserService.requestFor(model.requestId)
         }
     }
 
