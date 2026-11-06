@@ -17,6 +17,7 @@ import (
 func trashHome(t *testing.T) string {
 	t.Helper()
 	dataHome := t.TempDir()
+	t.Setenv("HOME", dataHome)
 	t.Setenv("XDG_DATA_HOME", dataHome)
 	home := filepath.Join(dataHome, "Trash")
 	listTrash = func() ([]trash.Entry, error) {

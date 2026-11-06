@@ -243,6 +243,7 @@ func TestTrashHasNoElevatedForm(t *testing.T) {
 	if os.Getuid() == 0 {
 		t.Skip("root ignores mode bits")
 	}
+	trashHome(t)
 	root := t.TempDir()
 	locked := filepath.Join(root, "locked")
 	victim := testfs.Write(t, filepath.Join(locked, "a.txt"), "a")
