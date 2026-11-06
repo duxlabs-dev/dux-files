@@ -348,7 +348,7 @@ FloatingWindow {
         onOpenRequested: entries => window.openFlow.openEntries(entries)
         onTabRequested: path => window.tabManager.newTab(path, true)
         onPathMenuRequested: (path, pointX, pointY) => window.menus.presentPlaceMenu("folder", path, pane, pointX, pointY)
-        onItemMenuRequested: (index, pointX, pointY, modifiers) => window.menus.showItemMenu(pointX, pointY, modifiers)
+        onItemMenuRequested: (index, pointX, pointY, modifiers) => window.menus.showItemMenu(pointX, pointY)
         onBackgroundMenuRequested: (pointX, pointY) => window.menus.showBackgroundMenu(pointX, pointY)
         onDropRequested: (paths, dest, action) => window.drag.applyDrop(paths, dest, action)
         onDragRequested: paths => window.drag.beginDrag(paths, window.firstSelected())
