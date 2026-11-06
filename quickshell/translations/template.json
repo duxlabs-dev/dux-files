@@ -595,6 +595,13 @@
     "comment": ""
   },
   {
+    "term": "Choose folder…",
+    "translation": "",
+    "context": "setting option opening a folder picker",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Clear",
     "translation": "",
     "context": "folder appearance action clearing the badge",
@@ -675,6 +682,13 @@
     "term": "Column view",
     "translation": "",
     "context": "view mode showing folders side by side",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Columns",
+    "translation": "",
+    "context": "view menu entry choosing which list columns are shown",
     "reference": "",
     "comment": ""
   },
@@ -885,6 +899,13 @@
     "term": "Ctrl+Wheel resizes per window.",
     "translation": "",
     "context": "icon size setting description",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Current folder",
+    "translation": "",
+    "context": "folder setting option keeping the folder in use",
     "reference": "",
     "comment": ""
   },
@@ -1577,7 +1598,7 @@
   {
     "term": "Grid view",
     "translation": "",
-    "context": "file browser toolbar button switching to the grid | view mode showing items as tiles",
+    "context": "view mode showing items as tiles",
     "reference": "",
     "comment": ""
   },
@@ -1605,7 +1626,7 @@
   {
     "term": "Home",
     "translation": "",
-    "context": "sidebar entry for the user's home folder",
+    "context": "file browser quick access location | sidebar entry for the user's home folder",
     "reference": "",
     "comment": ""
   },
@@ -1806,6 +1827,13 @@
     "comment": ""
   },
   {
+    "term": "Last used",
+    "translation": "",
+    "context": "startup folder option restoring the previous tabs",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Layer opacity",
     "translation": "",
     "context": "foreground layer opacity slider label",
@@ -1871,7 +1899,7 @@
   {
     "term": "List view",
     "translation": "",
-    "context": "file browser toolbar button switching to the list | view mode showing one row per item",
+    "context": "view mode showing one row per item",
     "reference": "",
     "comment": ""
   },
@@ -2163,9 +2191,23 @@
     "comment": ""
   },
   {
+    "term": "New tab folder",
+    "translation": "",
+    "context": "setting label for the folder a new tab opens in",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "New window",
     "translation": "",
     "context": "menu entry opening another file manager window",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "New window folder",
+    "translation": "",
+    "context": "setting label for the folder a new window opens in",
     "reference": "",
     "comment": ""
   },
@@ -3173,7 +3215,7 @@
   {
     "term": "Select folder",
     "translation": "",
-    "context": "file chooser default title when picking a folder",
+    "context": "file chooser default title when picking a folder | folder picker window title",
     "reference": "",
     "comment": ""
   },
@@ -3257,7 +3299,7 @@
   {
     "term": "Show hidden files",
     "translation": "",
-    "context": "file browser toolbar toggle | menu entry listing dot files",
+    "context": "menu entry listing dot files",
     "reference": "",
     "comment": ""
   },
@@ -3412,6 +3454,13 @@
     "term": "Square",
     "translation": "",
     "context": "radius strength slider label at zero",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Startup folder",
+    "translation": "",
+    "context": "setting label for the folder shown when the app opens",
     "reference": "",
     "comment": ""
   },
@@ -4103,6 +4152,13 @@
   },
   {
     "term": "default file manager dbus reveal",
+    "translation": "",
+    "context": "settings search keywords, space separated, add synonyms in your language",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "default folder directory start open home",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
     "reference": "",
