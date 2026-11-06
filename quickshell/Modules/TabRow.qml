@@ -161,7 +161,6 @@ Item {
                     dragging: row.draggingIndex === index
                     label: row.tabs[index] ?? ""
                     current: index === row.currentIndex
-                    closable: row.tabs.length > 1
                     onWidthChanged: row.layout()
                     onClicked: row.tabSelected(index)
                     onCloseRequested: row.tabClosed(index)
@@ -224,11 +223,4 @@ Item {
         onClicked: row.tabAdded()
     }
 
-    Rectangle {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        height: Theme.dividerWidth
-        color: Theme.outlineVariant
-    }
 }

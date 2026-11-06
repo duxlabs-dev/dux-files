@@ -42,7 +42,7 @@ Singleton {
     }
     readonly property real tabMinWidth: Theme.tabMinWidth
     readonly property real tabMaxWidth: Theme.sidebarWidth
-    readonly property real tabSpacing: Theme.spacingXXS
+    readonly property real tabSpacing: Theme.spacingS
     readonly property int tabHoverDelay: FileBrowserMetrics.springLoadDelay
 
     readonly property real dragGhostSize: FileBrowserMetrics.gridIconSizes[0]

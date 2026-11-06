@@ -56,6 +56,7 @@ Singleton {
     property alias extractOnOpen: adapter.extractOnOpen
     property alias registerFileManager: adapter.registerFileManager
     property alias recentFiles: adapter.recentFiles
+    property alias alwaysShowTabs: adapter.alwaysShowTabs
     property alias sidebarCollapsed: adapter.sidebarCollapsed
     property alias defaultView: adapter.defaultView
     property alias defaultSort: adapter.defaultSort
@@ -147,6 +148,7 @@ Singleton {
             property bool extractOnOpen: true
             property bool registerFileManager: true
             property bool recentFiles: true
+            property bool alwaysShowTabs: true
             property bool sidebarCollapsed: false
             property string defaultView: "list"
             property string defaultSort: "name"

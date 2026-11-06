@@ -10,6 +10,7 @@ FocusScope {
     id: pane
 
     property bool active: true
+    property bool showPathBar: true
     property bool showActiveOutline: false
     property bool showHidden: false
     property string sortKey: SessionData.lastUsed("sortKey", SettingsData.defaultSort)
@@ -493,6 +494,7 @@ FocusScope {
         id: browser
 
         anchors.fill: parent
+        anchors.bottomMargin: statusFooter.visible ? statusFooter.height : 0
         visible: !pane.resultsActive && (!pane.virtualActive || pane.editingPath)
         focus: !pane.resultsActive && (!pane.virtualActive || pane.editingPath)
         showSidebar: false
@@ -531,7 +533,8 @@ FocusScope {
         folderJump: FolderHistory
         unlistedPaths: [TrashService.filesPath, RecentService.path]
         header: pane.filtering ? filterHeader : null
-        pathBarTrailing: paneStatus
+        showPathBar: pane.showPathBar
+        pathBarTrailing: pane.showPathBar ? paneStatus : null
         emptyText: {
             if (pane.virtualActive)
                 return "";
@@ -605,6 +608,26 @@ FocusScope {
             host: pane
             onRemoveRequested: pane.removeFromRecentRequested()
             onClearRequested: pane.clearRecentRequested()
+        }
+    }
+
+    Item {
+        id: statusFooter
+        objectName: "paneStatusFooter"
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: FileBrowserMetrics.pathPillHeight + FilesMetrics.paneBodyMargin
+        visible: !pane.showPathBar && browser.visible && (statusLoader.item?.implicitWidth ?? 0) > 0
+
+        Loader {
+            id: statusLoader
+
+            anchors.right: parent.right
+            anchors.rightMargin: FilesMetrics.paneBodyMarginH
+            anchors.top: parent.top
+            sourceComponent: paneStatus
         }
     }
 

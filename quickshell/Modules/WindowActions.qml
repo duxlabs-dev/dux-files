@@ -148,10 +148,10 @@ QtObject {
             activePane.forward();
             return;
         case "editPath":
-            activePane.editPath();
+            mainWindow.topbar.focusLocation();
             return;
         case "jump":
-            activePane.startJump();
+            mainWindow.topbar.focusRecent();
             return;
         case "search":
             mainWindow.topbar.focusSearch();
