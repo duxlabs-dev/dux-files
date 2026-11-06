@@ -5,6 +5,7 @@ import qs.Common
 import qs.Services
 import qs.DCommon.Widgets
 import qs.DCommon.FileBrowser
+import "../Common/PreviewView.js" as PreviewView
 
 DFlickable {
     id: viewer
@@ -39,7 +40,7 @@ DFlickable {
             viewer.binary = result.binary === true;
             viewer.truncated = result.truncated === true;
             viewer.fileSize = result.size ?? 0;
-            edit.text = result.text ?? "";
+            edit.text = viewer.markdown ? PreviewView.localMarkdown(result.text ?? "") : result.text ?? "";
             viewer.highlightText();
         });
     }
