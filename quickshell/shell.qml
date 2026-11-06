@@ -21,8 +21,7 @@ ShellRoot {
     readonly property bool enableHotReload: Quickshell.env("DFILES_ENABLE_HOTRELOAD") === "1" || Quickshell.env("DFILES_ENABLE_HOTRELOAD") === "true"
 
     readonly property bool dbusActivated: Quickshell.env("DFILES_DBUS_ACTIVATED") === "1"
-    readonly property bool keepRunning: Quickshell.env("DFILES_KEEP_RUNNING") === "1"
-    readonly property bool quitOnLastClose: SettingsData.closeBehavior === "quit" && !keepRunning
+    readonly property bool quitOnLastClose: SettingsData.closeBehavior === "quit" && !SettingsData.keepRunning
     readonly property bool idle: WindowService.count === 0 && ChooserService.count === 0 && FileOpsService.activeCount === 0
     property bool quitDeferred: false
 
@@ -187,7 +186,7 @@ ShellRoot {
 
     Timer {
         interval: 30000
-        running: root.idle && !root.keepRunning && (root.dbusActivated || root.quitDeferred)
+        running: root.idle && !SettingsData.keepRunning && (root.dbusActivated || root.quitDeferred)
         onTriggered: root.quitWhenIdle()
     }
 

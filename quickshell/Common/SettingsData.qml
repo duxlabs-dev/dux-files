@@ -45,6 +45,7 @@ Singleton {
     property alias floatingWindowForegroundTransparency: adapter.floatingWindowForegroundTransparency
     property alias blurEnabled: adapter.blurEnabled
     property alias language: adapter.language
+    readonly property bool keepRunning: Quickshell.env("DFILES_KEEP_RUNNING") === "1"
     property alias terminal: adapter.terminal
     property alias opener: adapter.opener
     property alias closeBehavior: adapter.closeBehavior
