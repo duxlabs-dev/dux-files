@@ -15,8 +15,10 @@ import (
 )
 
 const (
-	Topic         = "network"
-	coalesceDelay = 150 * time.Millisecond
+	Topic            = "network"
+	coalesceDelay    = 150 * time.Millisecond
+	busIface         = "org.freedesktop.DBus"
+	nameOwnerChanged = busIface + ".NameOwnerChanged"
 )
 
 type Publisher interface {
@@ -63,7 +65,7 @@ func NewService(bus Publisher, configDir string) *Service {
 func (s *Service) Start() error {
 	conn, err := dbus.ConnectSessionBus(dbus.WithIncomingInterceptor(s.intercept))
 	if err != nil {
-		s.setReason("the session bus is unavailable")
+		s.unavailable("the session bus is unavailable")
 		return err
 	}
 
@@ -85,7 +87,10 @@ func (s *Service) run(conn *dbus.Conn) {
 }
 
 func (s *Service) watch(conn *dbus.Conn) {
-	rules := [][]dbus.MatchOption{{dbus.WithMatchInterface(TrackerIface)}}
+	rules := [][]dbus.MatchOption{
+		{dbus.WithMatchInterface(TrackerIface)},
+		{dbus.WithMatchInterface(busIface), dbus.WithMatchMember("NameOwnerChanged"), dbus.WithMatchArg(0, VfsBus)},
+	}
 	for _, monitor := range portableMonitors {
 		rules = append(rules, []dbus.MatchOption{dbus.WithMatchInterface(MonitorIface), dbus.WithMatchArg(0, monitor)})
 	}
@@ -112,6 +117,11 @@ func (s *Service) loop(conn *dbus.Conn, signals chan *dbus.Signal) {
 			if !ok {
 				return
 			}
+			if daemonLost(sig) {
+				s.unavailable("gvfs is not running")
+				s.publishMounts()
+				continue
+			}
 			if !refreshes(sig.Name) {
 				continue
 			}
@@ -128,10 +138,18 @@ func (s *Service) loop(conn *dbus.Conn, signals chan *dbus.Signal) {
 
 func refreshes(signal string) bool {
 	switch signal {
-	case TrackerIface + ".Mounted", TrackerIface + ".Unmounted":
+	case TrackerIface + ".Mounted", TrackerIface + ".Unmounted", nameOwnerChanged:
 		return true
 	}
 	return strings.HasPrefix(signal, MonitorIface+".Volume")
+}
+
+func daemonLost(sig *dbus.Signal) bool {
+	if sig.Name != nameOwnerChanged || len(sig.Body) != 3 {
+		return false
+	}
+	owner, _ := sig.Body[2].(string)
+	return owner == ""
 }
 
 func (s *Service) reload(conn *dbus.Conn) {
@@ -142,14 +160,14 @@ func (s *Service) reload(conn *dbus.Conn) {
 
 	var mountables []Mountable
 	if err := tracker.Call(TrackerIface+".ListMountableInfo", 0).Store(&mountables); err != nil {
-		s.setReason(reasonFor(err))
+		s.unavailable(reasonFor(err))
 		log.Debugf("network: ListMountableInfo failed: %v", err)
 		return
 	}
 
 	var rawMounts []wireMount
 	if err := tracker.Call(TrackerIface+".ListMounts", 0).Store(&rawMounts); err != nil {
-		s.setReason(reasonFor(err))
+		s.unavailable(reasonFor(err))
 		log.Debugf("network: ListMounts failed: %v", err)
 		return
 	}
@@ -386,11 +404,13 @@ func (s *Service) releaseOp(op *mountOp, conn *dbus.Conn) {
 	op.release(conn)
 }
 
-func (s *Service) setReason(reason string) {
+func (s *Service) unavailable(reason string) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.available = false
 	s.reason = reason
+	s.mounts = nil
+	s.mountables = nil
 }
 
 func (s *Service) publishMounts() {
