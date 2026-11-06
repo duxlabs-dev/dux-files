@@ -610,6 +610,7 @@ FloatingWindow {
                         item.restoreState(stored ?? {
                             "path": primaryPane.path
                         });
+                        window.tabManager.leaveMissingFolder(item);
                     }
                 }
             }
