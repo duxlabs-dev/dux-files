@@ -97,6 +97,8 @@ Images in png, jpeg, gif, bmp, tiff and webp are decoded in-process. Anything el
 PDF previews use the optional `QtQuick.Pdf` QML module: `qt6-webengine` on Arch, `qt6-qtpdf` on Fedora, `qt6-pdf-imports` on openSUSE, `qml6-module-qtquick-pdf` on Debian and Ubuntu. The nix package wires it in by default, `dux-files.override { withPdfPreview = false; }` drops it.
 Without it, the preview shows an installation hint; image previews and the rest of the file manager still work.
 
+Quick Look (Space) plays video and audio through the optional `QtMultimedia` QML module (`qt6-multimedia` on Arch) and highlights code through the optional `org.kde.syntaxhighlighting` module (`syntax-highlighting` on Arch). Without the first it shows an installation hint, without the second code shows as plain text. The nix package wires both in by default; `withMediaPreview = false` and `withSyntaxHighlighting = false` drop them.
+
 ## Usage
 
 ```bash
