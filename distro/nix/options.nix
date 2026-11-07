@@ -1,23 +1,35 @@
 {
+  config,
   lib,
   dfilesPkgs,
-  pkgs,
   ...
 }:
 let
   inherit (lib) types;
 in
 {
+  imports = [
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "dux-files"
+      "quickshell"
+      "package"
+    ] "The Quickshell runtime is embedded in dfiles as dux-qt-base; set programs.dux-files.duxQtBase.package instead.")
+  ];
+
   options.programs.dux-files = {
     enable = lib.mkEnableOption "Dux Files";
 
-    package = lib.mkPackageOption dfilesPkgs "dux-files" {
-      extraDescription = "The Dux Files package to use (defaults to be built from source)";
+    package = lib.mkOption {
+      type = types.package;
+      default = dfilesPkgs.dux-files.override { duxQtBase = config.programs.dux-files.duxQtBase.package; };
+      defaultText = lib.literalExpression "dfilesPkgs.dux-files.override { duxQtBase = config.programs.dux-files.duxQtBase.package; }";
+      description = "The Dux Files package to use (defaults to be built from source against duxQtBase.package)";
     };
 
-    quickshell = {
-      package = lib.mkPackageOption pkgs "quickshell" {
-        extraDescription = "The Quickshell package used to launch the file manager UI";
+    duxQtBase = {
+      package = lib.mkPackageOption dfilesPkgs "dux-qt-base" {
+        extraDescription = "The Quickshell runtime library embedded in the dfiles package (pkgs.dux-qt-base when the overlay provides it, else the dux-qt-base flake input).";
       };
     };
 

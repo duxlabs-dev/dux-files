@@ -11,10 +11,7 @@ in
   imports = [ (import ./options.nix args) ];
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [
-      cfg.package
-      cfg.quickshell.package
-    ];
+    environment.systemPackages = [ cfg.package ];
 
     services.dbus.packages = [ cfg.package ];
 
@@ -26,7 +23,6 @@ in
     systemd.user.services.dfiles = lib.mkIf cfg.systemd.enable {
       wantedBy = [ cfg.systemd.target ];
       restartIfChanged = cfg.systemd.restartIfChanged;
-      path = [ cfg.quickshell.package ];
     };
   };
 }

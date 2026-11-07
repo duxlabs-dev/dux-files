@@ -1,6 +1,6 @@
 # Dux Files Flatpak
 
-The build provides `dfiles`, the Quickshell runtime and QtPdf (the qtwebengine source with everything but pdfium switched off, for pdf previews) and installs the desktop file, metainfo and icon as `dev.duxlabs.files`.
+The build provides `dfiles`, dux-qt-base (the Quickshell runtime, in `/app/lib/dfiles`) and QtPdf (the qtwebengine source with everything but pdfium switched off, for pdf previews) and installs the desktop file, metainfo and icon as `dev.duxlabs.files`.
 
 ## Posture
 

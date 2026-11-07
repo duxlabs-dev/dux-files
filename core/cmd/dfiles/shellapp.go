@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/qtbaseembed"
 	"github.com/duxlabs-dev/dux-files/core/internal/shellembed"
 	"github.com/duxlabs-dev/dux-go/shellapp"
 )
@@ -12,6 +13,7 @@ var shellApp = shellapp.New(shellapp.Config{
 	QSAppID:  "dev.duxlabs.files",
 	Version:  Version,
 	Embedded: embeddedShell{},
+	QtBase:   qtbaseembed.Extract,
 	Boot:     bootBackend,
 	ExtraEnv: uiEnv,
 })
