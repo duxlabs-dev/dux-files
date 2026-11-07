@@ -7,10 +7,20 @@
       url = "github:duxlabs-dev/dux-qml-common";
       flake = false;
     };
+    dux-qt-base = {
+      url = "github:duxlabs-dev/dux-qt-base";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { self, nixpkgs, dank-qml-common, ... }:
+    {
+      self,
+      nixpkgs,
+      dank-qml-common,
+      dux-qt-base,
+      ...
+    }:
     let
       goModVersion =
         let
@@ -38,6 +48,17 @@
           system: fn system nixpkgs.legacyPackages.${system}
         );
 
+      duxQtBaseFor =
+        pkgs: pkgs.dux-qt-base or dux-qt-base.packages.${pkgs.stdenv.hostPlatform.system}.dux-qt-base;
+
+      mkQmlImportPath =
+        pkgs: qmlPkgs:
+        pkgs.lib.concatStringsSep ":" (map (o: "${o}/${pkgs.qt6.qtbase.qtQmlPrefix}") qmlPkgs);
+
+      mkQtPluginPath =
+        pkgs: qtPkgs:
+        pkgs.lib.concatStringsSep ":" (map (o: "${o}/${pkgs.qt6.qtbase.qtPluginPrefix}") qtPkgs);
+
       mkModuleWithDfilesPkgs =
         modulePath:
         args@{ pkgs, ... }:
@@ -52,6 +73,7 @@
         pkgs.lib.makeOverridable (
           {
             withPdfPreview ? true,
+            duxQtBase ? duxQtBaseFor pkgs,
           }:
           let
             version = "2.1.0";
@@ -60,18 +82,26 @@
               ffmpegthumbnailer
               poppler-utils
             ];
-            pdfQmlImportPath = "${pkgs.qt6.qtwebengine}/${pkgs.qt6.qtbase.qtQmlPrefix}";
+            qtPackages =
+              (with pkgs.kdePackages; [
+                qtdeclarative
+                qtsvg
+              ])
+              ++ pkgs.lib.optional withPdfPreview pkgs.qt6.qtwebengine;
           in
           (pkgs.buildGoModule.override { go = goForPkgs pkgs; }) {
             inherit version;
             pname = "dux-files";
             src = ./.;
             modRoot = "core";
-            vendorHash = "sha256-IEWUzEoOaCpWKIRDJd2JaWQl0J+doeIvrunnbofYZqA=";
+            vendorHash = "sha256-tJJwqqkPbOG/RDDIbgBW2n85TXmwbkrU9wspVzPNhs4=";
 
             subPackages = [ "cmd/dfiles" ];
 
-            tags = [ "withshell" ];
+            tags = [
+              "withshell"
+              "withqtbase"
+            ];
 
             # Mirror `make -C core sync-shell`. The flake src excludes submodule
             # content, so the DCommon symlink is replaced with the pinned input.
@@ -86,6 +116,13 @@
                 core/internal/shellembed/dist/.claude
               rm -f core/internal/shellembed/dist/.qmlls.ini \
                 core/internal/shellembed/dist/translations/extract_translations.py
+            '';
+
+            # embed the runtime library the same way make qtbase does; buildGoModule copies preBuild
+            # into the vendor derivation, which would make the vendorHash build depend on dux-qt-base
+            preConfigure = ''
+              install -Dm644 ${duxQtBase}/lib/libdux-qt-base.so.0 core/internal/qtbaseembed/lib/libdux-qt-base.so.0
+              sha256sum core/internal/qtbaseembed/lib/libdux-qt-base.so.0 | cut -c1-16 > core/internal/qtbaseembed/lib/.dankrev
             '';
 
             ldflags = [
@@ -136,7 +173,9 @@
                 --zsh <($out/bin/dfiles completion zsh)
 
               wrapProgram $out/bin/dfiles \
-                --prefix PATH : ${pkgs.lib.makeBinPath thumbnailTools} ${pkgs.lib.optionalString withPdfPreview "--prefix NIXPKGS_QT6_QML_IMPORT_PATH : ${pdfQmlImportPath}"}
+                --prefix PATH : ${pkgs.lib.makeBinPath thumbnailTools} \
+                --prefix NIXPKGS_QT6_QML_IMPORT_PATH : "${mkQmlImportPath pkgs qtPackages}" \
+                --prefix QT_PLUGIN_PATH : "${mkQtPluginPath pkgs qtPackages}"
             '';
 
             meta = {
@@ -151,6 +190,7 @@
 
       buildDfilesPkgs = pkgs: {
         dux-files = mkDfiles pkgs;
+        dux-qt-base = duxQtBaseFor pkgs;
       };
     in
     {

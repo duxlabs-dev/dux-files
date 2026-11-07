@@ -13,10 +13,10 @@
   type: archive
   url: https://proxy.golang.org/github.com/cavaliergopher/cpio/@v/v1.0.1.zip
 - dest: core/vendor/github.com/duxlabs-dev/dux-go
-  sha256: 1678e5421a278de065470ea644a2e1dbe0dad168b06bcbd07fcd7dfe8b340b5f
+  sha256: da039fc958f319cbc4bb74b271af0bf028b620cfb258121e66545dd2037d24de
   strip-components: 3
   type: archive
-  url: https://proxy.golang.org/github.com/duxlabs-dev/dux-go/@v/v1.6.3-0.20261031181736-024402301dff.zip
+  url: https://proxy.golang.org/github.com/duxlabs-dev/dux-go/@v/v1.6.3-0.20261107145002-3c9896096bc7.zip
 - dest: core/vendor/github.com/fsnotify/fsnotify
   sha256: b2c6a334e0d518da2e046066bdd9da34cb26bad6df9f17701802d3de522ab016
   strip-components: 3
@@ -142,6 +142,11 @@
   strip-components: 3
   type: archive
   url: https://proxy.golang.org/github.com/cyphar/filepath-securejoin/@v/v0.7.0.zip
+- dest: core/vendor/github.com/ebitengine/purego
+  sha256: 794b433246c662b29a0b48f2f07b1814bfe15ca61744de88f05d18d7795f77c2
+  strip-components: 3
+  type: archive
+  url: https://proxy.golang.org/github.com/ebitengine/purego/@v/v0.11.3.zip
 - dest: core/vendor/github.com/go-git/gcfg
   sha256: 4cd67689e108cfd654591c4a7f693ac5110634a73dabc12686fb07854556c480
   strip-components: 3
