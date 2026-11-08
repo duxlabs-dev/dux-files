@@ -11,6 +11,7 @@ ShellRoot {
     readonly property var log: Log.scoped("fixture")
     property int failures: 0
     property int watches: 0
+    property int stats: 0
     property var previewed: []
 
     function check(label, actual, expected) {
@@ -112,6 +113,16 @@ ShellRoot {
             callback({});
         }
 
+        function stat(path, callback) {
+            fixture.stats++;
+            const slash = path.lastIndexOf("/");
+            callback({
+                "entry": Object.assign(fixture.folder(path.slice(0, slash), path.slice(slash + 1)), {
+                    "iconName": path === "/home/me/docs" ? "folder-documents" : "folder"
+                })
+            });
+        }
+
         function count(paths, includeHidden, callback) {
             callback({
                 "counts": {}
@@ -142,6 +153,12 @@ ShellRoot {
             showSidebar: false
             showNavigation: false
         }
+    }
+
+    readonly property FilePreviewDrawer drawer: FilePreviewDrawer {
+        parent: browser
+        body: browser.body
+        available: 1200
     }
 
     readonly property FilePreviewPane preview: FilePreviewPane {
@@ -228,6 +245,23 @@ ShellRoot {
         browser.columnWidths = ({});
         check("default widths all fit", browser.body.fittingColumns, ["size", "modified", "type"]);
         check("the free space is what a resize may take", browser.body.clampColumnWidth("size", 5000), browser.body.fittingWidths.size + browser.body.fitting.slack);
+
+        const shownPaths = () => drawer.resolved.map(item => [item.path, item.iconName]);
+        browser.navigate("/home/me/docs");
+        browser.selection.clear();
+        drawer.open = true;
+        check("with nothing selected the drawer shows the current folder's details and icon", shownPaths(), [["/home/me/docs", "folder-documents"]]);
+        const statted = fixture.stats;
+        drawer.resolve();
+        check("an unchanged folder is not looked up again", fixture.stats - statted, 0);
+        browser.selection.select("/home/me/docs/readme.txt");
+        drawer.resolve();
+        check("a selection replaces the folder", shownPaths(), [["/home/me/docs/readme.txt", "text-plain"]]);
+        browser.selection.clear();
+        browser.navigate("/home/me/docs/sub");
+        drawer.resolve();
+        check("navigating shows the new folder", shownPaths(), [["/home/me/docs/sub", "folder"]]);
+        drawer.open = false;
 
         if (failures === 0)
             log.info("FIXTURE PASS");
