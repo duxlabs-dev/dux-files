@@ -10,7 +10,7 @@ import "../DCommon/FileBrowser/NameFilter.js" as NameFilter
 Rectangle {
     id: view
 
-    required property FilesPane host
+    required property var host
     required property var model
     property string title: ""
     property string summary: {
