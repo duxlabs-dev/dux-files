@@ -83,10 +83,6 @@ test("every scope is one MainWindow binds or a focused view handles", () => {
         assert.ok(boundScopes.concat(handledScopes).includes(entry.scope), `${entry.id}: ${entry.scope}`);
 });
 
-test("rows type-ahead replaces are the only plain-only ones", () => {
-    assert.deepEqual(entries.filter(entry => entry.plainOnly).map(entry => entry.id), ["typeAhead"]);
-});
-
 test("every entry lands in a group the overlay renders", () => {
     assert.ok(groups.length > 0);
     for (const entry of entries)

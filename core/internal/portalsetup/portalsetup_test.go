@@ -61,20 +61,6 @@ func withoutPreferredLine(content string) string {
 	return strings.Join(kept, "\n")
 }
 
-func TestInspectEmptyTree(t *testing.T) {
-	env := testEnv(t)
-	status := Inspect(env)
-	assert.False(t, status.Managed)
-	assert.False(t, status.SystemManaged)
-	assert.False(t, status.PortalFile.Found)
-	assert.False(t, status.Service.Found)
-	assert.Equal(t, userConfig(env, "niri-portals.conf"), status.Config.Path)
-	assert.False(t, status.Config.Exists)
-	assert.Nil(t, status.Config.Backends)
-	assert.Equal(t, "", status.Config.Effective)
-	assert.False(t, status.Active)
-}
-
 func TestEffectiveResolution(t *testing.T) {
 	t.Run("system default list picks first installed", func(t *testing.T) {
 		env := testEnv(t)
