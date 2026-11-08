@@ -54,7 +54,7 @@
             withPdfPreview ? true,
           }:
           let
-            version = "2.1.1";
+            version = "2.1.2";
             thumbnailTools = with pkgs; [
               bubblewrap
               ffmpegthumbnailer
