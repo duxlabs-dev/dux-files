@@ -79,6 +79,8 @@ FloatingWindow {
     property string viewMode: SettingsData.defaultView
     property bool previewOpen: true
     property bool sidebarShown: true
+    property real openWidth: FileBrowserMetrics.pickerWidth
+    property real openHeight: FileBrowserMetrics.pickerHeight
     property string errorText: ""
     property string overwriteTarget: ""
     property var pendingTargets: []
@@ -91,8 +93,8 @@ FloatingWindow {
     readonly property bool dialogOpen: overwriteDialog.visible || connectDialog.visible || unlockDialog.visible || conflictDialog.visible || errorDialog.visible || credentialDialog.visible || paneActions.trashDialogOpen
 
     title: (request?.title ?? "") !== "" ? request.title : defaultTitle
-    implicitWidth: Math.min(FileBrowserMetrics.pickerWidth, (screen?.width ?? FileBrowserMetrics.pickerWidth) * FileBrowserMetrics.pickerScreenFraction)
-    implicitHeight: Math.min(FileBrowserMetrics.pickerHeight, (screen?.height ?? FileBrowserMetrics.pickerHeight) * FileBrowserMetrics.pickerScreenFraction)
+    implicitWidth: Math.min(openWidth, (screen?.width ?? openWidth) * FileBrowserMetrics.pickerScreenFraction)
+    implicitHeight: Math.min(openHeight, (screen?.height ?? openHeight) * FileBrowserMetrics.pickerScreenFraction)
     minimumSize: Qt.size(FileBrowserMetrics.pickerMinWidth, FileBrowserMetrics.pickerMinHeight)
     color: Theme.windowSurface
     surfaceFormat.opaque: false
@@ -121,6 +123,10 @@ FloatingWindow {
         showHidden = saved.showHidden ?? SettingsData.showHidden;
         sidebarShown = saved.showSidebar;
         previewOpen = saved.showPreview;
+        if (saved.width > 0 && saved.height > 0) {
+            openWidth = saved.width;
+            openHeight = saved.height;
+        }
         restoring = false;
         filterIndex = request.currentFilter >= 0 ? request.currentFilter : (filters.length > 0 ? 0 : -1);
         const values = ({});
@@ -224,10 +230,14 @@ FloatingWindow {
             return;
         settled = true;
         ChooserService.answer(requestId, answer);
+        const state = {};
         if (pane.path !== "")
-            persist({
-                "lastPath": pane.path
-            });
+            state.lastPath = pane.path;
+        if (!maximized) {
+            state.width = Math.round(width);
+            state.height = Math.round(height);
+        }
+        persist(state);
     }
 
     function cancel() {
@@ -434,10 +444,9 @@ FloatingWindow {
             id: sidebarSlot
 
             anchors.top: header.bottom
-            anchors.bottom: footer.top
-            anchors.bottomMargin: FilesMetrics.contentSpacing
+            anchors.bottom: parent.bottom
             anchors.left: parent.left
-            width: window.sidebarDocked ? Math.max(FilesMetrics.sidebarMinWidth, Math.min(CacheData.sidebarWidth, surface.width - Math.max(FilesMetrics.windowMinWidth, topbar.minimumWidth + FilesMetrics.contentMarginH))) : 0
+            width: window.sidebarDocked ? FilesMetrics.sidebarMinWidth : 0
             clip: true
 
             Behavior on width {
@@ -575,7 +584,7 @@ FloatingWindow {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.leftMargin: FilesMetrics.contentMarginH
+            anchors.leftMargin: content.anchors.leftMargin
             anchors.rightMargin: FilesMetrics.contentMarginH
             anchors.bottomMargin: FilesMetrics.contentMarginV
             spacing: Theme.spacingS

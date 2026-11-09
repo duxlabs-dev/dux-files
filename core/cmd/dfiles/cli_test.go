@@ -1,18 +1,31 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
+	"fmt"
+	"net"
 	"os"
 	"path/filepath"
+	"slices"
 	"testing"
 
 	"github.com/duxlabs-dev/dux-files/core/internal/devices"
+	"github.com/duxlabs-dev/dux-files/core/internal/ipc"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/duxlabs-dev/dux-go/trash"
 )
+
+// A launch re-execs os.Args[0], which is this test binary; without the bail it reruns every test recursively.
+func TestMain(m *testing.M) {
+	if slices.Contains(os.Args, "--daemon-child") {
+		os.Exit(1)
+	}
+	os.Exit(m.Run())
+}
 
 func isolate(t *testing.T) string {
 	t.Helper()
@@ -27,6 +40,7 @@ func isolate(t *testing.T) string {
 	t.Setenv("HOME", filepath.Join(root, "home"))
 	t.Setenv("DFILES_SOCKET", "")
 	t.Setenv("FLATPAK_ID", "")
+	t.Setenv("DBUS_SESSION_BUS_ADDRESS", "unix:path="+filepath.Join(root, "runtime", "no-bus"))
 	return root
 }
 
@@ -179,4 +193,42 @@ func TestBareLocationsGoToTheRootCommand(t *testing.T) {
 	require.NoError(t, err)
 	assert.Same(t, rootCmd, cmd)
 	assert.Equal(t, []string{"/tmp/shots/", "smb://nas/"}, args)
+}
+
+func TestNewWindowFlagWithoutLocationsOpensAWindow(t *testing.T) {
+	root := isolate(t)
+	socket := filepath.Join(root, "runtime", "d.sock")
+	listener, err := net.Listen("unix", socket)
+	require.NoError(t, err)
+	t.Cleanup(func() { listener.Close() })
+	t.Setenv("DFILES_SOCKET", socket)
+	require.NoError(t, os.WriteFile(filepath.Join(root, "config", "shell.qml"), nil, 0o644))
+	t.Setenv("DFILES_SHELL_DIR", filepath.Join(root, "config"))
+	t.Cleanup(func() { openNewWindow = false })
+
+	received := make(chan ipc.Request, 1)
+	go func() {
+		conn, err := listener.Accept()
+		if err != nil {
+			return
+		}
+		defer conn.Close()
+		fmt.Fprintln(conn, `{"capabilities":[]}`)
+		line, err := bufio.NewReader(conn).ReadBytes('\n')
+		if err != nil {
+			return
+		}
+		var req ipc.Request
+		if json.Unmarshal(line, &req) != nil {
+			return
+		}
+		received <- req
+		fmt.Fprintf(conn, `{"id":%d,"result":{"ok":true}}`+"\n", req.ID)
+	}()
+
+	rootCmd.SetArgs([]string{"-n"})
+	require.NoError(t, rootCmd.Execute())
+	req := <-received
+	assert.Equal(t, "ui.open", req.Method)
+	assert.Equal(t, map[string]any{"newWindow": true}, req.Params)
 }

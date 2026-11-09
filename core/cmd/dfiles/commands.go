@@ -21,10 +21,13 @@ Without arguments it shows the file manager window. With locations it behaves li
 	},
 	PreRunE: shellApp.ResolveConfig,
 	RunE: func(_ *cobra.Command, args []string) error {
-		if len(args) == 0 {
-			return shellApp.CallOrLaunch("ui.show", nil)
+		switch {
+		case len(args) > 0:
+			return openLocations(args)
+		case openNewWindow:
+			return openEmptyWindow()
 		}
-		return openLocations(args)
+		return shellApp.CallOrLaunch("ui.show", nil)
 	},
 }
 
