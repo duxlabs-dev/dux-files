@@ -192,6 +192,7 @@ ShellRoot {
         check("the chain grows by one", columns().ancestors, ["/home/me", "/home/me/docs"]);
         check("the folder on screen is not listed again", fixture.watches - listedBefore, 0);
         check("the active column keeps the lookahead's rows", browser.body.directory.count, 0);
+        check("entering an empty folder selects nothing", browser.selection.paths, []);
 
         browser.body.leaveColumn();
         check("leaving goes to the parent", browser.path, "/home/me/docs");
@@ -203,6 +204,10 @@ ShellRoot {
         check("revealing an ancestor item moves the active column", browser.path, "/home/me");
         check("and selects the item there", browser.selection.paths, ["/home/me/notes.txt"]);
         check("the chain shrinks", columns().ancestors, []);
+
+        browser.selection.select("/home/me/docs");
+        browser.body.enterCursor();
+        check("entering a folder puts the cursor on its first entry", [browser.path, browser.selection.cursorPath, browser.selection.paths], ["/home/me/docs", "/home/me/docs/sub", ["/home/me/docs/sub"]]);
 
         browser.reveal("/home/me/gone.txt");
         check("a reveal that misses drops the old selection", browser.selection.paths, []);
