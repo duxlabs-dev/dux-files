@@ -298,6 +298,19 @@ func TestTruncateNameKeepsRunesWhole(t *testing.T) {
 	require.Less(t, len(filepath.Base((&runner{job: &job{id: "j1"}}).tempPath(long))), 255)
 }
 
+func TestTempNameNeverEndsInSpaceOrDot(t *testing.T) {
+	r := &runner{job: &job{id: "j1"}}
+	for _, name := range []string{
+		"A" + strings.Repeat(" ", 119) + ".test",
+		"B" + strings.Repeat(".", 100) + "txt",
+		"C" + strings.Repeat(" .", 60) + "md",
+		strings.Repeat(" ", 100) + "D",
+	} {
+		base := filepath.Base(r.tempPath(filepath.Join("/media/key", name)))
+		require.False(t, strings.HasSuffix(base, " ") || strings.HasSuffix(base, "."), "%q", base)
+	}
+}
+
 func TestTransferOntoItselfKeepsTheSource(t *testing.T) {
 	root := t.TempDir()
 	testfs.Write(t, filepath.Join(root, "dir", "inner.txt"), "keep me")
