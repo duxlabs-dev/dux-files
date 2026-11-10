@@ -12,6 +12,7 @@ in
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ cfg.package ];
+    environment.pathsToLink = [ "/share/polkit-1" ];
 
     services.dbus.packages = [ cfg.package ];
 
