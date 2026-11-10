@@ -29,7 +29,7 @@ in
 
     duxQtBase = {
       package = lib.mkPackageOption dfilesPkgs "dux-qt-base" {
-        extraDescription = "The Quickshell runtime library embedded in the dfiles package (pkgs.dux-qt-base when the overlay provides it, else the dux-qt-base flake input).";
+        extraDescription = "The Quickshell runtime library embedded in the dfiles package (defaults to the pinned dux-qt-base flake input, built against this system's nixpkgs).";
       };
     };
 

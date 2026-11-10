@@ -48,8 +48,7 @@
           system: fn system nixpkgs.legacyPackages.${system}
         );
 
-      duxQtBaseFor =
-        pkgs: pkgs.dux-qt-base or dux-qt-base.packages.${pkgs.stdenv.hostPlatform.system}.dux-qt-base;
+      duxQtBaseFor = pkgs: (dux-qt-base.overlays.default pkgs pkgs).dux-qt-base;
 
       mkQmlImportPath =
         pkgs: qmlPkgs:
@@ -94,7 +93,7 @@
             pname = "dux-files";
             src = ./.;
             modRoot = "core";
-            vendorHash = "sha256-F3xrGbgMTlz8epWVu5n1wPwoJ+NF9QENO18uxMkiI88=";
+            vendorHash = "sha256-ol3OOGb+35SWVeVJ/ny0U8Vp/Uis9KEVhqIFbQt+dZI=";
 
             subPackages = [ "cmd/dfiles" ];
 
