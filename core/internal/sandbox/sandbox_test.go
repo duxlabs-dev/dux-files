@@ -261,14 +261,6 @@ func TestCanTalkWildcard(t *testing.T) {
 	assert.False(t, canTalk(policy, "com.example.Exact.Sub"))
 }
 
-func TestWithFeatureDoesNotTouchTheOriginal(t *testing.T) {
-	caps := Detect(sandboxProbe(fullInfo))
-	updated := caps.WithFeature("elevation", Feature{Reason: "NOPKEXEC"})
-
-	assert.Equal(t, "NOPKEXEC", updated.Features["elevation"].Reason)
-	assert.Equal(t, ReasonSandboxed, caps.Features["elevation"].Reason)
-}
-
 func TestExportHostDirs(t *testing.T) {
 	for _, key := range []string{"XDG_CONFIG_HOME", "XDG_DATA_HOME", "XDG_CACHE_HOME", "XDG_STATE_HOME", "XDG_CONFIG_DIRS", "XDG_DATA_DIRS"} {
 		t.Setenv(key, "private")

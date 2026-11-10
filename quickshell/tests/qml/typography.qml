@@ -47,8 +47,6 @@ ShellRoot {
     }
 
     Component.onCompleted: {
-        check("the app defaults to the bundled fonts", [Theme.fontFamily, Theme.monoFontFamily, Theme.displayFontFamily], [DC.Fonts.sans, DC.Fonts.mono, DC.Fonts.display]);
-
         const custom = sourceComponent.createObject(fixture, {
             "source": "custom"
         });

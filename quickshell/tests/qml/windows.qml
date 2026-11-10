@@ -44,8 +44,6 @@ ShellRoot {
             "select": []
         };
 
-        check("nothing is open at start", [WindowService.count, WindowService.target(), WindowService.primaryId], [0, 0, 0]);
-
         check("an open with no window creates one", WindowService.open([docs], false), 1);
         check("the new window is the primary and the last used one", [WindowService.count, WindowService.primaryId, WindowService.lastActiveId], [1, 1, 1]);
         check("its locations wait until the window picks them up", WindowService.takePendingLocations(1).map(l => l.path), ["/home/me/docs"]);

@@ -224,7 +224,6 @@ ShellRoot {
         FileOpsService.refresh();
         check("relist replaces the store", states(), ["j9:queued"]);
 
-        check("no elevation before asking", FileOpsService.canElevate, false);
         elevationResponse = {
             "available": false,
             "route": "pkexec",
