@@ -53,6 +53,7 @@ FloatingWindow {
     readonly property bool textEditing: surface.focusItem instanceof TextInput || surface.focusItem instanceof TextEdit
     readonly property bool sidebarFocused: sidebarHost.focused
     readonly property bool tabRowFocused: ItemTree.isInside(surface.focusItem, tabRow)
+    readonly property bool bodyFocused: ItemTree.isInside(surface.focusItem, activePane.body)
     readonly property bool shortcutsEnabled: !dialogOpen && !textEditing && !(preview?.open ?? false)
     readonly property bool lastActive: WindowService.lastActiveId === windowId
     readonly property var previewTarget: {
@@ -60,6 +61,11 @@ FloatingWindow {
         return entries.length === 1 ? entries[0] : null;
     }
     readonly property bool previewExpandable: preview.supports(previewTarget)
+
+    onPreviewTargetChanged: {
+        if (preview.open && previewTarget)
+            preview.present(previewTarget);
+    }
 
     Component.onDestruction: FileOpsService.forget(opScope)
 
@@ -256,6 +262,17 @@ FloatingWindow {
 
     function selectedEntries() {
         return activePane.selectedEntries;
+    }
+
+    function allowsShortcut(id) {
+        switch (id) {
+        case "contextMenu":
+            return !(sidebarFocused || tabRowFocused);
+        case "previewExpand":
+            return bodyFocused;
+        default:
+            return true;
+        }
     }
 
     function firstSelected() {
@@ -665,6 +682,7 @@ FloatingWindow {
 
             anchors.fill: parent
             onClosed: window.activePane.focusBody()
+            onStepRequested: event => window.activePane.body.handleKey(event)
         }
     }
 
@@ -674,7 +692,7 @@ FloatingWindow {
         Shortcut {
             required property var modelData
 
-            enabled: window.shortcutsEnabled && (modelData.id !== "contextMenu" || !(window.sidebarFocused || window.tabRowFocused))
+            enabled: window.shortcutsEnabled && window.allowsShortcut(modelData.id)
             sequences: modelData.keys
             onActivated: window.actions.runAction(modelData.id)
         }

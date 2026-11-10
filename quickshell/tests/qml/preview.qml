@@ -34,11 +34,31 @@ ShellRoot {
         Qt.callLater(Qt.quit);
     }
 
-    Item {
-        id: host
+    property var nextPreview: ({})
+    property int leakedKeys: 0
+    property var lastPreview: null
 
-        width: 800
-        height: 600
+    readonly property QtObject fakeBackend: QtObject {
+        function preview(path, maxBytes, callback) {
+            fixture.lastPreview = {
+                "path": path,
+                "maxBytes": maxBytes
+            };
+            callback(fixture.nextPreview);
+        }
+    }
+
+    FloatingWindow {
+        implicitWidth: 800
+        implicitHeight: 600
+        visible: true
+
+        Item {
+            id: host
+
+            anchors.fill: parent
+            Keys.onPressed: fixture.leakedKeys++
+        }
     }
 
     Component {
@@ -60,12 +80,8 @@ ShellRoot {
         check("the overlay starts closed", view.open, false);
         check("pdf availability is unknown before opening a pdf", [PdfService.available, PdfService.unavailable], [false, false]);
 
-        view.present({
-            "path": "/nonexistent/photo.png",
-            "name": "photo.png",
-            "mime": "text/plain"
-        });
-        check("an unsupported format does not open it", view.open, false);
+        view.present(null);
+        check("nothing selected does not open it", view.open, false);
 
         view.present({
             "path": "/nonexistent/photo.png",
@@ -104,6 +120,61 @@ ShellRoot {
         view.reset();
         check("resetting drops zoom, angle and pan", [view.zoom, view.angle, view.panX, view.panY], [1, 0, 0, 0]);
 
+        view.backend = fakeBackend;
+        fixture.nextPreview = {
+            "text": "package main\n",
+            "binary": false,
+            "truncated": true,
+            "size": 1048576
+        };
+        view.present({
+            "path": "/nonexistent/main.go",
+            "name": "main.go",
+            "mime": "text/x-go"
+        });
+        check("a code file shows its text", [view.kind, view.shownKind, view.textView.failed], ["text", "text", false]);
+        check("the code file asks for the size cap", fixture.lastPreview, {
+            "path": "/nonexistent/main.go",
+            "maxBytes": 262144
+        });
+        check("a cut text file says so", view.textView.note !== "", true);
+
+        fixture.nextPreview = {
+            "text": "",
+            "binary": true,
+            "size": 10
+        };
+        view.present({
+            "path": "/nonexistent/data.json",
+            "name": "data.json",
+            "extension": "json",
+            "size": 10,
+            "mtimeMs": 0,
+            "mime": "application/json"
+        });
+        check("binary content falls back to the file details", [view.kind, view.shownKind], ["text", "generic"]);
+
+        fixture.nextPreview = {
+            "error": "permission denied"
+        };
+        view.present({
+            "path": "/nonexistent/notes.md",
+            "name": "notes.md",
+            "mime": "text/markdown"
+        });
+        check("an unreadable text file reports it", [view.kind, view.errorMessage], ["markdown", "This file could not be opened"]);
+
+        view.present({
+            "path": "/nonexistent/archive.zip",
+            "name": "archive.zip",
+            "extension": "zip",
+            "size": 2048,
+            "mtimeMs": 0,
+            "mime": "application/zip"
+        });
+        check("other files open on their details", [view.open, view.kind, view.errorMessage], [true, "generic", ""]);
+        view.dismiss();
+
         fixture.ready = true;
     }
 
@@ -136,6 +207,11 @@ ShellRoot {
                 verify(view.pageView !== null);
                 tryCompare(view.pageView, "ready", true);
                 compare(view.errorMessage, "");
+                compare(view.pageView.pageCount, 1);
+                view.pageBy(1);
+                view.pageView.goToPage(5);
+                compare(view.pageView.currentPage, 0);
+                checkPageField(view);
                 view.zoom = 2;
                 compare(view.pageView.zoom, 2);
                 view.angle = 90;
@@ -170,6 +246,87 @@ ShellRoot {
             tryCompare(image, "status", Image.Ready);
             compare(view.errorMessage, "");
             fixture.pdfChecked = true;
+        }
+
+        function test_space_closes_after_a_control_took_focus() {
+            const view = fixture.view;
+            view.present({
+                "path": FilePaths.fromUrl(Qt.resolvedUrl("preview.png")),
+                "name": "preview.png",
+                "mime": "image/png"
+            });
+            const zoomIn = fixture.findItem(view, item => item.iconName === "zoom_in");
+            zoomIn.forceActiveFocus();
+            compare(zoomIn.activeFocus, true);
+            keyClick(Qt.Key_Space);
+            fixture.check("space closes the preview even when a control has focus", [view.open, view.zoom], [false, 1]);
+        }
+
+        function test_sound_survives_other_files() {
+            const view = fixture.view;
+            const clip = {
+                "path": "/nonexistent/clip.mp4",
+                "name": "clip.mp4",
+                "mime": "video/mp4"
+            };
+            view.present(clip);
+            if (view.mediaComponent.status !== Component.Ready) {
+                view.dismiss();
+                return;
+            }
+            view.sound.volume = 0.3;
+            view.sound.muted = true;
+            view.present({
+                "path": FilePaths.fromUrl(Qt.resolvedUrl("preview.png")),
+                "name": "preview.png",
+                "mime": "image/png"
+            });
+            fixture.check("a picture between videos unloads the player", view.mediaView, null);
+            view.present(clip);
+            const volume = fixture.findItem(view.mediaView, item => item.maximum === 100 && item.sliderValueChanged !== undefined);
+            fixture.check("the next video keeps the volume and mute", [view.mediaView.sound.volume, view.mediaView.sound.muted, volume.value], [0.3, true, 30]);
+            view.dismiss();
+        }
+
+        function checkPageField(view) {
+            view.present({
+                "path": FilePaths.fromUrl(Qt.resolvedUrl("pages.pdf")),
+                "name": "pages.pdf",
+                "mime": "application/pdf"
+            });
+            tryCompare(view.pageView, "ready", true);
+            compare(view.pageView.pageCount, 3);
+            const field = fixture.findItem(view, item => item.validator !== undefined && item.inputFocused !== undefined);
+            verify(field !== null);
+            const jump = (key, page) => {
+                field.forceActiveFocus();
+                tryCompare(field, "inputFocused", true);
+                wait(0);
+                keyClick(key);
+                tryCompare(view.pageView, "currentPage", page);
+                keyClick(Qt.Key_Return);
+                compare(field.inputFocused, false);
+                compare(field.text, String(page + 1));
+            };
+            fixture.leakedKeys = 0;
+            jump(Qt.Key_3, 2);
+            jump(Qt.Key_1, 0);
+            jump(Qt.Key_9, 2);
+            field.forceActiveFocus();
+            tryCompare(field, "inputFocused", true);
+            wait(0);
+            keyClick(Qt.Key_1);
+            tryCompare(view.pageView, "currentPage", 0);
+            keyClick(Qt.Key_Escape);
+            tryCompare(view.pageView, "currentPage", 2);
+            compare([view.open, field.inputFocused, field.text], [true, false, "3"]);
+            fixture.check("enter in the page field stays inside the preview", fixture.leakedKeys, 0);
+            view.present({
+                "path": FilePaths.fromUrl(Qt.resolvedUrl("preview.pdf")),
+                "name": "preview.pdf",
+                "mime": "application/pdf"
+            });
+            tryCompare(view.pageView, "ready", true);
         }
 
         function cleanupTestCase() {

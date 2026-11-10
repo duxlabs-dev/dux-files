@@ -7,6 +7,7 @@ import qs.Services
 import qs.DCommon.Widgets
 import qs.DCommon.FileBrowser
 import "../Common/PreviewView.js" as PreviewView
+import "../DCommon/FileBrowser/FilePreview.js" as FilePreview
 
 FocusScope {
     id: overlay
@@ -17,22 +18,38 @@ FocusScope {
     property real angle: 0
     property real panX: 0
     property real panY: 0
+    property var backend: DirectoryService
+    property Component mediaComponent: null
+    readonly property QtObject sound: QtObject {
+        property real volume: 1
+        property bool muted: false
+    }
+    property Component highlighterComponent: null
 
     readonly property string path: entry?.path ?? ""
-    readonly property string kind: open && entry ? PreviewView.kindFor(entry.mime) : ""
+    readonly property string mime: entry?.mime ?? ""
+    readonly property string kind: open && entry ? PreviewView.kindFor(mime, FilePreview.isText(mime)) : ""
+    readonly property string shownKind: PreviewView.readsText(kind) && reader.binary ? "generic" : kind
+    readonly property bool transforms: PreviewView.transforms(kind)
+    readonly property bool showsDetails: errorMessage === "" && (shownKind === "generic" || (kind === "audio" && mediaView !== null))
     readonly property bool turned: PreviewView.normalizeAngle(angle) % 180 !== 0
     readonly property real devicePixelRatio: Window.window?.devicePixelRatio ?? Screen.devicePixelRatio
     readonly property int rasterBucket: Math.min(4, Math.max(1, Math.ceil(zoom)))
     readonly property alias pageView: pages.item
+    readonly property alias mediaView: media.item
+    readonly property alias textView: reader
     readonly property string errorMessage: {
         if (kind === "pdf" && PdfService.unavailable)
             return I18n.tr("PDF preview is not available. Install Qt PDF support to view this file.", "large preview warning when the optional Qt PDF module is missing");
-        if ((kind === "image" && picture.status === Image.Error) || (kind === "pdf" && (pages.status === Loader.Error || pageView?.failed)))
+        if (PreviewView.playsMedia(kind) && mediaComponent?.status === Component.Error)
+            return I18n.tr("Video and audio preview is not available. Install Qt Multimedia to play this file.", "large preview warning when the optional Qt Multimedia module is missing");
+        if ((kind === "image" && picture.status === Image.Error) || (kind === "pdf" && (pages.status === Loader.Error || pageView?.failed)) || (PreviewView.playsMedia(kind) && mediaView?.failed) || (PreviewView.readsText(kind) && reader.failed))
             return I18n.tr("This file could not be opened", "large preview placeholder");
         return "";
     }
 
     signal closed
+    signal stepRequested(var event)
 
     visible: open
     opacity: open ? 1 : 0
@@ -52,13 +69,29 @@ FocusScope {
         entry = target;
         reset();
         open = true;
-        if (kind === "pdf")
-            PdfService.ensureProbed();
+        loadOptional();
         forceActiveFocus();
     }
 
     function supports(target) {
-        return PreviewView.kindFor(target?.mime ?? "") !== "";
+        return !!target;
+    }
+
+    function loadOptional() {
+        switch (kind) {
+        case "pdf":
+            PdfService.ensureProbed();
+            break;
+        case "video":
+        case "audio":
+            if (!mediaComponent)
+                mediaComponent = Qt.createComponent(Qt.resolvedUrl("PreviewMedia.qml"), Component.PreferSynchronous, overlay);
+            break;
+        case "text":
+            if (!highlighterComponent)
+                highlighterComponent = Qt.createComponent(Qt.resolvedUrl("PreviewHighlighter.qml"), Component.PreferSynchronous, overlay);
+            break;
+        }
     }
 
     function dismiss() {
@@ -100,10 +133,66 @@ FocusScope {
     }
 
     Keys.onPressed: event => {
+        event.accepted = true;
+        if (event.matches(StandardKey.Copy)) {
+            reader.copySelection();
+            return;
+        }
+        if (event.modifiers & (Qt.ControlModifier | Qt.AltModifier))
+            return;
         switch (event.key) {
         case Qt.Key_Escape:
+            if (pageField.inputFocused) {
+                pageField.cancel();
+                leavePageField();
+                break;
+            }
             dismiss();
             break;
+        case Qt.Key_Up:
+        case Qt.Key_Down:
+            if (pageField.inputFocused) {
+                pageBy(event.key === Qt.Key_Down ? 1 : -1);
+                pageField.show();
+                break;
+            }
+            stepRequested(event);
+            break;
+        case Qt.Key_Left:
+        case Qt.Key_Right:
+            stepRequested(event);
+            break;
+        case Qt.Key_PageUp:
+        case Qt.Key_PageDown:
+            pageBy(event.key === Qt.Key_PageDown ? 1 : -1);
+            break;
+        case Qt.Key_Home:
+        case Qt.Key_End:
+            if (kind === "pdf")
+                pageView?.goToPage(event.key === Qt.Key_End ? pageView.pageCount - 1 : 0);
+            break;
+        default:
+            transformKey(event);
+        }
+    }
+
+    function leavePageField() {
+        pageField.setFocus(false);
+        forceActiveFocus();
+    }
+
+    function pageBy(step) {
+        if (kind === "pdf") {
+            pageView?.goToPage(pageView.currentPage + step);
+            return;
+        }
+        reader.scrollPage(step);
+    }
+
+    function transformKey(event) {
+        if (!transforms)
+            return;
+        switch (event.key) {
         case Qt.Key_Plus:
         case Qt.Key_Equal:
             zoomBy(1);
@@ -117,22 +206,7 @@ FocusScope {
         case Qt.Key_R:
             rotateBy(event.modifiers & Qt.ShiftModifier ? -90 : 90);
             break;
-        case Qt.Key_Left:
-            panTo(panX + 48, panY);
-            break;
-        case Qt.Key_Right:
-            panTo(panX - 48, panY);
-            break;
-        case Qt.Key_Up:
-            panTo(panX, panY + 48);
-            break;
-        case Qt.Key_Down:
-            panTo(panX, panY - 48);
-            break;
-        default:
-            return;
         }
-        event.accepted = true;
     }
 
     Rectangle {
@@ -170,16 +244,29 @@ FocusScope {
             anchors.margins: Theme.spacingM
             height: Theme.buttonHeightS
 
-            StyledText {
+            Column {
                 anchors.left: parent.left
                 anchors.right: closeButton.left
                 anchors.rightMargin: Theme.spacingM
                 anchors.verticalCenter: parent.verticalCenter
-                text: overlay.entry?.name ?? ""
-                color: Theme.surfaceText
-                font.pixelSize: Theme.fontSizeLarge
-                font.weight: Theme.fontWeightMedium
-                elide: Text.ElideMiddle
+
+                StyledText {
+                    width: parent.width
+                    text: overlay.entry?.name ?? ""
+                    color: Theme.surfaceText
+                    font.pixelSize: Theme.fontSizeLarge
+                    font.weight: Theme.fontWeightMedium
+                    elide: Text.ElideMiddle
+                }
+
+                StyledText {
+                    width: parent.width
+                    visible: text !== ""
+                    text: overlay.shownKind === overlay.kind ? reader.note : ""
+                    color: Theme.surfaceVariantText
+                    font.pixelSize: Theme.fontSizeSmall
+                    elide: Text.ElideRight
+                }
             }
 
             DActionButton {
@@ -197,7 +284,7 @@ FocusScope {
             id: stage
 
             anchors.top: header.bottom
-            anchors.bottom: controls.top
+            anchors.bottom: overlay.transforms ? controls.top : parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.margins: Theme.spacingM
@@ -235,6 +322,63 @@ FocusScope {
                     item.source = Qt.binding(() => FilePaths.toFileUrl(overlay.path));
                     item.zoom = Qt.binding(() => overlay.zoom);
                     item.angle = Qt.binding(() => overlay.angle);
+                }
+            }
+
+            PreviewText {
+                id: reader
+
+                anchors.fill: parent
+                anchors.margins: Theme.spacingS
+                visible: overlay.shownKind === "text" || overlay.shownKind === "markdown"
+                path: PreviewView.readsText(overlay.kind) ? overlay.path : ""
+                fileName: overlay.entry?.name ?? ""
+                markdown: overlay.kind === "markdown"
+                highlighter: overlay.highlighterComponent
+                backend: overlay.backend
+            }
+
+            Column {
+                anchors.centerIn: parent
+                width: parent.width - Theme.spacingXL * 2
+                spacing: Theme.spacingM
+                visible: overlay.showsDetails
+
+                FileItemVisual {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    iconSize: Math.min(FileBrowserMetrics.previewIconSize, stage.height / 2)
+                    iconName: overlay.entry?.iconName ?? ""
+                    path: overlay.path
+                    thumbnail: overlay.entry?.thumbnail ?? ""
+                    mime: overlay.mime
+                    isDir: overlay.entry?.isDir ?? false
+                    isSymlink: overlay.entry?.isSymlink ?? false
+                    symlinkBroken: overlay.entry?.symlinkBroken ?? false
+                    untrusted: overlay.entry?.untrusted ?? false
+                    unreadable: overlay.entry?.unreadable ?? false
+                    hidden: overlay.entry?.hidden ?? false
+                }
+
+                StyledText {
+                    width: parent.width
+                    text: overlay.showsDetails ? ["type", "size", "modified"].map(id => FileColumns.value(id, overlay.entry)).filter(value => value !== "").join(" · ") : ""
+                    color: Theme.surfaceVariantText
+                    font.pixelSize: Theme.fontSizeMedium
+                    horizontalAlignment: Text.AlignHCenter
+                    wrapMode: Text.Wrap
+                }
+            }
+
+            Loader {
+                id: media
+
+                anchors.fill: parent
+                anchors.margins: Theme.spacingS
+                active: PreviewView.playsMedia(overlay.kind) && overlay.mediaComponent?.status === Component.Ready
+                sourceComponent: active ? overlay.mediaComponent : null
+                onLoaded: {
+                    item.sound = overlay.sound;
+                    item.source = Qt.binding(() => FilePaths.toFileUrl(overlay.path));
                 }
             }
 
@@ -289,11 +433,92 @@ FocusScope {
         RowLayout {
             id: controls
 
+            visible: overlay.transforms
             enabled: overlay.kind !== "pdf" || overlay.pageView?.ready === true
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottomMargin: Theme.spacingM
             spacing: Theme.spacingXS
+
+            DActionButton {
+                visible: overlay.kind === "pdf"
+                iconName: "first_page"
+                enabled: (overlay.pageView?.currentPage ?? 0) > 0
+                tooltipText: I18n.tr("First page", "tooltip on the button jumping to the first page of a pdf in the large preview")
+                onClicked: overlay.pageView.goToPage(0)
+            }
+
+            DActionButton {
+                visible: overlay.kind === "pdf"
+                iconName: "chevron_left"
+                enabled: (overlay.pageView?.currentPage ?? 0) > 0
+                tooltipText: I18n.tr("Previous page", "tooltip on the button going back one page of a pdf in the large preview")
+                onClicked: overlay.pageBy(-1)
+            }
+
+            DTextField {
+                id: pageField
+
+                readonly property string shownPage: String((overlay.pageView?.currentPage ?? 0) + 1)
+                property int startPage: 0
+
+                function show() {
+                    text = Qt.binding(() => shownPage);
+                }
+
+                function cancel() {
+                    overlay.pageView?.goToPage(startPage);
+                    show();
+                }
+
+                visible: overlay.kind === "pdf"
+                Layout.preferredWidth: Theme.spacingXL * 2.5
+                text: shownPage
+                font.pixelSize: Theme.fontSizeSmall
+                validator: RegularExpressionValidator {
+                    regularExpression: /[0-9]{1,6}/
+                }
+                onFocusStateChanged: hasFocus => {
+                    if (!hasFocus)
+                        return;
+                    startPage = overlay.pageView?.currentPage ?? 0;
+                    Qt.callLater(selectAll);
+                }
+                onTextEdited: {
+                    if (inputFocused && text !== "" && text !== shownPage)
+                        overlay.pageView?.goToPage(parseInt(text, 10) - 1);
+                }
+                onAccepted: overlay.leavePageField()
+                onEditingFinished: show()
+            }
+
+            StyledText {
+                visible: overlay.kind === "pdf"
+                text: `/ ${overlay.pageView?.pageCount ?? 0}`
+                color: Theme.surfaceVariantText
+                font.pixelSize: Theme.fontSizeSmall
+            }
+
+            DActionButton {
+                visible: overlay.kind === "pdf"
+                iconName: "chevron_right"
+                enabled: (overlay.pageView?.currentPage ?? 0) < (overlay.pageView?.pageCount ?? 0) - 1
+                tooltipText: I18n.tr("Next page", "tooltip on the button going forward one page of a pdf in the large preview")
+                onClicked: overlay.pageBy(1)
+            }
+
+            DActionButton {
+                visible: overlay.kind === "pdf"
+                iconName: "last_page"
+                enabled: (overlay.pageView?.currentPage ?? 0) < (overlay.pageView?.pageCount ?? 0) - 1
+                tooltipText: I18n.tr("Last page", "tooltip on the button jumping to the last page of a pdf in the large preview")
+                onClicked: overlay.pageView.goToPage(overlay.pageView.pageCount - 1)
+            }
+
+            Item {
+                visible: overlay.kind === "pdf"
+                Layout.preferredWidth: Theme.spacingM
+            }
 
             DActionButton {
                 iconName: "zoom_out"
@@ -337,8 +562,8 @@ FocusScope {
         }
 
         Shortcut {
-            sequences: ["Escape"]
-            enabled: overlay.open
+            sequences: ["Escape", "Space", "F4"]
+            enabled: overlay.open && !pageField.inputFocused
             onActivated: overlay.dismiss()
         }
     }
