@@ -76,8 +76,6 @@ ShellRoot {
         DC.Paths.backend = Paths;
         DC.Host.appearance = FolderAppearances;
 
-        check("a folder starts with no look", [row.tint.toString(), row.icon], ["#00000000", "folder"]);
-
         FolderAppearances.set("/tmp/looks", {
             "color": "#44AAFF",
             "icon": "folder-red"

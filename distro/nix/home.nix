@@ -26,10 +26,7 @@ in
   config = lib.mkIf cfg.enable {
     programs.dux-files.systemd.target = lib.mkDefault config.wayland.systemd.target;
 
-    home.packages = [
-      cfg.package
-      cfg.quickshell.package
-    ];
+    home.packages = [ cfg.package ];
 
     dbus.packages = [ cfg.package ];
 

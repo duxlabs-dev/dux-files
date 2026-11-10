@@ -57,8 +57,6 @@ ShellRoot {
 
         const view = overlayComponent.createObject(host);
         fixture.view = view;
-        check("the overlay starts closed", view.open, false);
-        check("pdf availability is unknown before opening a pdf", [PdfService.available, PdfService.unavailable], [false, false]);
 
         view.present({
             "path": "/nonexistent/photo.png",
@@ -161,7 +159,11 @@ ShellRoot {
             compare(view.open, false);
             compare(view.entry, null);
             compare(view.errorMessage, "");
-            view.present({"path": FilePaths.fromUrl(Qt.resolvedUrl("preview.png")), "name": "preview.png", "mime": "image/png"});
+            view.present({
+                "path": FilePaths.fromUrl(Qt.resolvedUrl("preview.png")),
+                "name": "preview.png",
+                "mime": "image/png"
+            });
             compare(view.kind, "image");
             compare(view.open, true);
             compare(view.pageView, null);

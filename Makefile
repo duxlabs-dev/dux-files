@@ -25,7 +25,7 @@ SHELL_DIR=quickshell
 ASSETS_DIR=assets
 DESKTOP_ID=dev.duxlabs.files
 
-.PHONY: all build dev run clean test fmt vet lint-qml test-qml flatpak-build flatpak-run flatpak-lint flatpak-modules update-common i18n-extract i18n-local i18n-test i18n-push i18n-sync i18n-check install install-bin install-icon install-desktop install-metainfo install-polkit install-dbus install-portal install-systemd uninstall uninstall-bin uninstall-icon uninstall-desktop uninstall-metainfo uninstall-polkit uninstall-dbus uninstall-portal uninstall-systemd help
+.PHONY: all build dev run clean test fmt vet lint-qml test-qml flatpak-build flatpak-run flatpak-lint flatpak-modules update-common update-qtbase i18n-extract i18n-local i18n-test i18n-push i18n-sync i18n-check install install-bin install-icon install-desktop install-metainfo install-polkit install-dbus install-portal install-systemd uninstall uninstall-bin uninstall-icon uninstall-desktop uninstall-metainfo uninstall-polkit uninstall-dbus uninstall-portal uninstall-systemd help
 
 FLATPAK_MANIFEST=distro/flatpak/$(DESKTOP_ID).yml
 
@@ -82,6 +82,10 @@ test-qml:
 update-common:
 	git submodule update --remote --merge dux-qml-common
 	nix --extra-experimental-features 'nix-command flakes' flake update dank-qml-common
+
+update-qtbase:
+	git submodule update --remote --merge dux-qt-base
+	nix --extra-experimental-features 'nix-command flakes' flake update dux-qt-base
 
 i18n-extract:
 	@python3 $(SHELL_DIR)/translations/extract_translations.py
@@ -193,6 +197,7 @@ help:
 	@echo "  lint-qml           - qmllint shell.qml through the Quickshell tooling VFS (needs quickshell/.qmlls.ini)"
 	@echo "  test-qml           - Run the shell logic tests and the offscreen QML fixtures"
 	@echo "  update-common      - Bump the dux-qml-common submodule + flake input"
+	@echo "  update-qtbase      - Bump the dux-qt-base submodule + flake input"
 	@echo "  i18n-extract       - Regenerate translations/en.json from I18n.tr() calls"
 	@echo "  i18n-local         - Re-extract and show added/removed terms (no POEditor)"
 	@echo "  i18n-test          - Extract and validate, no POEditor calls"

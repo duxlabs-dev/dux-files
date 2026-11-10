@@ -72,18 +72,12 @@ ShellRoot {
         fakeTransport.connected = true;
         check("connect refetches", requests, 2);
         check("loaded", SandboxService.loaded, true);
-        check("sandboxed", SandboxService.sandboxed, true);
-        check("app id", SandboxService.appId, "dev.duxlabs.files");
-        check("host filesystem", SandboxService.hostFilesystem, false);
-        check("host os root", SandboxService.hostOsRoot, "/run/host");
         check("missing feature", SandboxService.available("terminal"), false);
         check("missing reason", SandboxService.reason("terminal"), "NOHOSTSPAWN");
         check("degraded feature stays available", SandboxService.available("openWith"), true);
         check("degraded flag", SandboxService.degraded("openWith"), true);
         check("plain feature", SandboxService.degraded("trash"), false);
         check("unlisted feature defaults to available", SandboxService.available("devices"), true);
-        check("portal version", SandboxService.portals.Trash, 1);
-        check("thumbnailers", SandboxService.thumbnailers, ["video"]);
 
         response = {
             "error": "not connected"

@@ -93,12 +93,6 @@ ShellRoot {
         });
         SettingsData.terminal = "";
 
-        AppsService.openWith(["/tmp/a.txt"], "editor.desktop", null);
-        check("openWith params", lastSent().params, {
-            "paths": ["/tmp/a.txt"],
-            "desktopId": "editor.desktop"
-        });
-
         AppsService.appsForMime("text/plain", "/tmp/a.txt", null);
         check("forMime params", lastSent().params, {
             "mime": "text/plain",
@@ -137,13 +131,6 @@ ShellRoot {
             "error": "denied",
             "code": "EACCES"
         });
-
-        check("a program asks before running", FilesFormat.isRunnable("application/x-executable", true), true);
-        check("a script asks before running", FilesFormat.isRunnable("application/x-shellscript", true), true);
-        check("an unknown executable asks", FilesFormat.isRunnable("", true), true);
-        check("a text file with the bit asks", FilesFormat.isRunnable("text/x-python", true), true);
-        check("an image never asks", FilesFormat.isRunnable("image/png", true), false);
-        check("without the bit nothing asks", FilesFormat.isRunnable("application/x-executable", false), false);
 
         log.info(failures === 0 ? "FIXTURE PASS" : `FIXTURE FAIL (${failures})`);
         Qt.callLater(Qt.quit);

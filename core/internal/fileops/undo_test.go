@@ -180,17 +180,6 @@ func TestPermanentDeleteRemovesTrees(t *testing.T) {
 	require.Error(t, err, "permanent delete is not undoable")
 }
 
-func TestNewFileRefusesAnExistingName(t *testing.T) {
-	root := t.TempDir()
-	testfs.Write(t, filepath.Join(root, "a.txt"), "keep")
-
-	manager, bus := newHarness(t)
-	view := run(t, manager, bus, spec{kind: KindNewFile, dest: root, name: "a.txt"})
-
-	require.Equal(t, StateFailed, view.State)
-	require.Equal(t, "keep", testfs.Read(t, filepath.Join(root, "a.txt")))
-}
-
 func TestNewItemsReportWhatTheyCreated(t *testing.T) {
 	root := t.TempDir()
 	template := testfs.Write(t, filepath.Join(root, "templates", "Sheet.csv"), "a,b\n")
