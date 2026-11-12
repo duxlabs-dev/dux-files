@@ -119,7 +119,7 @@ FilePlaceSection {
         FilePlaceRow {
             required property var modelData
 
-            label: modelData.mounted && modelData.mountPoint ? modelData.mountPoint : modelData.name || modelData.label || I18n.tr("File system", "storage volume containing the root directory")
+            label:  modelData.label || modelData.mountPoint || modelData.name || I18n.tr("File system", "storage volume containing the root directory")
             subtitle: modelData.device || ""
             iconName: modelData.encrypted && !modelData.unlocked ? "lock" : modelData.iconName
             ringValue: modelData.mounted ? DevicesService.usageRatio(modelData.mountPoint) : -1
