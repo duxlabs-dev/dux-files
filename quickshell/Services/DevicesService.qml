@@ -71,6 +71,12 @@ Singleton {
         }, root.requestFailed, callback);
     }
 
+    function mountImage(path, callback) {
+        transport.callReporting("devices.mountImage", {
+            "path": path
+        }, root.requestFailed, callback);
+    }
+
     function unmount(id, force, callback) {
         transport.callReporting("devices.unmount", {
             "id": id,

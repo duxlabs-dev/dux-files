@@ -15,6 +15,7 @@ FileMenu {
     property bool forPicker: false
     property bool selectedBookmarked: false
     property bool extractable: false
+    property bool mountable: false
     property bool inResults: false
     property bool inTrash: false
     property bool inRecent: false
@@ -46,6 +47,8 @@ FileMenu {
             "enabled": selectionCount > 0
         }), FileActions.row("openWithMenu", {
             "enabled": selectionCount > 0
+        }), FileActions.row("mountImage", {
+            "visible": mountable && !crossFolder
         }), FileActions.row("openInNewTab", {
             "visible": singleFolder
         }), FileActions.row("openInNewWindow", {

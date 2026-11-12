@@ -43,6 +43,13 @@ QtObject {
             dialogs.askExecutable(entry.path, entry.name);
             return;
         }
+        if (FilesFormat.mountableImage(entry.mime, entry.path)) {
+            DevicesService.mountImage(entry.path, result => {
+                if (result?.mountPoint)
+                    mainWindow.tabManager.newTab(result.mountPoint, false);
+            });
+            return;
+        }
         if (SettingsData.extractOnOpen && FilesFormat.extractable(entry.mime)) {
             extractBeside(entry.path, "enter");
             return;
