@@ -117,6 +117,9 @@ func build(objects Objects, path dbus.ObjectPath, ifaces map[string]map[string]d
 		mountSource = objects[unlocked]
 		if inner := mountSource[BlockIface]; inner != nil {
 			device.Fstype = stringOf(inner["IdType"])
+			if device.Label == "" {
+				device.Label = stringOf(inner["IdLabel"])
+			}
 		}
 	}
 	device.MountPoints = allMountPoints(mountSource[FsIface])
