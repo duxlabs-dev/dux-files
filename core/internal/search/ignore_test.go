@@ -27,7 +27,9 @@ func TestIgnoreRulesSkipHeavyFoldersAndUserExclusions(t *testing.T) {
 }
 
 func TestIgnoreFilesNestNegateAndMatchDirectories(t *testing.T) {
-	t.Setenv("HOME", t.TempDir())
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 	root := t.TempDir()
 	testfs.Write(t, filepath.Join(root, ".gitignore"), "*.log\n!keep.log\nbuild/\n/top-only\n")
 	testfs.Write(t, filepath.Join(root, "sub", ".ignore"), "secret*\n")

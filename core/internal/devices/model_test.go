@@ -161,6 +161,32 @@ func TestListFoldsAnUnlockedContainerIntoOneDevice(t *testing.T) {
 	assert.Equal(t, "ext4", vault.Fstype)
 }
 
+func TestListLabelsAnUnlockedContainer(t *testing.T) {
+	cases := []struct {
+		name, outer, inner, want string
+	}{
+		{"inner label when the container has none", "", "Backup", "Backup"},
+		{"container label wins", "VAULT", "Backup", "VAULT"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			objects := table()
+			objects["/block/luks"] = map[string]map[string]dbus.Variant{
+				BlockIface:  props(map[string]any{"Device": append([]byte("/dev/sdc1"), 0), "IdLabel": tc.outer, "IdType": "crypto_LUKS", "Size": uint64(1 << 35)}),
+				CryptoIface: props(map[string]any{}),
+			}
+			objects["/block/clear"] = map[string]map[string]dbus.Variant{
+				BlockIface: props(map[string]any{"Device": append([]byte("/dev/dm-0"), 0), "IdLabel": tc.inner, "IdType": "ext4", "CryptoBackingDevice": dbus.ObjectPath("/block/luks"), "Size": uint64(1 << 35)}),
+			}
+
+			vault, ok := byID(List(objects, testUID), "/block/luks")
+			require.True(t, ok)
+			assert.Equal(t, tc.want, vault.Label)
+			assert.Equal(t, tc.want, vault.Name)
+		})
+	}
+}
+
 func TestListKeepsALockedContainer(t *testing.T) {
 	objects := table()
 	objects["/block/luks"] = map[string]map[string]dbus.Variant{
