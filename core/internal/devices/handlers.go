@@ -10,7 +10,7 @@ import (
 
 func Handles(method string) bool {
 	switch method {
-	case "devices.list", "devices.usage", "devices.mount", "devices.unmount",
+	case "devices.list", "devices.usage", "devices.mount", "devices.mountImage", "devices.unmount",
 		"devices.eject", "devices.powerOff", "devices.unlock", "devices.lock":
 		return true
 	}
@@ -25,6 +25,8 @@ func (s *Service) Handle(w *ipc.ConnWriter, req ipc.Request) {
 		w.Respond(req.ID, map[string]any{"usage": s.Usage(params.StringSlice(req.Params, "paths"), params.BoolLoose(req.Params, "force"))})
 	case "devices.mount":
 		s.handleMount(w, req)
+	case "devices.mountImage":
+		s.handleMountImage(w, req)
 	case "devices.unmount":
 		s.handleUnmount(w, req)
 	case "devices.eject":
@@ -38,6 +40,21 @@ func (s *Service) Handle(w *ipc.ConnWriter, req ipc.Request) {
 	default:
 		wire.RespondError(w, req.ID, wire.Fail(files.CodeNotSupported, "unknown devices method: %s", req.Method))
 	}
+}
+
+func (s *Service) handleMountImage(w *ipc.ConnWriter, req ipc.Request) {
+	path := params.StringOpt(req.Params, "path", "")
+	if path == "" {
+		wire.RespondError(w, req.ID, wire.Invalid("devices.mountImage requires a path"))
+		return
+	}
+	readOnly := params.BoolOpt(req.Params, "readOnly", true)
+	mountPoint, devID, err := s.MountImage(path, readOnly)
+	if err != nil {
+		wire.RespondError(w, req.ID, err)
+		return
+	}
+	w.Respond(req.ID, map[string]any{"path": path, "id": devID, "mountPoint": mountPoint})
 }
 
 func (s *Service) handleMount(w *ipc.ConnWriter, req ipc.Request) {

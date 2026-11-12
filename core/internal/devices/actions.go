@@ -1,6 +1,11 @@
 package devices
 
 import (
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
+
 	"github.com/duxlabs-dev/dux-files/core/internal/wire"
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/godbus/dbus/v5"
@@ -24,6 +29,62 @@ func (s *Service) Mount(id string) (string, error) {
 	}
 	s.usage.forget(mountPoint)
 	return mountPoint, nil
+}
+
+func (s *Service) MountImage(path string, readOnly bool) (string, string, error) {
+	abs, err := filepath.Abs(path)
+	if err != nil {
+		return "", "", err
+	}
+	f, err := os.Open(abs)
+	if err != nil {
+		return "", "", err
+	}
+	defer f.Close()
+
+	options := map[string]dbus.Variant{
+		"read-only": dbus.MakeVariant(readOnly),
+	}
+	var loopPath dbus.ObjectPath
+	if err := s.call(ManagerPath, ManagerIface+".LoopSetup", dbus.UnixFD(f.Fd()), options).Store(&loopPath); err != nil {
+		return "", "", wrapDBus(err)
+	}
+
+	var mountPoint string
+	var mountErr error
+	deadline := time.Now().Add(3 * time.Second)
+	for {
+		mountErr = s.call(loopPath, FsIface+".Mount", noOptions).Store(&mountPoint)
+		if mountErr == nil {
+			s.usage.forget(mountPoint)
+			return mountPoint, string(loopPath), nil
+		}
+		if time.Now().After(deadline) {
+			break
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
+
+	var partitions []dbus.ObjectPath
+	s.mu.RLock()
+	for p, ifaces := range s.objects {
+		if strings.HasPrefix(string(p), string(loopPath)) && p != loopPath {
+			if _, hasFs := ifaces[FsIface]; hasFs {
+				partitions = append(partitions, p)
+			}
+		}
+	}
+	s.mu.RUnlock()
+
+	for _, p := range partitions {
+		if err := s.call(p, FsIface+".Mount", noOptions).Store(&mountPoint); err == nil {
+			s.usage.forget(mountPoint)
+			return mountPoint, string(p), nil
+		}
+	}
+
+	_ = s.call(loopPath, LoopIface+".Delete", noOptions).Store()
+	return "", string(loopPath), wrapDBus(mountErr)
 }
 
 func (s *Service) Unmount(id string, force bool) error {
@@ -57,6 +118,14 @@ func (s *Service) Eject(id string) error {
 	}
 	if err := s.checkDetach(device, true); err != nil {
 		return err
+	}
+	if device.Kind == KindLoop {
+		if device.Mounted {
+			if err := s.Unmount(id, false); err != nil {
+				return err
+			}
+		}
+		return wrapDBus(s.call(dbus.ObjectPath(device.ID), LoopIface+".Delete", noOptions).Store())
 	}
 	if device.Drive == "" {
 		return wire.Fail(files.CodeNotSupported, "%s has no drive to eject", device.Name)

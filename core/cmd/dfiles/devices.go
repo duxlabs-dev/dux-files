@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"slices"
 	"text/tabwriter"
 
@@ -165,8 +166,31 @@ func completeDevices(_ *cobra.Command, args []string, _ string) ([]string, cobra
 	return out, cobra.ShellCompDirectiveNoFileComp
 }
 
+var devicesMountImageCmd = &cobra.Command{
+	Use:   "mount-image <path>",
+	Short: "Mount a disk image (ISO, IMG) via loop device",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(_ *cobra.Command, args []string) error {
+		return withSession(deviceServices, func(s *session) error {
+			abs, err := filepath.Abs(args[0])
+			if err != nil {
+				return err
+			}
+			var out map[string]any
+			if err := s.call("devices.mountImage", map[string]any{"path": abs}, &out); err != nil {
+				return err
+			}
+			if jsonOutput {
+				return printJSON(out)
+			}
+			fmt.Println(out["mountPoint"])
+			return nil
+		})
+	},
+}
+
 func init() {
 	devicesListCmd.Flags().BoolVar(&devicesAllFlag, "all", false, "Include system partitions the sidebar hides")
 	devicesUnmountCmd.Flags().BoolVar(&devicesForceFlag, "force", false, "Unmount even while files are open")
-	devicesCmd.AddCommand(devicesListCmd, devicesMountCmd, devicesUnmountCmd, devicesEjectCmd)
+	devicesCmd.AddCommand(devicesListCmd, devicesMountCmd, devicesMountImageCmd, devicesUnmountCmd, devicesEjectCmd)
 }

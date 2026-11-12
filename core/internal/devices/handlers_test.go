@@ -1,6 +1,8 @@
 package devices
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/duxlabs-dev/dux-files/core/internal/ipctest"
@@ -20,6 +22,7 @@ type recordedCall struct {
 type fakeBus struct {
 	calls    []recordedCall
 	body     []any
+	bodyFunc func(method string, path dbus.ObjectPath) []any
 	err      error
 	failFrom int
 }
@@ -36,10 +39,17 @@ func (b *fakeBus) Object(_ string, path dbus.ObjectPath) dbus.BusObject {
 
 func (o *fakeObject) Call(method string, _ dbus.Flags, args ...any) *dbus.Call {
 	o.bus.calls = append(o.bus.calls, recordedCall{Path: o.path, Method: method, Args: args})
-	if len(o.bus.calls) <= o.bus.failFrom {
-		return &dbus.Call{Body: o.bus.body}
+	body := o.bus.body
+	if o.bus.bodyFunc != nil {
+		body = o.bus.bodyFunc(method, o.path)
 	}
-	return &dbus.Call{Err: o.bus.err, Body: o.bus.body}
+	if o.bus.failFrom > 0 && len(o.bus.calls) > o.bus.failFrom {
+		return &dbus.Call{Err: o.bus.err, Body: body}
+	}
+	if o.bus.err != nil && o.bus.failFrom == 0 {
+		return &dbus.Call{Err: o.bus.err, Body: body}
+	}
+	return &dbus.Call{Body: body}
 }
 
 func testService(t *testing.T, bus *fakeBus) *Service {
@@ -226,4 +236,49 @@ func TestHandleRefusesToLockEncryptedHome(t *testing.T) {
 	out := call(t, svc, ipc.Request{ID: 19, Method: "devices.lock", Params: map[string]any{"id": "/block/stick"}})
 	assert.Equal(t, "EPERM", out["code"])
 	assert.Empty(t, bus.calls)
+}
+
+func TestHandleMountImageCallsLoopSetupAndMount(t *testing.T) {
+	bus := &fakeBus{
+		bodyFunc: func(method string, path dbus.ObjectPath) []any {
+			switch method {
+			case ManagerIface + ".LoopSetup":
+				return []any{dbus.ObjectPath("/block/loop0")}
+			case FsIface + ".Mount":
+				return []any{"/run/media/test/ISO"}
+			}
+			return nil
+		},
+	}
+	svc := testService(t, bus)
+
+	tmp := filepath.Join(t.TempDir(), "test.iso")
+	require.NoError(t, os.WriteFile(tmp, []byte("fake iso"), 0o644))
+
+	out := call(t, svc, ipc.Request{ID: 20, Method: "devices.mountImage", Params: map[string]any{"path": tmp}})
+	result := out["result"].(map[string]any)
+	assert.Equal(t, "/block/loop0", result["id"])
+	assert.Equal(t, "/run/media/test/ISO", result["mountPoint"])
+	require.Len(t, bus.calls, 2)
+	assert.Equal(t, ManagerPath, bus.calls[0].Path)
+	assert.Equal(t, ManagerIface+".LoopSetup", bus.calls[0].Method)
+	assert.Equal(t, dbus.ObjectPath("/block/loop0"), bus.calls[1].Path)
+	assert.Equal(t, FsIface+".Mount", bus.calls[1].Method)
+}
+
+func TestHandleEjectLoopDeviceCallsDelete(t *testing.T) {
+	bus := &fakeBus{}
+	svc := testService(t, bus)
+	svc.objects["/block/loop0"] = map[string]map[string]dbus.Variant{
+		BlockIface: props(map[string]any{"Device": append([]byte("/dev/loop0"), 0), "IdLabel": "TEST", "Size": uint64(1 << 26)}),
+		LoopIface:  props(map[string]any{"SetupByUID": uint32(testUID)}),
+		FsIface:    {"MountPoints": mountPoints("/run/media/test/TEST")},
+	}
+
+	out := call(t, svc, ipc.Request{ID: 21, Method: "devices.eject", Params: map[string]any{"id": "/block/loop0"}})
+	assert.Equal(t, true, out["result"].(map[string]any)["ejected"])
+	require.Len(t, bus.calls, 2)
+	assert.Equal(t, FsIface+".Unmount", bus.calls[0].Method)
+	assert.Equal(t, LoopIface+".Delete", bus.calls[1].Method)
+	assert.Equal(t, dbus.ObjectPath("/block/loop0"), bus.calls[1].Path)
 }
