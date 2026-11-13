@@ -651,14 +651,8 @@ FloatingWindow {
                     onPreviewToggled: window.actions.runAction("togglePreview")
                     onCopyPathRequested: window.paneActions.copyText(window.currentPath)
                     onNewFolderRequested: window.actions.runAction("newFolder")
-                    onNewDocumentRequested: (pointX, pointY) => {
-                        const point = topbar.mapToItem(surface, pointX, pointY);
-                        window.menus.showNewDocumentMenu(point.x, point.y);
-                    }
-                    onColumnsMenuRequested: (pointX, pointY) => {
-                        const point = topbar.mapToItem(window.activePane, pointX, pointY);
-                        window.menus.showColumnsMenu(point.x, point.y);
-                    }
+                    onNewDocumentRequested: (parentMenu, row) => window.menus.showNewDocumentSubmenu(parentMenu, row)
+                    onColumnsMenuRequested: (parentMenu, row) => window.menus.showColumnsSubmenu(parentMenu, row)
                     onZoomRequested: step => window.activePane.body.zoomBy(step)
                     onUseForAllFoldersRequested: window.useForAllFolders()
                     onResetFolderRequested: window.activePane.resetFolder()

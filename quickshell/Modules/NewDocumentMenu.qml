@@ -19,6 +19,12 @@ FileMenu {
         openAt(pointX, pointY);
     }
 
+    function presentBeside(parentMenu, row) {
+        templates = [];
+        loadTemplates();
+        parentMenu.openSubmenu(menu, row);
+    }
+
     function loadTemplates() {
         const dir = DirectoryService.templatesDir;
         if (dir === "")

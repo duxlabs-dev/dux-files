@@ -54,6 +54,7 @@ Item {
             sortKey: bar.sortKey
             descending: bar.sortDescending
             showLabel: bar.width >= Theme.smallBreakpoint
+            tooltipSide: "top"
             onSortKeySelected: key => bar.sortKeySelected(key)
             onDirectionToggled: bar.sortDirectionToggled()
         }
@@ -77,6 +78,7 @@ Item {
                     iconName: modelData.icon
                     iconColor: active ? Theme.onSelectedContainer : Theme.surfaceText
                     tooltipText: modelData.label
+                    tooltipSide: "top"
                     Accessible.checked: active
                     onClicked: bar.viewModeSelected(modelData.value)
                 }
@@ -90,6 +92,7 @@ Item {
             iconName: bar.previewOpen ? "preview_off" : "preview"
             iconColor: bar.previewOpen ? Theme.onSelectedContainer : Theme.surfaceText
             tooltipText: bar.previewLabel
+            tooltipSide: "top"
             Accessible.checked: bar.previewOpen
             onClicked: bar.previewToggled()
         }

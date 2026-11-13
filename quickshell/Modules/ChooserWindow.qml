@@ -517,7 +517,7 @@ FloatingWindow {
                 onBackRequested: pane.back()
                 onForwardRequested: pane.forward()
                 onNewFolderRequested: menus.runAction("newFolder")
-                onNewDocumentRequested: (pointX, pointY) => menus.runAction("newDocument")
+                onNewDocumentRequested: (parentMenu, row) => menus.showNewDocumentSubmenu(parentMenu, row)
                 onSortKeySelected: key => window.setSort(key)
                 onSortDirectionToggled: window.setDirection(!window.sortDescending)
                 onViewModeSelected: mode => window.setViewMode(mode)

@@ -189,8 +189,8 @@ Item {
     signal resetFolderRequested
     signal propertiesRequested
     signal newFolderRequested
-    signal newDocumentRequested(real pointX, real pointY)
-    signal columnsMenuRequested(real pointX, real pointY)
+    signal newDocumentRequested(var parentMenu, var row)
+    signal columnsMenuRequested(var parentMenu, var row)
     signal newWindowRequested
     signal copyPathRequested
     signal reloadRequested
@@ -553,14 +553,13 @@ Item {
             }
 
             FileMenuItem {
+                id: columnsRow
+
                 visible: menu.viewRows && topbar.allowColumns && topbar.viewMode === "list" && !topbar.virtualActive && !topbar.resultsActive
                 text: I18n.tr("Columns", "view menu entry choosing which list columns are shown")
                 iconName: "view_column"
                 submenu: true
-                onClicked: menu.pick(() => {
-                    const point = rightActions.mapToItem(topbar, menu.x, menu.y);
-                    topbar.columnsMenuRequested(point.x, point.y);
-                })
+                onClicked: topbar.columnsMenuRequested(menu, columnsRow)
             }
 
             FileMenuDivider {
@@ -594,14 +593,13 @@ Item {
             }
 
             FileMenuItem {
+                id: newDocumentRow
+
                 visible: menu.moreRows && !topbar.virtualActive
                 text: FileActions.label("newDocument")
                 iconName: FileActions.icon("newDocument")
                 submenu: true
-                onClicked: menu.pick(() => {
-                    const point = rightActions.mapToItem(topbar, menu.x, menu.y);
-                    topbar.newDocumentRequested(point.x, point.y);
-                })
+                onClicked: topbar.newDocumentRequested(menu, newDocumentRow)
             }
 
             FileMenuDivider {

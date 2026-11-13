@@ -155,7 +155,8 @@ FileMenu {
                 submenu: slot.modelData.submenu === true
                 enabled: !slot.separator && slot.modelData.enabled
                 onClicked: {
-                    menu.close();
+                    if (!submenu)
+                        menu.close();
                     menu.actionTriggered(slot.modelData.id);
                 }
             }

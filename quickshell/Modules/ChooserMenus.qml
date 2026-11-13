@@ -28,6 +28,10 @@ Item {
         backgroundMenu.openAt(point.x, point.y);
     }
 
+    function showNewDocumentSubmenu(parentMenu, row) {
+        newDocumentMenu.presentBeside(parentMenu, row);
+    }
+
     function runAction(id) {
         if (!FileActions.available(id, "picker"))
             return;
@@ -63,7 +67,10 @@ Item {
             actions.newFolder(pane.virtualActive ? "" : pane.path);
             return;
         case "newDocument":
-            newDocumentMenu.present(backgroundMenu.x, backgroundMenu.y);
+            if (backgroundMenu.visible)
+                newDocumentMenu.presentBeside(backgroundMenu);
+            else
+                newDocumentMenu.present(backgroundMenu.x, backgroundMenu.y);
             return;
         case "showHidden":
             chooser.setShowHidden(!chooser.showHidden);

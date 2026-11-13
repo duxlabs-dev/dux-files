@@ -36,6 +36,10 @@ Item {
         columnsMenu.openAt(point.x, point.y);
     }
 
+    function showColumnsSubmenu(parentMenu, row) {
+        parentMenu.openSubmenu(columnsMenu, row);
+    }
+
     function toggleColumn(id) {
         const shown = SessionData.listColumns;
         SessionData.listColumns = shown.includes(id) ? shown.filter(entry => entry !== id) : shown.concat([id]);
@@ -55,9 +59,13 @@ Item {
         openWithMenu.mimes = mimes;
         openWithMenu.paths = paths;
         openWithMenu.apps = [];
-        itemMenu.close();
-        backgroundMenu.close();
-        openWithMenu.openAt(anchor.x, anchor.y);
+        if (anchor.visible) {
+            anchor.openSubmenu(openWithMenu);
+        } else {
+            itemMenu.close();
+            backgroundMenu.close();
+            openWithMenu.openAt(anchor.x, anchor.y);
+        }
         const token = ++openWithMenu.requestSerial;
         AppsService.sections(mimes, paths, response => {
             if (response.error || token !== openWithMenu.requestSerial || !openWithMenu.visible)
@@ -67,13 +75,23 @@ Item {
             const preferred = recommended.find(app => app.isDefault === true);
             const rest = recommended.filter(app => app !== preferred);
             openWithMenu.apps = (preferred ? [preferred] : []).concat(response.recent || [], rest).slice(0, 5);
+            if (openWithMenu.highlightedItem)
+                openWithMenu.highlightEdge(false);
         });
     }
 
-    function showNewDocumentMenu(pointX, pointY) {
+    function showNewDocumentMenu() {
+        if (backgroundMenu.visible) {
+            newDocumentMenu.presentBeside(backgroundMenu);
+            return;
+        }
         openWithMenu.close();
         itemMenu.close();
-        newDocumentMenu.present(pointX ?? backgroundMenu.x, pointY ?? backgroundMenu.y);
+        newDocumentMenu.present(backgroundMenu.x, backgroundMenu.y);
+    }
+
+    function showNewDocumentSubmenu(parentMenu, row) {
+        newDocumentMenu.presentBeside(parentMenu, row);
     }
 
     function showContextMenuAtCursor() {

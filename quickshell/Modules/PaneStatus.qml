@@ -90,6 +90,7 @@ Row {
                 iconSize: Theme.iconSizeSmall
                 iconColor: Theme.surfaceVariantText
                 tooltipText: I18n.tr("Clear the clipboard", "tooltip on the button dropping the copied or cut items")
+                tooltipSide: "top"
                 onClicked: ClipboardService.clear()
             }
         }
