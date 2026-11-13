@@ -34,8 +34,8 @@ FileMenu {
             return "recent";
         return inResults ? "results" : "folder";
     }
-    readonly property bool trashHidden: SettingsData.hiddenContextMenuItems.includes("item:trash")
-    readonly property bool deletePermanentlyHidden: SettingsData.hiddenContextMenuItems.includes("item:deletePermanently")
+    readonly property bool trashHidden: hiddenById("trash")
+    readonly property bool deletePermanentlyHidden: hiddenById("deletePermanently")
     readonly property string filterScope: context === "picker" || context === "trash" ? "" : forFolder ? (context === "recent" ? "" : "background") : "item"
     readonly property var entries: collapse((forFolder ? backgroundRows : itemRows).filter(row => row.visible !== false && (row.id === "separator" || (FileActions.available(row.id, context) && !hiddenById(row.id)))))
 
