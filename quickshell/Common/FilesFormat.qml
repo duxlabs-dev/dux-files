@@ -95,6 +95,19 @@ Singleton {
         return false;
     }
 
+    function mountableImage(mime, path) {
+        switch (mime) {
+        case "application/x-cd-image":
+        case "application/x-iso9660-image":
+        case "application/x-raw-disk-image":
+            return true;
+        }
+        if (typeof path !== "string")
+            return false;
+        const lower = path.toLowerCase();
+        return lower.endsWith(".iso") || lower.endsWith(".img");
+    }
+
     function isRunnable(mime, executable) {
         if (!executable)
             return false;

@@ -30,6 +30,11 @@ Singleton {
                 "contexts": browsingAndRecent,
                 "submenu": true
             },
+            "mountImage": {
+                "icon": "album",
+                "label": I18n.tr("Mount", "Mount"),
+                "contexts": browsingAndRecent
+            },
             "openFolderWith": {
                 "icon": "apps",
                 "label": I18n.tr("Open with", "open with dialog header"),

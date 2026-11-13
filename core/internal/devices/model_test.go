@@ -178,9 +178,9 @@ func TestListKeepsALockedContainer(t *testing.T) {
 func TestListShowsOnlyThisUsersLoopDevices(t *testing.T) {
 	objects := table()
 	objects["/block/loop0"] = map[string]map[string]dbus.Variant{
-		BlockIface: props(map[string]any{"Device": append([]byte("/dev/loop0"), 0), "IdLabel": "IMAGE", "IdType": "ext4", "Size": uint64(1 << 26), "HintSystem": true}),
+		BlockIface: props(map[string]any{"Device": append([]byte("/dev/loop0"), 0), "IdType": "iso9660", "Size": uint64(1 << 26), "HintSystem": true}),
 		FsIface:    {"MountPoints": mountPoints()},
-		LoopIface:  props(map[string]any{"SetupByUID": uint32(testUID)}),
+		LoopIface:  props(map[string]any{"SetupByUID": uint32(testUID), "BackingFile": append([]byte("/home/user/archlinux.iso"), 0)}),
 	}
 	objects["/block/loop1"] = map[string]map[string]dbus.Variant{
 		BlockIface: props(map[string]any{"Device": append([]byte("/dev/loop1"), 0), "IdType": "ext4", "Size": uint64(1 << 26), "HintSystem": true}),
@@ -192,6 +192,9 @@ func TestListShowsOnlyThisUsersLoopDevices(t *testing.T) {
 	mine, ok := byID(list, "/block/loop0")
 	require.True(t, ok)
 	assert.Equal(t, KindLoop, mine.Kind)
+	assert.True(t, mine.Ejectable)
+	assert.Equal(t, "archlinux.iso", mine.Name)
+	assert.Equal(t, "media-optical", mine.IconName)
 
 	_, theirs := byID(list, "/block/loop1")
 	assert.False(t, theirs)

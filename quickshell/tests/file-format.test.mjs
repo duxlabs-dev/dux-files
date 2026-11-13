@@ -10,7 +10,7 @@ function context() {
     const ctx = vm.createContext({ I18n: { tr: term => term } });
     for (const name of ["size", "operationError"])
         lift(fileFormat, name, ctx);
-    for (const name of ["elevationUnavailable", "featureUnavailable", "isRunnable", "extractable"])
+    for (const name of ["elevationUnavailable", "featureUnavailable", "isRunnable", "extractable", "mountableImage"])
         lift(filesFormat, name, ctx);
     return ctx;
 }
@@ -60,6 +60,17 @@ test("extractable mirrors the formats the daemon unpacks", () => {
         assert.equal(ctx.extractable(mime), true, mime);
     for (const mime of ["application/x-iso9660-image", "application/x-lzip-compressed-zip", "application/pdf", ""])
         assert.equal(ctx.extractable(mime), false, mime);
+});
+
+test("mountableImage detects ISO and raw disk images", () => {
+    const ctx = context();
+    assert.equal(ctx.mountableImage("application/x-cd-image", "test.iso"), true);
+    assert.equal(ctx.mountableImage("application/x-iso9660-image", "image.iso"), true);
+    assert.equal(ctx.mountableImage("application/x-raw-disk-image", "disk.img"), true);
+    assert.equal(ctx.mountableImage("application/octet-stream", "test.ISO"), true);
+    assert.equal(ctx.mountableImage("application/octet-stream", "flash.IMG"), true);
+    assert.equal(ctx.mountableImage("application/zip", "archive.zip"), false);
+    assert.equal(ctx.mountableImage("image/png", "picture.png"), false);
 });
 
 function timestampContext() {

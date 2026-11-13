@@ -12,13 +12,15 @@ import (
 )
 
 const (
-	BusName     = "org.freedesktop.UDisks2"
-	RootPath    = dbus.ObjectPath("/org/freedesktop/UDisks2")
-	BlockIface  = BusName + ".Block"
-	FsIface     = BusName + ".Filesystem"
-	CryptoIface = BusName + ".Encrypted"
-	DriveIface  = BusName + ".Drive"
-	LoopIface   = BusName + ".Loop"
+	BusName      = "org.freedesktop.UDisks2"
+	RootPath     = dbus.ObjectPath("/org/freedesktop/UDisks2")
+	ManagerPath  = dbus.ObjectPath("/org/freedesktop/UDisks2/Manager")
+	BlockIface   = BusName + ".Block"
+	FsIface      = BusName + ".Filesystem"
+	CryptoIface  = BusName + ".Encrypted"
+	DriveIface   = BusName + ".Drive"
+	LoopIface    = BusName + ".Loop"
+	ManagerIface = BusName + ".Manager"
 )
 
 const (
@@ -126,7 +128,10 @@ func build(objects Objects, path dbus.ObjectPath, ifaces map[string]map[string]d
 	device.Protected = protectedMounts(device.MountPoints)
 
 	device.Kind = kindOf(device, ifaces, drive)
-	device.Name = nameOf(device, block, drive)
+	if device.Kind == KindLoop {
+		device.Ejectable = true
+	}
+	device.Name = nameOf(device, block, drive, ifaces[LoopIface])
 	device.IconName = iconOf(device, drive)
 	return device
 }
@@ -161,12 +166,14 @@ func kindOf(device Device, ifaces map[string]map[string]dbus.Variant, drive map[
 	}
 }
 
-func nameOf(device Device, block, drive map[string]dbus.Variant) string {
+func nameOf(device Device, block, drive, loop map[string]dbus.Variant) string {
 	switch {
 	case device.Label != "":
 		return device.Label
 	case stringOf(block["HintName"]) != "":
 		return stringOf(block["HintName"])
+	case device.Kind == KindLoop && loop != nil && byteStringOf(loop["BackingFile"]) != "":
+		return filepath.Base(byteStringOf(loop["BackingFile"]))
 	}
 
 	model := strings.TrimSpace(stringOf(drive["Vendor"]) + " " + stringOf(drive["Model"]))
@@ -186,7 +193,12 @@ func iconOf(device Device, drive map[string]dbus.Variant) string {
 	case KindOptical:
 		return "media-optical"
 	case KindLoop:
-		return "drive-harddisk"
+		switch device.Fstype {
+		case "iso9660", "udf":
+			return "media-optical"
+		default:
+			return "drive-harddisk"
+		}
 	case KindRemovable:
 		if stringOf(drive["ConnectionBus"]) == "usb" {
 			return "drive-removable-media-usb"

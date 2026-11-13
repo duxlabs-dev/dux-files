@@ -21,6 +21,13 @@ Item {
         return entries.length > 0 && entries.every(entry => !entry.isDir && FilesFormat.extractable(entry.mime));
     }
 
+    function selectionIsMountable() {
+        const entries = mainWindow.selectedEntries();
+        if (entries.length === 0)
+            return false;
+        return entries.every(entry => !entry.isDir && FilesFormat.mountableImage(entry.mime, entry.path || entry.name));
+    }
+
     function showItemMenu(pointX, pointY) {
         openWithMenu.close();
         backgroundMenu.close();
@@ -109,6 +116,7 @@ Item {
         hasDirectory: live && menus.selectionIsDirectory()
         hasClipboard: live && ClipboardService.hasFiles
         extractable: live && menus.selectionIsExtractable()
+        mountable: live && menus.selectionIsMountable()
         inResults: live && menus.mainWindow.activePane.resultsActive
         inTrash: live && menus.mainWindow.activePane.trashActive
         inRecent: live && menus.mainWindow.activePane.recentActive

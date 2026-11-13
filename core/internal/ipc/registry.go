@@ -102,6 +102,7 @@ var Methods = []MethodSpec{
 	{Name: "devices.list", Group: "devices", Desc: "Local drives and volumes udisks2 knows about"},
 	{Name: "devices.usage", Group: "devices", Desc: "Disk usage for mounted devices, cached for 30 seconds", Params: []ParamSpec{opt("paths", "mount points, default every mounted device"), opt("force", "ignore the cache")}},
 	{Name: "devices.mount", Group: "devices", Desc: "Mount a device", Params: []ParamSpec{req("id", "device id from devices.list")}},
+	{Name: "devices.mountImage", Group: "devices", Desc: "Mount a disk image (ISO, IMG) via loop device", Params: []ParamSpec{req("path", "absolute image path"), opt("readOnly", "mount read-only (defaults to true)")}},
 	{Name: "devices.unmount", Group: "devices", Desc: "Unmount a device", Params: []ParamSpec{req("id", "device id from devices.list"), opt("force", "unmount even while busy")}},
 	{Name: "devices.eject", Group: "devices", Desc: "Unmount and eject removable media", Params: []ParamSpec{req("id", "device id from devices.list")}},
 	{Name: "devices.powerOff", Group: "devices", Desc: "Power off a drive", Params: []ParamSpec{req("id", "device id from devices.list")}},

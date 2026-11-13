@@ -179,6 +179,14 @@ QtObject {
         case "compress":
             mainWindow.dialogs.askCompress(mainWindow.selectedPaths());
             return;
+        case "mountImage":
+            mainWindow.selectedPaths().forEach(path => {
+                DevicesService.mountImage(path, result => {
+                    if (result?.mountPoint)
+                        mainWindow.tabManager.newTab(result.mountPoint, false);
+                });
+            });
+            return;
         case "extract":
             mainWindow.openFlow.extractTo(mainWindow.selectedPaths(), currentPath, "reveal");
             return;
