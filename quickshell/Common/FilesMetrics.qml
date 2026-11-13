@@ -19,6 +19,20 @@ Singleton {
     readonly property real topbarControlSize: FileBrowserMetrics.controlSize
     readonly property real topbarSpacing: FileBrowserMetrics.controlSpacing
     readonly property real topbarGroupSpacing: Theme.spacingXS
+    readonly property real pathMinWidth: Theme.sidebarWidth * 0.3
+    readonly property real previewMinWidth: FileBrowserMetrics.previewDrawerMinWidth
+    readonly property real searchMinWidth: Theme.sidebarWidth * 0.75
+    readonly property real searchMaxWidth: Theme.sidebarWidth * 1.6
+    readonly property real searchShare: 0.36
+    readonly property real searchCollapseBelow: Theme.sidebarWidth * 1.8
+    readonly property real statusBarHeight: topbarControlSize
+    readonly property real cardPadding: Theme.spacingS
+    readonly property real sidebarRailWidth: FileBrowserMetrics.sidebarRailWidth
+    readonly property real overviewCardWidth: Theme.sidebarWidth * 0.9
+    readonly property real overviewCardHeight: overviewCardWidth * 1.3
+    readonly property int overviewColumns: 3
+    readonly property int overviewEntries: overviewColumns * overviewColumns
+    readonly property int tabCountCap: 99
 
     readonly property real contentMarginV: FileBrowserMetrics.contentMargin
     readonly property real contentMarginH: contentMarginV
@@ -31,6 +45,7 @@ Singleton {
     readonly property real minimumPaneFraction: 0.2
 
     readonly property real tabHeight: Theme.buttonHeightS
+    readonly property real tabBandHeight: tabHeight + contentSpacing * 2
     readonly property int tabShortcutCount: 9
     readonly property int closedTabHistory: 10
     readonly property int defaultGridZoom: FileBrowserMetrics.defaultGridZoom
@@ -40,9 +55,9 @@ Singleton {
     function defaultZoom(viewMode) {
         return FileBrowserMetrics.defaultZoom(viewMode);
     }
-    readonly property real tabMinWidth: Theme.tabMinWidth
-    readonly property real tabMaxWidth: Theme.sidebarWidth
-    readonly property real tabSpacing: Theme.spacingXXS
+    readonly property real tabMinWidth: Theme.sidebarWidth * 0.6
+    readonly property real tabMaxWidth: Theme.sidebarWidth * 0.9
+    readonly property real tabSpacing: Theme.spacingXS
     readonly property int tabHoverDelay: FileBrowserMetrics.springLoadDelay
 
     readonly property real dragGhostSize: FileBrowserMetrics.gridIconSizes[0]

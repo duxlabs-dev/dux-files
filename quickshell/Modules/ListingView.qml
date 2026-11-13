@@ -52,12 +52,26 @@ Rectangle {
     }
 
     radius: FilesMetrics.paneRadius
-    color: Theme.foregroundColor(Theme.cardSurface, true)
+    color: host.surfaceColor
     border.width: host.showActiveOutline && host.active ? Theme.outlineWidthFocused : 0
     border.color: Theme.primary
 
     SelectionModel {
         id: selectionModel
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onPressed: mouse => {
+            const point = mapToItem(viewBody, mouse.x, mouse.y);
+            viewBody.beginBand(point.x, point.y, mouse.modifiers);
+        }
+        onPositionChanged: mouse => {
+            const point = mapToItem(viewBody, mouse.x, mouse.y);
+            viewBody.dragBand(point.x, point.y);
+        }
+        onReleased: viewBody.endBand()
+        onCanceled: viewBody.endBand()
     }
 
     Item {
@@ -69,7 +83,7 @@ Rectangle {
         anchors.topMargin: FilesMetrics.paneBodyMargin
         anchors.leftMargin: FilesMetrics.paneBodyMarginH
         anchors.rightMargin: FilesMetrics.paneBodyMarginH
-        height: Math.max(FileBrowserMetrics.pathPillHeight, titleColumn.implicitHeight, actionsRow.implicitHeight)
+        height: Math.max(view.host.framed ? FileBrowserMetrics.pathPillHeight : 0, titleColumn.implicitHeight, actionsRow.implicitHeight)
 
         Column {
             id: titleColumn
@@ -82,6 +96,7 @@ Rectangle {
 
             StyledText {
                 width: parent.width
+                visible: view.host.framed
                 text: view.title
                 color: Theme.surfaceText
                 font.pixelSize: Theme.fontSizeMedium
@@ -145,7 +160,7 @@ Rectangle {
         showHidden: view.showHidden
         dragEnabled: view.dragEnabled
         dropEnabled: false
-        showSelectionFooter: true
+        showSelectionFooter: view.host.framed
         emptyText: view.emptyText
         surfaceColor: view.color
         cutSet: view.host.cutSet
@@ -180,7 +195,9 @@ Rectangle {
                 view.host.previewToggleRequested();
                 return;
             }
-            drawer.handleKey(action, step);
+            view.host.previewKeyRequested(action, step);
+            if (view.host.internalPreview)
+                drawer.handleKey(action, step);
         }
         onFocusRequested: view.host.focusRequested()
         onTabRequested: target => {
@@ -206,7 +223,8 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: FilesMetrics.paneBodyMarginH
         body: viewBody
-        open: view.host.previewOpen
+        visible: view.host.internalPreview
+        open: view.host.internalPreview && view.host.previewOpen
         available: view.width - FilesMetrics.paneBodyMarginH * 2
         preferredWidth: CacheData.previewWidth
         onResized: width => view.host.setPreviewWidth(width)

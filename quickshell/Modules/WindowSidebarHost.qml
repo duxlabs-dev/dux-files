@@ -15,7 +15,8 @@ Item {
     property real contentMinWidth: FilesMetrics.windowMinWidth
 
     readonly property bool compact: width < FilesMetrics.sidebarOverlayBreakpoint
-    readonly property bool docked: !SettingsData.sidebarCollapsed && !compact
+    readonly property bool docked: !compact
+    readonly property bool rail: docked && SettingsData.sidebarCollapsed
     readonly property bool focused: ItemTree.isInside(focusItem, dockedSidebar) || ItemTree.isInside(focusItem, overlaySidebar)
     readonly property alias dockedWidth: sidebarSlot.width
 
@@ -95,12 +96,18 @@ Item {
         id: sidebarSlot
 
         readonly property real maximumWidth: Math.max(FilesMetrics.sidebarMinWidth, host.width - host.contentMinWidth)
+        readonly property real expandedWidth: Math.max(FilesMetrics.sidebarMinWidth, Math.min(maximumWidth, preferredWidth))
+        readonly property real layoutWidth: width > FilesMetrics.sidebarRailWidth ? expandedWidth : width
         property real preferredWidth: CacheData.sidebarWidth
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.left: parent.left
-        width: host.docked ? Math.max(FilesMetrics.sidebarMinWidth, Math.min(maximumWidth, preferredWidth)) : 0
+        width: {
+            if (!host.docked)
+                return 0;
+            return host.rail ? FilesMetrics.sidebarRailWidth : expandedWidth;
+        }
         clip: true
 
         Connections {
@@ -124,7 +131,10 @@ Item {
         WindowSidebar {
             id: dockedSidebar
 
-            anchors.fill: parent
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            width: Math.max(0, parent.layoutWidth - FilesMetrics.sidebarPadding * 2)
             visible: parent.width > 0
         }
     }
@@ -137,7 +147,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         width: FilesMetrics.splitterWidth
-        visible: host.docked
+        visible: host.docked && !host.rail
         z: 1
 
         Rectangle {

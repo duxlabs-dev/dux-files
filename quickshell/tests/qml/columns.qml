@@ -239,12 +239,10 @@ ShellRoot {
         browser.columnWidths = ({
                 "size": 1646
             });
-        check("a stored width wider than the window keeps its column on screen", browser.body.fittingColumns, ["size"]);
-        check("and shrinks it to the room left", browser.body.fittingWidths.size < 1200, true);
-        check("a resize cannot grow past the room left", browser.body.clampColumnWidth("size", 5000), browser.body.fittingWidths.size);
+        check("a stored width wider than the window is cut to the room one column has", browser.body.listWidths.size < 1200, true);
+        check("columns that do not fit stay and the row scrolls sideways", [Object.keys(browser.body.listWidths), browser.body.listRowWidth > browser.body.width], [["size", "modified", "type"], true]);
         browser.columnWidths = ({});
-        check("default widths all fit", browser.body.fittingColumns, ["size", "modified", "type"]);
-        check("the free space is what a resize may take", browser.body.clampColumnWidth("size", 5000), browser.body.fittingWidths.size + browser.body.fitting.slack);
+        check("default widths fit without scrolling", browser.body.listRowWidth, browser.body.width);
 
         const shownPaths = () => drawer.resolved.map(item => [item.path, item.iconName]);
         browser.navigate("/home/me/docs");

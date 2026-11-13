@@ -176,9 +176,13 @@ QtObject {
         persistTabs();
     }
 
-    function dropOnTab(index, drop) {
+    function tabPath(index) {
         const state = tabState(index);
-        const dest = index === currentTab ? activePane.path : (state?.panes?.[state.active ?? 0]?.path || state?.panes?.[0]?.path || "");
+        return index === currentTab ? activePane.path : (state?.panes?.[state.active ?? 0]?.path || state?.panes?.[0]?.path || "");
+    }
+
+    function dropOnTab(index, drop) {
+        const dest = tabPath(index);
         const paths = DragService.pathsFrom(drop);
         if (dest === "" || dest === RecentService.path || paths.length === 0 || paths.includes(dest))
             return;
