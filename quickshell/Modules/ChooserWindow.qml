@@ -106,7 +106,11 @@ FloatingWindow {
         blurWidth: window.width
         blurHeight: window.height
     }
-    Component.onCompleted: start()
+    Component.onCompleted: {
+        if ("appId" in window)
+            window.appId = "dev.duxlabs.files.chooser";
+        start();
+    }
     Component.onDestruction: FileOpsService.forget(opScope)
 
     function start() {
