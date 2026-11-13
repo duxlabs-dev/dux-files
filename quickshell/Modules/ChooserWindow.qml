@@ -87,6 +87,7 @@ FloatingWindow {
 
     readonly property bool compact: width < FilesMetrics.sidebarOverlayBreakpoint
     readonly property bool sidebarDocked: sidebarShown && !compact
+    readonly property bool previewShown: previewOpen && !compact
     readonly property bool textEditing: surface.focusItem instanceof TextInput || surface.focusItem instanceof TextEdit
     readonly property bool dialogOpen: overwriteDialog.visible || connectDialog.visible || unlockDialog.visible || conflictDialog.visible || errorDialog.visible || credentialDialog.visible || paneActions.trashDialogOpen
 
@@ -373,10 +374,26 @@ FloatingWindow {
         return true;
     }
 
+    function dismissEditors(position) {
+        const inPane = pane.mapFromItem(surface, position.x, position.y);
+        pane.dismissPathEditor(inPane.x, inPane.y);
+        if (!topbar.searchFocused)
+            return;
+        const inTopbar = topbar.mapFromItem(surface, position.x, position.y);
+        if (!topbar.searchContains(inTopbar.x, inTopbar.y))
+            pane.focusBody();
+    }
+
     function setChoice(id, value) {
         choiceValues = Object.assign({}, choiceValues, {
             [id]: value
         });
+    }
+
+    component FooterDropdown: DDropdown {
+        triggerHeight: FilesMetrics.topbarControlSize
+        triggerRadius: Theme.fullRadius(width, triggerHeight)
+        normalBorderColor: "transparent"
     }
 
     FocusScope {
@@ -431,10 +448,9 @@ FloatingWindow {
             id: sidebarSlot
 
             anchors.top: header.bottom
-            anchors.bottom: footer.top
-            anchors.bottomMargin: FilesMetrics.contentSpacing
+            anchors.bottom: parent.bottom
             anchors.left: parent.left
-            width: window.sidebarDocked ? Math.max(FilesMetrics.sidebarMinWidth, Math.min(CacheData.sidebarWidth, surface.width - Math.max(FilesMetrics.windowMinWidth, topbar.minimumWidth + FilesMetrics.contentMarginH))) : 0
+            width: window.sidebarDocked ? Math.max(FilesMetrics.sidebarMinWidth, Math.min(CacheData.sidebarWidth, surface.width - Math.max(FilesMetrics.windowMinWidth, content.minimumWidth + FilesMetrics.contentMarginH))) : 0
             clip: true
 
             Behavior on width {
@@ -466,12 +482,24 @@ FloatingWindow {
             id: content
 
             anchors.top: header.bottom
-            anchors.bottom: footer.top
+            anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottomMargin: FilesMetrics.contentSpacing
+            anchors.bottomMargin: FilesMetrics.contentMarginV
             anchors.leftMargin: Math.max(FilesMetrics.contentMarginH, sidebarSlot.width)
             anchors.rightMargin: FilesMetrics.contentMarginH
+
+            readonly property real minimumWidth: topbar.minimumWidth + FilesMetrics.cardPadding * 2
+            readonly property bool besidePreview: previewDrawer.width > 0
+
+            CardSegment {
+                id: topSegment
+
+                first: true
+                anchors.top: parent.top
+                height: topbar.height + FilesMetrics.cardPadding * 2
+                bottomRightRadius: content.besidePreview ? FilesMetrics.paneRadius : bottomRadius
+            }
 
             FilesTopbar {
                 id: topbar
@@ -479,12 +507,20 @@ FloatingWindow {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
+                anchors.margins: FilesMetrics.cardPadding
                 showSidebarToggle: !window.compact
                 showNewFolder: true
                 showSplit: false
                 showOverflow: false
                 allowColumns: false
                 showHiddenToggle: true
+                showViewControls: false
+                flatNavigation: true
+                hostsPath: true
+                placeTitle: pane.placeTitle
+                selectionCount: pane.editingPath ? 0 : pane.selection.count
+                selectionBytes: pane.body.selectedBytes()
+                selectionActions: false
                 hiddenShown: window.showHidden
                 compact: window.compact
                 backEnabled: pane.canGoBack
@@ -512,194 +548,278 @@ FloatingWindow {
                     pane.focusBody();
                     pane.body.jumpTo(0, Qt.NoModifier);
                 }
+                onSelectionCleared: pane.selection.clear()
                 onSidebarToggled: window.setSidebarShown(!window.sidebarShown)
                 onHiddenToggled: window.setShowHidden(!window.showHidden)
                 onBackRequested: pane.back()
                 onForwardRequested: pane.forward()
                 onNewFolderRequested: menus.runAction("newFolder")
                 onNewDocumentRequested: (parentMenu, row) => menus.showNewDocumentSubmenu(parentMenu, row)
-                onSortKeySelected: key => window.setSort(key)
-                onSortDirectionToggled: window.setDirection(!window.sortDescending)
-                onViewModeSelected: mode => window.setViewMode(mode)
-                onZoomRequested: step => pane.body.zoomBy(step)
-                onPreviewToggled: window.setPreviewOpen(!window.previewOpen)
             }
 
-            FilesPane {
-                id: pane
+            CardSegment {
+                id: listSegment
 
-                anchors.top: topbar.bottom
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.topMargin: FilesMetrics.contentSpacing
-                focus: !window.saving
-                folderViews: false
-                showHidden: window.showHidden
-                sortKey: window.sortKey
-                sortDescending: window.sortDescending
-                viewMode: window.viewMode
-                previewOpen: window.previewOpen && !window.compact
-                filters: window.filterGlobs
-                multiSelect: window.multiple
-                escapeClearsSelection: false
-                typeAhead: true
-                dragEnabled: false
-                dropEnabled: false
-                onActivateRequested: entry => window.activate(entry)
-                onOpenRequested: entries => window.openEntries(entries)
-                onItemMenuRequested: (index, pointX, pointY, modifiers) => menus.showItemMenu(pointX, pointY)
-                onBackgroundMenuRequested: (pointX, pointY) => menus.showBackgroundMenu(pointX, pointY)
-                onTabRequested: path => pane.navigate(path)
-                onRenameRequested: (target, name) => FileOpsService.rename(target, name, window.opScope)
-                onSortRequested: key => window.setSort(key)
-                onPreviewToggleRequested: window.setPreviewOpen(!window.previewOpen)
-                onServerDialogRequested: connectDialog.ask()
-                onConnectFailed: (uri, result) => connectDialog.showFailure(uri, result)
-                onFilterRequested: text => topbar.openFilter(text)
-                onFilterFocusRequested: topbar.focusFilter()
-                onPathChanged: {
-                    window.errorText = "";
-                    if (path !== "")
-                        FolderHistory.visit(path);
-                }
-            }
-        }
+                anchors.top: topSegment.bottom
+                anchors.bottom: statusSegment.top
+                anchors.right: previewDrawer.left
+                anchors.topMargin: Theme.groupedListGap
+                anchors.bottomMargin: Theme.groupedListGap
 
-        Column {
-            id: footer
+                FilesPane {
+                    id: pane
 
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.leftMargin: FilesMetrics.contentMarginH
-            anchors.rightMargin: FilesMetrics.contentMarginH
-            anchors.bottomMargin: FilesMetrics.contentMarginV
-            spacing: Theme.spacingS
-
-            Flow {
-                width: parent.width
-                spacing: Theme.spacingM
-                visible: window.filters.length > 0 || window.choices.length > 0
-
-                DDropdown {
-                    id: filterDropdown
-
-                    visible: window.filters.length > 0
-                    showLabel: false
-                    options: window.filters.map(filter => filter.name)
-                    currentValue: window.filterIndex >= 0 && window.filterIndex < window.filters.length ? window.filters[window.filterIndex].name : ""
-                    onValueChanged: value => {
-                        const index = window.filters.findIndex(filter => filter.name === value);
-                        if (index >= 0)
-                            window.filterIndex = index;
+                    anchors.fill: parent
+                    focus: !window.saving
+                    framed: false
+                    internalPreview: false
+                    pathBarHost: topbar.pathSlot
+                    folderViews: false
+                    showHidden: window.showHidden
+                    sortKey: window.sortKey
+                    sortDescending: window.sortDescending
+                    viewMode: window.viewMode
+                    previewOpen: window.previewShown
+                    filters: window.filterGlobs
+                    multiSelect: window.multiple
+                    escapeClearsSelection: false
+                    typeAhead: true
+                    dragEnabled: false
+                    dropEnabled: false
+                    onActivateRequested: entry => window.activate(entry)
+                    onOpenRequested: entries => window.openEntries(entries)
+                    onItemMenuRequested: (index, pointX, pointY, modifiers) => menus.showItemMenu(pointX, pointY)
+                    onBackgroundMenuRequested: (pointX, pointY) => menus.showBackgroundMenu(pointX, pointY)
+                    onTabRequested: path => pane.navigate(path)
+                    onRenameRequested: (target, name) => FileOpsService.rename(target, name, window.opScope)
+                    onSortRequested: key => window.setSort(key)
+                    onPreviewToggleRequested: window.setPreviewOpen(!window.previewOpen)
+                    onPreviewKeyRequested: (action, step) => previewDrawer.handleKey(action, step)
+                    onServerDialogRequested: connectDialog.ask()
+                    onConnectFailed: (uri, result) => connectDialog.showFailure(uri, result)
+                    onFilterRequested: text => topbar.openFilter(text)
+                    onFilterFocusRequested: topbar.focusFilter()
+                    onPathChanged: {
+                        window.errorText = "";
+                        if (path !== "")
+                            FolderHistory.visit(path);
                     }
                 }
+            }
 
-                Repeater {
-                    model: window.choices
+            CardSegment {
+                id: statusSegment
 
-                    delegate: Row {
-                        id: choiceRow
+                anchors.bottom: actionSegment.top
+                anchors.bottomMargin: Theme.groupedListGap
+                height: statusBar.implicitHeight + FilesMetrics.cardPadding * 2
+                topRightRadius: content.besidePreview ? FilesMetrics.paneRadius : topRadius
+            }
 
-                        required property var modelData
+            StatusBar {
+                id: statusBar
 
-                        readonly property bool isToggle: (modelData.options ?? []).length === 0
-                        readonly property string value: window.choiceValues[modelData.id] ?? ""
+                anchors.fill: statusSegment
+                anchors.margins: FilesMetrics.cardPadding
+                total: pane.itemTotal
+                hidden: pane.hiddenTotal
+                hint: pane.selectionHint
+                viewMode: window.viewMode
+                viewModes: topbar.viewModes
+                showPreview: !window.compact
+                previewOpen: window.previewOpen
+                previewLabel: topbar.previewLabel
+                sortKeys: topbar.activeSortKeys
+                sortKey: pane.effectiveSortKey
+                sortDescending: pane.effectiveSortDescending
+                onViewModeSelected: mode => window.setViewMode(mode)
+                onPreviewToggled: window.setPreviewOpen(!window.previewOpen)
+                onSortKeySelected: key => window.setSort(key)
+                onSortDirectionToggled: window.setDirection(!window.sortDescending)
+            }
 
-                        spacing: Theme.spacingS
+            CardSegment {
+                id: actionSegment
 
-                        StyledText {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: choiceRow.modelData.label
-                            color: Theme.surfaceText
-                            font.pixelSize: Theme.fontSizeMedium
-                        }
+                last: true
+                anchors.bottom: parent.bottom
+                height: footer.height + FilesMetrics.cardPadding * 2
+            }
 
-                        DToggle {
-                            anchors.verticalCenter: parent.verticalCenter
-                            visible: choiceRow.isToggle
-                            hideText: true
-                            text: choiceRow.modelData.label
-                            checked: choiceRow.value === "true"
-                            onToggled: value => window.setChoice(choiceRow.modelData.id, value ? "true" : "false")
-                        }
+            Column {
+                id: footer
 
-                        DDropdown {
-                            anchors.verticalCenter: parent.verticalCenter
-                            visible: !choiceRow.isToggle
-                            showLabel: false
-                            options: (choiceRow.modelData.options ?? []).map(option => option.label)
-                            currentValue: (choiceRow.modelData.options ?? []).find(option => option.id === choiceRow.value)?.label ?? ""
-                            onValueChanged: value => {
-                                const option = (choiceRow.modelData.options ?? []).find(option => option.label === value);
-                                if (option)
-                                    window.setChoice(choiceRow.modelData.id, option.id);
+                anchors.bottom: actionSegment.bottom
+                anchors.left: actionSegment.left
+                anchors.right: actionSegment.right
+                anchors.margins: FilesMetrics.cardPadding
+                spacing: Theme.spacingS
+
+                Flow {
+                    width: parent.width
+                    spacing: Theme.spacingM
+                    visible: window.choices.length > 0
+
+                    Repeater {
+                        model: window.choices
+
+                        delegate: Row {
+                            id: choiceRow
+
+                            required property var modelData
+
+                            readonly property bool isToggle: (modelData.options ?? []).length === 0
+                            readonly property string value: window.choiceValues[modelData.id] ?? ""
+
+                            spacing: Theme.spacingS
+
+                            StyledText {
+                                anchors.verticalCenter: parent.verticalCenter
+                                text: choiceRow.modelData.label
+                                color: Theme.surfaceText
+                                font.pixelSize: Theme.fontSizeMedium
+                            }
+
+                            DToggle {
+                                anchors.verticalCenter: parent.verticalCenter
+                                visible: choiceRow.isToggle
+                                hideText: true
+                                text: choiceRow.modelData.label
+                                checked: choiceRow.value === "true"
+                                onToggled: value => window.setChoice(choiceRow.modelData.id, value ? "true" : "false")
+                            }
+
+                            FooterDropdown {
+                                anchors.verticalCenter: parent.verticalCenter
+                                visible: !choiceRow.isToggle
+                                options: (choiceRow.modelData.options ?? []).map(option => option.label)
+                                currentValue: (choiceRow.modelData.options ?? []).find(option => option.id === choiceRow.value)?.label ?? ""
+                                onValueChanged: value => {
+                                    const option = (choiceRow.modelData.options ?? []).find(option => option.label === value);
+                                    if (option)
+                                        window.setChoice(choiceRow.modelData.id, option.id);
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            StyledText {
-                width: parent.width
-                visible: window.savingFiles && window.incomingFiles.length > 0
-                text: I18n.tr("Saving %1 into the chosen folder", "file chooser footer listing the names an app wants to save").arg(window.incomingFiles.join(", "))
-                color: Theme.surfaceVariantText
-                font.pixelSize: Theme.fontSizeSmall
-                elide: Text.ElideMiddle
-            }
-
-            StyledText {
-                width: parent.width
-                visible: window.errorText !== ""
-                text: window.errorText
-                color: Theme.error
-                font.pixelSize: Theme.fontSizeSmall
-                elide: Text.ElideRight
-            }
-
-            Item {
-                width: parent.width
-                height: Theme.buttonHeightS
-
-                DTextField {
-                    id: nameField
-
-                    anchors.left: parent.left
-                    anchors.right: buttons.left
-                    anchors.rightMargin: Theme.spacingM
-                    anchors.verticalCenter: parent.verticalCenter
-                    visible: window.saving
-                    controlHeight: Theme.buttonHeightS
-                    placeholderText: I18n.tr("Enter filename...", "file browser save filename input placeholder")
-                    isError: text.trim() !== "" && !window.canAccept
-                    onAccepted: window.acceptCurrent()
-                    Keys.onEscapePressed: event => {
-                        event.accepted = true;
-                        if (!window.escapeBack())
-                            window.cancel();
-                    }
+                StyledText {
+                    width: parent.width
+                    visible: window.savingFiles && window.incomingFiles.length > 0
+                    text: I18n.tr("Saving %1 into the chosen folder", "file chooser footer listing the names an app wants to save").arg(window.incomingFiles.join(", "))
+                    color: Theme.surfaceVariantText
+                    font.pixelSize: Theme.fontSizeSmall
+                    elide: Text.ElideMiddle
                 }
 
-                Row {
-                    id: buttons
+                StyledText {
+                    width: parent.width
+                    visible: window.errorText !== ""
+                    text: window.errorText
+                    color: Theme.error
+                    font.pixelSize: Theme.fontSizeSmall
+                    elide: Text.ElideRight
+                }
 
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: Theme.spacingS
-                    LayoutMirroring.enabled: I18n.isRtl
+                Item {
+                    id: actionRow
 
-                    TextButton {
-                        text: I18n.tr("Cancel", "dialog button to cancel")
-                        onClicked: window.cancel()
+                    width: parent.width
+                    height: FilesMetrics.topbarControlSize
+
+                    DTextField {
+                        id: nameField
+
+                        anchors.left: parent.left
+                        anchors.right: filterDropdown.visible ? filterDropdown.left : buttons.left
+                        anchors.rightMargin: Theme.spacingM
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: window.saving
+                        fieldHeight: FilesMetrics.topbarControlSize
+                        cornerRadius: Theme.fullRadius(width, height)
+                        backgroundColor: Theme.surfaceContainerLowest
+                        borderWidth: 0
+                        focusedBorderWidth: Math.max(Theme.outlineWidthFocused, Theme.focusRingWidth)
+                        placeholderText: I18n.tr("Enter filename...", "file browser save filename input placeholder")
+                        isError: text.trim() !== "" && !window.canAccept
+                        onAccepted: window.acceptCurrent()
+                        Keys.onEscapePressed: event => {
+                            event.accepted = true;
+                            if (!window.escapeBack())
+                                window.cancel();
+                        }
                     }
 
-                    DButton {
-                        enabled: window.canAccept
-                        text: window.acceptText
-                        onClicked: window.acceptCurrent()
+                    FooterDropdown {
+                        id: filterDropdown
+
+                        anchors.right: buttons.left
+                        anchors.rightMargin: Theme.spacingM
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: window.filters.length > 0
+                        dropdownWidth: Math.min(FilesMetrics.chooserFilterWidth, actionRow.width * FilesMetrics.chooserFilterShare)
+                        options: window.filters.map(filter => filter.name)
+                        currentValue: window.filterIndex >= 0 && window.filterIndex < window.filters.length ? window.filters[window.filterIndex].name : ""
+                        onValueChanged: value => {
+                            const index = window.filters.findIndex(filter => filter.name === value);
+                            if (index >= 0)
+                                window.filterIndex = index;
+                        }
                     }
+
+                    Row {
+                        id: buttons
+
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: Theme.spacingS
+                        LayoutMirroring.enabled: I18n.isRtl
+
+                        TextButton {
+                            text: I18n.tr("Cancel", "dialog button to cancel")
+                            onClicked: window.cancel()
+                        }
+
+                        DButton {
+                            enabled: window.canAccept
+                            text: window.acceptText
+                            onClicked: window.acceptCurrent()
+                        }
+                    }
+                }
+            }
+
+            FilePreviewDrawer {
+                id: previewDrawer
+
+                anchors.top: topSegment.bottom
+                anchors.bottom: statusSegment.top
+                anchors.topMargin: content.besidePreview ? FilesMetrics.contentSpacing : 0
+                anchors.bottomMargin: anchors.topMargin
+                anchors.right: parent.right
+                chipColor: Theme.surfaceContainerLowest
+                rowColor: topSegment.color
+                closable: false
+                body: pane.body
+                open: window.previewShown
+                available: content.width
+                preferredWidth: CacheData.previewWidth
+                onResized: width => pane.setPreviewWidth(width)
+                onFocusRequested: pane.focusBody()
+            }
+        }
+
+        Item {
+            anchors.fill: parent
+            z: 1
+
+            TapHandler {
+                acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+                enabled: pane.editingPath || topbar.searchFocused
+                onPressedChanged: {
+                    if (pressed)
+                        window.dismissEditors(point.position);
                 }
             }
         }

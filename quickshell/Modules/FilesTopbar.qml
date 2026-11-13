@@ -58,6 +58,8 @@ Item {
     }
 
     readonly property bool virtualActive: trashActive || recentActive
+    readonly property bool sidebarToggleOnly: showSidebarToggle && compact
+    readonly property color restingColor: hostsPath ? "transparent" : Theme.chipSurface
     readonly property var viewModes: allViewModes.filter(mode => allowColumns || mode.value !== "columns")
     readonly property var allViewModes: [
         {
@@ -282,7 +284,7 @@ Item {
 
         FlatButton {
             anchors.verticalCenter: parent.verticalCenter
-            visible: topbar.flatNavigation && !topbar.showSidebarToggle
+            visible: topbar.flatNavigation && !topbar.sidebarToggleOnly
             enabled: topbar.backEnabled
             iconName: I18n.isRtl ? "arrow_forward" : "arrow_back"
             tooltipText: I18n.tr("Back", "tooltip on the button going to the previous location")
@@ -291,7 +293,7 @@ Item {
 
         FlatButton {
             anchors.verticalCenter: parent.verticalCenter
-            visible: topbar.flatNavigation && !topbar.showSidebarToggle
+            visible: topbar.flatNavigation && !topbar.sidebarToggleOnly
             enabled: topbar.forwardEnabled
             iconName: I18n.isRtl ? "arrow_back" : "arrow_forward"
             tooltipText: I18n.tr("Forward", "tooltip on the button going to the next location")
@@ -312,7 +314,7 @@ Item {
             visible: topbar.showNewFolder
             enabled: topbar.currentPath !== "" && !topbar.virtualActive
             iconName: FileActions.icon("newFolder")
-            backgroundColor: Theme.chipSurface
+            backgroundColor: topbar.restingColor
             tooltipText: I18n.tr("New folder", "file browser toolbar button creating a folder")
             onClicked: topbar.newFolderRequested()
         }
@@ -329,8 +331,8 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             visible: topbar.showHiddenToggle
             iconName: topbar.hiddenShown ? "visibility" : "visibility_off"
-            iconColor: topbar.hiddenShown ? Theme.onPrimary : Theme.surfaceText
-            backgroundColor: topbar.hiddenShown ? Theme.primary : Theme.chipSurface
+            iconColor: topbar.hiddenShown ? Theme.onSelectedContainer : Theme.surfaceText
+            backgroundColor: topbar.hiddenShown ? Theme.selectedContainer : topbar.restingColor
             tooltipText: FileActions.label("showHidden")
             onClicked: topbar.hiddenToggled()
         }
@@ -457,7 +459,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             visible: topbar.showOverflow
             iconName: "more_vert"
-            backgroundColor: topbar.hostsPath ? "transparent" : Theme.chipSurface
+            backgroundColor: topbar.restingColor
             tooltipText: I18n.tr("More actions", "tooltip on the overflow menu button")
             onClicked: menu.toggle(overflowButton, "more")
         }
@@ -743,7 +745,7 @@ Item {
 
             StyledText {
                 anchors.left: clearSelection.right
-                anchors.right: selectionButtons.left
+                anchors.right: selectionButtons.visible ? selectionButtons.left : parent.right
                 anchors.leftMargin: Theme.spacingS
                 anchors.rightMargin: Theme.spacingS
                 anchors.verticalCenter: parent.verticalCenter

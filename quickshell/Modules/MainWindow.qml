@@ -352,22 +352,6 @@ FloatingWindow {
         targetWindow: window
     }
 
-    component CardSegment: Rectangle {
-        property bool first: false
-        property bool last: false
-
-        readonly property real topRadius: first ? FilesMetrics.paneRadius : Theme.groupedListInnerRadius
-        readonly property real bottomRadius: last ? FilesMetrics.paneRadius : Theme.groupedListInnerRadius
-
-        anchors.left: parent.left
-        anchors.right: parent.right
-        color: card.surfaceColor
-        topLeftRadius: topRadius
-        topRightRadius: topRadius
-        bottomLeftRadius: bottomRadius
-        bottomRightRadius: bottomRadius
-    }
-
     component WindowPane: FilesPane {
         id: pane
 
@@ -563,7 +547,7 @@ FloatingWindow {
             Item {
                 id: card
 
-                readonly property color surfaceColor: Theme.foregroundColor(Theme.cardSurface, true)
+                readonly property color surfaceColor: topSegment.color
                 readonly property real minimumWidth: topbar.minimumWidth + FilesMetrics.cardPadding * 2
 
                 anchors.top: parent.top

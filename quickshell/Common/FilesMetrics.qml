@@ -23,6 +23,8 @@ Singleton {
     readonly property real previewMinWidth: FileBrowserMetrics.previewDrawerMinWidth
     readonly property real searchMinWidth: Theme.sidebarWidth * 0.75
     readonly property real searchMaxWidth: Theme.sidebarWidth * 1.6
+    readonly property real chooserFilterWidth: searchMinWidth
+    readonly property real chooserFilterShare: 0.25
     readonly property real searchShare: 0.36
     readonly property real searchCollapseBelow: Theme.sidebarWidth * 1.8
     readonly property real statusBarHeight: topbarControlSize

@@ -16,6 +16,7 @@ Item {
     property bool previewOpen: false
     property string previewLabel: ""
     property bool showSort: true
+    property bool showPreview: true
     property var sortKeys: []
     property string sortKey: "name"
     property bool sortDescending: false
@@ -87,6 +88,7 @@ Item {
 
         ControlSegment {
             anchors.verticalCenter: parent.verticalCenter
+            visible: bar.showPreview
             width: FilesMetrics.topbarControlSize
             color: bar.previewOpen ? Theme.selectedContainer : Theme.chipSurface
             iconName: bar.previewOpen ? "preview_off" : "preview"
