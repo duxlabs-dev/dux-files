@@ -18,7 +18,7 @@ import (
 	"github.com/duxlabs-dev/dux-go/ipc/params"
 )
 
-func (m *Manager) Handle(_ context.Context, w *ipc.ConnWriter, req ipc.Request) {
+func (m *Manager) Handle(ctx context.Context, w *ipc.ConnWriter, req ipc.Request) {
 	switch req.Method {
 	case "files.op.jobs":
 		w.Respond(req.ID, map[string]any{"jobs": m.Jobs()})
@@ -44,6 +44,9 @@ func (m *Manager) Handle(_ context.Context, w *ipc.ConnWriter, req ipc.Request) 
 		return
 	case "files.op.dropAction":
 		handleDropAction(w, req)
+		return
+	case "files.op.portalTransfer":
+		m.handlePortalTransfer(ctx, w, req)
 		return
 	}
 
