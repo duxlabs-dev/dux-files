@@ -18,6 +18,7 @@ type fakePortalTransfer struct {
 	startErr   error
 	addErr     error
 	batches    [][]dbus.UnixFD
+	stopped    []string
 	addCalls   int
 	startCalls int
 	stopCalls  int
@@ -34,8 +35,9 @@ func (f *fakePortalTransfer) AddFiles(_ context.Context, _ string, fds []dbus.Un
 	return f.addErr
 }
 
-func (f *fakePortalTransfer) StopTransfer(context.Context, string) {
+func (f *fakePortalTransfer) StopTransfer(_ context.Context, key string) {
 	f.stopCalls++
+	f.stopped = append(f.stopped, key)
 }
 
 func TestHandlePortalTransferRejectsInvalidParams(t *testing.T) {
@@ -100,4 +102,23 @@ func TestExportPortalTransferErrors(t *testing.T) {
 		require.Empty(t, key)
 		require.Equal(t, 1, client.stopCalls)
 	})
+}
+
+func TestManagerPortalTransferStopsPreviousKey(t *testing.T) {
+	manager, _ := newHarness(t)
+	dir := t.TempDir()
+	file := filepath.Join(dir, "a.txt")
+	require.NoError(t, os.WriteFile(file, []byte("x"), 0o644))
+
+	client := &fakePortalTransfer{key: "first-key"}
+	key, err := manager.exportPortalTransfer(context.Background(), client, []string{file})
+	require.NoError(t, err)
+	require.Equal(t, "first-key", key)
+	require.Empty(t, client.stopped)
+
+	client.key = "second-key"
+	key, err = manager.exportPortalTransfer(context.Background(), client, []string{file})
+	require.NoError(t, err)
+	require.Equal(t, "second-key", key)
+	require.Equal(t, []string{"first-key"}, client.stopped)
 }

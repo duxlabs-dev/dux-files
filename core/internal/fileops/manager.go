@@ -73,16 +73,17 @@ type Manager struct {
 	stater Stater
 	slots  chan struct{}
 
-	mu       sync.Mutex
-	elevator Elevator
-	images   ImageSource
-	nextID   int
-	active   map[string]*job
-	order    []string
-	finished []View
-	undo     map[string][]undoEntry
-	redo     map[string][]spec
-	epoch    map[string]uint64
+	mu        sync.Mutex
+	elevator  Elevator
+	images    ImageSource
+	nextID    int
+	active    map[string]*job
+	order     []string
+	finished  []View
+	undo      map[string][]undoEntry
+	redo      map[string][]spec
+	epoch     map[string]uint64
+	portalKey string
 }
 
 func NewManager(bus Publisher, stater Stater) *Manager {

@@ -46,7 +46,7 @@ func (m *Manager) Handle(ctx context.Context, w *ipc.ConnWriter, req ipc.Request
 		handleDropAction(w, req)
 		return
 	case "files.op.portalTransfer":
-		handlePortalTransfer(ctx, w, req)
+		m.handlePortalTransfer(ctx, w, req)
 		return
 	}
 

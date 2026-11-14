@@ -47,7 +47,7 @@ func (c dbusPortalTransfer) StopTransfer(ctx context.Context, key string) {
 	_ = c.obj.CallWithContext(ctx, portalTransferIface+".StopTransfer", 0, key).Err
 }
 
-func handlePortalTransfer(ctx context.Context, w *ipc.ConnWriter, req ipc.Request) {
+func (m *Manager) handlePortalTransfer(ctx context.Context, w *ipc.ConnWriter, req ipc.Request) {
 	sources, err := absPaths(req, "paths")
 	if err != nil {
 		wire.RespondError(w, req.ID, err)
@@ -69,13 +69,40 @@ func handlePortalTransfer(ctx context.Context, w *ipc.ConnWriter, req ipc.Reques
 	defer cancel()
 
 	client := dbusPortalTransfer{obj: bus.Object(portalBusName, portalObjectPath)}
-	key, err := exportPortalTransfer(callCtx, client, sources)
+	key, err := m.exportPortalTransfer(callCtx, client, sources)
 	if err != nil {
 		log.Debugf("portalTransfer: %v", err)
 		w.Respond(req.ID, map[string]any{"key": ""})
 		return
 	}
 	w.Respond(req.ID, map[string]any{"key": key})
+}
+
+func (m *Manager) exportPortalTransfer(ctx context.Context, client portalTransferClient, paths []string) (string, error) {
+	m.mu.Lock()
+	prev := m.portalKey
+	m.portalKey = ""
+	m.mu.Unlock()
+
+	if prev != "" {
+		client.StopTransfer(ctx, prev)
+	}
+
+	key, err := exportPortalTransfer(ctx, client, paths)
+	if err != nil || key == "" {
+		return "", err
+	}
+
+	m.mu.Lock()
+	if m.portalKey == "" {
+		m.portalKey = key
+		m.mu.Unlock()
+		return key, nil
+	}
+	m.mu.Unlock()
+
+	client.StopTransfer(ctx, key)
+	return "", nil
 }
 
 func exportPortalTransfer(ctx context.Context, client portalTransferClient, paths []string) (string, error) {
