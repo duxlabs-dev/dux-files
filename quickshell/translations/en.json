@@ -2808,6 +2808,12 @@
     "comment": "toast action revealing the extracted files"
   },
   {
+    "term": "Show configured network mounts",
+    "context": "Show configured network mounts",
+    "reference": "Modules/Settings/SettingsContent.qml:1392",
+    "comment": "configured network mounts setting label"
+  },
+  {
     "term": "Show devices",
     "context": "Show devices",
     "reference": "Modules/Settings/SettingsContent.qml:1429",
@@ -2836,6 +2842,12 @@
     "context": "Show network",
     "reference": "Modules/Settings/SettingsContent.qml:1456",
     "comment": "network setting label"
+  },
+  {
+    "term": "Show network mounts from /etc/fstab, including ones that are not mounted.",
+    "context": "Show network mounts from /etc/fstab, including ones that are not mounted.",
+    "reference": "Modules/Settings/SettingsContent.qml:1394",
+    "comment": "configured network mounts setting description"
   },
   {
     "term": "Show system partitions",
@@ -3675,6 +3687,12 @@
     "term": "frosted glass compositor",
     "context": "frosted glass compositor",
     "reference": "Modules/Settings/SettingsContent.qml:1231",
+    "comment": "settings search keywords, space separated, add synonyms in your language"
+  },
+  {
+    "term": "fstab cifs nfs sshfs network mounts sidebar hide",
+    "context": "fstab cifs nfs sshfs network mounts sidebar hide",
+    "reference": "Modules/Settings/SettingsContent.qml:1393",
     "comment": "settings search keywords, space separated, add synonyms in your language"
   },
   {

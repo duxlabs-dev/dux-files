@@ -134,6 +134,8 @@ dfiles ipc list                 # Every IPC method the daemon exposes
 dfiles ipc <method> key=value...
 ```
 
+Network locations configured in `/etc/fstab` appear in the Network sidebar when Settings, Devices, Network, "Show configured network mounts" is enabled. They can be mounted with `network.mount id=...` and unmounted with `network.disconnect id=...`; `network.mounts` lists their current status.
+
 Jobs started from the CLI answer their own prompts. A restore that finds its original path taken keeps both (`--conflict skip|replace` changes that), and a failed item is skipped, reported, and makes the command exit 1.
 
 ## Default file manager
