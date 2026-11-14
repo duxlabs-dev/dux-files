@@ -98,7 +98,7 @@ OverlayDialog {
 
     DToggle {
         width: parent.width
-        text: I18n.tr("Vim keys", "toggle label for vim style navigation")
+        text: I18n.tr("%1 keys", "toggle label for vim style navigation, %1 is Vim").arg("Vim")
         description: I18n.tr("h j k l move, / searches and letters run commands instead of jumping to a name.", "vim keys toggle description")
         checked: SettingsData.vimKeys
         onToggled: checked => SettingsData.vimKeys = checked

@@ -14,6 +14,9 @@
   "%1 folders could not be read": {
     "%1 folders could not be read": "%1 mappen konden niet worden gelezen"
   },
+  "%1 follows the handler on your %2.": {
+    "%1 follows the handler on your %2.": ""
+  },
   "%1 h %2 min left": {
     "%1 h %2 min left": "Nog %1 u %2 min"
   },
@@ -38,6 +41,9 @@
   "%1 items cut": {
     "%1 items cut": "%1 items geknipt"
   },
+  "%1 keys": {
+    "%1 keys": ""
+  },
   "%1 levels deep": {
     "%1 levels deep": "%1 niveaus diep"
   },
@@ -47,14 +53,23 @@
   "%1 min left": {
     "%1 min left": "Nog %1 min"
   },
+  "%1 not detected, using %2.": {
+    "%1 not detected, using %2.": ""
+  },
+  "%1 not detected, using the %2 preset.": {
+    "%1 not detected, using the %2 preset.": ""
+  },
   "%1 px": {
     "%1 px": "%1 px"
   },
   "%1 running operations will be stopped part way through.": {
-    "%1 running operations will be stopped part way through.": ""
+    "%1 running operations will be stopped part way through.": "%1 lopende bewerkingen worden halverwege gestopt."
   },
   "%1 s left": {
     "%1 s left": "Nog %1 s"
+  },
+  "%1 selected": {
+    "%1 selected": ""
   },
   "%1 used · %2 free · %3 total": {
     "%1 used · %2 free · %3 total": "%1 gebruikt · %2 vrij · %3 totaal"
@@ -64,6 +79,9 @@
   },
   "%1 will be moved to the trash.": {
     "%1 will be moved to the trash.": "%1 wordt naar de prullenbak verplaatst."
+  },
+  "%1 with seconds": {
+    "%1 with seconds": ""
   },
   "%1 · %2": {
     "%1 · %2": "%1 · %2"
@@ -86,8 +104,8 @@
   "1 item cut": {
     "1 item cut": "1 item geknipt"
   },
-  "50 is the Material default.": {
-    "50 is the Material default.": "50 is de standaardwaarde van Material."
+  "50 is the %1 default.": {
+    "50 is the %1 default.": ""
   },
   "? or F1 in the main window.": {
     "? or F1 in the main window.": "? of F1 in het hoofdvenster."
@@ -116,11 +134,11 @@
   "Administrator access is not available": {
     "Administrator access is not available": "Beheerderstoegang is niet beschikbaar"
   },
-  "Administrator access is not available because pkexec is not installed": {
-    "Administrator access is not available because pkexec is not installed": "Beheerderstoegang is niet beschikbaar omdat pkexec niet is geïnstalleerd"
+  "Administrator access is not available because %1 is not installed": {
+    "Administrator access is not available because %1 is not installed": ""
   },
-  "Administrator access is not available because the polkit policy is not installed": {
-    "Administrator access is not available because the polkit policy is not installed": "Beheerderstoegang is niet beschikbaar omdat het polkit-beleid niet is geïnstalleerd"
+  "Administrator access is not available because the %1 policy is not installed": {
+    "Administrator access is not available because the %1 policy is not installed": ""
   },
   "Administrator access is not available inside the sandbox": {
     "Administrator access is not available inside the sandbox": "Beheerderstoegang is niet beschikbaar binnen de sandbox"
@@ -185,8 +203,8 @@
   "Automatic": {
     "Automatic": "Automatisch"
   },
-  "Automatic uses $TERMINAL.": {
-    "Automatic uses $TERMINAL.": "Automatisch gebruikt $TERMINAL."
+  "Automatic uses %1.": {
+    "Automatic uses %1.": ""
   },
   "Available": {
     "Available": "Beschikbaar"
@@ -210,7 +228,7 @@
     "Backend: started on demand through %1": "Backend: op aanvraag gestart via %1"
   },
   "Background blur": {
-    "Background blur": ""
+    "Background blur": "Achtergrondvervaging"
   },
   "Badges": {
     "Badges": "Emblemen"
@@ -228,7 +246,7 @@
     "Blue": "Blauw"
   },
   "Blurs what shows through the window. Needs an opacity below 100%.": {
-    "Blurs what shows through the window. Needs an opacity below 100%.": ""
+    "Blurs what shows through the window. Needs an opacity below 100%.": "Vervaagt wat door het venster zichtbaar is. Vereist een dekking onder 100%."
   },
   "Bookmark this folder": {
     "Bookmark this folder": "Bladwijzer voor deze map maken"
@@ -255,7 +273,7 @@
     "Choose a badge image": "Kies een emblemafbeelding"
   },
   "Choose folder…": {
-    "Choose folder…": ""
+    "Choose folder…": "Map kiezen…"
   },
   "Clear": {
     "Clear": "Wissen"
@@ -287,9 +305,6 @@
   "Close tabs to the right": {
     "Close tabs to the right": "Tabbladen rechts sluiten"
   },
-  "Collapse": {
-    "Collapse": "Inklappen"
-  },
   "Color source": {
     "Color source": "Kleurbron"
   },
@@ -297,7 +312,7 @@
     "Column view": "Kolomweergave"
   },
   "Columns": {
-    "Columns": ""
+    "Columns": "Kolommen"
   },
   "Comfortable": {
     "Comfortable": "Comfortabel"
@@ -335,8 +350,8 @@
   "Connected": {
     "Connected": "Verbonden"
   },
-  "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": {
-    "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": "Verbonden, maar de share heeft geen lokale map. De gvfs-FUSE-dienst is mogelijk niet actief."
+  "Connected, but the share has no local folder. The %1 service may not be running.": {
+    "Connected, but the share has no local folder. The %1 service may not be running.": ""
   },
   "Contents": {
     "Contents": "Inhoud"
@@ -390,7 +405,7 @@
     "Ctrl+Wheel resizes per window.": "Ctrl+Wheel wijzigt de grootte per venster."
   },
   "Current folder": {
-    "Current folder": ""
+    "Current folder": "Huidige map"
   },
   "Custom": {
     "Custom": "Aangepast"
@@ -405,7 +420,7 @@
     "Dark": "Donker"
   },
   "Date format": {
-    "Date format": ""
+    "Date format": "Datumnotatie"
   },
   "Decrease": {
     "Decrease": "Verlagen"
@@ -482,11 +497,14 @@
   "Drives and mounting": {
     "Drives and mounting": "Schijven en aankoppelen"
   },
-  "Drives are unavailable because the sandbox cannot reach udisks2": {
-    "Drives are unavailable because the sandbox cannot reach udisks2": "Schijven zijn niet beschikbaar omdat de sandbox udisks2 niet kan bereiken"
+  "Drives are unavailable because %1 is not running": {
+    "Drives are unavailable because %1 is not running": ""
   },
-  "Drives are unavailable because udisks2 is not running": {
-    "Drives are unavailable because udisks2 is not running": "Schijven zijn niet beschikbaar omdat udisks2 niet actief is"
+  "Drives are unavailable because the sandbox cannot reach %1": {
+    "Drives are unavailable because the sandbox cannot reach %1": ""
+  },
+  "Drop on a tab to move files there": {
+    "Drop on a tab to move files there": ""
   },
   "Dropping without a modifier": {
     "Dropping without a modifier": "Neerzetten zonder modificatietoets"
@@ -505,12 +523,6 @@
   },
   "Duration": {
     "Duration": "Duur"
-  },
-  "Dux Shell not detected, using %1.": {
-    "Dux Shell not detected, using %1.": "Dux Shell niet gevonden, %1 wordt gebruikt."
-  },
-  "Dux Shell not detected, using the %1 preset.": {
-    "Dux Shell not detected, using the %1 preset.": "Dux Shell niet gevonden, voorinstelling %1 wordt gebruikt."
   },
   "Each launcher's own configuration folder.": {
     "Each launcher's own configuration folder.": "De eigen configuratiemap van elke launcher."
@@ -547,9 +559,6 @@
   },
   "Execute": {
     "Execute": "Uitvoeren"
-  },
-  "Expand": {
-    "Expand": "Uitklappen"
   },
   "Extract archives on open": {
     "Extract archives on open": "Archieven uitpakken bij openen"
@@ -617,8 +626,8 @@
   "Folders to skip": {
     "Folders to skip": "Over te slaan mappen"
   },
-  "Follow Dux Shell colors, falling back to a preset.": {
-    "Follow Dux Shell colors, falling back to a preset.": "Kleuren van Dux Shell volgen, met een voorinstelling als terugval."
+  "Follow %1 colors, falling back to a preset.": {
+    "Follow %1 colors, falling back to a preset.": ""
   },
   "Following the system color scheme (currently %1).": {
     "Following the system color scheme (currently %1).": "Volgt het kleurenschema van het systeem (momenteel %1)."
@@ -627,7 +636,7 @@
     "Font source": "Lettertypebron"
   },
   "Foreground layers": {
-    "Foreground layers": ""
+    "Foreground layers": "Voorgrondlagen"
   },
   "Forget": {
     "Forget": "Vergeten"
@@ -650,11 +659,8 @@
   "Games": {
     "Games": "Spellen"
   },
-  "Games and prefixes Heroic installed.": {
-    "Games and prefixes Heroic installed.": "Spellen en prefixen die Heroic heeft geïnstalleerd."
-  },
-  "Games and prefixes Lutris installed.": {
-    "Games and prefixes Lutris installed.": "Games en prefixen die Lutris heeft geïnstalleerd."
+  "Games and prefixes %1 installed.": {
+    "Games and prefixes %1 installed.": ""
   },
   "Games folder": {
     "Games folder": "Gamesmap"
@@ -670,9 +676,6 @@
   },
   "Getting around": {
     "Getting around": "Navigeren"
-  },
-  "GitHub": {
-    "GitHub": "GitHub"
   },
   "Go to that tab": {
     "Go to that tab": "Naar dat tabblad gaan"
@@ -695,26 +698,14 @@
   "Group": {
     "Group": "Groep"
   },
-  "Heroic": {
-    "Heroic": "Heroic"
-  },
   "Hidden files after other files": {
-    "Hidden files after other files": ""
-  },
-  "Hides the title and the window buttons, leaving a thin strip to drag the window.": {
-    "Hides the title and the window buttons, leaving a thin strip to drag the window.": "Verbergt de titel en de vensterknoppen, zodat er een smalle strook overblijft om het venster te verslepen."
+    "Hidden files after other files": "Verborgen bestanden na andere bestanden"
   },
   "Home": {
     "Home": "Persoonlijke map"
   },
   "Host filesystem": {
     "Host filesystem": "Bestandssysteem van host"
-  },
-  "ISO 8601": {
-    "ISO 8601": ""
-  },
-  "ISO 8601 with seconds": {
-    "ISO 8601 with seconds": ""
   },
   "Icons": {
     "Icons": "Pictogrammen"
@@ -731,8 +722,8 @@
   "Import": {
     "Import": "Importeren"
   },
-  "Import your GTK bookmarks?": {
-    "Import your GTK bookmarks?": "Je GTK-bladwijzers importeren?"
+  "Import your %1 bookmarks?": {
+    "Import your %1 bookmarks?": ""
   },
   "Include hidden files": {
     "Include hidden files": "Verborgen bestanden meenemen"
@@ -777,7 +768,7 @@
     "Keep running": "Actief blijven"
   },
   "Keeps cards and panes solid when the window is see-through.": {
-    "Keeps cards and panes solid when the window is see-through.": ""
+    "Keeps cards and panes solid when the window is see-through.": "Houdt kaarten en deelvensters ondoorzichtig wanneer het venster doorzichtig is."
   },
   "Keyboard": {
     "Keyboard": "Toetsenbord"
@@ -792,16 +783,19 @@
     "Larger icons": "Grotere pictogrammen"
   },
   "Last used": {
-    "Last used": ""
+    "Last used": "Laatst gebruikt"
   },
   "Layer opacity": {
-    "Layer opacity": ""
+    "Layer opacity": "Laagdekking"
   },
   "Lets the desktop show through the window. Text and controls stay solid.": {
-    "Lets the desktop show through the window. Text and controls stay solid.": ""
+    "Lets the desktop show through the window. Text and controls stay solid.": "Laat het bureaublad door het venster heen zien. Tekst en bedieningselementen blijven ondoorzichtig."
   },
-  "Libraries and Proton prefixes.": {
-    "Libraries and Proton prefixes.": "Bibliotheken en Proton-prefixen."
+  "Libraries and %1 prefixes.": {
+    "Libraries and %1 prefixes.": ""
+  },
+  "Library": {
+    "Library": ""
   },
   "Library · %1": {
     "Library · %1": "Bibliotheek · %1"
@@ -832,9 +826,6 @@
   },
   "Lock": {
     "Lock": "Vergrendelen"
-  },
-  "Lutris": {
-    "Lutris": "Lutris"
   },
   "MIT License": {
     "MIT License": "MIT-licentie"
@@ -926,11 +917,11 @@
   "Network in the sidebar": {
     "Network in the sidebar": "Netwerk in de zijbalk"
   },
-  "Network locations are unavailable because gvfs is not running": {
-    "Network locations are unavailable because gvfs is not running": "Netwerklocaties zijn niet beschikbaar omdat gvfs niet actief is"
+  "Network locations are unavailable because %1 is not running": {
+    "Network locations are unavailable because %1 is not running": ""
   },
-  "Network locations are unavailable because the sandbox cannot reach gvfs": {
-    "Network locations are unavailable because the sandbox cannot reach gvfs": "Netwerklocaties zijn niet beschikbaar omdat de sandbox gvfs niet kan bereiken"
+  "Network locations are unavailable because the sandbox cannot reach %1": {
+    "Network locations are unavailable because the sandbox cannot reach %1": ""
   },
   "Never": {
     "Never": "Nooit"
@@ -948,13 +939,13 @@
     "New tab": "Nieuw tabblad"
   },
   "New tab folder": {
-    "New tab folder": ""
+    "New tab folder": "Map voor nieuw tabblad"
   },
   "New window": {
     "New window": "Nieuw venster"
   },
   "New window folder": {
-    "New window folder": ""
+    "New window folder": "Map voor nieuw venster"
   },
   "Next tab": {
     "Next tab": "Volgend tabblad"
@@ -1011,7 +1002,7 @@
     "Only the window process serves the portal": "Alleen het vensterproces bedient het portaal"
   },
   "Opacity": {
-    "Opacity": ""
+    "Opacity": "Dekking"
   },
   "Open": {
     "Open": "Openen"
@@ -1088,8 +1079,8 @@
   "Owner": {
     "Owner": "Eigenaar"
   },
-  "PDF preview is not available. Install Qt PDF support to view this file.": {
-    "PDF preview is not available. Install Qt PDF support to view this file.": "PDF-voorbeeld is niet beschikbaar. Installeer Qt PDF-ondersteuning om dit bestand te bekijken."
+  "PDF preview is not available. Install %1 support to view this file.": {
+    "PDF preview is not available. Install %1 support to view this file.": ""
   },
   "Palette: %1": {
     "Palette: %1": "Palet: %1"
@@ -1139,8 +1130,8 @@
   "Preference: %1 is used": {
     "Preference: %1 is used": "Voorkeur: %1 wordt gebruikt"
   },
-  "Preference: %1 names Dux Files": {
-    "Preference: %1 names Dux Files": "Voorkeur: %1 noemt Dux Files"
+  "Preference: %2 names %1": {
+    "Preference: %2 names %1": ""
   },
   "Preference: no file chooser backend configured": {
     "Preference: no file chooser backend configured": "Voorkeur: geen backend voor bestandskiezer ingesteld"
@@ -1172,9 +1163,6 @@
   "Protocol": {
     "Protocol": "Protocol"
   },
-  "Proton · %1": {
-    "Proton · %1": "Proton · %1"
-  },
   "Purple": {
     "Purple": "Paars"
   },
@@ -1182,7 +1170,7 @@
     "Quit": "Afsluiten"
   },
   "Quit while file operations are running?": {
-    "Quit while file operations are running?": ""
+    "Quit while file operations are running?": "Afsluiten terwijl er bestandsbewerkingen lopen?"
   },
   "Radius strength": {
     "Radius strength": "Afrondingssterkte"
@@ -1215,7 +1203,7 @@
     "Register as the session file manager": "Registreren als bestandsbeheerder van de sessie"
   },
   "Relative": {
-    "Relative": ""
+    "Relative": "Relatief"
   },
   "Relevance": {
     "Relevance": "Relevantie"
@@ -1301,6 +1289,9 @@
   "Reverse the sort order": {
     "Reverse the sort order": "Sorteervolgorde omkeren"
   },
+  "Revision": {
+    "Revision": ""
+  },
   "Ripple effects": {
     "Ripple effects": "Rimpeleffecten"
   },
@@ -1321,6 +1312,9 @@
   },
   "Run this file?": {
     "Run this file?": "Dit bestand uitvoeren?"
+  },
+  "Runtime": {
+    "Runtime": ""
   },
   "Sandbox": {
     "Sandbox": "Sandbox"
@@ -1370,8 +1364,8 @@
   "Search the disk": {
     "Search the disk": "De schijf doorzoeken"
   },
-  "Search with the danksearch index": {
-    "Search with the danksearch index": "Zoeken met de danksearch-index"
+  "Search with the %1 index": {
+    "Search with the %1 index": ""
   },
   "Search your home folder": {
     "Search your home folder": "Je persoonlijke map doorzoeken"
@@ -1407,10 +1401,13 @@
     "Shared with other apps.": "Gedeeld met andere apps."
   },
   "Shares on %1": {
-    "Shares on %1": ""
+    "Shares on %1": "Shares op %1"
   },
   "Show": {
     "Show": "Tonen"
+  },
+  "Show all tabs": {
+    "Show all tabs": ""
   },
   "Show devices": {
     "Show devices": "Apparaten tonen"
@@ -1491,25 +1488,19 @@
     "Square": "Vierkant"
   },
   "Startup folder": {
-    "Startup folder": ""
+    "Startup folder": "Opstartmap"
   },
   "Status": {
     "Status": "Status"
   },
-  "Steam": {
-    "Steam": "Steam"
-  },
-  "Steam, ~/VirtualBox VMs": {
-    "Steam, ~/VirtualBox VMs": "Steam, ~/VirtualBox VMs"
-  },
   "Stop measuring": {
     "Stop measuring": "Meten stoppen"
   },
-  "Such as a separate /home.": {
-    "Such as a separate /home.": "Zoals een aparte /home."
+  "Such as a separate %1.": {
+    "Such as a separate %1.": ""
   },
-  "Support Dux Labs": {
-    "Support Dux Labs": "Steun Dux Labs"
+  "Support %1": {
+    "Support %1": ""
   },
   "Switch pane": {
     "Switch pane": "Van paneel wisselen"
@@ -1521,7 +1512,7 @@
     "System default": "Systeemstandaard"
   },
   "System locale": {
-    "System locale": ""
+    "System locale": "Systeemlocale"
   },
   "System preference unavailable, using dark.": {
     "System preference unavailable, using dark.": "Systeemvoorkeur niet beschikbaar, donker wordt gebruikt."
@@ -1532,11 +1523,11 @@
   "Terminal, drag and thumbnails": {
     "Terminal, drag and thumbnails": "Terminal, slepen en miniaturen"
   },
-  "The Wine prefix of each game.": {
-    "The Wine prefix of each game.": "De Wine-prefix van elk spel."
+  "The %1 prefix of each game.": {
+    "The %1 prefix of each game.": ""
   },
-  "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": {
-    "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": "De wijziging wordt van kracht nadat xdg-desktop-portal opnieuw is gestart. Geopende open- en opslaandialogen van andere apps worden gesloten."
+  "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": {
+    "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": ""
   },
   "The files themselves stay where they are.": {
     "The files themselves stay where they are.": "De bestanden zelf blijven waar ze zijn."
@@ -1545,7 +1536,7 @@
     "The portal list is managed by the system.": "De portaallijst wordt door het systeem beheerd."
   },
   "The running operation will be stopped part way through.": {
-    "The running operation will be stopped part way through.": ""
+    "The running operation will be stopped part way through.": "De lopende bewerking wordt halverwege gestopt."
   },
   "The session bus refused it.": {
     "The session bus refused it.": "De sessiebus heeft het geweigerd."
@@ -1581,7 +1572,7 @@
     "This month": "Deze maand"
   },
   "This server offers no shares": {
-    "This server offers no shares": ""
+    "This server offers no shares": "Deze server biedt geen shares aan"
   },
   "This session": {
     "This session": "Deze sessie"
@@ -1664,8 +1655,8 @@
   "Use": {
     "Use": "Gebruiken"
   },
-  "Use Dux Files for open and save dialogs": {
-    "Use Dux Files for open and save dialogs": "Dux Files gebruiken voor open- en opslagdialogen"
+  "Use %1 for open and save dialogs": {
+    "Use %1 for open and save dialogs": ""
   },
   "Use a bundled color palette.": {
     "Use a bundled color palette.": "Een meegeleverd kleurenpalet gebruiken."
@@ -1685,8 +1676,8 @@
   "Username": {
     "Username": "Gebruikersnaam"
   },
-  "Using Dux Shell dynamic colors.": {
-    "Using Dux Shell dynamic colors.": "Dynamische kleuren van Dux Shell worden gebruikt."
+  "Using %1 dynamic colors.": {
+    "Using %1 dynamic colors.": ""
   },
   "Version": {
     "Version": "Versie"
@@ -1703,9 +1694,6 @@
   "Views, sorting and defaults": {
     "Views, sorting and defaults": "Weergaven, sortering en standaarden"
   },
-  "Vim keys": {
-    "Vim keys": "Vim-toetsen"
-  },
   "Waiting": {
     "Waiting": "Wachten"
   },
@@ -1717,9 +1705,6 @@
   },
   "Window": {
     "Window": "Venster"
-  },
-  "Window header": {
-    "Window header": "Vensterkop"
   },
   "Windows": {
     "Windows": "Vensters"
@@ -1734,7 +1719,7 @@
     "Wrong password": "Onjuist wachtwoord"
   },
   "Your compositor does not support background blur.": {
-    "Your compositor does not support background blur.": ""
+    "Your compositor does not support background blur.": "Je compositor ondersteunt geen achtergrondvervaging."
   },
   "Zoom in": {
     "Zoom in": "Inzoomen"
@@ -1758,7 +1743,7 @@
     "capability available sandbox": "mogelijkheid functie beschikbaar sandbox capability available"
   },
   "cards panes contrast glass": {
-    "cards panes contrast glass": ""
+    "cards panes contrast glass": "cards panes contrast glass kaarten deelvensters panelen contrast glas"
   },
   "config folder launcher wine prefix": {
     "config folder launcher wine prefix": "configuratie map starter wine prefix config folder launcher"
@@ -1794,7 +1779,7 @@
     "default file manager dbus reveal": "standaard bestandsbeheerder dbus tonen weergeven default file manager reveal"
   },
   "default folder directory start open home": {
-    "default folder directory start open home": ""
+    "default folder directory start open home": "default folder directory start open home standaard map opstarten starten openen persoonlijke thuismap"
   },
   "delete confirmation prompt": {
     "delete confirmation prompt": "verwijderen bevestiging vraag melding delete confirmation prompt"
@@ -1812,7 +1797,7 @@
     "dotfiles invisible": "dotfiles verborgen onzichtbaar bestanden invisible hidden"
   },
   "dotfiles sort last bottom": {
-    "dotfiles sort last bottom": ""
+    "dotfiles sort last bottom": "dotfiles sort last bottom puntbestanden verborgen sorteren laatst onderaan"
   },
   "drag drop copy move ask default action": {
     "drag drop copy move ask default action": "slepen neerzetten kopiëren verplaatsen vragen standaard actie drag drop copy move ask default action"
@@ -1848,7 +1833,7 @@
     "font typeface headline title": "lettertype kop koptekst titel font typeface headline title"
   },
   "frosted glass compositor": {
-    "frosted glass compositor": ""
+    "frosted glass compositor": "frosted glass compositor matglas mat glas vervaging compositor"
   },
   "games library steamapps common": {
     "games library steamapps common": "spellen games bibliotheek steamapps common library"
@@ -1956,13 +1941,10 @@
     "thumbnail size limit cap megabytes": "miniatuur grootte limiet maximum megabytes thumbnail size limit cap"
   },
   "time modified timestamp iso relative seconds": {
-    "time modified timestamp iso relative seconds": ""
-  },
-  "title bar header hide decorations": {
-    "title bar header hide decorations": "title bar header hide decorations titelbalk kop vensterkop verbergen decoraties vensterdecoraties"
+    "time modified timestamp iso relative seconds": "time modified timestamp iso relative seconds tijd gewijzigd wijzigingsdatum tijdstempel iso relatief seconden"
   },
   "transparency translucent glass see-through": {
-    "transparency translucent glass see-through": ""
+    "transparency translucent glass see-through": "transparency translucent glass see-through transparantie doorschijnend glas doorzichtig dekking"
   },
   "type-ahead jump filter search keyboard": {
     "type-ahead jump filter search keyboard": "typen springen filter zoeken toetsenbord type-ahead jump search keyboard"
@@ -1972,9 +1954,6 @@
   },
   "xdg-desktop-portal": {
     "xdg-desktop-portal": "xdg-desktop-portal"
-  },
-  "xdg-open follows the handler on your PATH.": {
-    "xdg-open follows the handler on your PATH.": "xdg-open volgt de handler in je PATH."
   },
   "xdg-open handlr mimeo opener default application launch": {
     "xdg-open handlr mimeo opener default application launch": "xdg-open handlr mimeo opener default application launch openen standaardtoepassing standaardprogramma starten"

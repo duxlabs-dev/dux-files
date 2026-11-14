@@ -14,6 +14,9 @@
   "%1 folders could not be read": {
     "%1 folders could not be read": "%1 Ordner konnten nicht gelesen werden"
   },
+  "%1 follows the handler on your %2.": {
+    "%1 follows the handler on your %2.": ""
+  },
   "%1 h %2 min left": {
     "%1 h %2 min left": "%1 Std. %2 Min. verbleibend"
   },
@@ -38,23 +41,35 @@
   "%1 items cut": {
     "%1 items cut": "%1 Elemente ausgeschnitten"
   },
+  "%1 keys": {
+    "%1 keys": ""
+  },
   "%1 levels deep": {
     "%1 levels deep": "%1 Ebenen tief"
   },
   "%1 matching “%2”": {
-    "%1 matching “%2”": "%1 entspricht “%2”"
+    "%1 matching “%2”": "%1 übereinstimmend “%2”"
   },
   "%1 min left": {
     "%1 min left": "%1 Min. verbleibend"
+  },
+  "%1 not detected, using %2.": {
+    "%1 not detected, using %2.": ""
+  },
+  "%1 not detected, using the %2 preset.": {
+    "%1 not detected, using the %2 preset.": ""
   },
   "%1 px": {
     "%1 px": "%1 px"
   },
   "%1 running operations will be stopped part way through.": {
-    "%1 running operations will be stopped part way through.": ""
+    "%1 running operations will be stopped part way through.": "%1 laufende Vorgänge werden auf halbem Weg abgebrochen."
   },
   "%1 s left": {
-    "%1 s left": "%1 s verbleibend"
+    "%1 s left": "%1 Sek. verbleibend"
+  },
+  "%1 selected": {
+    "%1 selected": ""
   },
   "%1 used · %2 free · %3 total": {
     "%1 used · %2 free · %3 total": "%1 verwendet · %2 frei · %3 insgesamt"
@@ -65,6 +80,9 @@
   "%1 will be moved to the trash.": {
     "%1 will be moved to the trash.": "%1 wird in den Papierkorb verschoben."
   },
+  "%1 with seconds": {
+    "%1 with seconds": ""
+  },
   "%1 · %2": {
     "%1 · %2": "%1 · %2"
   },
@@ -72,7 +90,7 @@
     "%1 …": "%1 …"
   },
   "%1, %2 matches": {
-    "%1, %2 matches": "%1, %2 Treffer"
+    "%1, %2 matches": "%1, %2 Übereinstimmungen"
   },
   "%1/s": {
     "%1/s": "%1/s"
@@ -86,8 +104,8 @@
   "1 item cut": {
     "1 item cut": "1 Element ausgeschnitten"
   },
-  "50 is the Material default.": {
-    "50 is the Material default.": "50 ist die Material-Vorgabe."
+  "50 is the %1 default.": {
+    "50 is the %1 default.": ""
   },
   "? or F1 in the main window.": {
     "? or F1 in the main window.": "? oder F1 im Hauptfenster."
@@ -99,7 +117,7 @@
     "About": "Über"
   },
   "Accessed": {
-    "Accessed": "Zugegriffen"
+    "Accessed": "Letzter Zugriff"
   },
   "Add or remove one item": {
     "Add or remove one item": "Ein Element hinzufügen oder entfernen"
@@ -114,16 +132,16 @@
     "Address": "Adresse"
   },
   "Administrator access is not available": {
-    "Administrator access is not available": "Administratorzugang ist nicht verfügbar"
+    "Administrator access is not available": "Administratorzugriff ist nicht verfügbar"
   },
-  "Administrator access is not available because pkexec is not installed": {
-    "Administrator access is not available because pkexec is not installed": "Administratorzugang ist nicht verfügbar weil pkexec nicht installiert ist"
+  "Administrator access is not available because %1 is not installed": {
+    "Administrator access is not available because %1 is not installed": ""
   },
-  "Administrator access is not available because the polkit policy is not installed": {
-    "Administrator access is not available because the polkit policy is not installed": "Administratorzugriff ist nicht verfügbar, da die Polkit-Richtlinie nicht installiert ist"
+  "Administrator access is not available because the %1 policy is not installed": {
+    "Administrator access is not available because the %1 policy is not installed": ""
   },
   "Administrator access is not available inside the sandbox": {
-    "Administrator access is not available inside the sandbox": "Administratorzugang ist innerhlab der Sandbox nicht verfügbar"
+    "Administrator access is not available inside the sandbox": "Administratorzugriff ist innerhalb der Sandbox nicht verfügbar"
   },
   "Already here": {
     "Already here": "Existiert bereits"
@@ -132,10 +150,10 @@
     "Always": "Immer"
   },
   "Always use the dark theme.": {
-    "Always use the dark theme.": "Immer das dunkle Thema verwenden."
+    "Always use the dark theme.": "Immer das dunkle Theme verwenden."
   },
   "Always use the light theme.": {
-    "Always use the light theme.": "Immer das helle Thema verwenden."
+    "Always use the light theme.": "Immer das helle Theme verwenden."
   },
   "Always use this application": {
     "Always use this application": "Immer diese Anwendung verwenden"
@@ -185,8 +203,8 @@
   "Automatic": {
     "Automatic": "Automatisch"
   },
-  "Automatic uses $TERMINAL.": {
-    "Automatic uses $TERMINAL.": "Automatic verwendet $TERMINAL."
+  "Automatic uses %1.": {
+    "Automatic uses %1.": ""
   },
   "Available": {
     "Available": "Verfügbar"
@@ -210,7 +228,7 @@
     "Backend: started on demand through %1": "Backend: gestartet bei Abruf über %1"
   },
   "Background blur": {
-    "Background blur": ""
+    "Background blur": "Hintergrundunschärfe"
   },
   "Badges": {
     "Badges": "Badges"
@@ -228,7 +246,7 @@
     "Blue": "Blau"
   },
   "Blurs what shows through the window. Needs an opacity below 100%.": {
-    "Blurs what shows through the window. Needs an opacity below 100%.": ""
+    "Blurs what shows through the window. Needs an opacity below 100%.": "Verwischt, was durch das Fenster zu sehen ist. Benötigt eine Opazität unter 100%."
   },
   "Bookmark this folder": {
     "Bookmark this folder": "Diesen Ordner mit Lesezeichen versehen"
@@ -255,7 +273,7 @@
     "Choose a badge image": "Ein Badge-Bild wählen"
   },
   "Choose folder…": {
-    "Choose folder…": ""
+    "Choose folder…": "Ordner auswählen…"
   },
   "Clear": {
     "Clear": "Löschen"
@@ -287,9 +305,6 @@
   "Close tabs to the right": {
     "Close tabs to the right": "Tabs zur rechten schließen"
   },
-  "Collapse": {
-    "Collapse": "Einklappen"
-  },
   "Color source": {
     "Color source": "Farbquelle"
   },
@@ -297,7 +312,7 @@
     "Column view": "Spaltenansicht"
   },
   "Columns": {
-    "Columns": ""
+    "Columns": "Spalten"
   },
   "Comfortable": {
     "Comfortable": "Komfortabel"
@@ -335,8 +350,8 @@
   "Connected": {
     "Connected": "Verbunden"
   },
-  "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": {
-    "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": "Verbunden, aber die Freigabe verfügt über keinen lokalen Ordner. Der gvfs-FUSE-Dienst wird möglicherweise nicht ausgeführt."
+  "Connected, but the share has no local folder. The %1 service may not be running.": {
+    "Connected, but the share has no local folder. The %1 service may not be running.": ""
   },
   "Contents": {
     "Contents": "Inhalt"
@@ -348,7 +363,7 @@
     "Copy": "Kopieren"
   },
   "Copy location path": {
-    "Copy location path": "Pfad zu Ort kopieren"
+    "Copy location path": "Speicherortpfad kopieren"
   },
   "Copy name": {
     "Copy name": "Name kopieren"
@@ -366,7 +381,7 @@
     "Coral": "Coral"
   },
   "Could not read that file, expected a JSON color theme.": {
-    "Could not read that file, expected a JSON color theme.": "Diese Datei konnte nicht gelesen werden, erwartet wurde ein JSON-Farbschema."
+    "Could not read that file, expected a JSON color theme.": "Diese Datei konnte nicht gelesen werden, erwartet wurde ein JSON-Farb-Theme."
   },
   "Count items in folders": {
     "Count items in folders": "Elemente in Ordnern zählen"
@@ -390,10 +405,10 @@
     "Ctrl+Wheel resizes per window.": "Strg+Rad ändert die Größe pro Fenster."
   },
   "Current folder": {
-    "Current folder": ""
+    "Current folder": "Aktueller Ordner"
   },
   "Custom": {
-    "Custom": "Benutzerdefiniert"
+    "Custom": "Benutzerdef."
   },
   "Cut": {
     "Cut": "Ausschneiden"
@@ -405,7 +420,7 @@
     "Dark": "Dunkel"
   },
   "Date format": {
-    "Date format": ""
+    "Date format": "Datumsformat"
   },
   "Decrease": {
     "Decrease": "Verringern"
@@ -417,7 +432,7 @@
     "Default application": "Standardanwendung"
   },
   "Default applications": {
-    "Default applications": "Vorgegeben Anwendungen"
+    "Default applications": "Vorgegebene Anwendungen"
   },
   "Default icon size": {
     "Default icon size": "Vorgegebene Icon-Größe"
@@ -482,14 +497,17 @@
   "Drives and mounting": {
     "Drives and mounting": "Laufwerke und Mounting"
   },
-  "Drives are unavailable because the sandbox cannot reach udisks2": {
-    "Drives are unavailable because the sandbox cannot reach udisks2": "Laufwerke sind nicht verfügbar, da die Sandbox udisks2 nicht erreichen kann"
+  "Drives are unavailable because %1 is not running": {
+    "Drives are unavailable because %1 is not running": ""
   },
-  "Drives are unavailable because udisks2 is not running": {
-    "Drives are unavailable because udisks2 is not running": "Laufwerke sind nicht verfügbar, da udisks2 nicht ausgeführt wird"
+  "Drives are unavailable because the sandbox cannot reach %1": {
+    "Drives are unavailable because the sandbox cannot reach %1": ""
+  },
+  "Drop on a tab to move files there": {
+    "Drop on a tab to move files there": ""
   },
   "Dropping without a modifier": {
-    "Dropping without a modifier": "Ablegen ohne Modifikatortaste"
+    "Dropping without a modifier": "Ablegen ohne einen Modifikator"
   },
   "Duplicate": {
     "Duplicate": "Duplizieren"
@@ -505,12 +523,6 @@
   },
   "Duration": {
     "Duration": "Dauer"
-  },
-  "Dux Shell not detected, using %1.": {
-    "Dux Shell not detected, using %1.": "Dux Shell nicht erkannt, verwendet wird %1."
-  },
-  "Dux Shell not detected, using the %1 preset.": {
-    "Dux Shell not detected, using the %1 preset.": "Dux Shell nicht erkannt, verwendet wird das Preset %1."
   },
   "Each launcher's own configuration folder.": {
     "Each launcher's own configuration folder.": "Eigener Konfigurationsordner jedes Launchers."
@@ -547,9 +559,6 @@
   },
   "Execute": {
     "Execute": "Ausführen"
-  },
-  "Expand": {
-    "Expand": "Erweitern"
   },
   "Extract archives on open": {
     "Extract archives on open": "Archive beim Öffnen entpacken"
@@ -617,8 +626,8 @@
   "Folders to skip": {
     "Folders to skip": "Ordner zum Überspringen"
   },
-  "Follow Dux Shell colors, falling back to a preset.": {
-    "Follow Dux Shell colors, falling back to a preset.": "Farben von Dux Shell folgen, zurückfallend auf ein Preset."
+  "Follow %1 colors, falling back to a preset.": {
+    "Follow %1 colors, falling back to a preset.": ""
   },
   "Following the system color scheme (currently %1).": {
     "Following the system color scheme (currently %1).": "Dem Farbschema des Systems folgend (derzeit %1)."
@@ -627,7 +636,7 @@
     "Font source": "Schriftartquelle"
   },
   "Foreground layers": {
-    "Foreground layers": ""
+    "Foreground layers": "Vordergrundebenen"
   },
   "Forget": {
     "Forget": "Vergessen"
@@ -650,11 +659,8 @@
   "Games": {
     "Games": "Spiele"
   },
-  "Games and prefixes Heroic installed.": {
-    "Games and prefixes Heroic installed.": "Spiele und Präfixe von Heroic installiert."
-  },
-  "Games and prefixes Lutris installed.": {
-    "Games and prefixes Lutris installed.": "Spiele und Präfixe von Lutrix installiert."
+  "Games and prefixes %1 installed.": {
+    "Games and prefixes %1 installed.": ""
   },
   "Games folder": {
     "Games folder": "Spieleordner"
@@ -671,9 +677,6 @@
   "Getting around": {
     "Getting around": "Navigation"
   },
-  "GitHub": {
-    "GitHub": "GitHub"
-  },
   "Go to that tab": {
     "Go to that tab": "Zu diesem Tab gehen"
   },
@@ -687,34 +690,22 @@
     "Green": "Grün"
   },
   "Grid icon size": {
-    "Grid icon size": "Symbolgröße in der Gitteransicht"
+    "Grid icon size": "Größe des Raster-Icons"
   },
   "Grid view": {
-    "Grid view": "Gitteransicht"
+    "Grid view": "Rasteransicht"
   },
   "Group": {
     "Group": "Gruppe"
   },
-  "Heroic": {
-    "Heroic": "Heroic"
-  },
   "Hidden files after other files": {
-    "Hidden files after other files": ""
-  },
-  "Hides the title and the window buttons, leaving a thin strip to drag the window.": {
-    "Hides the title and the window buttons, leaving a thin strip to drag the window.": "Blendet den Titel und die Fensterschaltflächen aus, wobei ein schmaler Streifen zum Verschieben des Fensters verbleibt."
+    "Hidden files after other files": "Ausgeblendete Dateien nach anderen Dateien"
   },
   "Home": {
     "Home": "Home"
   },
   "Host filesystem": {
     "Host filesystem": "Host-Dateisystem"
-  },
-  "ISO 8601": {
-    "ISO 8601": ""
-  },
-  "ISO 8601 with seconds": {
-    "ISO 8601 with seconds": ""
   },
   "Icons": {
     "Icons": "Icons"
@@ -731,11 +722,11 @@
   "Import": {
     "Import": "Importieren"
   },
-  "Import your GTK bookmarks?": {
-    "Import your GTK bookmarks?": "Ihre GTK-Lesezeichen importieren?"
+  "Import your %1 bookmarks?": {
+    "Import your %1 bookmarks?": ""
   },
   "Include hidden files": {
-    "Include hidden files": "Versteckte Dateien einbeziehen"
+    "Include hidden files": "Ausgeblendete Dateien einbeziehen"
   },
   "Include ignored": {
     "Include ignored": "Einbeziehen ignoriert"
@@ -774,16 +765,16 @@
     "Keep both": "Beide behalten"
   },
   "Keep running": {
-    "Keep running": "Am Laufen halten"
+    "Keep running": "Laufen lassen"
   },
   "Keeps cards and panes solid when the window is see-through.": {
-    "Keeps cards and panes solid when the window is see-through.": ""
+    "Keeps cards and panes solid when the window is see-through.": "Hält Karten und Fensterbereiche deckend, wenn das Fenster durchsichtig ist."
   },
   "Keyboard": {
     "Keyboard": "Tastatur"
   },
   "Keyboard shortcuts": {
-    "Keyboard shortcuts": "Tastaturkürzel"
+    "Keyboard shortcuts": "Tastatur-Shortcuts"
   },
   "Language": {
     "Language": "Sprache"
@@ -792,16 +783,19 @@
     "Larger icons": "Größere Icons"
   },
   "Last used": {
-    "Last used": ""
+    "Last used": "Zuletzt verwendet"
   },
   "Layer opacity": {
-    "Layer opacity": ""
+    "Layer opacity": "Ebenen-Opazität"
   },
   "Lets the desktop show through the window. Text and controls stay solid.": {
-    "Lets the desktop show through the window. Text and controls stay solid.": ""
+    "Lets the desktop show through the window. Text and controls stay solid.": "Lässt den Desktop durch das Fenster hindurch sichtbar. Text und Steuerungen bleiben deckend."
   },
-  "Libraries and Proton prefixes.": {
-    "Libraries and Proton prefixes.": "Bibliotheken und Proton-Präfixe."
+  "Libraries and %1 prefixes.": {
+    "Libraries and %1 prefixes.": ""
+  },
+  "Library": {
+    "Library": ""
   },
   "Library · %1": {
     "Library · %1": "Bibliothek · %1"
@@ -819,7 +813,7 @@
     "Links to": "Verknüpft mit"
   },
   "List icon size": {
-    "List icon size": "Symbolgröße in der Listenansicht"
+    "List icon size": "Größe des Listen-Icons"
   },
   "List view": {
     "List view": "Listenansicht"
@@ -833,9 +827,6 @@
   "Lock": {
     "Lock": "Sperren"
   },
-  "Lutris": {
-    "Lutris": "Lutris"
-  },
   "MIT License": {
     "MIT License": "MIT Lizenz"
   },
@@ -843,7 +834,7 @@
     "Menu": "Menü"
   },
   "Merge": {
-    "Merge": "Kombinieren"
+    "Merge": "Zusammenführen"
   },
   "Modified": {
     "Modified": "Modifiziert"
@@ -926,11 +917,11 @@
   "Network in the sidebar": {
     "Network in the sidebar": "Netzwerk in der Seitenleiste"
   },
-  "Network locations are unavailable because gvfs is not running": {
-    "Network locations are unavailable because gvfs is not running": "Netzwerkstandorte sind nicht verfügbar, da gvfs nicht ausgeführt wird"
+  "Network locations are unavailable because %1 is not running": {
+    "Network locations are unavailable because %1 is not running": ""
   },
-  "Network locations are unavailable because the sandbox cannot reach gvfs": {
-    "Network locations are unavailable because the sandbox cannot reach gvfs": "Netzwerkstandorte sind nicht verfügbar, da die Sandbox gvfs micht erreichen kann"
+  "Network locations are unavailable because the sandbox cannot reach %1": {
+    "Network locations are unavailable because the sandbox cannot reach %1": ""
   },
   "Never": {
     "Never": "Niemals"
@@ -948,13 +939,13 @@
     "New tab": "Neuer Tab"
   },
   "New tab folder": {
-    "New tab folder": ""
+    "New tab folder": "Ordner für neuen Tab"
   },
   "New window": {
     "New window": "Neues Fenster"
   },
   "New window folder": {
-    "New window folder": ""
+    "New window folder": "Ordner für neues Fenster"
   },
   "Next tab": {
     "Next tab": "Nächster Tab"
@@ -1011,7 +1002,7 @@
     "Only the window process serves the portal": "Nur der Fensterprozess bedient das Portal"
   },
   "Opacity": {
-    "Opacity": ""
+    "Opacity": "Opazität"
   },
   "Open": {
     "Open": "Öffnen"
@@ -1047,7 +1038,7 @@
     "Open in terminal": "In Terminal öffnen"
   },
   "Open in the other pane": {
-    "Open in the other pane": "Im anderen Fenster öffnen"
+    "Open in the other pane": "Im anderen Fensterbereich öffnen"
   },
   "Open items with": {
     "Open items with": "Elemente öffnen mit"
@@ -1065,13 +1056,13 @@
     "Open the place": "Den Ort öffnen"
   },
   "Open the preview in a large view": {
-    "Open the preview in a large view": "Die Vorschau in einer großen Ansicht öffnen"
+    "Open the preview in a large view": "Vorschau in einer großen Ansicht öffnen"
   },
   "Open unmounted drives on click": {
     "Open unmounted drives on click": "Nicht eingehängte Laufwerke bei Klick öffnen"
   },
   "Open with": {
-    "Open with": "Öffne mit"
+    "Open with": "Öffnen mit"
   },
   "Orange": {
     "Orange": "Orange"
@@ -1086,10 +1077,10 @@
     "Over 100 MB": "Über 100 MB"
   },
   "Owner": {
-    "Owner": "Besitzer"
+    "Owner": "Eigentümer"
   },
-  "PDF preview is not available. Install Qt PDF support to view this file.": {
-    "PDF preview is not available. Install Qt PDF support to view this file.": "PDF-Vorschau ist nicht verfügbar. Installieren Sie die Qt-PDF-Unterstützung, um diese Datei anzusehen."
+  "PDF preview is not available. Install %1 support to view this file.": {
+    "PDF preview is not available. Install %1 support to view this file.": ""
   },
   "Palette: %1": {
     "Palette: %1": "Palette: %1"
@@ -1139,8 +1130,8 @@
   "Preference: %1 is used": {
     "Preference: %1 is used": "Voreinstellung: %1 wird verwendet"
   },
-  "Preference: %1 names Dux Files": {
-    "Preference: %1 names Dux Files": "Voreinstellung: %1 benennt Dux Files"
+  "Preference: %2 names %1": {
+    "Preference: %2 names %1": ""
   },
   "Preference: no file chooser backend configured": {
     "Preference: no file chooser backend configured": "Einstellung: Kein Backend für Dateiauswahl konfiguriert"
@@ -1172,9 +1163,6 @@
   "Protocol": {
     "Protocol": "Protokoll"
   },
-  "Proton · %1": {
-    "Proton · %1": " Proton · %1"
-  },
   "Purple": {
     "Purple": "Lila"
   },
@@ -1182,7 +1170,7 @@
     "Quit": "Beenden"
   },
   "Quit while file operations are running?": {
-    "Quit while file operations are running?": ""
+    "Quit while file operations are running?": "Beenden, während Dateioperationen ausgeführt werden?"
   },
   "Radius strength": {
     "Radius strength": "Radiusstärke"
@@ -1215,7 +1203,7 @@
     "Register as the session file manager": "Als Sitzungsdateimanager registrieren"
   },
   "Relative": {
-    "Relative": ""
+    "Relative": "Relativ"
   },
   "Relevance": {
     "Relevance": "Relevanz"
@@ -1301,6 +1289,9 @@
   "Reverse the sort order": {
     "Reverse the sort order": "Die Sortierreihenfolge umkehren"
   },
+  "Revision": {
+    "Revision": ""
+  },
   "Ripple effects": {
     "Ripple effects": "Welleneffekte"
   },
@@ -1321,6 +1312,9 @@
   },
   "Run this file?": {
     "Run this file?": "Diese Datei ausführen?"
+  },
+  "Runtime": {
+    "Runtime": ""
   },
   "Sandbox": {
     "Sandbox": "Sandbox"
@@ -1350,10 +1344,10 @@
     "Search applications": "Anwendungen suchen"
   },
   "Search icon": {
-    "Search icon": "Such-Icon"
+    "Search icon": "Icon suchen"
   },
   "Search icons": {
-    "Search icons": "Such-Icons"
+    "Search icons": "Icons suchen"
   },
   "Search in Files": {
     "Search in Files": "Suche in Dateien"
@@ -1370,8 +1364,8 @@
   "Search the disk": {
     "Search the disk": "Die Festplatte durchsuchen"
   },
-  "Search with the danksearch index": {
-    "Search with the danksearch index": "Mit dem danksearch-Index suchen"
+  "Search with the %1 index": {
+    "Search with the %1 index": ""
   },
   "Search your home folder": {
     "Search your home folder": "Ihren Home-Ordner durchsuchen"
@@ -1407,10 +1401,13 @@
     "Shared with other apps.": "Geteilt mit anderen Apps."
   },
   "Shares on %1": {
-    "Shares on %1": ""
+    "Shares on %1": "Freigaben auf %1"
   },
   "Show": {
     "Show": "Zeigen"
+  },
+  "Show all tabs": {
+    "Show all tabs": ""
   },
   "Show devices": {
     "Show devices": "Geräte zeigen"
@@ -1491,28 +1488,22 @@
     "Square": "Quadrat"
   },
   "Startup folder": {
-    "Startup folder": ""
+    "Startup folder": "Startordner"
   },
   "Status": {
     "Status": "Status"
   },
-  "Steam": {
-    "Steam": "Steam"
-  },
-  "Steam, ~/VirtualBox VMs": {
-    "Steam, ~/VirtualBox VMs": "Steam, ~/VirtualBox VMs"
-  },
   "Stop measuring": {
     "Stop measuring": "Messung beenden"
   },
-  "Such as a separate /home.": {
-    "Such as a separate /home.": "Wie zum Beispiel ein separates /home-Verzeichnis."
+  "Such as a separate %1.": {
+    "Such as a separate %1.": ""
   },
-  "Support Dux Labs": {
-    "Support Dux Labs": "Dux Labs unterstützen"
+  "Support %1": {
+    "Support %1": ""
   },
   "Switch pane": {
-    "Switch pane": "Bereich wechseln"
+    "Switch pane": "Fensterbereich wechseln"
   },
   "System": {
     "System": "System"
@@ -1521,7 +1512,7 @@
     "System default": "Systemstandard"
   },
   "System locale": {
-    "System locale": ""
+    "System locale": "Systemgebietsschema"
   },
   "System preference unavailable, using dark.": {
     "System preference unavailable, using dark.": "Systemvoreinstellung nicht verfügbar, verwendet wird dunkel."
@@ -1532,11 +1523,11 @@
   "Terminal, drag and thumbnails": {
     "Terminal, drag and thumbnails": "Terminal, Ziehen und Thumbnails"
   },
-  "The Wine prefix of each game.": {
-    "The Wine prefix of each game.": "Das Wine-Präfix von jedem Spiel."
+  "The %1 prefix of each game.": {
+    "The %1 prefix of each game.": ""
   },
-  "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": {
-    "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": "Die Änderung wird nach dem Neustart von xdg-desktop-portal wirksam. Öffnen- und Speichern-Dialoge, die in anderen Anwendungen geöffnet sind, werden geschlossen."
+  "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": {
+    "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": ""
   },
   "The files themselves stay where they are.": {
     "The files themselves stay where they are.": "Die Dateien selbst bleiben, wo sie sind."
@@ -1545,7 +1536,7 @@
     "The portal list is managed by the system.": "Die Portal-Liste wird vom System verwaltet."
   },
   "The running operation will be stopped part way through.": {
-    "The running operation will be stopped part way through.": ""
+    "The running operation will be stopped part way through.": "Der laufende Vorgang wird auf halbem Weg abgebrochen."
   },
   "The session bus refused it.": {
     "The session bus refused it.": "Der Session-Bus hat dies abgelehnt."
@@ -1581,7 +1572,7 @@
     "This month": "Diesen Monat"
   },
   "This server offers no shares": {
-    "This server offers no shares": ""
+    "This server offers no shares": "Dieser Server bietet keine Freigaben an"
   },
   "This session": {
     "This session": "Diese Sitzung"
@@ -1653,7 +1644,7 @@
     "Unmount": "Aushängen"
   },
   "Unpacks into a folder beside it.": {
-    "Unpacks into a folder beside it.": "Entpackt in einen Ordner daneben."
+    "Unpacks into a folder beside it.": "Entpackt in einen Ordner neben diesem."
   },
   "Untitled document": {
     "Untitled document": "Unbetiteltes Dokument"
@@ -1664,8 +1655,8 @@
   "Use": {
     "Use": "Verwenden"
   },
-  "Use Dux Files for open and save dialogs": {
-    "Use Dux Files for open and save dialogs": "Dux Files für Öffnen- und Speichern-Dialoge verwenden"
+  "Use %1 for open and save dialogs": {
+    "Use %1 for open and save dialogs": ""
   },
   "Use a bundled color palette.": {
     "Use a bundled color palette.": "Eine gebundelte Farbpalette verwenden"
@@ -1685,8 +1676,8 @@
   "Username": {
     "Username": "Benutzername"
   },
-  "Using Dux Shell dynamic colors.": {
-    "Using Dux Shell dynamic colors.": "Verwendung dynamischer Farben in Dux Shell."
+  "Using %1 dynamic colors.": {
+    "Using %1 dynamic colors.": ""
   },
   "Version": {
     "Version": "Version"
@@ -1703,9 +1694,6 @@
   "Views, sorting and defaults": {
     "Views, sorting and defaults": "Ansichten, Sortierung und Vorgaben"
   },
-  "Vim keys": {
-    "Vim keys": "Vim-Keys"
-  },
   "Waiting": {
     "Waiting": "Warten"
   },
@@ -1717,9 +1705,6 @@
   },
   "Window": {
     "Window": "Fenster"
-  },
-  "Window header": {
-    "Window header": "Fensterkopfzeile"
   },
   "Windows": {
     "Windows": "Fenster"
@@ -1734,7 +1719,7 @@
     "Wrong password": "Falsches Passwort"
   },
   "Your compositor does not support background blur.": {
-    "Your compositor does not support background blur.": ""
+    "Your compositor does not support background blur.": "Ihr Compositor unterstützt keine Hintergrundunschärfe."
   },
   "Zoom in": {
     "Zoom in": "Hineinzoomen"
@@ -1758,7 +1743,7 @@
     "capability available sandbox": "Fähigkeit verfügbar Sandbox"
   },
   "cards panes contrast glass": {
-    "cards panes contrast glass": ""
+    "cards panes contrast glass": "Karten Fensterbereiche Kontrast Glas"
   },
   "config folder launcher wine prefix": {
     "config folder launcher wine prefix": "Konfigurationsordner Launcher Wine-Prefix"
@@ -1794,7 +1779,7 @@
     "default file manager dbus reveal": "Standard-Dateimanager D-Bus reveal"
   },
   "default folder directory start open home": {
-    "default folder directory start open home": ""
+    "default folder directory start open home": "Standard Ordner Verzeichnis Start Öffnen Home"
   },
   "delete confirmation prompt": {
     "delete confirmation prompt": "Bestätigungsaufforderung zum Löschen"
@@ -1812,7 +1797,7 @@
     "dotfiles invisible": "Dotfiles unsichtbar"
   },
   "dotfiles sort last bottom": {
-    "dotfiles sort last bottom": ""
+    "dotfiles sort last bottom": "Dotfiles-Sortierung zuletzt unten"
   },
   "drag drop copy move ask default action": {
     "drag drop copy move ask default action": "Drag & Drop Kopieren Verschieben Fragen Standardaktion"
@@ -1842,13 +1827,13 @@
     "font typeface": "Schriftart Typeface"
   },
   "font typeface code mono": {
-    "font typeface code mono": "Schriftart Code Mono"
+    "font typeface code mono": "Schriftart Typeface Code Mono"
   },
   "font typeface headline title": {
-    "font typeface headline title": "Schriftart Überschrift Titel"
+    "font typeface headline title": "Schriftart Typeface Überschrift Titel"
   },
   "frosted glass compositor": {
-    "frosted glass compositor": ""
+    "frosted glass compositor": "Milchglas Compositor"
   },
   "games library steamapps common": {
     "games library steamapps common": "Spiele Bibliothek Steamapps Common"
@@ -1878,7 +1863,7 @@
     "keyboard outline accessibility": "Tastatur Umriss Barrierefreiheit"
   },
   "keys bindings hotkeys F1": {
-    "keys bindings hotkeys F1": "Tastenbelegungen Hotkeys F1"
+    "keys bindings hotkeys F1": "Tastenzuordnungen Hotkeys F1"
   },
   "light": {
     "light": "Hell"
@@ -1887,7 +1872,7 @@
     "light dark mode system color scheme": "Hell-Dunkel-Modus System-Farbschema"
   },
   "list grid columns icons tiles": {
-    "list grid columns icons tiles": "Liste Gitter Spalten Symbole Kacheln"
+    "list grid columns icons tiles": "Liste Raster Spalten Icons Kacheln"
   },
   "locale translation interface": {
     "locale translation interface": "Interface für lokale Übersetzung"
@@ -1902,10 +1887,10 @@
     "order direction ascending reverse": "Reihenfolge Richtung aufsteigend umgekehrt"
   },
   "order name size modified type date": {
-    "order name size modified type date": "Sortierung Name Größe Geändert Typ Datum"
+    "order name size modified type date": "Reihenfolge Name Größe Geändert Typ Datum"
   },
   "palette dms preset custom accent": {
-    "palette dms preset custom accent": "Palette, DMS, Preset, benutzerdefiniert, Akzent"
+    "palette dms preset custom accent": "Palette DMS Preset benutzerdefiniert Akzent"
   },
   "portal file chooser picker xdg": {
     "portal file chooser picker xdg": "Portal Dateiauswahl Picker xdg"
@@ -1917,7 +1902,7 @@
     "previews images video pdf": "Vorschauen Bilder Video PDF"
   },
   "quit exit hide daemon keep running": {
-    "quit exit hide daemon keep running": "Beenden Schließen Verbergen Daemon weiterlaufen"
+    "quit exit hide daemon keep running": "Beenden Schließen Ausblenden Daemon Ausführung"
   },
   "remote sftp smb previews": {
     "remote sftp smb previews": "Entfernt sftp smb Vorschauen"
@@ -1926,7 +1911,7 @@
     "reset clear per-folder memory": "Zurücksetzen Speicher pro Ordner löschen"
   },
   "search dotfiles recursive": {
-    "search dotfiles recursive": "Suche Dotfiles rekursiv"
+    "search dotfiles recursive": "Dotfiles rekursiv suchen"
   },
   "search exclude ignore": {
     "search exclude ignore": "Suche ausschließen ignorieren"
@@ -1956,13 +1941,10 @@
     "thumbnail size limit cap megabytes": "Vorschaubild Größenbeschränkung Megabyte"
   },
   "time modified timestamp iso relative seconds": {
-    "time modified timestamp iso relative seconds": ""
-  },
-  "title bar header hide decorations": {
-    "title bar header hide decorations": "Titelleiste Kopfzeile Dekorationen ausblenden"
+    "time modified timestamp iso relative seconds": "Zeit geändert Zeitstempel ISO relativ Sekunden"
   },
   "transparency translucent glass see-through": {
-    "transparency translucent glass see-through": ""
+    "transparency translucent glass see-through": "Transparenz durchscheinend Glas durchsichtig"
   },
   "type-ahead jump filter search keyboard": {
     "type-ahead jump filter search keyboard": "Direkteingabe Sprung Filter Suche Tastatur"
@@ -1972,9 +1954,6 @@
   },
   "xdg-desktop-portal": {
     "xdg-desktop-portal": "xdg-desktop-portal "
-  },
-  "xdg-open follows the handler on your PATH.": {
-    "xdg-open follows the handler on your PATH.": "xdg-open folgt dem Handler auf Ihrem PATH."
   },
   "xdg-open handlr mimeo opener default application launch": {
     "xdg-open handlr mimeo opener default application launch": "xdg-open handlr mimeo Öffner Standardanwendung Start"

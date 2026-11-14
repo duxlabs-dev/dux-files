@@ -123,7 +123,7 @@ FloatingWindow {
         if (!BookmarksService.importOffer)
             return;
         BookmarksService.declineImport();
-        ToastService.show(I18n.tr("Import your GTK bookmarks?", "toast offering to copy the gtk file chooser bookmarks once"), {
+        ToastService.show(I18n.tr("Import your %1 bookmarks?", "toast offering to copy the gtk file chooser bookmarks once, %1 is GTK").arg("GTK"), {
             "actionLabel": I18n.tr("Import", "toast action importing gtk bookmarks"),
             "duration": ToastService.offerDuration,
             "action": () => BookmarksService.importGtk(added => ToastService.info(I18n.tr("%1 bookmarks imported", "toast after importing gtk bookmarks").arg(added)))

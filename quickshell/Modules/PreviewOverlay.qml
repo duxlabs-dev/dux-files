@@ -26,7 +26,7 @@ FocusScope {
     readonly property alias pageView: pages.item
     readonly property string errorMessage: {
         if (kind === "pdf" && PdfService.unavailable)
-            return I18n.tr("PDF preview is not available. Install Qt PDF support to view this file.", "large preview warning when the optional Qt PDF module is missing");
+            return I18n.tr("PDF preview is not available. Install %1 support to view this file.", "large preview warning when an optional module is missing, %1 is Qt PDF").arg("Qt PDF");
         if ((kind === "image" && picture.status === Image.Error) || (kind === "pdf" && (pages.status === Loader.Error || pageView?.failed)))
             return I18n.tr("This file could not be opened", "large preview placeholder");
         return "";

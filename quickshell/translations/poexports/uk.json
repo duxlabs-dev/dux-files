@@ -14,6 +14,9 @@
   "%1 folders could not be read": {
     "%1 folders could not be read": "Не вдалося прочитати %1 теки"
   },
+  "%1 follows the handler on your %2.": {
+    "%1 follows the handler on your %2.": ""
+  },
   "%1 h %2 min left": {
     "%1 h %2 min left": "Залишилося %1 год %2 хв"
   },
@@ -38,6 +41,9 @@
   "%1 items cut": {
     "%1 items cut": "Вирізано %1 елементів"
   },
+  "%1 keys": {
+    "%1 keys": ""
+  },
   "%1 levels deep": {
     "%1 levels deep": "Глибина %1 рівнів"
   },
@@ -47,14 +53,23 @@
   "%1 min left": {
     "%1 min left": "Залишилося %1 хв"
   },
+  "%1 not detected, using %2.": {
+    "%1 not detected, using %2.": ""
+  },
+  "%1 not detected, using the %2 preset.": {
+    "%1 not detected, using the %2 preset.": ""
+  },
   "%1 px": {
     "%1 px": "%1 пкс"
   },
   "%1 running operations will be stopped part way through.": {
-    "%1 running operations will be stopped part way through.": ""
+    "%1 running operations will be stopped part way through.": "Поточних операцій буде зупинено на півшляху: %1"
   },
   "%1 s left": {
     "%1 s left": "Залишилося %1 с"
+  },
+  "%1 selected": {
+    "%1 selected": ""
   },
   "%1 used · %2 free · %3 total": {
     "%1 used · %2 free · %3 total": "Використано %1 · вільно %2 · всього %3"
@@ -64,6 +79,9 @@
   },
   "%1 will be moved to the trash.": {
     "%1 will be moved to the trash.": "%1 буде переміщено до кошика"
+  },
+  "%1 with seconds": {
+    "%1 with seconds": ""
   },
   "%1 · %2": {
     "%1 · %2": "%1 · %2"
@@ -86,8 +104,8 @@
   "1 item cut": {
     "1 item cut": "Вирізано 1 елемент"
   },
-  "50 is the Material default.": {
-    "50 is the Material default.": "50 — це типове значення Material"
+  "50 is the %1 default.": {
+    "50 is the %1 default.": ""
   },
   "? or F1 in the main window.": {
     "? or F1 in the main window.": "? або F1 у головному вікні"
@@ -116,11 +134,11 @@
   "Administrator access is not available": {
     "Administrator access is not available": "Доступ адміністратора неможливий"
   },
-  "Administrator access is not available because pkexec is not installed": {
-    "Administrator access is not available because pkexec is not installed": "Доступ адміністратора неможливий, оскільки pkexec не встановлено"
+  "Administrator access is not available because %1 is not installed": {
+    "Administrator access is not available because %1 is not installed": ""
   },
-  "Administrator access is not available because the polkit policy is not installed": {
-    "Administrator access is not available because the polkit policy is not installed": "Доступ адміністратора неможливий, оскільки політику polkit не встановлено"
+  "Administrator access is not available because the %1 policy is not installed": {
+    "Administrator access is not available because the %1 policy is not installed": ""
   },
   "Administrator access is not available inside the sandbox": {
     "Administrator access is not available inside the sandbox": "Доступ адміністратора неможливий всередині пісочниці"
@@ -185,8 +203,8 @@
   "Automatic": {
     "Automatic": "Автоматично"
   },
-  "Automatic uses $TERMINAL.": {
-    "Automatic uses $TERMINAL.": "Автоматично використовує $TERMINAL"
+  "Automatic uses %1.": {
+    "Automatic uses %1.": ""
   },
   "Available": {
     "Available": "Доступно"
@@ -210,7 +228,7 @@
     "Backend: started on demand through %1": "Сервіс: запущено за запитом через %1"
   },
   "Background blur": {
-    "Background blur": ""
+    "Background blur": "Розмиття фону"
   },
   "Badges": {
     "Badges": "Значки"
@@ -228,7 +246,7 @@
     "Blue": "Синій"
   },
   "Blurs what shows through the window. Needs an opacity below 100%.": {
-    "Blurs what shows through the window. Needs an opacity below 100%.": ""
+    "Blurs what shows through the window. Needs an opacity below 100%.": "Розмиває те, що видно крізь вікно. Потребує непрозорості нижче 100%"
   },
   "Bookmark this folder": {
     "Bookmark this folder": "Додати цю теку до закладок"
@@ -255,7 +273,7 @@
     "Choose a badge image": "Виберіть зображення значка"
   },
   "Choose folder…": {
-    "Choose folder…": ""
+    "Choose folder…": "Вибрати теку..."
   },
   "Clear": {
     "Clear": "Очистити"
@@ -287,9 +305,6 @@
   "Close tabs to the right": {
     "Close tabs to the right": "Закрити вкладки праворуч"
   },
-  "Collapse": {
-    "Collapse": "Згорнути"
-  },
   "Color source": {
     "Color source": "Джерело кольору"
   },
@@ -297,7 +312,7 @@
     "Column view": "Вигляд стовпцями"
   },
   "Columns": {
-    "Columns": ""
+    "Columns": "Стовпці"
   },
   "Comfortable": {
     "Comfortable": "Комфортний"
@@ -335,8 +350,8 @@
   "Connected": {
     "Connected": "Підключено"
   },
-  "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": {
-    "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": "Підключено, але спільна тека не має локальної. Можливо, служба gvfs FUSE не запущена"
+  "Connected, but the share has no local folder. The %1 service may not be running.": {
+    "Connected, but the share has no local folder. The %1 service may not be running.": ""
   },
   "Contents": {
     "Contents": "Вміст"
@@ -390,7 +405,7 @@
     "Ctrl+Wheel resizes per window.": "Ctrl+Колесо змінює розмір для кожного вікна"
   },
   "Current folder": {
-    "Current folder": ""
+    "Current folder": "Поточна тека"
   },
   "Custom": {
     "Custom": "Спеціальний"
@@ -405,7 +420,7 @@
     "Dark": "Темний"
   },
   "Date format": {
-    "Date format": ""
+    "Date format": "Формат дати"
   },
   "Decrease": {
     "Decrease": "Зменшити"
@@ -482,11 +497,14 @@
   "Drives and mounting": {
     "Drives and mounting": "Диски та монтування"
   },
-  "Drives are unavailable because the sandbox cannot reach udisks2": {
-    "Drives are unavailable because the sandbox cannot reach udisks2": "Диски недоступні, оскільки пісочниця не має доступу до udisks2"
+  "Drives are unavailable because %1 is not running": {
+    "Drives are unavailable because %1 is not running": ""
   },
-  "Drives are unavailable because udisks2 is not running": {
-    "Drives are unavailable because udisks2 is not running": "Диски недоступні, оскільки udisks2 не запущено"
+  "Drives are unavailable because the sandbox cannot reach %1": {
+    "Drives are unavailable because the sandbox cannot reach %1": ""
+  },
+  "Drop on a tab to move files there": {
+    "Drop on a tab to move files there": ""
   },
   "Dropping without a modifier": {
     "Dropping without a modifier": "Перетягування без модифікатора"
@@ -505,12 +523,6 @@
   },
   "Duration": {
     "Duration": "Тривалість"
-  },
-  "Dux Shell not detected, using %1.": {
-    "Dux Shell not detected, using %1.": "Dux Shell не виявлено, використовується %1"
-  },
-  "Dux Shell not detected, using the %1 preset.": {
-    "Dux Shell not detected, using the %1 preset.": "Dux Shell не виявлено, використовується набір налаштувань %1"
   },
   "Each launcher's own configuration folder.": {
     "Each launcher's own configuration folder.": "Власна тека конфігурації для кожного запускача"
@@ -547,9 +559,6 @@
   },
   "Execute": {
     "Execute": "Виконати"
-  },
-  "Expand": {
-    "Expand": "Розгорнути"
   },
   "Extract archives on open": {
     "Extract archives on open": "Розпаковувати архіви при відкритті"
@@ -617,8 +626,8 @@
   "Folders to skip": {
     "Folders to skip": "Теки, які слід пропустити"
   },
-  "Follow Dux Shell colors, falling back to a preset.": {
-    "Follow Dux Shell colors, falling back to a preset.": "Використовувати кольори Dux Shell, інакше — набір налаштувань"
+  "Follow %1 colors, falling back to a preset.": {
+    "Follow %1 colors, falling back to a preset.": ""
   },
   "Following the system color scheme (currently %1).": {
     "Following the system color scheme (currently %1).": "Використовувати системну кольорову схему (зараз %1)"
@@ -627,7 +636,7 @@
     "Font source": "Джерело шрифту"
   },
   "Foreground layers": {
-    "Foreground layers": ""
+    "Foreground layers": "Передні шари"
   },
   "Forget": {
     "Forget": "Забути"
@@ -650,11 +659,8 @@
   "Games": {
     "Games": "Ігри"
   },
-  "Games and prefixes Heroic installed.": {
-    "Games and prefixes Heroic installed.": "Встановлено ігри та префікси Heroic"
-  },
-  "Games and prefixes Lutris installed.": {
-    "Games and prefixes Lutris installed.": "Встановлено ігри та префікси Lutris"
+  "Games and prefixes %1 installed.": {
+    "Games and prefixes %1 installed.": ""
   },
   "Games folder": {
     "Games folder": "Тека ігор"
@@ -670,9 +676,6 @@
   },
   "Getting around": {
     "Getting around": "Навігація"
-  },
-  "GitHub": {
-    "GitHub": "GitHub"
   },
   "Go to that tab": {
     "Go to that tab": "Перейти до цієї вкладки"
@@ -695,26 +698,14 @@
   "Group": {
     "Group": "Група"
   },
-  "Heroic": {
-    "Heroic": "Heroic"
-  },
   "Hidden files after other files": {
-    "Hidden files after other files": ""
-  },
-  "Hides the title and the window buttons, leaving a thin strip to drag the window.": {
-    "Hides the title and the window buttons, leaving a thin strip to drag the window.": "Приховує заголовок і кнопки вікна, залишаючи вузьку смужку для перетягування вікна"
+    "Hidden files after other files": "Приховані файли після інших файлів"
   },
   "Home": {
     "Home": "Дім"
   },
   "Host filesystem": {
     "Host filesystem": "Хостова файлова система"
-  },
-  "ISO 8601": {
-    "ISO 8601": ""
-  },
-  "ISO 8601 with seconds": {
-    "ISO 8601 with seconds": ""
   },
   "Icons": {
     "Icons": "Піктограми"
@@ -731,8 +722,8 @@
   "Import": {
     "Import": "Імпортувати"
   },
-  "Import your GTK bookmarks?": {
-    "Import your GTK bookmarks?": "Імпортувати ваші GTK-закладки?"
+  "Import your %1 bookmarks?": {
+    "Import your %1 bookmarks?": ""
   },
   "Include hidden files": {
     "Include hidden files": "Включати приховані файли"
@@ -777,7 +768,7 @@
     "Keep running": "Продовжити роботу"
   },
   "Keeps cards and panes solid when the window is see-through.": {
-    "Keeps cards and panes solid when the window is see-through.": ""
+    "Keeps cards and panes solid when the window is see-through.": "Залишає картки та панелі суцільними, коли вікно прозоре"
   },
   "Keyboard": {
     "Keyboard": "Клавіатура"
@@ -792,16 +783,19 @@
     "Larger icons": "Більші іконки"
   },
   "Last used": {
-    "Last used": ""
+    "Last used": "Останній використаний"
   },
   "Layer opacity": {
-    "Layer opacity": ""
+    "Layer opacity": "Непрозорість шару"
   },
   "Lets the desktop show through the window. Text and controls stay solid.": {
-    "Lets the desktop show through the window. Text and controls stay solid.": ""
+    "Lets the desktop show through the window. Text and controls stay solid.": "Дозволяє робочому столу бути помітним крізь вікно. Текст і елементи керування залишаються суцільними"
   },
-  "Libraries and Proton prefixes.": {
-    "Libraries and Proton prefixes.": "Бібліотеки та префікси Proton"
+  "Libraries and %1 prefixes.": {
+    "Libraries and %1 prefixes.": ""
+  },
+  "Library": {
+    "Library": ""
   },
   "Library · %1": {
     "Library · %1": "Бібліотека · %1"
@@ -832,9 +826,6 @@
   },
   "Lock": {
     "Lock": "Заблокувати"
-  },
-  "Lutris": {
-    "Lutris": "Lutris"
   },
   "MIT License": {
     "MIT License": "Ліцензія MIT"
@@ -926,11 +917,11 @@
   "Network in the sidebar": {
     "Network in the sidebar": "«Мережа» на бічній панелі"
   },
-  "Network locations are unavailable because gvfs is not running": {
-    "Network locations are unavailable because gvfs is not running": "Мережеві розташування недоступні, оскільки gvfs не запущено"
+  "Network locations are unavailable because %1 is not running": {
+    "Network locations are unavailable because %1 is not running": ""
   },
-  "Network locations are unavailable because the sandbox cannot reach gvfs": {
-    "Network locations are unavailable because the sandbox cannot reach gvfs": "Мережеві розташування недоступні, оскільки пісочниця не має доступу до gvfs"
+  "Network locations are unavailable because the sandbox cannot reach %1": {
+    "Network locations are unavailable because the sandbox cannot reach %1": ""
   },
   "Never": {
     "Never": "Ніколи"
@@ -948,13 +939,13 @@
     "New tab": "Нова вкладка"
   },
   "New tab folder": {
-    "New tab folder": ""
+    "New tab folder": "Тека нової вкладки"
   },
   "New window": {
     "New window": "Нове вікно"
   },
   "New window folder": {
-    "New window folder": ""
+    "New window folder": "Тека нового вікна"
   },
   "Next tab": {
     "Next tab": "Наступна вкладка"
@@ -1011,7 +1002,7 @@
     "Only the window process serves the portal": "Портал обслуговується лише процесом вікна"
   },
   "Opacity": {
-    "Opacity": ""
+    "Opacity": "Непрозорість"
   },
   "Open": {
     "Open": "Відкрити"
@@ -1088,8 +1079,8 @@
   "Owner": {
     "Owner": "Власник"
   },
-  "PDF preview is not available. Install Qt PDF support to view this file.": {
-    "PDF preview is not available. Install Qt PDF support to view this file.": "Попередній перегляд PDF недоступний. Встановіть підтримку PDF у Qt, щоб переглянути цей файл"
+  "PDF preview is not available. Install %1 support to view this file.": {
+    "PDF preview is not available. Install %1 support to view this file.": ""
   },
   "Palette: %1": {
     "Palette: %1": "Палітра: %1"
@@ -1139,8 +1130,8 @@
   "Preference: %1 is used": {
     "Preference: %1 is used": "Налаштування: використовується %1"
   },
-  "Preference: %1 names Dux Files": {
-    "Preference: %1 names Dux Files": "Налаштування: %1 називає Dux Files"
+  "Preference: %2 names %1": {
+    "Preference: %2 names %1": ""
   },
   "Preference: no file chooser backend configured": {
     "Preference: no file chooser backend configured": "Налаштування: сервіс вибору файлів не налаштовано"
@@ -1172,9 +1163,6 @@
   "Protocol": {
     "Protocol": "Протокол"
   },
-  "Proton · %1": {
-    "Proton · %1": "Proton · %1"
-  },
   "Purple": {
     "Purple": "Фіолетовий"
   },
@@ -1182,7 +1170,7 @@
     "Quit": "Вийти"
   },
   "Quit while file operations are running?": {
-    "Quit while file operations are running?": ""
+    "Quit while file operations are running?": "Вийти, поки виконуються операції з файлами?"
   },
   "Radius strength": {
     "Radius strength": "Величина радіуса"
@@ -1215,7 +1203,7 @@
     "Register as the session file manager": "Зареєструвати як сесійний менеджер файлів"
   },
   "Relative": {
-    "Relative": ""
+    "Relative": "Відносна"
   },
   "Relevance": {
     "Relevance": "Релевантність"
@@ -1301,6 +1289,9 @@
   "Reverse the sort order": {
     "Reverse the sort order": "Змінити порядок сортування"
   },
+  "Revision": {
+    "Revision": ""
+  },
   "Ripple effects": {
     "Ripple effects": "Ефекти розширення"
   },
@@ -1321,6 +1312,9 @@
   },
   "Run this file?": {
     "Run this file?": "Запустити цей файл?"
+  },
+  "Runtime": {
+    "Runtime": ""
   },
   "Sandbox": {
     "Sandbox": "Пісочниця"
@@ -1370,8 +1364,8 @@
   "Search the disk": {
     "Search the disk": "Шукати на диску"
   },
-  "Search with the danksearch index": {
-    "Search with the danksearch index": "Шукати за допомогою індексу danksearch"
+  "Search with the %1 index": {
+    "Search with the %1 index": ""
   },
   "Search your home folder": {
     "Search your home folder": "Шукати у домашній теці"
@@ -1407,10 +1401,13 @@
     "Shared with other apps.": "Спільно з іншими програмами"
   },
   "Shares on %1": {
-    "Shares on %1": ""
+    "Shares on %1": "Ресурси на %1"
   },
   "Show": {
     "Show": "Показати"
+  },
+  "Show all tabs": {
+    "Show all tabs": ""
   },
   "Show devices": {
     "Show devices": "Показувати пристрої"
@@ -1491,25 +1488,19 @@
     "Square": "Квадратний"
   },
   "Startup folder": {
-    "Startup folder": ""
+    "Startup folder": "Початкова тека"
   },
   "Status": {
     "Status": "Статус"
   },
-  "Steam": {
-    "Steam": "Steam"
-  },
-  "Steam, ~/VirtualBox VMs": {
-    "Steam, ~/VirtualBox VMs": "Steam, ~/VirtualBox VMs"
-  },
   "Stop measuring": {
     "Stop measuring": "Припинити вимірювання"
   },
-  "Such as a separate /home.": {
-    "Such as a separate /home.": "Наприклад, окремий /home"
+  "Such as a separate %1.": {
+    "Such as a separate %1.": ""
   },
-  "Support Dux Labs": {
-    "Support Dux Labs": "Підтримати Dux Labs"
+  "Support %1": {
+    "Support %1": ""
   },
   "Switch pane": {
     "Switch pane": "Переключити панель"
@@ -1521,7 +1512,7 @@
     "System default": "Типове значення системи"
   },
   "System locale": {
-    "System locale": ""
+    "System locale": "Системна локаль"
   },
   "System preference unavailable, using dark.": {
     "System preference unavailable, using dark.": "Системне налаштування недоступне, використовується темна тема"
@@ -1532,11 +1523,11 @@
   "Terminal, drag and thumbnails": {
     "Terminal, drag and thumbnails": "Термінал, перетягування та мініатюри"
   },
-  "The Wine prefix of each game.": {
-    "The Wine prefix of each game.": "Wine-префікс кожної гри"
+  "The %1 prefix of each game.": {
+    "The %1 prefix of each game.": ""
   },
-  "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": {
-    "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": "Зміни наберуть чинності після перезапуску xdg-desktop-portal. Відкриті діалоги відкриття та збереження інших програм будуть закриті"
+  "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": {
+    "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": ""
   },
   "The files themselves stay where they are.": {
     "The files themselves stay where they are.": "Самі файли залишаються на своїх місцях"
@@ -1545,7 +1536,7 @@
     "The portal list is managed by the system.": "Список порталів керується системою"
   },
   "The running operation will be stopped part way through.": {
-    "The running operation will be stopped part way through.": ""
+    "The running operation will be stopped part way through.": "Поточна операція буде зупинена на півшляху"
   },
   "The session bus refused it.": {
     "The session bus refused it.": "Сесійна шина відмовила"
@@ -1581,7 +1572,7 @@
     "This month": "Цього місяця"
   },
   "This server offers no shares": {
-    "This server offers no shares": ""
+    "This server offers no shares": "Цей сервер не має спільних ресурсів"
   },
   "This session": {
     "This session": "Ця сесія"
@@ -1664,8 +1655,8 @@
   "Use": {
     "Use": "Використовувати"
   },
-  "Use Dux Files for open and save dialogs": {
-    "Use Dux Files for open and save dialogs": "Використовувати Dux Files для діалогів відкриття та збереження"
+  "Use %1 for open and save dialogs": {
+    "Use %1 for open and save dialogs": ""
   },
   "Use a bundled color palette.": {
     "Use a bundled color palette.": "Використовувати вбудовану кольорову палітру"
@@ -1685,8 +1676,8 @@
   "Username": {
     "Username": "Ім'я користувача"
   },
-  "Using Dux Shell dynamic colors.": {
-    "Using Dux Shell dynamic colors.": "Використання динамічних кольорів Dux Shell"
+  "Using %1 dynamic colors.": {
+    "Using %1 dynamic colors.": ""
   },
   "Version": {
     "Version": "Версія"
@@ -1703,9 +1694,6 @@
   "Views, sorting and defaults": {
     "Views, sorting and defaults": "Вигляди, сортування та типові значення"
   },
-  "Vim keys": {
-    "Vim keys": "Клавіші Vim"
-  },
   "Waiting": {
     "Waiting": "Очікування"
   },
@@ -1717,9 +1705,6 @@
   },
   "Window": {
     "Window": "Вікно"
-  },
-  "Window header": {
-    "Window header": "Заголовок вікна"
   },
   "Windows": {
     "Windows": "Вікна"
@@ -1734,7 +1719,7 @@
     "Wrong password": "Неправильний пароль"
   },
   "Your compositor does not support background blur.": {
-    "Your compositor does not support background blur.": ""
+    "Your compositor does not support background blur.": "Ваш композитор не підтримує розмиття фону"
   },
   "Zoom in": {
     "Zoom in": "Наблизити"
@@ -1758,7 +1743,7 @@
     "capability available sandbox": "доступна можливість пісочниці"
   },
   "cards panes contrast glass": {
-    "cards panes contrast glass": ""
+    "cards panes contrast glass": "картки панелі контраст скло"
   },
   "config folder launcher wine prefix": {
     "config folder launcher wine prefix": "wine-префікс теки конфігурації запускача"
@@ -1794,7 +1779,7 @@
     "default file manager dbus reveal": "типовий менеджер файлів dbus reveal"
   },
   "default folder directory start open home": {
-    "default folder directory start open home": ""
+    "default folder directory start open home": "типова тека каталог початок відкрити головну сторінку"
   },
   "delete confirmation prompt": {
     "delete confirmation prompt": "запит на підтвердження видалення"
@@ -1812,7 +1797,7 @@
     "dotfiles invisible": "приховані dot-файли"
   },
   "dotfiles sort last bottom": {
-    "dotfiles sort last bottom": ""
+    "dotfiles sort last bottom": "dot-файли сортування останні внизу"
   },
   "drag drop copy move ask default action": {
     "drag drop copy move ask default action": "перетягування копіювання переміщення запит типова дія"
@@ -1848,7 +1833,7 @@
     "font typeface headline title": "шрифт для заголовків"
   },
   "frosted glass compositor": {
-    "frosted glass compositor": ""
+    "frosted glass compositor": "матове скло композитор"
   },
   "games library steamapps common": {
     "games library steamapps common": "бібліотека ігор steamapps common"
@@ -1956,13 +1941,10 @@
     "thumbnail size limit cap megabytes": "ліміт розміру мініатюри мегабайти"
   },
   "time modified timestamp iso relative seconds": {
-    "time modified timestamp iso relative seconds": ""
-  },
-  "title bar header hide decorations": {
-    "title bar header hide decorations": "титул панель заголовок приховати прикраси декор"
+    "time modified timestamp iso relative seconds": "час змінено часова мітка ISO відносний секунди"
   },
   "transparency translucent glass see-through": {
-    "transparency translucent glass see-through": ""
+    "transparency translucent glass see-through": "прозорість напівпрозоре скло прозорий"
   },
   "type-ahead jump filter search keyboard": {
     "type-ahead jump filter search keyboard": "попереднє введення перехід фільтр пошук клавіатура"
@@ -1972,9 +1954,6 @@
   },
   "xdg-desktop-portal": {
     "xdg-desktop-portal": "xdg-desktop-portal"
-  },
-  "xdg-open follows the handler on your PATH.": {
-    "xdg-open follows the handler on your PATH.": "xdg-open слідує за обробником у вашому PATH"
   },
   "xdg-open handlr mimeo opener default application launch": {
     "xdg-open handlr mimeo opener default application launch": "xdg-open handlr mimeo opener типова програма запуск"

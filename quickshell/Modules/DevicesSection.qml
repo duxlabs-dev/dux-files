@@ -97,7 +97,7 @@ FilePlaceSection {
             return "";
         if (!SandboxService.available("devices"))
             return FilesFormat.featureUnavailable(SandboxService.reason("devices"));
-        return I18n.tr("Drives are unavailable because udisks2 is not running", "sidebar explanation when the device service is missing");
+        return I18n.tr("Drives are unavailable because %1 is not running", "sidebar explanation when the device service is missing, %1 is the service name").arg("udisks2");
     }
     showEmpty: !DevicesService.available
     visible: SettingsData.showDevicesSection && (shownDevices.length > 0 || NetworkService.portables.length > 0 || NetworkService.deviceMounts.length > 0 || (showEmpty && emptyText !== ""))

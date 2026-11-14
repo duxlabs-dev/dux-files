@@ -14,6 +14,9 @@
   "%1 folders could not be read": {
     "%1 folders could not be read": "%1 個資料夾無法讀取"
   },
+  "%1 follows the handler on your %2.": {
+    "%1 follows the handler on your %2.": ""
+  },
   "%1 h %2 min left": {
     "%1 h %2 min left": "剩餘 %1 小時 %2 分鐘"
   },
@@ -38,6 +41,9 @@
   "%1 items cut": {
     "%1 items cut": "已剪下 %1 項"
   },
+  "%1 keys": {
+    "%1 keys": ""
+  },
   "%1 levels deep": {
     "%1 levels deep": "深入 %1 層"
   },
@@ -46,6 +52,12 @@
   },
   "%1 min left": {
     "%1 min left": "剩餘 %1 分鐘"
+  },
+  "%1 not detected, using %2.": {
+    "%1 not detected, using %2.": ""
+  },
+  "%1 not detected, using the %2 preset.": {
+    "%1 not detected, using the %2 preset.": ""
   },
   "%1 px": {
     "%1 px": "%1 像素"
@@ -56,6 +68,9 @@
   "%1 s left": {
     "%1 s left": "剩餘 %1 秒"
   },
+  "%1 selected": {
+    "%1 selected": ""
+  },
   "%1 used · %2 free · %3 total": {
     "%1 used · %2 free · %3 total": "已用 %1 · 可用 %2 · 共 %3"
   },
@@ -64,6 +79,9 @@
   },
   "%1 will be moved to the trash.": {
     "%1 will be moved to the trash.": "%1 將被移到垃圾桶。"
+  },
+  "%1 with seconds": {
+    "%1 with seconds": ""
   },
   "%1 · %2": {
     "%1 · %2": "%1 · %2"
@@ -86,8 +104,8 @@
   "1 item cut": {
     "1 item cut": "已剪下 1 項"
   },
-  "50 is the Material default.": {
-    "50 is the Material default.": "50 是 Material 的預設值。"
+  "50 is the %1 default.": {
+    "50 is the %1 default.": ""
   },
   "? or F1 in the main window.": {
     "? or F1 in the main window.": "在主視窗中按 ? 或 F1。"
@@ -116,11 +134,11 @@
   "Administrator access is not available": {
     "Administrator access is not available": "無法取得管理員權限"
   },
-  "Administrator access is not available because pkexec is not installed": {
-    "Administrator access is not available because pkexec is not installed": "未安裝 pkexec，無法取得管理員權限"
+  "Administrator access is not available because %1 is not installed": {
+    "Administrator access is not available because %1 is not installed": ""
   },
-  "Administrator access is not available because the polkit policy is not installed": {
-    "Administrator access is not available because the polkit policy is not installed": "未安裝 polkit 原則，無法取得管理員權限"
+  "Administrator access is not available because the %1 policy is not installed": {
+    "Administrator access is not available because the %1 policy is not installed": ""
   },
   "Administrator access is not available inside the sandbox": {
     "Administrator access is not available inside the sandbox": "沙箱內無法取得管理員權限"
@@ -185,8 +203,8 @@
   "Automatic": {
     "Automatic": "自動"
   },
-  "Automatic uses $TERMINAL.": {
-    "Automatic uses $TERMINAL.": "自動模式使用 $TERMINAL。"
+  "Automatic uses %1.": {
+    "Automatic uses %1.": ""
   },
   "Available": {
     "Available": "可用"
@@ -287,9 +305,6 @@
   "Close tabs to the right": {
     "Close tabs to the right": "關閉右側分頁"
   },
-  "Collapse": {
-    "Collapse": ""
-  },
   "Color source": {
     "Color source": "色彩來源"
   },
@@ -335,8 +350,8 @@
   "Connected": {
     "Connected": "已連線"
   },
-  "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": {
-    "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": "已連線，但共用沒有本機資料夾。gvfs FUSE 服務可能未執行。"
+  "Connected, but the share has no local folder. The %1 service may not be running.": {
+    "Connected, but the share has no local folder. The %1 service may not be running.": ""
   },
   "Contents": {
     "Contents": "內容"
@@ -482,11 +497,14 @@
   "Drives and mounting": {
     "Drives and mounting": "磁碟機與掛載"
   },
-  "Drives are unavailable because the sandbox cannot reach udisks2": {
-    "Drives are unavailable because the sandbox cannot reach udisks2": "沙箱無法存取 udisks2，磁碟機無法使用"
+  "Drives are unavailable because %1 is not running": {
+    "Drives are unavailable because %1 is not running": ""
   },
-  "Drives are unavailable because udisks2 is not running": {
-    "Drives are unavailable because udisks2 is not running": "udisks2 未執行，磁碟機無法使用"
+  "Drives are unavailable because the sandbox cannot reach %1": {
+    "Drives are unavailable because the sandbox cannot reach %1": ""
+  },
+  "Drop on a tab to move files there": {
+    "Drop on a tab to move files there": ""
   },
   "Dropping without a modifier": {
     "Dropping without a modifier": "無修飾鍵拖放"
@@ -505,12 +523,6 @@
   },
   "Duration": {
     "Duration": "持續時間"
-  },
-  "Dux Shell not detected, using %1.": {
-    "Dux Shell not detected, using %1.": ""
-  },
-  "Dux Shell not detected, using the %1 preset.": {
-    "Dux Shell not detected, using the %1 preset.": "未偵測到 Dux Shell，使用 %1 預設。"
   },
   "Each launcher's own configuration folder.": {
     "Each launcher's own configuration folder.": ""
@@ -547,9 +559,6 @@
   },
   "Execute": {
     "Execute": "執行"
-  },
-  "Expand": {
-    "Expand": ""
   },
   "Extract archives on open": {
     "Extract archives on open": "開啟時解壓縮"
@@ -617,8 +626,8 @@
   "Folders to skip": {
     "Folders to skip": "要略過的資料夾"
   },
-  "Follow Dux Shell colors, falling back to a preset.": {
-    "Follow Dux Shell colors, falling back to a preset.": "跟隨 Dux Shell 色彩，否則退回預設。"
+  "Follow %1 colors, falling back to a preset.": {
+    "Follow %1 colors, falling back to a preset.": ""
   },
   "Following the system color scheme (currently %1).": {
     "Following the system color scheme (currently %1).": "跟隨系統色彩配置（目前為 %1）。"
@@ -650,11 +659,8 @@
   "Games": {
     "Games": ""
   },
-  "Games and prefixes Heroic installed.": {
-    "Games and prefixes Heroic installed.": ""
-  },
-  "Games and prefixes Lutris installed.": {
-    "Games and prefixes Lutris installed.": ""
+  "Games and prefixes %1 installed.": {
+    "Games and prefixes %1 installed.": ""
   },
   "Games folder": {
     "Games folder": ""
@@ -670,9 +676,6 @@
   },
   "Getting around": {
     "Getting around": "瀏覽"
-  },
-  "GitHub": {
-    "GitHub": "GitHub"
   },
   "Go to that tab": {
     "Go to that tab": "切換到該分頁"
@@ -695,26 +698,14 @@
   "Group": {
     "Group": "群組"
   },
-  "Heroic": {
-    "Heroic": ""
-  },
   "Hidden files after other files": {
     "Hidden files after other files": ""
-  },
-  "Hides the title and the window buttons, leaving a thin strip to drag the window.": {
-    "Hides the title and the window buttons, leaving a thin strip to drag the window.": ""
   },
   "Home": {
     "Home": "主資料夾"
   },
   "Host filesystem": {
     "Host filesystem": "主機檔案系統"
-  },
-  "ISO 8601": {
-    "ISO 8601": ""
-  },
-  "ISO 8601 with seconds": {
-    "ISO 8601 with seconds": ""
   },
   "Icons": {
     "Icons": ""
@@ -731,8 +722,8 @@
   "Import": {
     "Import": "匯入"
   },
-  "Import your GTK bookmarks?": {
-    "Import your GTK bookmarks?": "匯入你的 GTK 書籤？"
+  "Import your %1 bookmarks?": {
+    "Import your %1 bookmarks?": ""
   },
   "Include hidden files": {
     "Include hidden files": "包含隱藏檔案"
@@ -800,8 +791,11 @@
   "Lets the desktop show through the window. Text and controls stay solid.": {
     "Lets the desktop show through the window. Text and controls stay solid.": ""
   },
-  "Libraries and Proton prefixes.": {
-    "Libraries and Proton prefixes.": ""
+  "Libraries and %1 prefixes.": {
+    "Libraries and %1 prefixes.": ""
+  },
+  "Library": {
+    "Library": ""
   },
   "Library · %1": {
     "Library · %1": ""
@@ -832,9 +826,6 @@
   },
   "Lock": {
     "Lock": "鎖定"
-  },
-  "Lutris": {
-    "Lutris": ""
   },
   "MIT License": {
     "MIT License": "MIT 授權條款"
@@ -926,11 +917,11 @@
   "Network in the sidebar": {
     "Network in the sidebar": ""
   },
-  "Network locations are unavailable because gvfs is not running": {
-    "Network locations are unavailable because gvfs is not running": "gvfs 未執行，網路位置無法使用"
+  "Network locations are unavailable because %1 is not running": {
+    "Network locations are unavailable because %1 is not running": ""
   },
-  "Network locations are unavailable because the sandbox cannot reach gvfs": {
-    "Network locations are unavailable because the sandbox cannot reach gvfs": "沙箱無法存取 gvfs，網路位置無法使用"
+  "Network locations are unavailable because the sandbox cannot reach %1": {
+    "Network locations are unavailable because the sandbox cannot reach %1": ""
   },
   "Never": {
     "Never": "從不"
@@ -1088,8 +1079,8 @@
   "Owner": {
     "Owner": "擁有者"
   },
-  "PDF preview is not available. Install Qt PDF support to view this file.": {
-    "PDF preview is not available. Install Qt PDF support to view this file.": ""
+  "PDF preview is not available. Install %1 support to view this file.": {
+    "PDF preview is not available. Install %1 support to view this file.": ""
   },
   "Palette: %1": {
     "Palette: %1": "調色盤：%1"
@@ -1139,8 +1130,8 @@
   "Preference: %1 is used": {
     "Preference: %1 is used": "偏好設定：正在使用 %1"
   },
-  "Preference: %1 names Dux Files": {
-    "Preference: %1 names Dux Files": "偏好設定：%1 指向 Dux Files"
+  "Preference: %2 names %1": {
+    "Preference: %2 names %1": ""
   },
   "Preference: no file chooser backend configured": {
     "Preference: no file chooser backend configured": "偏好設定：未設定檔案選擇器後端"
@@ -1171,9 +1162,6 @@
   },
   "Protocol": {
     "Protocol": "協定"
-  },
-  "Proton · %1": {
-    "Proton · %1": ""
   },
   "Purple": {
     "Purple": "紫色"
@@ -1301,6 +1289,9 @@
   "Reverse the sort order": {
     "Reverse the sort order": "反轉排序順序"
   },
+  "Revision": {
+    "Revision": ""
+  },
   "Ripple effects": {
     "Ripple effects": "波紋效果"
   },
@@ -1321,6 +1312,9 @@
   },
   "Run this file?": {
     "Run this file?": "執行此檔案？"
+  },
+  "Runtime": {
+    "Runtime": ""
   },
   "Sandbox": {
     "Sandbox": "沙箱"
@@ -1370,8 +1364,8 @@
   "Search the disk": {
     "Search the disk": "搜尋磁碟"
   },
-  "Search with the danksearch index": {
-    "Search with the danksearch index": "使用 danksearch 索引搜尋"
+  "Search with the %1 index": {
+    "Search with the %1 index": ""
   },
   "Search your home folder": {
     "Search your home folder": "搜尋主資料夾"
@@ -1411,6 +1405,9 @@
   },
   "Show": {
     "Show": "顯示"
+  },
+  "Show all tabs": {
+    "Show all tabs": ""
   },
   "Show devices": {
     "Show devices": ""
@@ -1496,20 +1493,14 @@
   "Status": {
     "Status": "狀態"
   },
-  "Steam": {
-    "Steam": ""
-  },
-  "Steam, ~/VirtualBox VMs": {
-    "Steam, ~/VirtualBox VMs": "例如 Steam、~/VirtualBox VMs"
-  },
   "Stop measuring": {
     "Stop measuring": "停止計算"
   },
-  "Such as a separate /home.": {
-    "Such as a separate /home.": "例如獨立的 /home。"
+  "Such as a separate %1.": {
+    "Such as a separate %1.": ""
   },
-  "Support Dux Labs": {
-    "Support Dux Labs": "支持 Dux Labs"
+  "Support %1": {
+    "Support %1": ""
   },
   "Switch pane": {
     "Switch pane": "切換窗格"
@@ -1532,11 +1523,11 @@
   "Terminal, drag and thumbnails": {
     "Terminal, drag and thumbnails": "終端機、拖放與縮圖"
   },
-  "The Wine prefix of each game.": {
-    "The Wine prefix of each game.": ""
+  "The %1 prefix of each game.": {
+    "The %1 prefix of each game.": ""
   },
-  "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": {
-    "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": "變更將在 xdg-desktop-portal 重新啟動後生效。其他應用程式已開啟的開啟與儲存對話框將會關閉。"
+  "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": {
+    "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": ""
   },
   "The files themselves stay where they are.": {
     "The files themselves stay where they are.": "檔案本身仍保留在原處。"
@@ -1664,8 +1655,8 @@
   "Use": {
     "Use": ""
   },
-  "Use Dux Files for open and save dialogs": {
-    "Use Dux Files for open and save dialogs": "使用 Dux Files 處理開啟與儲存對話框"
+  "Use %1 for open and save dialogs": {
+    "Use %1 for open and save dialogs": ""
   },
   "Use a bundled color palette.": {
     "Use a bundled color palette.": "使用內建調色盤。"
@@ -1685,8 +1676,8 @@
   "Username": {
     "Username": "使用者名稱"
   },
-  "Using Dux Shell dynamic colors.": {
-    "Using Dux Shell dynamic colors.": "正在使用 Dux Shell 動態色彩。"
+  "Using %1 dynamic colors.": {
+    "Using %1 dynamic colors.": ""
   },
   "Version": {
     "Version": "版本"
@@ -1703,9 +1694,6 @@
   "Views, sorting and defaults": {
     "Views, sorting and defaults": "檢視、排序與預設值"
   },
-  "Vim keys": {
-    "Vim keys": "Vim 鍵位"
-  },
   "Waiting": {
     "Waiting": "等待中"
   },
@@ -1717,9 +1705,6 @@
   },
   "Window": {
     "Window": "視窗"
-  },
-  "Window header": {
-    "Window header": ""
   },
   "Windows": {
     "Windows": "視窗"
@@ -1958,9 +1943,6 @@
   "time modified timestamp iso relative seconds": {
     "time modified timestamp iso relative seconds": ""
   },
-  "title bar header hide decorations": {
-    "title bar header hide decorations": ""
-  },
   "transparency translucent glass see-through": {
     "transparency translucent glass see-through": ""
   },
@@ -1972,9 +1954,6 @@
   },
   "xdg-desktop-portal": {
     "xdg-desktop-portal": "xdg-desktop-portal"
-  },
-  "xdg-open follows the handler on your PATH.": {
-    "xdg-open follows the handler on your PATH.": ""
   },
   "xdg-open handlr mimeo opener default application launch": {
     "xdg-open handlr mimeo opener default application launch": ""

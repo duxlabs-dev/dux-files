@@ -25,7 +25,7 @@ FilePlaceSection {
             return "";
         if (!SandboxService.available("network"))
             return FilesFormat.featureUnavailable(SandboxService.reason("network"));
-        return I18n.tr("Network locations are unavailable because gvfs is not running", "sidebar explanation when the network service is missing");
+        return I18n.tr("Network locations are unavailable because %1 is not running", "sidebar explanation when the network service is missing, %1 is the service name").arg("gvfs");
     }
     showEmpty: true
 

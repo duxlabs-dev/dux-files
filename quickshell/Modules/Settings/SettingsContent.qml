@@ -100,11 +100,11 @@ Item {
             value: "relative"
         },
         {
-            label: I18n.tr("ISO 8601", "date format option, year-month-day hour:minute"),
+            label: "ISO 8601",
             value: "iso"
         },
         {
-            label: I18n.tr("ISO 8601 with seconds", "date format option, year-month-day hour:minute:second"),
+            label: I18n.tr("%1 with seconds", "date format option, year-month-day hour:minute:second, %1 is ISO 8601").arg("ISO 8601"),
             value: "isoSeconds"
         }
     ]
@@ -118,8 +118,7 @@ Item {
             "value": "current",
             "label": I18n.tr("Current folder", "folder setting option keeping the folder in use")
         },
-        homeFolderOption
-    ]
+        homeFolderOption]
     property string folderPickerKey: ""
 
     function pickFolder(key) {
@@ -298,7 +297,7 @@ Item {
         const config = portalStatus.config ?? ({});
         const effective = config.effective ?? "";
         if (effective === "dfiles")
-            return I18n.tr("Preference: %1 names Dux Files", "portal chooser status line, %1 is a path").arg(config.path ?? "");
+            return I18n.tr("Preference: %2 names %1", "portal chooser status line, %1 is the app name, %2 is a path").arg("Dux Files").arg(config.path ?? "");
         if (effective !== "")
             return I18n.tr("Preference: %1 is used", "portal chooser status line, %1 is another backend name").arg(effective);
         return I18n.tr("Preference: no file chooser backend configured", "portal chooser status line");
@@ -470,7 +469,7 @@ Item {
         id: portalRestartDialog
 
         title: I18n.tr("Restart the portal service?", "dialog title before restarting xdg-desktop-portal")
-        message: I18n.tr("The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.", "dialog message before restarting xdg-desktop-portal")
+        message: I18n.tr("The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.", "dialog message before restarting the portal, %1 is the service name").arg("xdg-desktop-portal")
         confirmText: I18n.tr("Restart", "dialog button restarting xdg-desktop-portal")
         danger: false
         onConfirmed: root.restartPortal()
@@ -698,8 +697,7 @@ Item {
                             "value": "last",
                             "label": I18n.tr("Last used", "startup folder option restoring the previous tabs")
                         },
-                        root.homeFolderOption
-                    ]
+                        root.homeFolderOption]
                 }
 
                 FolderOptionRow {
@@ -750,7 +748,7 @@ Item {
                 title: I18n.tr("Open and save dialogs", "general settings section label for the portal file chooser")
 
                 SettingsToggleRow {
-                    text: I18n.tr("Use Dux Files for open and save dialogs", "setting label for serving the desktop portal file chooser")
+                    text: I18n.tr("Use %1 for open and save dialogs", "setting label for serving the desktop portal file chooser, %1 is the app name").arg("Dux Files")
                     keywords: I18n.tr("portal file chooser picker xdg", "settings search keywords, space separated, add synonyms in your language")
                     description: root.portalDescription()
                     enabled: root.portalStatus.available === true && root.portalStatus.systemManaged !== true
@@ -931,7 +929,7 @@ Item {
                 title: I18n.tr("Keyboard", "general settings section label")
 
                 SettingsToggleRow {
-                    text: I18n.tr("Vim keys", "toggle label for vim style navigation")
+                    text: I18n.tr("%1 keys", "toggle label for vim style navigation, %1 is Vim").arg("Vim")
                     keywords: I18n.tr("hjkl keyboard navigation modal", "settings search keywords, space separated, add synonyms in your language")
                     description: I18n.tr("h j k l move, / searches.", "vim keys toggle description")
                     settingKey: "vimKeys"
@@ -1016,7 +1014,7 @@ Item {
                         case "custom":
                             return I18n.tr("Load colors from your own theme file.", "color source description for custom");
                         default:
-                            return I18n.tr("Follow Dux Shell colors, falling back to a preset.", "color source description for auto");
+                            return I18n.tr("Follow %1 colors, falling back to a preset.", "color source description for auto, %1 is Dux Shell").arg("Dux Shell");
                         }
                     }
                     optionList: root.colorSourceOptions
@@ -1028,7 +1026,7 @@ Item {
                     visible: SettingsData.colorSource === "auto"
                     iconName: Theme.dmsColorsAvailable ? "check_circle" : "info"
                     iconColor: Theme.dmsColorsAvailable ? Theme.success : Theme.surfaceVariantText
-                    title: Theme.dmsColorsAvailable ? I18n.tr("Using Dux Shell dynamic colors.", "auto color source status when DMS is active") : I18n.tr("Dux Shell not detected, using the %1 preset.", "auto color source status when DMS is missing").arg(Theme.presetLabel(SettingsData.presetTheme))
+                    title: Theme.dmsColorsAvailable ? I18n.tr("Using %1 dynamic colors.", "auto color source status when the shell is active, %1 is Dux Shell").arg("Dux Shell") : I18n.tr("%1 not detected, using the %2 preset.", "auto color source status when the shell is missing, %1 is Dux Shell, %2 is a preset name").arg("Dux Shell").arg(Theme.presetLabel(SettingsData.presetTheme))
                 }
 
                 SettingsRow {
@@ -1096,7 +1094,7 @@ Item {
                 SettingsSliderRow {
                     text: I18n.tr("Radius strength", "global component corner rounding")
                     keywords: I18n.tr("corners rounding shape square", "settings search keywords, space separated, add synonyms in your language")
-                    description: I18n.tr("50 is the Material default.", "radius strength slider description")
+                    description: I18n.tr("50 is the %1 default.", "radius strength slider description, %1 is Material").arg("Material")
                     minimumLabel: I18n.tr("Square", "radius strength slider label at zero")
                     value: SettingsData.radiusStrength
                     minimum: 0
@@ -1133,7 +1131,7 @@ Item {
                     visible: SettingsData.fontSource === "auto" && !Theme.typography.followingDms
                     iconName: "info"
                     iconColor: Theme.surfaceVariantText
-                    title: I18n.tr("Dux Shell not detected, using %1.", "auto font source status when DMS is missing").arg(Theme.fontFamily)
+                    title: I18n.tr("%1 not detected, using %2.", "auto font source status when the shell is missing, %1 is Dux Shell, %2 is a font family").arg("Dux Shell").arg(Theme.fontFamily)
                 }
 
                 FontFamilyRow {
@@ -1323,7 +1321,7 @@ Item {
                 OptionDropdownRow {
                     text: I18n.tr("Terminal", "setting label for the terminal emulator")
                     keywords: I18n.tr("console emulator shell command line", "settings search keywords, space separated, add synonyms in your language")
-                    description: SandboxService.sandboxed ? I18n.tr("Name the host terminal to launch.", "terminal setting description inside flatpak") : I18n.tr("Automatic uses $TERMINAL.", "terminal setting description")
+                    description: SandboxService.sandboxed ? I18n.tr("Name the host terminal to launch.", "terminal setting description inside flatpak") : I18n.tr("Automatic uses %1.", "terminal setting description, %1 is an environment variable").arg("$TERMINAL")
                     optionList: root.terminalOptions
                     current: SettingsData.terminal
                     onPicked: value => SettingsData.terminal = value
@@ -1336,7 +1334,7 @@ Item {
                 OptionDropdownRow {
                     text: I18n.tr("Open files with", "file opener setting label")
                     keywords: I18n.tr("xdg-open handlr mimeo opener default application launch", "settings search keywords, space separated, add synonyms in your language")
-                    description: I18n.tr("xdg-open follows the handler on your PATH.", "file opener setting description")
+                    description: I18n.tr("%1 follows the handler on your %2.", "file opener setting description, %1 is a command, %2 is an environment variable").arg("xdg-open").arg("PATH")
                     optionList: root.openerOptions
                     current: SettingsData.opener
                     onPicked: value => SettingsData.opener = value
@@ -1406,7 +1404,7 @@ Item {
                         width: parent.width
                         outlined: true
                         text: SettingsData.searchExcludes.join(", ")
-                        placeholderText: I18n.tr("Steam, ~/VirtualBox VMs", "example list in the search exclusions field, folder names or paths separated by commas")
+                        placeholderText: "Steam, ~/VirtualBox VMs"
                         onEditingFinished: {
                             const names = text.split(",").map(entry => entry.trim()).filter(entry => entry !== "");
                             const current = SettingsData.searchExcludes;
@@ -1435,7 +1433,7 @@ Item {
                 SettingsToggleRow {
                     text: I18n.tr("Show system partitions", "devices setting label")
                     keywords: I18n.tr("internal drives udisks home boot", "settings search keywords, space separated, add synonyms in your language")
-                    description: I18n.tr("Such as a separate /home.", "devices setting description")
+                    description: I18n.tr("Such as a separate %1.", "devices setting description, %1 is a mount point").arg("/home")
                     enabled: SettingsData.showDevicesSection
                     settingKey: "showSystemPartitions"
                 }
@@ -1471,25 +1469,25 @@ Item {
                 }
 
                 SettingsToggleRow {
-                    text: I18n.tr("Steam", "games setting label for the steam group")
+                    text: "Steam"
                     keywords: I18n.tr("steam proton valve", "settings search keywords, space separated, add synonyms in your language")
-                    description: I18n.tr("Libraries and Proton prefixes.", "steam games setting description")
+                    description: I18n.tr("Libraries and %1 prefixes.", "steam games setting description, %1 is Proton").arg("Proton")
                     enabled: SettingsData.showGamesSidebar
                     settingKey: "showSteamGames"
                 }
 
                 SettingsToggleRow {
-                    text: I18n.tr("Heroic", "games setting label for the heroic group")
+                    text: "Heroic"
                     keywords: I18n.tr("heroic epic gog amazon", "settings search keywords, space separated, add synonyms in your language")
-                    description: I18n.tr("Games and prefixes Heroic installed.", "heroic games setting description")
+                    description: I18n.tr("Games and prefixes %1 installed.", "games setting description, %1 is a game launcher name").arg("Heroic")
                     enabled: SettingsData.showGamesSidebar
                     settingKey: "showHeroicGames"
                 }
 
                 SettingsToggleRow {
-                    text: I18n.tr("Lutris", "games setting label for the lutris group")
+                    text: "Lutris"
                     keywords: I18n.tr("lutris wine prefix", "settings search keywords, space separated, add synonyms in your language")
-                    description: I18n.tr("Games and prefixes Lutris installed.", "lutris games setting description")
+                    description: I18n.tr("Games and prefixes %1 installed.", "games setting description, %1 is a game launcher name").arg("Lutris")
                     enabled: SettingsData.showGamesSidebar
                     settingKey: "showLutrisGames"
                 }
@@ -1505,7 +1503,7 @@ Item {
                 SettingsToggleRow {
                     text: I18n.tr("Prefixes", "games setting label hiding wine prefixes")
                     keywords: I18n.tr("wine prefix proton compatdata", "settings search keywords, space separated, add synonyms in your language")
-                    description: I18n.tr("The Wine prefix of each game.", "games setting description for the wine prefixes")
+                    description: I18n.tr("The %1 prefix of each game.", "games setting description for the wine prefixes, %1 is Wine").arg("Wine")
                     enabled: SettingsData.showGamesSidebar
                     settingKey: "showGamePrefixes"
                 }

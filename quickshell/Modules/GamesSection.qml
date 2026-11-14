@@ -61,11 +61,11 @@ FilePlaceSection {
     function groupTitle(key) {
         switch (key) {
         case "steam":
-            return I18n.tr("Steam", "games sidebar group holding steam libraries");
+            return "Steam";
         case "heroic":
-            return I18n.tr("Heroic", "games sidebar group holding heroic games");
+            return "Heroic";
         case "lutris":
-            return I18n.tr("Lutris", "games sidebar group holding lutris games");
+            return "Lutris";
         default:
             return key;
         }
@@ -76,7 +76,7 @@ FilePlaceSection {
         case "library":
             return I18n.tr("Library · %1", "games sidebar row for a steam library").arg(place.detail);
         case "proton":
-            return I18n.tr("Proton · %1", "games sidebar row for the proton prefixes of a steam library").arg(place.detail);
+            return I18n.tr("%1 · %2", "games sidebar row for the proton prefixes of a steam library, %1 is Proton, %2 is the library").arg("Proton").arg(place.detail);
         case "prefix":
             return I18n.tr("Prefix · %1", "games sidebar row for one game's wine prefix").arg(place.detail);
         case "games":

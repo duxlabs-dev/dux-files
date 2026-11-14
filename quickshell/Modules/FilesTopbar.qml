@@ -59,7 +59,7 @@ Item {
 
     readonly property bool virtualActive: trashActive || recentActive
     readonly property bool sidebarToggleOnly: showSidebarToggle && compact
-    readonly property color restingColor: hostsPath ? "transparent" : Theme.chipSurface
+    readonly property color restingColor: hostsPath ? "transparent" : Theme.chipLayer
     readonly property var viewModes: allViewModes.filter(mode => allowColumns || mode.value !== "columns")
     readonly property var allViewModes: [
         {
@@ -332,7 +332,7 @@ Item {
             visible: topbar.showHiddenToggle
             iconName: topbar.hiddenShown ? "visibility" : "visibility_off"
             iconColor: topbar.hiddenShown ? Theme.onSelectedContainer : Theme.surfaceText
-            backgroundColor: topbar.hiddenShown ? Theme.selectedContainer : topbar.restingColor
+            backgroundColor: topbar.hiddenShown ? Theme.selectedLayer : topbar.restingColor
             tooltipText: FileActions.label("showHidden")
             onClicked: topbar.hiddenToggled()
         }
@@ -343,7 +343,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             visible: topbar.showViewControls && !topbar.compact
             iconName: topbar.currentViewMode.icon
-            backgroundColor: Theme.chipSurface
+            backgroundColor: Theme.chipLayer
             tooltipText: I18n.tr("View", "keyboard shortcut group")
             onClicked: menu.toggle(viewButton, "view")
         }
@@ -353,7 +353,7 @@ Item {
             visible: topbar.showViewControls && !topbar.compact
             iconName: "view_sidebar"
             iconColor: topbar.previewOpen ? Theme.onPrimary : Theme.surfaceText
-            backgroundColor: topbar.previewOpen ? Theme.primary : Theme.chipSurface
+            backgroundColor: topbar.previewOpen ? Theme.primary : Theme.chipLayer
             tooltipText: topbar.previewLabel
             onClicked: topbar.previewToggled()
         }
@@ -362,7 +362,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             visible: topbar.showViewControls && !topbar.compact && topbar.previewExpandable
             iconName: "open_in_full"
-            backgroundColor: Theme.chipSurface
+            backgroundColor: Theme.chipLayer
             tooltipText: topbar.previewExpandLabel
             onClicked: topbar.previewExpandRequested()
         }
@@ -372,7 +372,7 @@ Item {
             visible: topbar.showViewControls && !topbar.compact && topbar.showSplit
             iconName: "splitscreen_vertical_add"
             iconColor: topbar.splitView ? Theme.onPrimary : Theme.surfaceText
-            backgroundColor: topbar.splitView ? Theme.primary : Theme.chipSurface
+            backgroundColor: topbar.splitView ? Theme.primary : Theme.chipLayer
             tooltipText: I18n.tr("Split view", "tooltip on the button showing a second pane")
             onClicked: topbar.splitToggled()
         }
@@ -396,7 +396,7 @@ Item {
             focusPolicy: Qt.TabFocus
             buttonSize: FilesMetrics.topbarControlSize
             iconSize: Theme.iconSizeMedium
-            backgroundColor: Theme.chipSurface
+            backgroundColor: Theme.chipLayer
         }
 
         FlatButton {
@@ -414,7 +414,7 @@ Item {
             readonly property color contentColor: overviewDrop.containsDrag ? Theme.onPrimaryContainer : topbar.overviewOpen ? Theme.onSelectedContainer : Theme.surfaceText
 
             visible: topbar.showTabOverview
-            backgroundColor: overviewDrop.containsDrag ? Theme.primaryContainer : topbar.overviewOpen ? Theme.selectedContainer : "transparent"
+            backgroundColor: overviewDrop.containsDrag ? Theme.primaryContainer : topbar.overviewOpen ? Theme.selectedLayer : "transparent"
             tooltipText: I18n.tr("Show all tabs", "tooltip on the button opening the tab overview")
             onClicked: topbar.overviewToggled()
 
@@ -774,7 +774,7 @@ Item {
 
                         iconName: FileActions.icon(modelData)
                         iconColor: modelData === "trash" ? Theme.error : Theme.surfaceText
-                        backgroundColor: Theme.chipSurface
+                        backgroundColor: Theme.chipLayer
                         tooltipText: FileActions.label(modelData)
                         onClicked: topbar.selectionActionRequested(modelData)
                     }

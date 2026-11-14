@@ -54,7 +54,7 @@ Row {
         width: chip.implicitWidth + FileBrowserMetrics.pathPillPadding + Theme.spacingXXS
         height: FileBrowserMetrics.pathPillHeight
         radius: FileBrowserMetrics.pathPillRadius
-        color: Theme.chipSurface
+        color: Theme.chipLayer
         border.width: Theme.outlineWidth
         border.color: Theme.outlineVariant
         Accessible.role: Accessible.StaticText

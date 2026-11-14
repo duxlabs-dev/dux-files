@@ -14,6 +14,9 @@
   "%1 folders could not be read": {
     "%1 folders could not be read": "%1 mappa nem olvasható"
   },
+  "%1 follows the handler on your %2.": {
+    "%1 follows the handler on your %2.": ""
+  },
   "%1 h %2 min left": {
     "%1 h %2 min left": "%1 ó %2 p van hátra"
   },
@@ -38,6 +41,9 @@
   "%1 items cut": {
     "%1 items cut": "%1 elem kivágva"
   },
+  "%1 keys": {
+    "%1 keys": ""
+  },
   "%1 levels deep": {
     "%1 levels deep": "%1 szint mélyen"
   },
@@ -47,14 +53,23 @@
   "%1 min left": {
     "%1 min left": "%1 perc van hátra"
   },
+  "%1 not detected, using %2.": {
+    "%1 not detected, using %2.": ""
+  },
+  "%1 not detected, using the %2 preset.": {
+    "%1 not detected, using the %2 preset.": ""
+  },
   "%1 px": {
     "%1 px": "%1 képpont"
   },
   "%1 running operations will be stopped part way through.": {
-    "%1 running operations will be stopped part way through.": ""
+    "%1 running operations will be stopped part way through.": "%1 futó művelet megszakad folyamat közben."
   },
   "%1 s left": {
     "%1 s left": "%1 mp van hátra"
+  },
+  "%1 selected": {
+    "%1 selected": ""
   },
   "%1 used · %2 free · %3 total": {
     "%1 used · %2 free · %3 total": "%1 felhasznált · %2 szabad · %3 összesen"
@@ -64,6 +79,9 @@
   },
   "%1 will be moved to the trash.": {
     "%1 will be moved to the trash.": "A(z) %1 a kukába kerül."
+  },
+  "%1 with seconds": {
+    "%1 with seconds": ""
   },
   "%1 · %2": {
     "%1 · %2": "%1 · %2"
@@ -86,8 +104,8 @@
   "1 item cut": {
     "1 item cut": "1 elem kivágva"
   },
-  "50 is the Material default.": {
-    "50 is the Material default.": "Az 50 az alapértelmezett Material-érték."
+  "50 is the %1 default.": {
+    "50 is the %1 default.": ""
   },
   "? or F1 in the main window.": {
     "? or F1 in the main window.": "? vagy F1 a főablakban."
@@ -116,11 +134,11 @@
   "Administrator access is not available": {
     "Administrator access is not available": "Rendszergazdai hozzáférés nem érhető el"
   },
-  "Administrator access is not available because pkexec is not installed": {
-    "Administrator access is not available because pkexec is not installed": "Rendszergazdai hozzáférés nem érhető el, mert a pkexec nincs telepítve"
+  "Administrator access is not available because %1 is not installed": {
+    "Administrator access is not available because %1 is not installed": ""
   },
-  "Administrator access is not available because the polkit policy is not installed": {
-    "Administrator access is not available because the polkit policy is not installed": "Rendszergazdai hozzáférés nem érhető el, mert a polkit-irányelv nincs telepítve"
+  "Administrator access is not available because the %1 policy is not installed": {
+    "Administrator access is not available because the %1 policy is not installed": ""
   },
   "Administrator access is not available inside the sandbox": {
     "Administrator access is not available inside the sandbox": "Rendszergazdai hozzáférés nem érhető el a homokozón belül"
@@ -185,8 +203,8 @@
   "Automatic": {
     "Automatic": "Automatikus"
   },
-  "Automatic uses $TERMINAL.": {
-    "Automatic uses $TERMINAL.": "Az automatikus beállítás a $TERMINAL változót használja."
+  "Automatic uses %1.": {
+    "Automatic uses %1.": ""
   },
   "Available": {
     "Available": "Elérhető"
@@ -210,7 +228,7 @@
     "Backend: started on demand through %1": "Háttérrendszer: igény szerint elindítva a(z) %1 révén"
   },
   "Background blur": {
-    "Background blur": ""
+    "Background blur": "Háttér elmosása"
   },
   "Badges": {
     "Badges": "Jelvények"
@@ -228,7 +246,7 @@
     "Blue": "Kék"
   },
   "Blurs what shows through the window. Needs an opacity below 100%.": {
-    "Blurs what shows through the window. Needs an opacity below 100%.": ""
+    "Blurs what shows through the window. Needs an opacity below 100%.": "Elmossa azt, ami átszűrődik az ablakon. 100% alatti átlátszatlanság szükséges hozzá."
   },
   "Bookmark this folder": {
     "Bookmark this folder": "Mappa felvétele a könyvjelzők közé"
@@ -255,7 +273,7 @@
     "Choose a badge image": "Válassz jelvényképet"
   },
   "Choose folder…": {
-    "Choose folder…": ""
+    "Choose folder…": "Mappa kiválasztása…"
   },
   "Clear": {
     "Clear": "Törlés"
@@ -287,9 +305,6 @@
   "Close tabs to the right": {
     "Close tabs to the right": "Jobbra lévő lapok bezárása"
   },
-  "Collapse": {
-    "Collapse": "Összecsukás"
-  },
   "Color source": {
     "Color source": "Színforrás"
   },
@@ -297,7 +312,7 @@
     "Column view": "Oszlopnézet"
   },
   "Columns": {
-    "Columns": ""
+    "Columns": "Oszlopok"
   },
   "Comfortable": {
     "Comfortable": "Kényelmes"
@@ -335,8 +350,8 @@
   "Connected": {
     "Connected": "Kapcsolódva"
   },
-  "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": {
-    "Connected, but the share has no local folder. The gvfs FUSE service may not be running.": "Kapcsolódva, de a megosztásnak nincs helyi mappája. Lehet, hogy a gvfs FUSE-szolgáltatás nem fut."
+  "Connected, but the share has no local folder. The %1 service may not be running.": {
+    "Connected, but the share has no local folder. The %1 service may not be running.": ""
   },
   "Contents": {
     "Contents": "Tartalom"
@@ -390,7 +405,7 @@
     "Ctrl+Wheel resizes per window.": "A Ctrl+Görgő ablakonként méretezi át."
   },
   "Current folder": {
-    "Current folder": ""
+    "Current folder": "Jelenlegi mappa"
   },
   "Custom": {
     "Custom": "Egyéni"
@@ -405,7 +420,7 @@
     "Dark": "Sötét"
   },
   "Date format": {
-    "Date format": ""
+    "Date format": "Dátumformátum"
   },
   "Decrease": {
     "Decrease": "Csökkentés"
@@ -482,11 +497,14 @@
   "Drives and mounting": {
     "Drives and mounting": "Meghajtók és csatolás"
   },
-  "Drives are unavailable because the sandbox cannot reach udisks2": {
-    "Drives are unavailable because the sandbox cannot reach udisks2": "A meghajtók nem érhetők el, mert a homokozó nem éri el az udisks2 szolgáltatást"
+  "Drives are unavailable because %1 is not running": {
+    "Drives are unavailable because %1 is not running": ""
   },
-  "Drives are unavailable because udisks2 is not running": {
-    "Drives are unavailable because udisks2 is not running": "A meghajtók nem érhetők el, mert az udisks2 nem fut"
+  "Drives are unavailable because the sandbox cannot reach %1": {
+    "Drives are unavailable because the sandbox cannot reach %1": ""
+  },
+  "Drop on a tab to move files there": {
+    "Drop on a tab to move files there": ""
   },
   "Dropping without a modifier": {
     "Dropping without a modifier": "Eldobás módosítóbillentyű nélkül"
@@ -505,12 +523,6 @@
   },
   "Duration": {
     "Duration": "Időtartam"
-  },
-  "Dux Shell not detected, using %1.": {
-    "Dux Shell not detected, using %1.": "A Dux Shell nem észlelhető, a(z) %1 kerül felhasználásra."
-  },
-  "Dux Shell not detected, using the %1 preset.": {
-    "Dux Shell not detected, using the %1 preset.": "A Dux Shell nem észlelhető, a(z) %1 előbeállítás kerül felhasználásra."
   },
   "Each launcher's own configuration folder.": {
     "Each launcher's own configuration folder.": "Az egyes indítók saját konfigurációs mappája."
@@ -547,9 +559,6 @@
   },
   "Execute": {
     "Execute": "Végrehajtás"
-  },
-  "Expand": {
-    "Expand": "Kibontás"
   },
   "Extract archives on open": {
     "Extract archives on open": "Archívumok kibontása megnyitáskor"
@@ -617,8 +626,8 @@
   "Folders to skip": {
     "Folders to skip": "Kihagyandó mappák"
   },
-  "Follow Dux Shell colors, falling back to a preset.": {
-    "Follow Dux Shell colors, falling back to a preset.": "A Dux Shell színeinek követése, visszatérés egy előbeállításhoz."
+  "Follow %1 colors, falling back to a preset.": {
+    "Follow %1 colors, falling back to a preset.": ""
   },
   "Following the system color scheme (currently %1).": {
     "Following the system color scheme (currently %1).": "A rendszer színsémájának követése (jelenleg: %1)."
@@ -627,7 +636,7 @@
     "Font source": "Betűkészlet forrása"
   },
   "Foreground layers": {
-    "Foreground layers": ""
+    "Foreground layers": "Előtér rétegek"
   },
   "Forget": {
     "Forget": "Elfelejtés"
@@ -650,11 +659,8 @@
   "Games": {
     "Games": "Játékok"
   },
-  "Games and prefixes Heroic installed.": {
-    "Games and prefixes Heroic installed.": "A Heroic által telepített játékok és prefixek."
-  },
-  "Games and prefixes Lutris installed.": {
-    "Games and prefixes Lutris installed.": "A Lutris által telepített játékok és prefixek."
+  "Games and prefixes %1 installed.": {
+    "Games and prefixes %1 installed.": ""
   },
   "Games folder": {
     "Games folder": "Játékok mappa"
@@ -670,9 +676,6 @@
   },
   "Getting around": {
     "Getting around": "Navigáció"
-  },
-  "GitHub": {
-    "GitHub": "GitHub"
   },
   "Go to that tab": {
     "Go to that tab": "Ugrás arra a lapra"
@@ -695,26 +698,14 @@
   "Group": {
     "Group": "Csoport"
   },
-  "Heroic": {
-    "Heroic": "Heroic"
-  },
   "Hidden files after other files": {
-    "Hidden files after other files": ""
-  },
-  "Hides the title and the window buttons, leaving a thin strip to drag the window.": {
-    "Hides the title and the window buttons, leaving a thin strip to drag the window.": "Elrejti a címet és az ablakgombokat, egy vékony sávot hagyva az ablak mozgatásához."
+    "Hidden files after other files": "Rejtett fájlok a többi fájl után"
   },
   "Home": {
     "Home": "Kezdőlap"
   },
   "Host filesystem": {
     "Host filesystem": "Gazdagép fájlrendszere"
-  },
-  "ISO 8601": {
-    "ISO 8601": ""
-  },
-  "ISO 8601 with seconds": {
-    "ISO 8601 with seconds": ""
   },
   "Icons": {
     "Icons": "Ikonok"
@@ -731,8 +722,8 @@
   "Import": {
     "Import": "Importálás"
   },
-  "Import your GTK bookmarks?": {
-    "Import your GTK bookmarks?": "Importálod a GTK-könyvjelzőidet?"
+  "Import your %1 bookmarks?": {
+    "Import your %1 bookmarks?": ""
   },
   "Include hidden files": {
     "Include hidden files": "Rejtett fájlok megjelenítése"
@@ -777,7 +768,7 @@
     "Keep running": "Futtatás folytatása"
   },
   "Keeps cards and panes solid when the window is see-through.": {
-    "Keeps cards and panes solid when the window is see-through.": ""
+    "Keeps cards and panes solid when the window is see-through.": "Nem átlátszóan tartja a kártyákat és a paneleket, amikor az ablak átlátszó."
   },
   "Keyboard": {
     "Keyboard": "Billentyűzet"
@@ -792,16 +783,19 @@
     "Larger icons": "Nagyobb ikonok"
   },
   "Last used": {
-    "Last used": ""
+    "Last used": "Legutóbb használt"
   },
   "Layer opacity": {
-    "Layer opacity": ""
+    "Layer opacity": "Réteg átlátszatlansága"
   },
   "Lets the desktop show through the window. Text and controls stay solid.": {
-    "Lets the desktop show through the window. Text and controls stay solid.": ""
+    "Lets the desktop show through the window. Text and controls stay solid.": "Láthatóvá teszi az asztalt az ablakon keresztül. A szöveg és a vezérlők nem lesznek átlátszók."
   },
-  "Libraries and Proton prefixes.": {
-    "Libraries and Proton prefixes.": "Könyvtárak és Proton-előtagok."
+  "Libraries and %1 prefixes.": {
+    "Libraries and %1 prefixes.": ""
+  },
+  "Library": {
+    "Library": ""
   },
   "Library · %1": {
     "Library · %1": "Könyvtár · %1"
@@ -832,9 +826,6 @@
   },
   "Lock": {
     "Lock": "Zárolás"
-  },
-  "Lutris": {
-    "Lutris": "Lutris"
   },
   "MIT License": {
     "MIT License": "MIT licenc"
@@ -926,11 +917,11 @@
   "Network in the sidebar": {
     "Network in the sidebar": "Hálózat az oldalsávban"
   },
-  "Network locations are unavailable because gvfs is not running": {
-    "Network locations are unavailable because gvfs is not running": "A hálózati helyek nem érhetők el, mert a gvfs nem fut"
+  "Network locations are unavailable because %1 is not running": {
+    "Network locations are unavailable because %1 is not running": ""
   },
-  "Network locations are unavailable because the sandbox cannot reach gvfs": {
-    "Network locations are unavailable because the sandbox cannot reach gvfs": "A hálózati helyek nem érhetők el, mert a homokozó nem éri el a gvfs-t"
+  "Network locations are unavailable because the sandbox cannot reach %1": {
+    "Network locations are unavailable because the sandbox cannot reach %1": ""
   },
   "Never": {
     "Never": "Soha"
@@ -948,13 +939,13 @@
     "New tab": "Új lap"
   },
   "New tab folder": {
-    "New tab folder": ""
+    "New tab folder": "Új lap mappája"
   },
   "New window": {
     "New window": "Új ablak"
   },
   "New window folder": {
-    "New window folder": ""
+    "New window folder": "Új ablak mappája"
   },
   "Next tab": {
     "Next tab": "Következő lap"
@@ -1011,7 +1002,7 @@
     "Only the window process serves the portal": "Csak az ablakfolyamat szolgálja ki a portált"
   },
   "Opacity": {
-    "Opacity": ""
+    "Opacity": "Átlátszatlanság"
   },
   "Open": {
     "Open": "Megnyitás"
@@ -1088,8 +1079,8 @@
   "Owner": {
     "Owner": "Tulajdonos"
   },
-  "PDF preview is not available. Install Qt PDF support to view this file.": {
-    "PDF preview is not available. Install Qt PDF support to view this file.": "A PDF-előnézet nem érhető el. A fájl megtekintéséhez telepítsd a Qt PDF-támogatást."
+  "PDF preview is not available. Install %1 support to view this file.": {
+    "PDF preview is not available. Install %1 support to view this file.": ""
   },
   "Palette: %1": {
     "Palette: %1": "Paletta: %1"
@@ -1139,17 +1130,17 @@
   "Preference: %1 is used": {
     "Preference: %1 is used": "Beállítás: a(z) %1 van használatban"
   },
-  "Preference: %1 names Dux Files": {
-    "Preference: %1 names Dux Files": "Beállítás: a(z) %1 a Dux Fájlok alkalmazást nevezi meg"
+  "Preference: %2 names %1": {
+    "Preference: %2 names %1": ""
   },
   "Preference: no file chooser backend configured": {
     "Preference: no file chooser backend configured": "Beállítás: nincs beállítva fájlválasztó háttérrendszer"
   },
   "Prefix · %1": {
-    "Prefix · %1": "Előtag · %1"
+    "Prefix · %1": "Prefix · %1"
   },
   "Prefixes": {
-    "Prefixes": "Előtagok"
+    "Prefixes": "Prefixek"
   },
   "Preset": {
     "Preset": "Előbeállítás"
@@ -1172,9 +1163,6 @@
   "Protocol": {
     "Protocol": "Protokoll"
   },
-  "Proton · %1": {
-    "Proton · %1": "Proton · %1"
-  },
   "Purple": {
     "Purple": "Lila"
   },
@@ -1182,7 +1170,7 @@
     "Quit": "Kilépés"
   },
   "Quit while file operations are running?": {
-    "Quit while file operations are running?": ""
+    "Quit while file operations are running?": "Kilépés, miközben fájlműveletek futnak?"
   },
   "Radius strength": {
     "Radius strength": "Sugár erőssége"
@@ -1215,7 +1203,7 @@
     "Register as the session file manager": "Regisztrálás munkamenet-fájlkezelőként"
   },
   "Relative": {
-    "Relative": ""
+    "Relative": "Relatív"
   },
   "Relevance": {
     "Relevance": "Relevancia"
@@ -1301,6 +1289,9 @@
   "Reverse the sort order": {
     "Reverse the sort order": "Rendezési sorrend megfordítása"
   },
+  "Revision": {
+    "Revision": ""
+  },
   "Ripple effects": {
     "Ripple effects": "Hullám effektusok"
   },
@@ -1321,6 +1312,9 @@
   },
   "Run this file?": {
     "Run this file?": "Futtatod ezt a fájlt?"
+  },
+  "Runtime": {
+    "Runtime": ""
   },
   "Sandbox": {
     "Sandbox": "Homokozó"
@@ -1370,8 +1364,8 @@
   "Search the disk": {
     "Search the disk": "Keresés a lemezen"
   },
-  "Search with the danksearch index": {
-    "Search with the danksearch index": "Keresés a danksearch indexszel"
+  "Search with the %1 index": {
+    "Search with the %1 index": ""
   },
   "Search your home folder": {
     "Search your home folder": "Keresés a saját mappában"
@@ -1407,10 +1401,13 @@
     "Shared with other apps.": "Megosztva más alkalmazásokkal."
   },
   "Shares on %1": {
-    "Shares on %1": ""
+    "Shares on %1": "Megosztások itt: %1"
   },
   "Show": {
     "Show": "Megjelenítés"
+  },
+  "Show all tabs": {
+    "Show all tabs": ""
   },
   "Show devices": {
     "Show devices": "Eszközök megjelenítése"
@@ -1491,25 +1488,19 @@
     "Square": "Négyzet"
   },
   "Startup folder": {
-    "Startup folder": ""
+    "Startup folder": "Kezdő mappa"
   },
   "Status": {
     "Status": "Állapot"
   },
-  "Steam": {
-    "Steam": "Steam"
-  },
-  "Steam, ~/VirtualBox VMs": {
-    "Steam, ~/VirtualBox VMs": "Steam, ~/VirtualBox VMs"
-  },
   "Stop measuring": {
     "Stop measuring": "Mérés leállítása"
   },
-  "Such as a separate /home.": {
-    "Such as a separate /home.": "Például egy külön /home könyvtár."
+  "Such as a separate %1.": {
+    "Such as a separate %1.": ""
   },
-  "Support Dux Labs": {
-    "Support Dux Labs": "A Dux Labs támogatása"
+  "Support %1": {
+    "Support %1": ""
   },
   "Switch pane": {
     "Switch pane": "Ablaktábla váltása"
@@ -1521,7 +1512,7 @@
     "System default": "Rendszer-alapértelmezett"
   },
   "System locale": {
-    "System locale": ""
+    "System locale": "Rendszer területi beállítása"
   },
   "System preference unavailable, using dark.": {
     "System preference unavailable, using dark.": "A rendszerbeállítás nem érhető el, sötét mód használata."
@@ -1532,11 +1523,11 @@
   "Terminal, drag and thumbnails": {
     "Terminal, drag and thumbnails": "Terminál, húzás és előnézetek"
   },
-  "The Wine prefix of each game.": {
-    "The Wine prefix of each game.": "Az egyes játékok Wine-környezetmappája."
+  "The %1 prefix of each game.": {
+    "The %1 prefix of each game.": ""
   },
-  "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": {
-    "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.": "A módosítás az xdg-desktop-portal újraindítása után lép életbe. A más alkalmazások által nyitva tartott megnyitási és mentési párbeszédpanelek bezáródnak."
+  "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": {
+    "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": ""
   },
   "The files themselves stay where they are.": {
     "The files themselves stay where they are.": "Maguk a fájlok a helyükön maradnak."
@@ -1545,7 +1536,7 @@
     "The portal list is managed by the system.": "A portállistát a rendszer kezeli."
   },
   "The running operation will be stopped part way through.": {
-    "The running operation will be stopped part way through.": ""
+    "The running operation will be stopped part way through.": "A futó művelet meg fog szakadni folyamat közben."
   },
   "The session bus refused it.": {
     "The session bus refused it.": "A munkamenetbusz elutasította."
@@ -1581,7 +1572,7 @@
     "This month": "Ebben a hónapban"
   },
   "This server offers no shares": {
-    "This server offers no shares": ""
+    "This server offers no shares": "Ez a kiszolgáló nem kínál megosztásokat"
   },
   "This session": {
     "This session": "Ez a munkamenet"
@@ -1664,8 +1655,8 @@
   "Use": {
     "Use": "Használat"
   },
-  "Use Dux Files for open and save dialogs": {
-    "Use Dux Files for open and save dialogs": "A Dux Fájlok használata a megnyitási és mentési párbeszédpanelekhez"
+  "Use %1 for open and save dialogs": {
+    "Use %1 for open and save dialogs": ""
   },
   "Use a bundled color palette.": {
     "Use a bundled color palette.": "Beépített színpaletta használata."
@@ -1685,8 +1676,8 @@
   "Username": {
     "Username": "Felhasználónév"
   },
-  "Using Dux Shell dynamic colors.": {
-    "Using Dux Shell dynamic colors.": "A Dux Shell dinamikus színeinek használata."
+  "Using %1 dynamic colors.": {
+    "Using %1 dynamic colors.": ""
   },
   "Version": {
     "Version": "Verzió"
@@ -1703,9 +1694,6 @@
   "Views, sorting and defaults": {
     "Views, sorting and defaults": "Nézetek, rendezés és alapértelmezések"
   },
-  "Vim keys": {
-    "Vim keys": "Vim-billentyűk"
-  },
   "Waiting": {
     "Waiting": "Várakozás"
   },
@@ -1717,9 +1705,6 @@
   },
   "Window": {
     "Window": "Ablak"
-  },
-  "Window header": {
-    "Window header": "Ablakfejléc"
   },
   "Windows": {
     "Windows": "Ablakok"
@@ -1734,7 +1719,7 @@
     "Wrong password": "Hibás jelszó"
   },
   "Your compositor does not support background blur.": {
-    "Your compositor does not support background blur.": ""
+    "Your compositor does not support background blur.": "A kompozitor nem támogatja a háttér elmosását."
   },
   "Zoom in": {
     "Zoom in": "Nagyítás"
@@ -1758,7 +1743,7 @@
     "capability available sandbox": "képesség elérhető homokozó"
   },
   "cards panes contrast glass": {
-    "cards panes contrast glass": ""
+    "cards panes contrast glass": "kártyák panelek kontraszt üveg"
   },
   "config folder launcher wine prefix": {
     "config folder launcher wine prefix": "konfigurációs mappa indító wine prefix"
@@ -1794,7 +1779,7 @@
     "default file manager dbus reveal": "alapértelmezett fájlkezelő dbus felfedés"
   },
   "default folder directory start open home": {
-    "default folder directory start open home": ""
+    "default folder directory start open home": "alapértelmezett mappa könyvtár indítás megnyitás saját mappa"
   },
   "delete confirmation prompt": {
     "delete confirmation prompt": "törlés megerősítés kérdés"
@@ -1812,7 +1797,7 @@
     "dotfiles invisible": "rejtett fájlok láthatatlan"
   },
   "dotfiles sort last bottom": {
-    "dotfiles sort last bottom": ""
+    "dotfiles sort last bottom": "rejtett fájlok rendezés utolsó lent"
   },
   "drag drop copy move ask default action": {
     "drag drop copy move ask default action": "fogd és vidd másolás áthelyezés rákérdezés alapértelmezett művelet"
@@ -1848,7 +1833,7 @@
     "font typeface headline title": "betűtípus szedés főcím cím"
   },
   "frosted glass compositor": {
-    "frosted glass compositor": ""
+    "frosted glass compositor": "matt üveg kompozitor"
   },
   "games library steamapps common": {
     "games library steamapps common": "játékok könyvtár steamapps common"
@@ -1956,13 +1941,10 @@
     "thumbnail size limit cap megabytes": "bélyegkép előnézet méret korlát maximum megabájt"
   },
   "time modified timestamp iso relative seconds": {
-    "time modified timestamp iso relative seconds": ""
-  },
-  "title bar header hide decorations": {
-    "title bar header hide decorations": "címsor fejléc elrejtés díszítések"
+    "time modified timestamp iso relative seconds": "idő módosítva időbélyeg iso relatív másodpercek"
   },
   "transparency translucent glass see-through": {
-    "transparency translucent glass see-through": ""
+    "transparency translucent glass see-through": "átlátszóság áttetsző üveg átlátszó"
   },
   "type-ahead jump filter search keyboard": {
     "type-ahead jump filter search keyboard": "gépelés közbeni ugrás szűrő keresés billentyűzet"
@@ -1972,9 +1954,6 @@
   },
   "xdg-desktop-portal": {
     "xdg-desktop-portal": "xdg-desktop-portal"
-  },
-  "xdg-open follows the handler on your PATH.": {
-    "xdg-open follows the handler on your PATH.": "Az xdg-open a PATH környezeti változóban lévő kezelőt követi."
   },
   "xdg-open handlr mimeo opener default application launch": {
     "xdg-open handlr mimeo opener default application launch": "xdg-open handlr mimeo opener alapértelmezett alkalmazás indítás"

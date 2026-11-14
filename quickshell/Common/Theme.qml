@@ -439,6 +439,7 @@ Singleton {
     readonly property real switchThumbPressed: 28
     readonly property real sliderStopSize: 4
     readonly property real sliderTrackMinAlpha: 0.4
+    readonly property real selectedLayerMinAlpha: 0.4
     readonly property real sliderTickSize: 3
     readonly property real menuItemHeight: 40
     readonly property real outlineWidth: 1
@@ -551,6 +552,8 @@ Singleton {
     readonly property color nestedSurface: withAlpha(surfaceContainerHigh, foregroundAlpha)
     readonly property color floatingWindowSurface: withAlpha(surfaceContainer, floatingWindowTransparency)
     readonly property color floatingWindowNestedSurface: withAlpha(surfaceContainerHigh, floatingWindowForegroundAlpha)
+    readonly property color chipLayer: foregroundColor(chipSurface, true)
+    readonly property color selectedLayer: blendAlpha(selectedContainer, Math.max(selectedLayerMinAlpha, floatingWindowForegroundAlpha))
     readonly property color floatingWindowFieldColor: floatingWindowNestedSurface
     readonly property color floatingWindowFieldBorderColor: withAlpha(outline, 0.16)
     readonly property color floatingWindowFieldFocusedBorderColor: primary

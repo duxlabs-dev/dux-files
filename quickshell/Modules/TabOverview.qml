@@ -51,7 +51,7 @@ Item {
         width: FilesMetrics.overviewCardWidth
         height: FilesMetrics.overviewCardHeight
         radius: Theme.cornerRadiusL
-        color: hot ? Theme.primaryContainer : current ? Theme.selectedContainer : Theme.chipSurface
+        color: hot ? Theme.primaryContainer : current ? Theme.selectedLayer : Theme.chipLayer
         border.width: hot || current ? Theme.outlineWidthFocused : Theme.outlineWidth
         border.color: hot ? Theme.primary : current ? Theme.outline : Theme.outlineVariant
 

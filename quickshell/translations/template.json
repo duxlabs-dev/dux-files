@@ -35,6 +35,13 @@
     "comment": ""
   },
   {
+    "term": "%1 follows the handler on your %2.",
+    "translation": "",
+    "context": "file opener setting description, %1 is a command, %2 is an environment variable",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "%1 h %2 min left",
     "translation": "",
     "context": "time left for a file operation, in hours and minutes",
@@ -91,6 +98,13 @@
     "comment": ""
   },
   {
+    "term": "%1 keys",
+    "translation": "",
+    "context": "toggle label for vim style navigation, %1 is Vim",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "%1 levels deep",
     "translation": "",
     "context": "search results header note giving how far below the folder the index reaches",
@@ -108,6 +122,20 @@
     "term": "%1 min left",
     "translation": "",
     "context": "time left for a file operation, in minutes",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "%1 not detected, using %2.",
+    "translation": "",
+    "context": "auto font source status when the shell is missing, %1 is Dux Shell, %2 is a font family",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "%1 not detected, using the %2 preset.",
+    "translation": "",
+    "context": "auto color source status when the shell is missing, %1 is Dux Shell, %2 is a preset name",
     "reference": "",
     "comment": ""
   },
@@ -133,6 +161,13 @@
     "comment": ""
   },
   {
+    "term": "%1 selected",
+    "translation": "",
+    "context": "count of selected items",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "%1 used · %2 free · %3 total",
     "translation": "",
     "context": "storage volume usage, free space and total capacity",
@@ -154,9 +189,16 @@
     "comment": ""
   },
   {
+    "term": "%1 with seconds",
+    "translation": "",
+    "context": "date format option, year-month-day hour:minute:second, %1 is ISO 8601",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "%1 · %2",
     "translation": "",
-    "context": "folder status: item count then hidden count | properties size row: bytes then item count | transfer speed then time left",
+    "context": "folder status: item count then hidden count | games sidebar row for the proton prefixes of a steam library, %1 is Proton, %2 is the library | properties size row: bytes then item count | transfer speed then time left",
     "reference": "",
     "comment": ""
   },
@@ -203,9 +245,9 @@
     "comment": ""
   },
   {
-    "term": "50 is the Material default.",
+    "term": "50 is the %1 default.",
     "translation": "",
-    "context": "radius strength slider description",
+    "context": "radius strength slider description, %1 is Material",
     "reference": "",
     "comment": ""
   },
@@ -273,16 +315,16 @@
     "comment": ""
   },
   {
-    "term": "Administrator access is not available because pkexec is not installed",
+    "term": "Administrator access is not available because %1 is not installed",
     "translation": "",
-    "context": "file operation error dialog explanation",
+    "context": "file operation error dialog explanation, %1 is a command",
     "reference": "",
     "comment": ""
   },
   {
-    "term": "Administrator access is not available because the polkit policy is not installed",
+    "term": "Administrator access is not available because the %1 policy is not installed",
     "translation": "",
-    "context": "file operation error dialog explanation",
+    "context": "file operation error dialog explanation, %1 is polkit",
     "reference": "",
     "comment": ""
   },
@@ -434,9 +476,9 @@
     "comment": ""
   },
   {
-    "term": "Automatic uses $TERMINAL.",
+    "term": "Automatic uses %1.",
     "translation": "",
-    "context": "terminal setting description",
+    "context": "terminal setting description, %1 is an environment variable",
     "reference": "",
     "comment": ""
   },
@@ -632,7 +674,7 @@
   {
     "term": "Clear the selection",
     "translation": "",
-    "context": "keyboard shortcut",
+    "context": "keyboard shortcut | tooltip on the button clearing the file selection",
     "reference": "",
     "comment": ""
   },
@@ -777,9 +819,9 @@
     "comment": ""
   },
   {
-    "term": "Connected, but the share has no local folder. The gvfs FUSE service may not be running.",
+    "term": "Connected, but the share has no local folder. The %1 service may not be running.",
     "translation": "",
-    "context": "connect dialog error when a mounted share has no fuse path",
+    "context": "connect dialog error when a mounted share has no fuse path, %1 is the service name",
     "reference": "",
     "comment": ""
   },
@@ -1120,16 +1162,23 @@
     "comment": ""
   },
   {
-    "term": "Drives are unavailable because the sandbox cannot reach udisks2",
+    "term": "Drives are unavailable because %1 is not running",
     "translation": "",
-    "context": "explanation when the flatpak lacks the udisks2 permission",
+    "context": "sidebar explanation when the device service is missing, %1 is the service name",
     "reference": "",
     "comment": ""
   },
   {
-    "term": "Drives are unavailable because udisks2 is not running",
+    "term": "Drives are unavailable because the sandbox cannot reach %1",
     "translation": "",
-    "context": "sidebar explanation when the device service is missing",
+    "context": "explanation when the flatpak lacks the udisks2 permission, %1 is the service name",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Drop on a tab to move files there",
+    "translation": "",
+    "context": "tab overview hint shown while files are dragged",
     "reference": "",
     "comment": ""
   },
@@ -1172,20 +1221,6 @@
     "term": "Duration",
     "translation": "",
     "context": "animation duration slider label",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Dux Shell not detected, using %1.",
-    "translation": "",
-    "context": "auto font source status when DMS is missing",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Dux Shell not detected, using the %1 preset.",
-    "translation": "",
-    "context": "auto color source status when DMS is missing",
     "reference": "",
     "comment": ""
   },
@@ -1428,9 +1463,9 @@
     "comment": ""
   },
   {
-    "term": "Follow Dux Shell colors, falling back to a preset.",
+    "term": "Follow %1 colors, falling back to a preset.",
     "translation": "",
-    "context": "color source description for auto",
+    "context": "color source description for auto, %1 is Dux Shell",
     "reference": "",
     "comment": ""
   },
@@ -1505,16 +1540,9 @@
     "comment": ""
   },
   {
-    "term": "Games and prefixes Heroic installed.",
+    "term": "Games and prefixes %1 installed.",
     "translation": "",
-    "context": "heroic games setting description",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Games and prefixes Lutris installed.",
-    "translation": "",
-    "context": "lutris games setting description",
+    "context": "games setting description, %1 is a game launcher name",
     "reference": "",
     "comment": ""
   },
@@ -1550,13 +1578,6 @@
     "term": "Getting around",
     "translation": "",
     "context": "keyboard shortcut group",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "GitHub",
-    "translation": "",
-    "context": "about page resource button",
     "reference": "",
     "comment": ""
   },
@@ -1610,13 +1631,6 @@
     "comment": ""
   },
   {
-    "term": "Heroic",
-    "translation": "",
-    "context": "games setting label for the heroic group | games sidebar group holding heroic games",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Hidden files after other files",
     "translation": "",
     "context": "hidden files last toggle label",
@@ -1634,20 +1648,6 @@
     "term": "Host filesystem",
     "translation": "",
     "context": "capability row on the about page",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "ISO 8601",
-    "translation": "",
-    "context": "date format option, year-month-day hour:minute",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "ISO 8601 with seconds",
-    "translation": "",
-    "context": "date format option, year-month-day hour:minute:second",
     "reference": "",
     "comment": ""
   },
@@ -1687,9 +1687,9 @@
     "comment": ""
   },
   {
-    "term": "Import your GTK bookmarks?",
+    "term": "Import your %1 bookmarks?",
     "translation": "",
-    "context": "toast offering to copy the gtk file chooser bookmarks once",
+    "context": "toast offering to copy the gtk file chooser bookmarks once, %1 is GTK",
     "reference": "",
     "comment": ""
   },
@@ -1848,9 +1848,16 @@
     "comment": ""
   },
   {
-    "term": "Libraries and Proton prefixes.",
+    "term": "Libraries and %1 prefixes.",
     "translation": "",
-    "context": "steam games setting description",
+    "context": "steam games setting description, %1 is Proton",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Library",
+    "translation": "",
+    "context": "about page runtime library path",
     "reference": "",
     "comment": ""
   },
@@ -1921,13 +1928,6 @@
     "term": "Lock",
     "translation": "",
     "context": "device action",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Lutris",
-    "translation": "",
-    "context": "games setting label for the lutris group | games sidebar group holding lutris games",
     "reference": "",
     "comment": ""
   },
@@ -2142,16 +2142,16 @@
     "comment": ""
   },
   {
-    "term": "Network locations are unavailable because gvfs is not running",
+    "term": "Network locations are unavailable because %1 is not running",
     "translation": "",
-    "context": "sidebar explanation when the network service is missing",
+    "context": "sidebar explanation when the network service is missing, %1 is the service name",
     "reference": "",
     "comment": ""
   },
   {
-    "term": "Network locations are unavailable because the sandbox cannot reach gvfs",
+    "term": "Network locations are unavailable because the sandbox cannot reach %1",
     "translation": "",
-    "context": "explanation when the flatpak lacks the gvfs permissions",
+    "context": "explanation when the flatpak lacks the gvfs permissions, %1 is the service name",
     "reference": "",
     "comment": ""
   },
@@ -2520,9 +2520,9 @@
     "comment": ""
   },
   {
-    "term": "PDF preview is not available. Install Qt PDF support to view this file.",
+    "term": "PDF preview is not available. Install %1 support to view this file.",
     "translation": "",
-    "context": "large preview warning when the optional Qt PDF module is missing",
+    "context": "large preview warning when an optional module is missing, %1 is Qt PDF",
     "reference": "",
     "comment": ""
   },
@@ -2639,9 +2639,9 @@
     "comment": ""
   },
   {
-    "term": "Preference: %1 names Dux Files",
+    "term": "Preference: %2 names %1",
     "translation": "",
-    "context": "portal chooser status line, %1 is a path",
+    "context": "portal chooser status line, %1 is the app name, %2 is a path",
     "reference": "",
     "comment": ""
   },
@@ -2712,13 +2712,6 @@
     "term": "Protocol",
     "translation": "",
     "context": "label for the network protocol picker",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Proton · %1",
-    "translation": "",
-    "context": "games sidebar row for the proton prefixes of a steam library",
     "reference": "",
     "comment": ""
   },
@@ -3017,6 +3010,13 @@
     "comment": ""
   },
   {
+    "term": "Revision",
+    "translation": "",
+    "context": "about page runtime build revision",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Ripple effects",
     "translation": "",
     "context": "ripple effects toggle label",
@@ -3062,6 +3062,13 @@
     "term": "Run this file?",
     "translation": "",
     "context": "executable file dialog header",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Runtime",
+    "translation": "",
+    "context": "about page runtime section header",
     "reference": "",
     "comment": ""
   },
@@ -3178,9 +3185,9 @@
     "comment": ""
   },
   {
-    "term": "Search with the danksearch index",
+    "term": "Search with the %1 index",
     "translation": "",
-    "context": "capability row on the about page",
+    "context": "capability row on the about page, %1 is the search service name",
     "reference": "",
     "comment": ""
   },
@@ -3272,6 +3279,13 @@
     "term": "Show",
     "translation": "",
     "context": "toast action revealing the extracted files",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Show all tabs",
+    "translation": "",
+    "context": "tooltip on the button opening the tab overview",
     "reference": "",
     "comment": ""
   },
@@ -3472,20 +3486,6 @@
     "comment": ""
   },
   {
-    "term": "Steam",
-    "translation": "",
-    "context": "games setting label for the steam group | games sidebar group holding steam libraries",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Steam, ~/VirtualBox VMs",
-    "translation": "",
-    "context": "example list in the search exclusions field, folder names or paths separated by commas",
-    "reference": "",
-    "comment": ""
-  },
-  {
     "term": "Stop measuring",
     "translation": "",
     "context": "properties action halting the recursive size scan",
@@ -3493,16 +3493,16 @@
     "comment": ""
   },
   {
-    "term": "Such as a separate /home.",
+    "term": "Such as a separate %1.",
     "translation": "",
-    "context": "devices setting description",
+    "context": "devices setting description, %1 is a mount point",
     "reference": "",
     "comment": ""
   },
   {
-    "term": "Support Dux Labs",
+    "term": "Support %1",
     "translation": "",
-    "context": "about page hero button, opens the Ko-fi donation page",
+    "context": "about page hero button, opens the Ko-fi donation page, %1 is Dux Labs",
     "reference": "",
     "comment": ""
   },
@@ -3556,16 +3556,16 @@
     "comment": ""
   },
   {
-    "term": "The Wine prefix of each game.",
+    "term": "The %1 prefix of each game.",
     "translation": "",
-    "context": "games setting description for the wine prefixes",
+    "context": "games setting description for the wine prefixes, %1 is Wine",
     "reference": "",
     "comment": ""
   },
   {
-    "term": "The change takes effect after xdg-desktop-portal restarts. Open and save dialogs other apps have open will close.",
+    "term": "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.",
     "translation": "",
-    "context": "dialog message before restarting xdg-desktop-portal",
+    "context": "dialog message before restarting the portal, %1 is the service name",
     "reference": "",
     "comment": ""
   },
@@ -3864,9 +3864,9 @@
     "comment": ""
   },
   {
-    "term": "Use Dux Files for open and save dialogs",
+    "term": "Use %1 for open and save dialogs",
     "translation": "",
-    "context": "setting label for serving the desktop portal file chooser",
+    "context": "setting label for serving the desktop portal file chooser, %1 is the app name",
     "reference": "",
     "comment": ""
   },
@@ -3913,9 +3913,9 @@
     "comment": ""
   },
   {
-    "term": "Using Dux Shell dynamic colors.",
+    "term": "Using %1 dynamic colors.",
     "translation": "",
-    "context": "auto color source status when DMS is active",
+    "context": "auto color source status when the shell is active, %1 is Dux Shell",
     "reference": "",
     "comment": ""
   },
@@ -3951,13 +3951,6 @@
     "term": "Views, sorting and defaults",
     "translation": "",
     "context": "settings sidebar tab hint",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "Vim keys",
-    "translation": "",
-    "context": "toggle label for vim style navigation",
     "reference": "",
     "comment": ""
   },
@@ -4567,13 +4560,6 @@
     "term": "xdg-desktop-portal",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
-    "reference": "",
-    "comment": ""
-  },
-  {
-    "term": "xdg-open follows the handler on your PATH.",
-    "translation": "",
-    "context": "file opener setting description",
     "reference": "",
     "comment": ""
   },

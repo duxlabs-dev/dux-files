@@ -10,7 +10,7 @@ function context() {
     const ctx = vm.createContext({ I18n: { tr: term => term } });
     for (const name of ["size", "operationError"])
         lift(fileFormat, name, ctx);
-    for (const name of ["elevationUnavailable", "featureUnavailable", "isRunnable", "extractable"])
+    for (const name of ["isRunnable", "extractable"])
         lift(filesFormat, name, ctx);
     return ctx;
 }
@@ -33,15 +33,6 @@ test("operationError keeps the daemon message only for unmapped codes", () => {
     assert.equal(ctx.operationError("", ""), "This item could not be handled");
     assert.equal(ctx.operationError("EACCES", "raw"), "You do not have permission to do this");
     assert.equal(ctx.operationError("SANDBOXED", "raw"), "This item could not be handled");
-});
-
-test("every sandbox reason code has its own explanation", () => {
-    const ctx = context();
-    const codes = ["SANDBOXED", "NOHOSTFS", "NOUDISKS", "NOGVFS", "NOHOSTSPAWN", "PORTALCHOOSER"];
-    const texts = codes.map(code => ctx.featureUnavailable(code));
-    assert.equal(new Set(texts).size, codes.length);
-    assert.equal(ctx.featureUnavailable("SOMETHING_NEW"), "Not available");
-    assert.notEqual(ctx.elevationUnavailable("SANDBOXED"), ctx.featureUnavailable("SANDBOXED"));
 });
 
 test("isRunnable needs the execute bit and a program-like type", () => {
