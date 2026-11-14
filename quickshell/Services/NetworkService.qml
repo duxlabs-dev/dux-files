@@ -86,9 +86,9 @@ Singleton {
     }
 
     function mount(id, callback) {
-        _send("network.mount", {
+        transport.callReporting("network.mount", {
             "id": id
-        }, callback);
+        }, root.requestFailed, callback);
     }
 
     function disconnect(id, callback) {

@@ -19,6 +19,41 @@ FilePlaceSection {
     signal refreshRequested
     signal menuRequested(string id, string path, real pointX, real pointY)
 
+    function finishMount(id, path, navigate, result) {
+        if (busyId === id)
+            busyId = "";
+        if (result?.error)
+            return;
+        if (navigate)
+            navigateRequested(path);
+        mountRefresh.restart();
+    }
+
+    function activateMount(id, path, mounted) {
+        if (mounted) {
+            navigateRequested(path);
+            return;
+        }
+        busyId = id;
+        NetworkService.mount(id, result => section.finishMount(id, path, true, result));
+    }
+
+    function toggleMount(id, mounted) {
+        busyId = id;
+        const done = result => section.finishMount(id, "", false, result);
+        if (mounted)
+            NetworkService.disconnect(id, done);
+        else
+            NetworkService.mount(id, done);
+    }
+
+    function showMountMenu(row, id, path, mounted, point) {
+        if (!mounted)
+            return;
+        const mapped = row.mapToItem(section, point.position.x, point.position.y);
+        menuRequested(id, path, mapped.x, mapped.y);
+    }
+
     visible: SettingsData.showNetworkSection
     title: I18n.tr("Network", "sidebar section listing remote locations")
     emptyText: {
@@ -41,83 +76,9 @@ FilePlaceSection {
     Repeater {
         model: NetworkService.visibleNetworkMounts
 
-        Item {
-            required property var modelData
-            width: section.width
-            height: row.implicitHeight
-
-            FilePlaceRow {
-                id: row
-
-                TapHandler {
-                    acceptedButtons: Qt.RightButton
-                    onTapped: point => {
-                        if (!modelData.mounted)
-                            return;
-                        const mapped = row.mapToItem(section, point.position.x, point.position.y);
-                        section.menuRequested(modelData.id, modelData.path, mapped.x, mapped.y);
-                    }
-                }
-
-                anchors.fill: parent
-                label: modelData.name
-                iconName: modelData.iconName
-                actionIcon: modelData.mounted ? "eject" : "play_arrow"
-                actionTooltip: modelData.mounted ? I18n.tr("Disconnect", "network mount action") : I18n.tr("Mount", "network mount action")
-                busy: section.busyId === modelData.id
-                dropPath: modelData.mounted ? modelData.path : ""
-                onClicked: {
-                    if (modelData.mounted) {
-                        section.navigateRequested(modelData.path);
-                        return;
-                    }
-                    const id = modelData.id;
-                    const path = modelData.path;
-                    section.busyId = id;
-                    NetworkService.mount(id, result => {
-                        section.busyId = "";
-                        if (result.error)
-                            return;
-                        section.navigateRequested(path);
-                        mountRefresh.restart();
-                    });
-                }
-                onMiddleClicked: section.tabRequested(modelData.path)
-                onDropped: drop => section.dropRequested(modelData.path, drop)
-                onSpringLoaded: {
-                    if (modelData.mounted)
-                        section.navigateRequested(modelData.path);
-                }
-                onActionTriggered: {
-                    const id = modelData.id;
-                    const mounted = modelData.mounted === true;
-                    section.busyId = id;
-                    const done = result => {
-                        section.busyId = "";
-                        if (!result?.error)
-                            mountRefresh.restart();
-                    };
-                    if (mounted)
-                        NetworkService.disconnect(id, done);
-                    else
-                        NetworkService.mount(id, done);
-                }
-            }
-
-            Rectangle {
-                visible: modelData.mounted === true
-                width: Theme.spacingS
-                height: width
-                radius: width / 2
-                anchors.left: parent.left
-                anchors.leftMargin: Theme.spacingS + Theme.iconSize + Theme.spacingXXS
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: Theme.spacingS + Theme.spacingXXS
-                z: 2
-                color: Theme.success
-                border.color: Theme.surfaceContainerLowest
-                border.width: Theme.outlineWidth
-            }
+        NetworkMountRow {
+            host: section
+            network: true
         }
     }
 

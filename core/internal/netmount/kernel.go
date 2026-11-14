@@ -13,8 +13,8 @@ import (
 )
 
 var kernelNetworkFsTypes = []string{
-	"nfs", "nfs4", "cifs", "smb3", "smbfs", "9p", "afs", "ceph", "glusterfs",
-	"davfs", "fuse.sshfs", "fuse.rclone",
+	"nfs", "nfs4", "cifs", "smb3", "smbfs", "9p", "afs", "ceph", "glusterfs", "autofs",
+	"davfs", "fuse.sshfs", "fuse.gvfsd-fuse", "fuse.rclone",
 }
 
 var mountEscapes = strings.NewReplacer(`\040`, " ", `\011`, "\t", `\012`, "\n", `\134`, `\`)
@@ -25,6 +25,9 @@ func kernelNetworkMounts() []Mount {
 
 func parseKernelNetworkMounts(mountinfo, fstab string) []Mount {
 	mounted := parseMountedNetworkMounts(mountinfo)
+	mounted = slices.DeleteFunc(mounted, func(mount Mount) bool {
+		return mount.Scheme == "fuse.gvfsd-fuse"
+	})
 	mountedByPath := make(map[string]Mount, len(mounted))
 	for _, mount := range mounted {
 		mountedByPath[mount.Path] = mount
@@ -47,6 +50,15 @@ func parseKernelNetworkMounts(mountinfo, fstab string) []Mount {
 		}
 	}
 	return out
+}
+
+func MountedNetworkPaths(mountinfo string) []string {
+	mounts := parseMountedNetworkMounts(mountinfo)
+	paths := make([]string, 0, len(mounts))
+	for _, mount := range mounts {
+		paths = append(paths, mount.Path)
+	}
+	return paths
 }
 
 func parseMountedNetworkMounts(mountinfo string) []Mount {

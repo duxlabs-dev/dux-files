@@ -5,20 +5,15 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
-	"strings"
-
-	"github.com/duxlabs-dev/dux-files/core/internal/pathutil"
 
 	"github.com/duxlabs-dev/dux-files/core/internal/location"
+	"github.com/duxlabs-dev/dux-files/core/internal/netmount"
+	"github.com/duxlabs-dev/dux-files/core/internal/pathutil"
 	"github.com/duxlabs-dev/dux-files/core/internal/wire"
 	"github.com/duxlabs-dev/dux-go/ipc/params"
 )
 
 const missingCheckLimit = 500
-
-var networkFsTypes = []string{"nfs", "nfs4", "cifs", "smb3", "smbfs", "9p", "afs", "ceph", "glusterfs", "autofs", "davfs", "fuse.sshfs", "fuse.gvfsd-fuse", "fuse.rclone"}
-
-var mountEscapes = strings.NewReplacer(`\040`, " ", `\011`, "\t", `\012`, "\n", `\134`, `\`)
 
 func HandleLocation(_ context.Context, w *ConnWriter, req Request) {
 	switch req.Method {
@@ -45,17 +40,7 @@ func parentExists(path string) bool {
 }
 
 func networkMounts(mountinfo string) []string {
-	var out []string
-	for line := range strings.SplitSeq(mountinfo, "\n") {
-		mount, filesystem, ok := strings.Cut(line, " - ")
-		fields := strings.Fields(mount)
-		kind := strings.Fields(filesystem)
-		if !ok || len(fields) < 5 || len(kind) == 0 || !slices.Contains(networkFsTypes, kind[0]) {
-			continue
-		}
-		out = append(out, mountEscapes.Replace(fields[4]))
-	}
-	return out
+	return netmount.MountedNetworkPaths(mountinfo)
 }
 
 func onMount(path string, mounts []string) bool {
