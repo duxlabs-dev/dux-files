@@ -10,6 +10,7 @@ func TestParseKernelNetworkMounts(t *testing.T) {
 	mountinfo := `22 1 259:2 / / rw,relatime - ext4 /dev/nvme0n1p2 rw
 98 22 0:55 / /mnt/nas\040share rw,relatime - nfs4 nas:/export rw
 99 22 0:56 / /home/me/remote rw - fuse.sshfs me@host: rw
+100 22 0:57 / /proc/sys/fs/binfmt_misc rw - autofs systemd-1 rw
 `
 	fstab := `//nas/share /mnt/nas\040share cifs noauto,credentials=/run/secret
 //nas/photos /mnt/photos cifs noauto,credentials=/run/secret
