@@ -5,7 +5,7 @@ go 1.27.3
 require (
 	github.com/bodgit/sevenzip v1.6.5
 	github.com/cavaliergopher/cpio v1.0.1
-	github.com/duxlabs-dev/dux-go v1.6.3-0.20261110155217-26b745ee0afd
+	github.com/duxlabs-dev/dux-go v1.6.3-0.20261113025848-c9b121458954
 	github.com/fsnotify/fsnotify v1.10.1
 	github.com/go-git/go-billy/v5 v5.9.2
 	github.com/go-git/go-git/v5 v5.19.3
