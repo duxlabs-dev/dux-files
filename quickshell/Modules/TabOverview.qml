@@ -45,13 +45,15 @@ Item {
         property bool current: false
         property bool hot: false
 
+        property color fillColor: hot ? Theme.primaryContainer : current ? Theme.selectedLayer : Theme.chipLayer
+
         readonly property color contentColor: current ? Theme.onSelectedContainer : Theme.surfaceText
 
         focusPolicy: Qt.TabFocus
         width: FilesMetrics.overviewCardWidth
         height: FilesMetrics.overviewCardHeight
         radius: Theme.cornerRadiusL
-        color: hot ? Theme.primaryContainer : current ? Theme.selectedLayer : Theme.chipLayer
+        color: fillColor
         border.width: hot || current ? Theme.outlineWidthFocused : Theme.outlineWidth
         border.color: hot ? Theme.primary : current ? Theme.outline : Theme.outlineVariant
 
@@ -101,8 +103,11 @@ Item {
                         readonly property string path: overview.pathFor(overview.tabs[index], index)
                         readonly property var entries: overview.listings[path] ?? []
 
+                        readonly property real frameWidth: Theme.spacingXS - border.width
+
                         current: index === overview.currentIndex
                         hot: tabDrop.containsDrag
+                        color: "transparent"
                         Accessible.name: title.text
                         onPathChanged: overview.load(path)
                         Component.onCompleted: {
@@ -118,6 +123,31 @@ Item {
                                 if (overview.tabs.length > 1)
                                     overview.tabClosed(tabCard.index);
                             }
+                        }
+
+                        Rectangle {
+                            anchors.top: parent.top
+                            anchors.bottom: previewFrame.top
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.topMargin: tabCard.border.width
+                            anchors.leftMargin: tabCard.border.width
+                            anchors.rightMargin: tabCard.border.width
+                            topLeftRadius: previewFrame.bottomLeftRadius
+                            topRightRadius: previewFrame.bottomLeftRadius
+                            color: tabCard.fillColor
+                        }
+
+                        Rectangle {
+                            id: previewFrame
+
+                            anchors.fill: preview
+                            anchors.margins: -tabCard.frameWidth
+                            bottomLeftRadius: Math.max(0, tabCard.radius - tabCard.border.width)
+                            bottomRightRadius: bottomLeftRadius
+                            color: "transparent"
+                            border.width: tabCard.frameWidth
+                            border.color: tabCard.fillColor
                         }
 
                         Rectangle {
@@ -171,14 +201,14 @@ Item {
                             onClicked: overview.tabClosed(tabCard.index)
                         }
 
-                        Rectangle {
+                        Item {
+                            id: preview
+
                             anchors.top: closeButton.bottom
                             anchors.bottom: parent.bottom
                             anchors.left: parent.left
                             anchors.right: parent.right
                             anchors.margins: Theme.spacingXS
-                            radius: Math.max(0, tabCard.radius - Theme.spacingXS)
-                            color: Theme.foregroundColor(Theme.cardSurface, true)
                             clip: true
 
                             Grid {
@@ -238,7 +268,7 @@ Item {
                     id: newCard
 
                     hot: newDrop.containsDrag
-                    color: hot ? Theme.primaryContainer : "transparent"
+                    fillColor: hot ? Theme.primaryContainer : "transparent"
                     Accessible.name: newLabel.text
                     onClicked: overview.tabAdded()
 
