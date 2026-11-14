@@ -53,6 +53,7 @@ FloatingWindow {
         focus: true
 
         readonly property bool isFloatingWindowSurface: true
+        readonly property color surfaceColor: settingsModal.color
 
         LayoutMirroring.enabled: I18n.isRtl
         LayoutMirroring.childrenInherit: true

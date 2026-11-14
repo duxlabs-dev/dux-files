@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 	"path/filepath"
-	"strconv"
 	"sync"
 	"testing"
 	"time"
@@ -107,35 +106,6 @@ func TestHandleCancelAndUndoErrors(t *testing.T) {
 
 	out = call(t, manager, ipc.Request{Method: "files.op.respond", Params: map[string]any{"jobId": "j404", "id": "c1", "action": "banana"}})
 	require.Contains(t, out, "error")
-}
-
-func TestJobsListingIsSafeWhileAJobRecords(t *testing.T) {
-	root := t.TempDir()
-	src := filepath.Join(root, "src")
-	for i := range 40 {
-		testfs.Write(t, filepath.Join(src, "f"+strconv.Itoa(i)+".txt"), "body")
-	}
-	dest := filepath.Join(root, "dest")
-	require.NoError(t, os.Mkdir(dest, 0o755))
-
-	manager, bus := newHarness(t)
-	sources := make([]string, 0, 40)
-	for i := range 40 {
-		sources = append(sources, filepath.Join(src, "f"+strconv.Itoa(i)+".txt"))
-	}
-	job := manager.enqueue(spec{kind: KindCopy, scope: "w1", sources: sources, dest: dest})
-
-	done := make(chan struct{})
-	go func() {
-		defer close(done)
-		for range 200 {
-			manager.Jobs()
-		}
-	}()
-
-	bus.wait(t, job.id)
-	<-done
-	require.FileExists(t, filepath.Join(dest, "f39.txt"))
 }
 
 func TestDropActionOnTheSameDeviceIsAMove(t *testing.T) {

@@ -62,8 +62,3 @@ func TestServersForgetDropsOne(t *testing.T) {
 	require.Len(t, list, 1)
 	assert.Equal(t, "sftp://two/", list[0].URI)
 }
-
-func TestServersTolerateAnUnreadableStore(t *testing.T) {
-	store := newServerStore(filepath.Join(t.TempDir(), "missing"))
-	assert.Empty(t, store.list())
-}

@@ -29,9 +29,9 @@ cleanup:
   - /lib/cmake
   - /lib/pkgconfig
   - /lib/libSPIRV-Tools*
+  - /lib/dfiles/libdux-qt-base.so
+  - /lib/dfiles/pkgconfig
   - /bin/spirv-*
-  - /share/applications/org.quickshell.desktop
-  - /share/icons/hicolor/scalable/apps/org.quickshell.svg
 
 build-options:
   append-path: /usr/lib/sdk/golang/bin
@@ -70,16 +70,15 @@ modules:
         commit: ad9184e76a66b1001c29db9b0a3e87f646c64de0
         dest: external/spirv-headers
 
-  - name: quickshell
+  # dfiles looks for the runtime in ../lib/dfiles next to /app/bin/dfiles
+  - name: dux-qt-base
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DCMAKE_INSTALL_PREFIX=/app
+      - -DCMAKE_INSTALL_LIBDIR=lib/dfiles
       - -DDISTRIBUTOR=Dux Files Flatpak
-      - -DUSE_JEMALLOC=OFF
-      - -DCRASH_HANDLER=OFF
-      - -DBUILD_TESTING=OFF
       - -DSOCKETS=ON
       - -DWAYLAND=ON
       - -DWAYLAND_WLR_LAYERSHELL=OFF
@@ -101,9 +100,8 @@ modules:
       - -DNETWORK=OFF
     sources:
       - type: git
-        url: https://github.com/quickshell-mirror/quickshell.git
-        tag: v0.3.1
-        commit: 1a4716cde794a59928d9d9fc15f2afc7a95de360
+        url: https://github.com/duxlabs-dev/dux-qt-base.git
+        commit: c0b79cde2f8b451cf1cf538c5a4c7d03167c90d6
         disable-submodules: true
 
   - name: qtpdf

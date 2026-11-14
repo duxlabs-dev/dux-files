@@ -242,6 +242,22 @@ func TestMkdirSymlinkRenameRemove(t *testing.T) {
 	require.NoError(t, err, "removeall of a missing path succeeds like os.RemoveAll")
 }
 
+func TestRenameatIfAbsentKeepsAnExistingTarget(t *testing.T) {
+	root := t.TempDir()
+	require.NoError(t, os.WriteFile(filepath.Join(root, "a"), []byte("a"), 0o644))
+	require.NoError(t, os.WriteFile(filepath.Join(root, "b"), []byte("b"), 0o644))
+	dir, err := unix.Open(root, unix.O_PATH|unix.O_DIRECTORY, 0)
+	require.NoError(t, err)
+	defer unix.Close(dir)
+
+	require.ErrorIs(t, renameatIfAbsent(dir, "a", dir, "b"), fs.ErrExist)
+	assert.Equal(t, "b", string(testfs.ReadBytes(t, filepath.Join(root, "b"))))
+
+	require.NoError(t, renameatIfAbsent(dir, "a", dir, "c"))
+	assert.Equal(t, "a", string(testfs.ReadBytes(t, filepath.Join(root, "c"))))
+	assert.NoFileExists(t, filepath.Join(root, "a"))
+}
+
 func TestUtimesSetsTheModificationTime(t *testing.T) {
 	root := t.TempDir()
 	path := filepath.Join(root, "f")

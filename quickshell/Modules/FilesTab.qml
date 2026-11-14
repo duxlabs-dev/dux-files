@@ -19,12 +19,14 @@ StyledButton {
     signal dropped(var drop)
     signal menuRequested(real pointX, real pointY)
 
-    readonly property color contentColor: current ? Theme.primary : Theme.onSurfaceVariant
+    readonly property color contentColor: current ? Theme.surfaceText : Theme.onSurfaceVariant
 
-    implicitWidth: Math.max(FilesMetrics.tabMinWidth, Math.min(FilesMetrics.tabMaxWidth, title.implicitWidth + closeButton.width + Theme.spacingL))
+    implicitWidth: FilesMetrics.tabMaxWidth
     implicitHeight: FilesMetrics.tabHeight
-    radius: Theme.cornerRadiusM
-    color: dragging ? Theme.surfaceContainerHigh : dropZone.containsDrag ? Theme.primaryContainer : "transparent"
+    radius: Theme.fullRadius(width, height)
+    color: dropZone.containsDrag ? Theme.primaryContainer : current || dragging ? Theme.foregroundColor(Theme.cardSurface, true) : "transparent"
+    border.width: current ? Theme.outlineWidth : 0
+    border.color: Theme.outlineVariant
     Accessible.role: Accessible.PageTab
     Accessible.name: label
     Accessible.selected: current
@@ -78,11 +80,22 @@ StyledButton {
         visible: tab.visualFocus
     }
 
-    StyledText {
-        id: title
+    DIcon {
+        id: glyph
 
         anchors.left: parent.left
         anchors.leftMargin: Theme.spacingM
+        anchors.verticalCenter: parent.verticalCenter
+        name: "folder"
+        size: Theme.iconSizeMedium
+        color: tab.contentColor
+    }
+
+    StyledText {
+        id: title
+
+        anchors.left: glyph.right
+        anchors.leftMargin: Theme.spacingS
         anchors.right: closeButton.left
         anchors.rightMargin: Theme.spacingXXS
         anchors.verticalCenter: parent.verticalCenter
@@ -90,40 +103,23 @@ StyledButton {
         color: tab.contentColor
         font.pixelSize: Theme.fontSizeSmall
         font.weight: tab.current ? Theme.fontWeightMedium : Theme.fontWeight
-        elide: Text.ElideMiddle
+        horizontalAlignment: Text.AlignLeft
+        elide: Text.ElideRight
     }
 
     DActionButton {
         id: closeButton
 
         anchors.right: parent.right
-        anchors.rightMargin: Theme.spacingXXS
+        anchors.rightMargin: Theme.spacingXS
         anchors.verticalCenter: parent.verticalCenter
         visible: tab.closable
-        width: visible ? Theme.buttonHeightXXS : 0
+        width: visible ? Theme.buttonHeightXXS : Theme.spacingS
         buttonSize: Theme.buttonHeightXXS
         iconName: "close"
         iconSize: Theme.iconSizeSmall
         iconColor: tab.contentColor
         tooltipText: I18n.tr("Close tab", "tooltip on the button closing a tab")
         onClicked: tab.closeRequested()
-    }
-
-    Rectangle {
-        anchors.bottom: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        width: tab.current ? Math.max(Theme.tabIndicatorMinWidth, tab.width - Theme.spacingL) : 0
-        height: Theme.tabIndicatorHeight
-        radius: Theme.cornerRadiusFull
-        color: Theme.primary
-
-        Behavior on width {
-            enabled: Theme.animationsEnabled
-            NumberAnimation {
-                duration: Theme.expressiveDurations.expressiveFastSpatial
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Theme.expressiveCurves.expressiveFastSpatial
-            }
-        }
     }
 }

@@ -24,6 +24,7 @@ FloatingWindow {
     property real splitRatio: 0.5
     property bool showHidden: SessionData.lastUsed("showHidden", SettingsData.showHidden)
     property bool previewOpen: SessionData.lastUsed("previewOpen", true)
+    property bool overviewOpen: false
 
     readonly property string opScope: "window" + windowId
     readonly property var cutSet: {
@@ -53,7 +54,7 @@ FloatingWindow {
     readonly property bool textEditing: surface.focusItem instanceof TextInput || surface.focusItem instanceof TextEdit
     readonly property bool sidebarFocused: sidebarHost.focused
     readonly property bool tabRowFocused: ItemTree.isInside(surface.focusItem, tabRow)
-    readonly property bool shortcutsEnabled: !dialogOpen && !textEditing && !(preview?.open ?? false)
+    readonly property bool shortcutsEnabled: !dialogOpen && !textEditing && !overviewOpen && !(preview?.open ?? false)
     readonly property bool lastActive: WindowService.lastActiveId === windowId
     readonly property var previewTarget: {
         const entries = selectedEntries();
@@ -239,7 +240,24 @@ FloatingWindow {
         });
     }
 
+    function closeOverview() {
+        overviewOpen = false;
+        activePane.focusBody();
+    }
+
+    function toggleOverview() {
+        if (overviewOpen) {
+            closeOverview();
+            return;
+        }
+        overviewOpen = true;
+    }
+
     function escapeBack() {
+        if (overviewOpen) {
+            closeOverview();
+            return true;
+        }
         if (sidebarHost.overlayOpen) {
             sidebarHost.leave();
             return true;
@@ -340,6 +358,8 @@ FloatingWindow {
         property int paneIndex: 0
 
         active: window.activePaneIndex === paneIndex
+        framed: false
+        internalPreview: false
         showHidden: window.showHidden
         previewOpen: window.previewOpen
         showActiveOutline: window.splitView
@@ -348,7 +368,7 @@ FloatingWindow {
         onOpenRequested: entries => window.openFlow.openEntries(entries)
         onTabRequested: path => window.tabManager.newTab(path, true)
         onPathMenuRequested: (path, pointX, pointY) => window.menus.presentPlaceMenu("folder", path, pane, pointX, pointY)
-        onItemMenuRequested: (index, pointX, pointY, modifiers) => window.menus.showItemMenu(pointX, pointY, modifiers)
+        onItemMenuRequested: (index, pointX, pointY, modifiers) => window.menus.showItemMenu(pointX, pointY)
         onBackgroundMenuRequested: (pointX, pointY) => window.menus.showBackgroundMenu(pointX, pointY)
         onDropRequested: (paths, dest, action) => window.drag.applyDrop(paths, dest, action)
         onDragRequested: paths => window.drag.beginDrag(paths, window.firstSelected())
@@ -361,6 +381,7 @@ FloatingWindow {
                 pane.focusBody();
         }
         onPreviewToggleRequested: window.actions.runAction("togglePreview")
+        onPreviewKeyRequested: (action, step) => previewDrawer.handleKey(action, step)
         onServerDialogRequested: window.dialogs.askServer()
         onConnectFailed: (uri, result) => window.dialogs.presentServer(uri, result)
         onRestoreRequested: window.actions.runAction("restore")
@@ -381,6 +402,7 @@ FloatingWindow {
 
         anchors.fill: parent
         readonly property bool isFloatingWindowSurface: true
+        readonly property color surfaceColor: window.color
         readonly property bool windowActive: Window.active
         readonly property Item focusItem: Window.activeFocusItem
 
@@ -388,7 +410,10 @@ FloatingWindow {
         LayoutMirroring.childrenInherit: true
 
         FocusFallback {
-            onTriggered: window.activePane.focusBody()
+            onTriggered: {
+                if (!window.overviewOpen)
+                    window.activePane.focusBody();
+            }
         }
 
         WheelHandler {
@@ -428,6 +453,14 @@ FloatingWindow {
         Keys.onPressed: event => {
             if (window.textEditing)
                 return;
+            if (window.overviewOpen) {
+                if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab)
+                    return;
+                if (event.key === Qt.Key_Escape)
+                    window.closeOverview();
+                event.accepted = true;
+                return;
+            }
             if (!window.sidebarFocused && !ItemTree.isInside(surface.focusItem, window.activePane)) {
                 window.activePane.handleStrayKey(event);
                 if (event.accepted)
@@ -451,8 +484,8 @@ FloatingWindow {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
+            height: Math.max(implicitHeight, tabBand.height)
             controls: windowControls
-            title: window.title
             onCloseRequested: window.requestClose()
 
             JobsButton {
@@ -462,25 +495,31 @@ FloatingWindow {
         }
 
         Item {
-            id: content
+            id: tabBand
 
-            anchors.top: header.bottom
-            anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottomMargin: FilesMetrics.contentMarginV
-            anchors.leftMargin: Math.max(FilesMetrics.contentMarginH, sidebarHost.dockedWidth)
-            anchors.rightMargin: FilesMetrics.contentMarginH
+            height: FilesMetrics.tabBandHeight
             enabled: !window.preview.open
+
+            FlatButton {
+                anchors.left: parent.left
+                anchors.leftMargin: (FilesMetrics.sidebarRailWidth - width) / 2
+                anchors.verticalCenter: parent.verticalCenter
+                visible: sidebarHost.docked
+                iconName: sidebarHost.rail ? "menu" : "menu_open"
+                tooltipText: I18n.tr("Toggle sidebar", "tooltip on the button showing or hiding the sidebar")
+                onClicked: sidebarHost.toggle()
+            }
 
             TabRow {
                 id: tabRow
 
-                anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
-                visible: window.tabManager.tabs.length > 1
-                height: visible ? implicitHeight : 0
+                anchors.leftMargin: content.anchors.leftMargin
+                anchors.rightMargin: header.collapsed ? FilesMetrics.contentMarginH : header.buttonsReserve
+                anchors.verticalCenter: parent.verticalCenter
                 tabs: window.tabManager.tabs.map(state => window.tabManager.tabLabel(state))
                 currentIndex: window.tabManager.currentTab
                 onTabSelected: index => window.tabManager.selectTab(index)
@@ -491,134 +530,267 @@ FloatingWindow {
                 onTabMoved: (from, to) => window.tabManager.moveTab(from, to)
                 onTabMenuRequested: (index, pointX, pointY) => window.menus.presentTabMenu(index, tabRow, pointX, pointY)
             }
+        }
 
-            FilesTopbar {
-                id: topbar
+        Item {
+            id: content
 
-                anchors.top: tabRow.bottom
-                anchors.topMargin: tabRow.visible ? FilesMetrics.contentSpacing : 0
-                anchors.left: parent.left
-                anchors.right: parent.right
-                splitView: window.splitView
-                backEnabled: window.activePane.canGoBack
-                forwardEnabled: window.activePane.canGoForward
-                sortKey: window.activePane.effectiveSortKey
-                sortDescending: window.activePane.effectiveSortDescending
-                resultsActive: window.activePane.resultsActive
-                compact: sidebarHost.compact
-                showJobs: !window.headerHostsJobs
-                viewMode: window.activePane.viewMode
-                folderRemembered: window.activePane.folderRemembered
-                folderHasSettings: window.activePane.hasFolderSettings
-                previewOpen: window.previewOpen
-                previewExpandable: window.previewExpandable
-                trashActive: window.activePane.trashActive
-                recentActive: window.activePane.recentActive
-                filterText: window.activePane.nameFilter
-                currentPath: window.currentPath
-                onFilterChanged: text => window.activePane.nameFilter = text
-                onSearchRequested: query => window.activePane.startSearch(query, null)
-                onSearchCleared: {
-                    window.activePane.closeSearch();
-                    window.activePane.focusBody();
-                }
-                onLocationRequested: location => {
-                    window.openLocation(location, false);
-                    window.activePane.focusBody();
-                }
-                onResultsRequested: {
-                    window.activePane.focusBody();
-                    window.activePane.body.jumpTo(0, Qt.NoModifier);
-                }
-                onSettingsRequested: window.dialogs.openSettings()
-                onShortcutsRequested: window.actions.runAction("shortcuts")
-                onSidebarToggled: sidebarHost.toggle()
-                onBackRequested: window.activePane.back()
-                onForwardRequested: window.activePane.forward()
-                onSplitToggled: window.toggleSplit()
-                onSortKeySelected: key => window.activePane.sortBy(key)
-                onSortDirectionToggled: window.activePane.flipSort()
-                onCopyPathRequested: window.paneActions.copyText(window.currentPath)
-                onNewFolderRequested: window.actions.runAction("newFolder")
-                onNewDocumentRequested: (pointX, pointY) => {
-                    const point = topbar.mapToItem(surface, pointX, pointY);
-                    window.menus.showNewDocumentMenu(point.x, point.y);
-                }
-                onColumnsMenuRequested: (pointX, pointY) => {
-                    const point = topbar.mapToItem(window.activePane, pointX, pointY);
-                    window.menus.showColumnsMenu(point.x, point.y);
-                }
-                onViewModeSelected: mode => window.activePane.setViewMode(mode)
-                onZoomRequested: step => window.activePane.body.zoomBy(step)
-                onUseForAllFoldersRequested: window.useForAllFolders()
-                onResetFolderRequested: window.activePane.resetFolder()
-                onPreviewToggled: window.actions.runAction("togglePreview")
-                onPreviewExpandRequested: window.actions.runAction("previewExpand")
-                onReloadRequested: window.actions.runAction("reload")
-                onTerminalRequested: window.actions.runAction("openTerminal")
-                onPropertiesRequested: window.actions.runAction("properties")
-                onNewWindowRequested: window.actions.runAction("newWindow")
-            }
+            anchors.top: tabBand.bottom
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottomMargin: FilesMetrics.contentMarginV
+            anchors.leftMargin: Math.max(FilesMetrics.contentMarginH, sidebarHost.dockedWidth)
+            anchors.rightMargin: FilesMetrics.contentMarginH
+            enabled: !window.preview.open
 
             Item {
-                id: panesRow
+                id: card
 
-                anchors.top: topbar.bottom
-                anchors.topMargin: FilesMetrics.contentSpacing
-                anchors.bottom: parent.bottom
+                readonly property color surfaceColor: topSegment.color
+                readonly property real minimumWidth: topbar.minimumWidth + FilesMetrics.cardPadding * 2
+
+                anchors.top: parent.top
+                anchors.bottom: footer.top
+                anchors.bottomMargin: Theme.groupedListGap
                 anchors.left: parent.left
-                anchors.right: parent.right
+                anchors.right: previewDrawer.left
 
-                readonly property real usableWidth: width - (window.splitView ? FilesMetrics.splitterWidth : 0)
+                CardSegment {
+                    id: topSegment
 
-                WindowPane {
-                    id: primaryPane
-
+                    first: true
                     anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    width: window.splitView ? panesRow.usableWidth * window.splitRatio : panesRow.width
+                    height: topbar.height + FilesMetrics.cardPadding * 2
                 }
 
-                PaneSplitter {
-                    id: splitter
+                CardSegment {
+                    anchors.top: topSegment.bottom
+                    anchors.bottom: parent.bottom
+                    anchors.topMargin: Theme.groupedListGap
+                }
+
+                FilesTopbar {
+                    id: topbar
 
                     anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: FilesMetrics.cardPadding
+                    splitView: window.splitView
+                    backEnabled: window.activePane.canGoBack
+                    forwardEnabled: window.activePane.canGoForward
+                    sortKey: window.activePane.effectiveSortKey
+                    sortDescending: window.activePane.effectiveSortDescending
+                    resultsActive: window.activePane.resultsActive
+                    compact: sidebarHost.compact
+                    showSidebarToggle: sidebarHost.compact
+                    showViewControls: false
+                    flatNavigation: true
+                    hostsPath: true
+                    placeTitle: window.splitView ? window.title : window.activePane.placeTitle
+                    selectionCount: window.activePane.editingPath ? 0 : window.selectedPaths().length
+                    selectionBytes: window.activePane.body.selectedBytes()
+                    selectionActions: !window.activePane.virtualActive
+                    showTabOverview: true
+                    overviewOpen: window.overviewOpen
+                    tabCount: window.tabManager.tabs.length
+                    showJobs: !window.headerHostsJobs
+                    viewMode: window.activePane.viewMode
+                    folderRemembered: window.activePane.folderRemembered
+                    folderHasSettings: window.activePane.hasFolderSettings
+                    previewOpen: window.previewOpen
+                    previewExpandable: window.previewExpandable
+                    trashActive: window.activePane.trashActive
+                    recentActive: window.activePane.recentActive
+                    filterText: window.activePane.nameFilter
+                    currentPath: window.currentPath
+                    onFilterChanged: text => window.activePane.nameFilter = text
+                    onSearchRequested: query => window.activePane.startSearch(query, null)
+                    onSearchCleared: {
+                        window.activePane.closeSearch();
+                        window.activePane.focusBody();
+                    }
+                    onLocationRequested: location => {
+                        window.openLocation(location, false);
+                        window.activePane.focusBody();
+                    }
+                    onResultsRequested: {
+                        window.activePane.focusBody();
+                        window.activePane.body.jumpTo(0, Qt.NoModifier);
+                    }
+                    onSelectionCleared: window.activePane.selection.clear()
+                    onSelectionActionRequested: action => window.actions.runAction(action)
+                    onOverviewToggled: window.toggleOverview()
+                    onOverviewDropHovered: window.overviewOpen = true
+                    onSettingsRequested: window.dialogs.openSettings()
+                    onShortcutsRequested: window.actions.runAction("shortcuts")
+                    onSidebarToggled: sidebarHost.toggle()
+                    onBackRequested: window.activePane.back()
+                    onForwardRequested: window.activePane.forward()
+                    onSplitToggled: window.toggleSplit()
+                    onSortKeySelected: key => window.activePane.sortBy(key)
+                    onSortDirectionToggled: window.activePane.flipSort()
+                    onViewModeSelected: mode => window.activePane.setViewMode(mode)
+                    onPreviewToggled: window.actions.runAction("togglePreview")
+                    onCopyPathRequested: window.paneActions.copyText(window.currentPath)
+                    onNewFolderRequested: window.actions.runAction("newFolder")
+                    onNewDocumentRequested: (parentMenu, row) => window.menus.showNewDocumentSubmenu(parentMenu, row)
+                    onColumnsMenuRequested: (parentMenu, row) => window.menus.showColumnsSubmenu(parentMenu, row)
+                    onZoomRequested: step => window.activePane.body.zoomBy(step)
+                    onUseForAllFoldersRequested: window.useForAllFolders()
+                    onResetFolderRequested: window.activePane.resetFolder()
+                    onPreviewExpandRequested: window.actions.runAction("previewExpand")
+                    onReloadRequested: window.actions.runAction("reload")
+                    onTerminalRequested: window.actions.runAction("openTerminal")
+                    onPropertiesRequested: window.actions.runAction("properties")
+                    onNewWindowRequested: window.actions.runAction("newWindow")
+                }
+
+                Item {
+                    id: panesRow
+
+                    anchors.top: topSegment.bottom
                     anchors.bottom: parent.bottom
-                    anchors.left: primaryPane.right
-                    visible: window.splitView
-                    onMoved: delta => window.resizeSplit(delta / Math.max(1, panesRow.usableWidth))
-                    onReset: window.setSplitRatio(0.5)
+                    anchors.topMargin: Theme.groupedListGap
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    visible: !window.overviewOpen
+
+                    readonly property real usableWidth: width - (window.splitView ? FilesMetrics.splitterWidth : 0)
+
+                    WindowPane {
+                        id: primaryPane
+
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        width: window.splitView ? panesRow.usableWidth * window.splitRatio : panesRow.width
+                        pathBarHost: window.splitView ? null : topbar.pathSlot
+                    }
+
+                    PaneSplitter {
+                        id: splitter
+
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.left: primaryPane.right
+                        visible: window.splitView
+                        onMoved: delta => window.resizeSplit(delta / Math.max(1, panesRow.usableWidth))
+                        onReset: window.setSplitRatio(0.5)
+                    }
+
+                    Loader {
+                        id: splitLoader
+
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.left: splitter.right
+                        anchors.right: parent.right
+                        active: window.splitView
+                        sourceComponent: WindowPane {
+                            paneIndex: 1
+                        }
+                        onLoaded: {
+                            if (window.tabManager.tabs.length === 0)
+                                return;
+                            const stored = window.tabManager.tabState(window.tabManager.currentTab)?.panes?.[1];
+                            item.restoreState(stored ?? {
+                                "path": primaryPane.path
+                            });
+                            window.tabManager.leaveMissingFolder(item);
+                        }
+                    }
                 }
 
                 Loader {
-                    id: splitLoader
-
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.left: splitter.right
-                    anchors.right: parent.right
-                    active: window.splitView
-                    sourceComponent: WindowPane {
-                        paneIndex: 1
-                    }
-                    onLoaded: {
-                        if (window.tabManager.tabs.length === 0)
-                            return;
-                        const stored = window.tabManager.tabState(window.tabManager.currentTab)?.panes?.[1];
-                        item.restoreState(stored ?? {
-                            "path": primaryPane.path
-                        });
+                    anchors.fill: panesRow
+                    active: window.overviewOpen
+                    sourceComponent: TabOverview {
+                        tabs: window.tabManager.tabs
+                        currentIndex: window.tabManager.currentTab
+                        titleFor: state => window.tabManager.tabLabel(state)
+                        pathFor: (state, index) => window.tabManager.tabPath(index)
+                        showHidden: window.showHidden
+                        onTabSelected: index => {
+                            window.tabManager.selectTab(index);
+                            window.closeOverview();
+                        }
+                        onTabClosed: index => window.tabManager.closeTab(index)
+                        onTabAdded: {
+                            window.tabManager.newTab("", false);
+                            window.closeOverview();
+                        }
+                        onTabDropped: (index, drop) => {
+                            window.tabManager.dropOnTab(index, drop);
+                            window.closeOverview();
+                        }
+                        onNewTabDropped: drop => {
+                            window.tabManager.newTab("", true);
+                            window.tabManager.dropOnTab(window.tabManager.tabs.length - 1, drop);
+                            window.closeOverview();
+                        }
                     }
                 }
+            }
+
+            CardSegment {
+                id: footer
+
+                readonly property bool underPreview: previewDrawer.width > 0
+
+                last: true
+                anchors.bottom: parent.bottom
+                height: statusBar.implicitHeight + FilesMetrics.cardPadding * 2
+                topRightRadius: underPreview ? FilesMetrics.paneRadius : topRadius
+            }
+
+            StatusBar {
+                id: statusBar
+
+                anchors.fill: footer
+                anchors.margins: FilesMetrics.cardPadding
+                total: window.activePane.itemTotal
+                hidden: window.activePane.hiddenTotal
+                hint: window.activePane.selectionHint
+                viewMode: window.activePane.viewMode
+                viewModes: topbar.viewModes
+                previewOpen: window.previewOpen
+                previewLabel: topbar.previewLabel
+                sortKeys: topbar.activeSortKeys
+                sortKey: window.activePane.effectiveSortKey
+                sortDescending: window.activePane.effectiveSortDescending
+                onViewModeSelected: mode => window.activePane.setViewMode(mode)
+                onPreviewToggled: window.actions.runAction("togglePreview")
+                onSortKeySelected: key => window.activePane.sortBy(key)
+                onSortDirectionToggled: window.activePane.flipSort()
+            }
+
+            FilePreviewDrawer {
+                id: previewDrawer
+
+                anchors.top: parent.top
+                chipColor: Theme.surfaceContainerLowest
+                rowColor: card.surfaceColor
+                viewMinimum: card.minimumWidth
+                closable: false
+                anchors.bottom: footer.top
+                anchors.bottomMargin: footer.underPreview ? FilesMetrics.contentSpacing : 0
+                anchors.right: parent.right
+                body: window.activePane.body
+                open: window.previewOpen && !window.activePane.body.columnsMode
+                available: content.width
+                preferredWidth: CacheData.previewWidth
+                onResized: width => window.activePane.setPreviewWidth(width)
+                onFocusRequested: window.activePane.focusRequested()
             }
         }
 
         WindowSidebarHost {
             id: sidebarHost
 
-            contentMinWidth: Math.max(FilesMetrics.windowMinWidth, topbar.minimumWidth + FilesMetrics.contentMarginH)
-            anchors.top: header.bottom
+            contentMinWidth: Math.max(FilesMetrics.windowMinWidth, card.minimumWidth + FilesMetrics.contentMarginH + (previewDrawer.open ? FilesMetrics.previewMinWidth : 0))
+            anchors.top: tabBand.bottom
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right

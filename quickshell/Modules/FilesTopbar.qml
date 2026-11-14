@@ -34,19 +34,43 @@ Item {
     property bool allowColumns: true
     property bool showHiddenToggle: false
     property bool hiddenShown: false
+    property bool showViewControls: true
+    property bool flatNavigation: false
+    property bool hostsPath: false
+    property string placeTitle: ""
+    property int selectionCount: 0
+    property real selectionBytes: -1
+    property bool selectionActions: true
+    property bool showTabOverview: false
+    property bool overviewOpen: false
+    property int tabCount: 1
+    property bool searchForced: false
+
+    readonly property alias pathSlot: pathSlot
+    readonly property real centerWidth: width - leftActions.width - rightActions.width - FilesMetrics.topbarSpacing * 2
+    readonly property bool searchNarrow: hostsPath && centerWidth < FilesMetrics.searchCollapseBelow
+    readonly property bool searchTakesAll: !hostsPath || (searchNarrow && (searchFocused || searchForced || search.text !== ""))
+    readonly property bool searchCollapsed: searchNarrow && !searchTakesAll
+    readonly property bool selectionShown: hostsPath && selectionCount > 1
+    readonly property string selectionText: {
+        const items = I18n.tr("%1 selected", "count of selected items").arg(selectionCount);
+        return selectionBytes < 0 ? items : `${items} · ${FileFormat.size(selectionBytes)}`;
+    }
 
     readonly property bool virtualActive: trashActive || recentActive
+    readonly property bool sidebarToggleOnly: showSidebarToggle && compact
+    readonly property color restingColor: hostsPath ? "transparent" : Theme.chipSurface
     readonly property var viewModes: allViewModes.filter(mode => allowColumns || mode.value !== "columns")
     readonly property var allViewModes: [
-        {
-            "value": "list",
-            "icon": "view_list",
-            "label": I18n.tr("List view", "view mode showing one row per item")
-        },
         {
             "value": "grid",
             "icon": "grid_view",
             "label": I18n.tr("Grid view", "view mode showing items as tiles")
+        },
+        {
+            "value": "list",
+            "icon": "view_list",
+            "label": I18n.tr("List view", "view mode showing one row per item")
         },
         {
             "value": "columns",
@@ -59,7 +83,7 @@ Item {
     readonly property string useForAllLabel: I18n.tr("Use these settings for all folders", "view menu entry making this folder's sort and view the defaults")
     readonly property string resetFolderLabel: I18n.tr("Reset this folder", "view menu entry dropping this folder's own sort and view")
     readonly property var currentViewMode: viewModes.find(mode => mode.value === viewMode) ?? viewModes[0]
-    readonly property real minimumWidth: leftActions.width + rightActions.width + FilesMetrics.topbarSpacing * 2 + FilesMetrics.topbarControlSize
+    readonly property real minimumWidth: leftActions.width + rightActions.width + FilesMetrics.topbarSpacing * 2 + FilesMetrics.pathMinWidth
     property bool resultsActive: false
     readonly property var resultSortKeys: [
         {
@@ -167,8 +191,8 @@ Item {
     signal resetFolderRequested
     signal propertiesRequested
     signal newFolderRequested
-    signal newDocumentRequested(real pointX, real pointY)
-    signal columnsMenuRequested(real pointX, real pointY)
+    signal newDocumentRequested(var parentMenu, var row)
+    signal columnsMenuRequested(var parentMenu, var row)
     signal newWindowRequested
     signal copyPathRequested
     signal reloadRequested
@@ -180,8 +204,13 @@ Item {
     signal searchCleared
     signal locationRequested(var location)
     signal resultsRequested
+    signal selectionCleared
+    signal selectionActionRequested(string action)
+    signal overviewToggled
+    signal overviewDropHovered
 
     function focusSearch() {
+        searchForced = true;
         search.forceActiveFocus();
         search.selectAll();
     }
@@ -192,6 +221,7 @@ Item {
     }
 
     function focusFilter() {
+        searchForced = true;
         search.forceActiveFocus();
         search.cursorPosition = search.text.length;
     }
@@ -252,8 +282,27 @@ Item {
             onClicked: topbar.sidebarToggled()
         }
 
+        FlatButton {
+            anchors.verticalCenter: parent.verticalCenter
+            visible: topbar.flatNavigation && !topbar.sidebarToggleOnly
+            enabled: topbar.backEnabled
+            iconName: I18n.isRtl ? "arrow_forward" : "arrow_back"
+            tooltipText: I18n.tr("Back", "tooltip on the button going to the previous location")
+            onClicked: topbar.backRequested()
+        }
+
+        FlatButton {
+            anchors.verticalCenter: parent.verticalCenter
+            visible: topbar.flatNavigation && !topbar.sidebarToggleOnly
+            enabled: topbar.forwardEnabled
+            iconName: I18n.isRtl ? "arrow_back" : "arrow_forward"
+            tooltipText: I18n.tr("Forward", "tooltip on the button going to the next location")
+            onClicked: topbar.forwardRequested()
+        }
+
         NavButtonPair {
             anchors.verticalCenter: parent.verticalCenter
+            visible: !topbar.flatNavigation
             backEnabled: topbar.backEnabled
             forwardEnabled: topbar.forwardEnabled
             onBackRequested: topbar.backRequested()
@@ -265,7 +314,7 @@ Item {
             visible: topbar.showNewFolder
             enabled: topbar.currentPath !== "" && !topbar.virtualActive
             iconName: FileActions.icon("newFolder")
-            backgroundColor: Theme.chipSurface
+            backgroundColor: topbar.restingColor
             tooltipText: I18n.tr("New folder", "file browser toolbar button creating a folder")
             onClicked: topbar.newFolderRequested()
         }
@@ -282,8 +331,8 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             visible: topbar.showHiddenToggle
             iconName: topbar.hiddenShown ? "visibility" : "visibility_off"
-            iconColor: topbar.hiddenShown ? Theme.onPrimary : Theme.surfaceText
-            backgroundColor: topbar.hiddenShown ? Theme.primary : Theme.chipSurface
+            iconColor: topbar.hiddenShown ? Theme.onSelectedContainer : Theme.surfaceText
+            backgroundColor: topbar.hiddenShown ? Theme.selectedContainer : topbar.restingColor
             tooltipText: FileActions.label("showHidden")
             onClicked: topbar.hiddenToggled()
         }
@@ -292,7 +341,7 @@ Item {
             id: viewButton
 
             anchors.verticalCenter: parent.verticalCenter
-            visible: !topbar.compact
+            visible: topbar.showViewControls && !topbar.compact
             iconName: topbar.currentViewMode.icon
             backgroundColor: Theme.chipSurface
             tooltipText: I18n.tr("View", "keyboard shortcut group")
@@ -301,7 +350,7 @@ Item {
 
         FlatButton {
             anchors.verticalCenter: parent.verticalCenter
-            visible: !topbar.compact
+            visible: topbar.showViewControls && !topbar.compact
             iconName: "view_sidebar"
             iconColor: topbar.previewOpen ? Theme.onPrimary : Theme.surfaceText
             backgroundColor: topbar.previewOpen ? Theme.primary : Theme.chipSurface
@@ -311,7 +360,7 @@ Item {
 
         FlatButton {
             anchors.verticalCenter: parent.verticalCenter
-            visible: !topbar.compact && topbar.previewExpandable
+            visible: topbar.showViewControls && !topbar.compact && topbar.previewExpandable
             iconName: "open_in_full"
             backgroundColor: Theme.chipSurface
             tooltipText: topbar.previewExpandLabel
@@ -320,7 +369,7 @@ Item {
 
         FlatButton {
             anchors.verticalCenter: parent.verticalCenter
-            visible: !topbar.compact && topbar.showSplit
+            visible: topbar.showViewControls && !topbar.compact && topbar.showSplit
             iconName: "splitscreen_vertical_add"
             iconColor: topbar.splitView ? Theme.onPrimary : Theme.surfaceText
             backgroundColor: topbar.splitView ? Theme.primary : Theme.chipSurface
@@ -332,6 +381,7 @@ Item {
             id: sortButton
 
             anchors.verticalCenter: parent.verticalCenter
+            visible: topbar.showViewControls
             keys: topbar.activeSortKeys
             sortKey: topbar.sortKey
             descending: topbar.sortDescending
@@ -350,12 +400,66 @@ Item {
         }
 
         FlatButton {
+            anchors.verticalCenter: parent.verticalCenter
+            visible: topbar.searchCollapsed
+            iconName: "search"
+            tooltipText: I18n.tr("Search in Files", "placeholder in the search field")
+            onClicked: topbar.focusSearch()
+        }
+
+        FlatButton {
+            id: overviewButton
+
+            anchors.verticalCenter: parent.verticalCenter
+            readonly property color contentColor: overviewDrop.containsDrag ? Theme.onPrimaryContainer : topbar.overviewOpen ? Theme.onSelectedContainer : Theme.surfaceText
+
+            visible: topbar.showTabOverview
+            backgroundColor: overviewDrop.containsDrag ? Theme.primaryContainer : topbar.overviewOpen ? Theme.selectedContainer : "transparent"
+            tooltipText: I18n.tr("Show all tabs", "tooltip on the button opening the tab overview")
+            onClicked: topbar.overviewToggled()
+
+            Rectangle {
+                anchors.centerIn: parent
+                width: Theme.iconSizeMedium
+                height: Theme.iconSizeMedium
+                radius: Theme.cornerRadiusXS
+                color: "transparent"
+                border.width: Theme.outlineWidthFocused
+                border.color: overviewButton.contentColor
+
+                StyledText {
+                    anchors.centerIn: parent
+                    text: String(Math.min(topbar.tabCount, FilesMetrics.tabCountCap))
+                    color: overviewButton.contentColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    font.weight: Theme.fontWeightMedium
+                }
+            }
+
+            DropArea {
+                id: overviewDrop
+
+                anchors.fill: parent
+                enabled: !topbar.overviewOpen
+                onEntered: overviewSpring.restart()
+                onExited: overviewSpring.stop()
+            }
+
+            Timer {
+                id: overviewSpring
+
+                interval: FilesMetrics.tabHoverDelay
+                onTriggered: topbar.overviewDropHovered()
+            }
+        }
+
+        FlatButton {
             id: overflowButton
 
             anchors.verticalCenter: parent.verticalCenter
             visible: topbar.showOverflow
             iconName: "more_vert"
-            backgroundColor: Theme.chipSurface
+            backgroundColor: topbar.restingColor
             tooltipText: I18n.tr("More actions", "tooltip on the overflow menu button")
             onClicked: menu.toggle(overflowButton, "more")
         }
@@ -367,9 +471,10 @@ Item {
             property string section: "more"
 
             readonly property bool viewOnly: section === "view"
-            readonly property bool viewRows: viewOnly || topbar.compact
             readonly property bool moreRows: section === "more"
-            readonly property bool compactRows: moreRows && topbar.compact
+            readonly property bool foldedView: moreRows && (topbar.compact || !topbar.showViewControls)
+            readonly property bool modeRows: viewOnly || (foldedView && topbar.showViewControls)
+            readonly property bool viewRows: viewOnly || foldedView
             readonly property bool folderRows: viewRows && topbar.folderRemembered
 
             x: anchor.x + anchor.width - width
@@ -396,7 +501,7 @@ Item {
                 FileMenuItem {
                     required property var modelData
 
-                    visible: menu.viewRows
+                    visible: menu.modeRows
                     text: modelData.label
                     iconName: modelData.icon
                     checked: topbar.viewMode === modelData.value
@@ -427,7 +532,7 @@ Item {
             }
 
             FileMenuItem {
-                visible: menu.viewRows
+                visible: menu.modeRows
                 text: topbar.previewLabel
                 iconName: "view_sidebar"
                 checked: topbar.previewOpen
@@ -442,7 +547,7 @@ Item {
             }
 
             FileMenuItem {
-                visible: menu.compactRows && topbar.showSplit
+                visible: menu.foldedView && topbar.showSplit
                 text: I18n.tr("Split view", "tooltip on the button showing a second pane")
                 iconName: "splitscreen_vertical_add"
                 checked: topbar.splitView
@@ -450,14 +555,13 @@ Item {
             }
 
             FileMenuItem {
+                id: columnsRow
+
                 visible: menu.viewRows && topbar.allowColumns && topbar.viewMode === "list" && !topbar.virtualActive && !topbar.resultsActive
                 text: I18n.tr("Columns", "view menu entry choosing which list columns are shown")
                 iconName: "view_column"
                 submenu: true
-                onClicked: menu.pick(() => {
-                    const point = rightActions.mapToItem(topbar, menu.x, menu.y);
-                    topbar.columnsMenuRequested(point.x, point.y);
-                })
+                onClicked: topbar.columnsMenuRequested(menu, columnsRow)
             }
 
             FileMenuDivider {
@@ -479,28 +583,29 @@ Item {
                 onClicked: menu.pick(() => topbar.resetFolderRequested())
             }
 
+            FileMenuDivider {
+                visible: menu.foldedView
+            }
+
             FileMenuItem {
-                visible: menu.moreRows
-                enabled: !topbar.virtualActive
+                visible: menu.moreRows && !topbar.virtualActive
                 text: FileActions.label("newFolder")
                 iconName: FileActions.icon("newFolder")
                 onClicked: menu.pick(() => topbar.newFolderRequested())
             }
 
             FileMenuItem {
-                visible: menu.moreRows
-                enabled: !topbar.virtualActive
+                id: newDocumentRow
+
+                visible: menu.moreRows && !topbar.virtualActive
                 text: FileActions.label("newDocument")
                 iconName: FileActions.icon("newDocument")
                 submenu: true
-                onClicked: menu.pick(() => {
-                    const point = rightActions.mapToItem(topbar, menu.x, menu.y);
-                    topbar.newDocumentRequested(point.x, point.y);
-                })
+                onClicked: topbar.newDocumentRequested(menu, newDocumentRow)
             }
 
             FileMenuDivider {
-                visible: menu.moreRows
+                visible: menu.moreRows && !topbar.virtualActive
             }
 
             FileMenuItem {
@@ -511,8 +616,7 @@ Item {
             }
 
             FileMenuItem {
-                visible: menu.moreRows
-                enabled: !topbar.virtualActive
+                visible: menu.moreRows && !topbar.virtualActive
                 text: FileActions.label("properties")
                 iconName: FileActions.icon("properties")
                 onClicked: menu.pick(() => topbar.propertiesRequested())
@@ -560,17 +664,23 @@ Item {
     DSearchField {
         id: search
 
-        anchors.left: leftActions.right
         anchors.right: rightActions.left
-        anchors.leftMargin: FilesMetrics.topbarSpacing
         anchors.rightMargin: FilesMetrics.topbarSpacing
         anchors.verticalCenter: parent.verticalCenter
+        visible: !topbar.searchCollapsed
+        width: topbar.searchTakesAll ? topbar.centerWidth : Math.max(FilesMetrics.searchMinWidth, Math.min(FilesMetrics.searchMaxWidth, topbar.centerWidth * FilesMetrics.searchShare))
         fieldHeight: FilesMetrics.topbarControlSize
         leftIconSize: Theme.iconSizeMedium
         backgroundColor: Theme.surfaceContainerLowest
+        borderWidth: 0
+        focusedBorderWidth: Math.max(Theme.outlineWidthFocused, Theme.focusRingWidth)
         placeholderText: I18n.tr("Search in Files", "placeholder in the search field")
         keyForwardTargets: [topbar]
-        onFocusStateChanged: hasFocus => topbar.searchFocused = hasFocus
+        onFocusStateChanged: hasFocus => {
+            topbar.searchFocused = hasFocus;
+            if (!hasFocus)
+                topbar.searchForced = false;
+        }
         onTextChanged: {
             recentPopup.highlightIndex = -1;
             if (text !== topbar.filterText)
@@ -584,6 +694,92 @@ Item {
             }
             if (text.trim() !== "")
                 topbar.searchRequested(text.trim());
+        }
+    }
+
+    Item {
+        id: pathArea
+
+        anchors.left: leftActions.right
+        anchors.right: search.visible ? search.left : rightActions.left
+        anchors.leftMargin: FilesMetrics.topbarSpacing
+        anchors.rightMargin: FilesMetrics.topbarSpacing
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        visible: topbar.hostsPath && !topbar.searchTakesAll
+
+        Item {
+            id: pathSlot
+
+            anchors.fill: parent
+            visible: !topbar.selectionShown
+        }
+
+        StyledText {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.leftMargin: Theme.spacingM
+            anchors.verticalCenter: parent.verticalCenter
+            visible: !topbar.selectionShown && topbar.placeTitle !== ""
+            text: topbar.placeTitle
+            color: Theme.surfaceText
+            font.pixelSize: Theme.fontSizeMedium
+            font.weight: Theme.fontWeightMedium
+            horizontalAlignment: Text.AlignLeft
+            elide: Text.ElideMiddle
+        }
+
+        Item {
+            anchors.fill: parent
+            visible: topbar.selectionShown
+
+            FlatButton {
+                id: clearSelection
+
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                iconName: "close"
+                tooltipText: I18n.tr("Clear the selection", "tooltip on the button clearing the file selection")
+                onClicked: topbar.selectionCleared()
+            }
+
+            StyledText {
+                anchors.left: clearSelection.right
+                anchors.right: selectionButtons.visible ? selectionButtons.left : parent.right
+                anchors.leftMargin: Theme.spacingS
+                anchors.rightMargin: Theme.spacingS
+                anchors.verticalCenter: parent.verticalCenter
+                text: topbar.selectionText
+                color: Theme.surfaceText
+                font.pixelSize: Theme.fontSizeMedium
+                font.weight: Theme.fontWeightMedium
+                horizontalAlignment: Text.AlignLeft
+                wrapMode: Text.NoWrap
+                elide: Text.ElideRight
+            }
+
+            Row {
+                id: selectionButtons
+
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: FilesMetrics.topbarSpacing
+                visible: topbar.selectionActions
+
+                Repeater {
+                    model: ["copy", "cut", "trash"]
+
+                    FlatButton {
+                        required property string modelData
+
+                        iconName: FileActions.icon(modelData)
+                        iconColor: modelData === "trash" ? Theme.error : Theme.surfaceText
+                        backgroundColor: Theme.chipSurface
+                        tooltipText: FileActions.label(modelData)
+                        onClicked: topbar.selectionActionRequested(modelData)
+                    }
+                }
+            }
         }
     }
 

@@ -109,6 +109,25 @@ Item {
         }
     ]
 
+    readonly property var homeFolderOption: ({
+            "value": "home",
+            "label": I18n.tr("Home", "file browser quick access location")
+        })
+    readonly property var newFolderOptions: [
+        {
+            "value": "current",
+            "label": I18n.tr("Current folder", "folder setting option keeping the folder in use")
+        },
+        homeFolderOption
+    ]
+    property string folderPickerKey: ""
+
+    function pickFolder(key) {
+        folderPickerKey = key;
+        folderPickerLoader.active = true;
+        folderPickerLoader.item.open();
+    }
+
     readonly property var gridSizeOptions: FileBrowserMetrics.gridIconSizes.map((size, index) => ({
                 label: I18n.tr("%1 px", "icon size option").arg(size),
                 value: index
@@ -573,6 +592,40 @@ Item {
         onValueChanged: label => picked(root.valueForLabel(optionList, label))
     }
 
+    component FolderOptionRow: OptionDropdownRow {
+        id: folderRow
+
+        required property string folderKey
+        required property var baseOptions
+        readonly property string chooseValue: "choose"
+
+        dropdownWidth: SettingsMetrics.dropdownWidth
+        keywords: I18n.tr("default folder directory start open home", "settings search keywords, space separated, add synonyms in your language")
+        current: SettingsData[folderKey]
+        optionList: {
+            const options = baseOptions.slice();
+            if (current.startsWith("/"))
+                options.push({
+                    "value": current,
+                    "label": Paths.shortenHome(current)
+                });
+            options.push({
+                "value": chooseValue,
+                "label": I18n.tr("Choose folder…", "setting option opening a folder picker")
+            });
+            return options;
+        }
+        onPicked: value => {
+            if (value !== chooseValue) {
+                SettingsData[folderKey] = value;
+                return;
+            }
+            currentValue = "";
+            currentValue = Qt.binding(() => root.labelForValue(optionList, current));
+            root.pickFolder(folderKey);
+        }
+    }
+
     component FontFamilyRow: SettingsDropdownRow {
         property string family: ""
         property string defaultFamily: Theme.defaultFontFamily
@@ -601,6 +654,18 @@ Item {
         }
     }
 
+    Loader {
+        id: folderPickerLoader
+        active: false
+        sourceComponent: FileBrowserModal {
+            parentModal: root.hostWindow
+            bucket: "folderSetting"
+            browserTitle: I18n.tr("Select folder", "folder picker window title")
+            folderMode: true
+            onAccepted: paths => SettingsData[root.folderPickerKey] = paths[0]
+        }
+    }
+
     Component {
         id: generalPage
         SettingsPage {
@@ -608,6 +673,7 @@ Item {
                 title: I18n.tr("Window", "general settings section label")
 
                 OptionGroupRow {
+                    visible: !SettingsData.keepRunning
                     text: I18n.tr("Close behavior", "close behavior setting label")
                     keywords: I18n.tr("quit exit hide daemon keep running", "settings search keywords, space separated, add synonyms in your language")
                     optionList: [
@@ -622,6 +688,30 @@ Item {
                     ]
                     current: SettingsData.closeBehavior
                     onPicked: value => SettingsData.closeBehavior = value
+                }
+
+                FolderOptionRow {
+                    text: I18n.tr("Startup folder", "setting label for the folder shown when the app opens")
+                    folderKey: "startupFolder"
+                    baseOptions: [
+                        {
+                            "value": "last",
+                            "label": I18n.tr("Last used", "startup folder option restoring the previous tabs")
+                        },
+                        root.homeFolderOption
+                    ]
+                }
+
+                FolderOptionRow {
+                    text: I18n.tr("New window folder", "setting label for the folder a new window opens in")
+                    folderKey: "newWindowFolder"
+                    baseOptions: root.newFolderOptions
+                }
+
+                FolderOptionRow {
+                    text: I18n.tr("New tab folder", "setting label for the folder a new tab opens in")
+                    folderKey: "newTabFolder"
+                    baseOptions: root.newFolderOptions
                 }
 
                 SettingsToggleRow {

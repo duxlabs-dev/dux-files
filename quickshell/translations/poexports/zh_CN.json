@@ -50,6 +50,9 @@
   "%1 px": {
     "%1 px": "%1 像素"
   },
+  "%1 running operations will be stopped part way through.": {
+    "%1 running operations will be stopped part way through.": ""
+  },
   "%1 s left": {
     "%1 s left": "剩余 %1 秒"
   },
@@ -206,6 +209,9 @@
   "Backend: started on demand through %1": {
     "Backend: started on demand through %1": "后端：通过 %1 按需启动"
   },
+  "Background blur": {
+    "Background blur": ""
+  },
   "Badges": {
     "Badges": ""
   },
@@ -220,6 +226,9 @@
   },
   "Blue": {
     "Blue": "蓝色"
+  },
+  "Blurs what shows through the window. Needs an opacity below 100%.": {
+    "Blurs what shows through the window. Needs an opacity below 100%.": ""
   },
   "Bookmark this folder": {
     "Bookmark this folder": "将此文件夹加入书签"
@@ -244,6 +253,9 @@
   },
   "Choose a badge image": {
     "Choose a badge image": ""
+  },
+  "Choose folder…": {
+    "Choose folder…": ""
   },
   "Clear": {
     "Clear": ""
@@ -283,6 +295,9 @@
   },
   "Column view": {
     "Column view": "分栏视图"
+  },
+  "Columns": {
+    "Columns": ""
   },
   "Comfortable": {
     "Comfortable": ""
@@ -374,6 +389,9 @@
   "Ctrl+Wheel resizes per window.": {
     "Ctrl+Wheel resizes per window.": "Ctrl+滚轮按窗口调整大小。"
   },
+  "Current folder": {
+    "Current folder": ""
+  },
   "Custom": {
     "Custom": "自定义"
   },
@@ -385,6 +403,9 @@
   },
   "Dark": {
     "Dark": "深色"
+  },
+  "Date format": {
+    "Date format": ""
   },
   "Decrease": {
     "Decrease": "减少"
@@ -605,6 +626,9 @@
   "Font source": {
     "Font source": ""
   },
+  "Foreground layers": {
+    "Foreground layers": ""
+  },
   "Forget": {
     "Forget": "忘记"
   },
@@ -674,6 +698,9 @@
   "Heroic": {
     "Heroic": ""
   },
+  "Hidden files after other files": {
+    "Hidden files after other files": ""
+  },
   "Hides the title and the window buttons, leaving a thin strip to drag the window.": {
     "Hides the title and the window buttons, leaving a thin strip to drag the window.": ""
   },
@@ -682,6 +709,12 @@
   },
   "Host filesystem": {
     "Host filesystem": "主机文件系统"
+  },
+  "ISO 8601": {
+    "ISO 8601": ""
+  },
+  "ISO 8601 with seconds": {
+    "ISO 8601 with seconds": ""
   },
   "Icons": {
     "Icons": ""
@@ -743,6 +776,9 @@
   "Keep running": {
     "Keep running": "保持运行"
   },
+  "Keeps cards and panes solid when the window is see-through.": {
+    "Keeps cards and panes solid when the window is see-through.": ""
+  },
   "Keyboard": {
     "Keyboard": "键盘"
   },
@@ -754,6 +790,15 @@
   },
   "Larger icons": {
     "Larger icons": "放大图标"
+  },
+  "Last used": {
+    "Last used": ""
+  },
+  "Layer opacity": {
+    "Layer opacity": ""
+  },
+  "Lets the desktop show through the window. Text and controls stay solid.": {
+    "Lets the desktop show through the window. Text and controls stay solid.": ""
   },
   "Libraries and Proton prefixes.": {
     "Libraries and Proton prefixes.": ""
@@ -902,8 +947,14 @@
   "New tab": {
     "New tab": "新建标签页"
   },
+  "New tab folder": {
+    "New tab folder": ""
+  },
   "New window": {
     "New window": "新建窗口"
+  },
+  "New window folder": {
+    "New window folder": ""
   },
   "Next tab": {
     "Next tab": "下一个标签页"
@@ -958,6 +1009,9 @@
   },
   "Only the window process serves the portal": {
     "Only the window process serves the portal": "只有窗口进程提供门户服务"
+  },
+  "Opacity": {
+    "Opacity": ""
   },
   "Open": {
     "Open": "打开"
@@ -1127,6 +1181,9 @@
   "Quit": {
     "Quit": "退出"
   },
+  "Quit while file operations are running?": {
+    "Quit while file operations are running?": ""
+  },
   "Radius strength": {
     "Radius strength": "圆角强度"
   },
@@ -1156,6 +1213,9 @@
   },
   "Register as the session file manager": {
     "Register as the session file manager": "注册为会话文件管理器"
+  },
+  "Relative": {
+    "Relative": ""
   },
   "Relevance": {
     "Relevance": "相关度"
@@ -1346,6 +1406,9 @@
   "Shared with other apps.": {
     "Shared with other apps.": "与其他应用共享。"
   },
+  "Shares on %1": {
+    "Shares on %1": ""
+  },
   "Show": {
     "Show": "显示"
   },
@@ -1427,6 +1490,9 @@
   "Square": {
     "Square": "直角"
   },
+  "Startup folder": {
+    "Startup folder": ""
+  },
   "Status": {
     "Status": "状态"
   },
@@ -1454,6 +1520,9 @@
   "System default": {
     "System default": "系统默认"
   },
+  "System locale": {
+    "System locale": ""
+  },
   "System preference unavailable, using dark.": {
     "System preference unavailable, using dark.": "系统偏好不可用，使用深色。"
   },
@@ -1474,6 +1543,9 @@
   },
   "The portal list is managed by the system.": {
     "The portal list is managed by the system.": "门户列表由系统管理。"
+  },
+  "The running operation will be stopped part way through.": {
+    "The running operation will be stopped part way through.": ""
   },
   "The session bus refused it.": {
     "The session bus refused it.": "会话总线拒绝了该请求。"
@@ -1507,6 +1579,9 @@
   },
   "This month": {
     "This month": "本月"
+  },
+  "This server offers no shares": {
+    "This server offers no shares": ""
   },
   "This session": {
     "This session": "本次会话"
@@ -1658,6 +1733,9 @@
   "Wrong password": {
     "Wrong password": "密码错误"
   },
+  "Your compositor does not support background blur.": {
+    "Your compositor does not support background blur.": ""
+  },
   "Zoom in": {
     "Zoom in": ""
   },
@@ -1678,6 +1756,9 @@
   },
   "capability available sandbox": {
     "capability available sandbox": "功能 可用 沙箱"
+  },
+  "cards panes contrast glass": {
+    "cards panes contrast glass": ""
   },
   "config folder launcher wine prefix": {
     "config folder launcher wine prefix": ""
@@ -1712,6 +1793,9 @@
   "default file manager dbus reveal": {
     "default file manager dbus reveal": "默认 文件管理器 dbus 显示"
   },
+  "default folder directory start open home": {
+    "default folder directory start open home": ""
+  },
   "delete confirmation prompt": {
     "delete confirmation prompt": "删除 确认 提示"
   },
@@ -1726,6 +1810,9 @@
   },
   "dotfiles invisible": {
     "dotfiles invisible": "隐藏文件 不可见"
+  },
+  "dotfiles sort last bottom": {
+    "dotfiles sort last bottom": ""
   },
   "drag drop copy move ask default action": {
     "drag drop copy move ask default action": "拖放 复制 移动 询问 默认操作"
@@ -1759,6 +1846,9 @@
   },
   "font typeface headline title": {
     "font typeface headline title": ""
+  },
+  "frosted glass compositor": {
+    "frosted glass compositor": ""
   },
   "games library steamapps common": {
     "games library steamapps common": ""
@@ -1865,8 +1955,14 @@
   "thumbnail size limit cap megabytes": {
     "thumbnail size limit cap megabytes": "缩略图 大小 限制 上限 兆字节"
   },
+  "time modified timestamp iso relative seconds": {
+    "time modified timestamp iso relative seconds": ""
+  },
   "title bar header hide decorations": {
     "title bar header hide decorations": ""
+  },
+  "transparency translucent glass see-through": {
+    "transparency translucent glass see-through": ""
   },
   "type-ahead jump filter search keyboard": {
     "type-ahead jump filter search keyboard": "即时输入 跳转 筛选 搜索 键盘"

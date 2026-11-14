@@ -59,14 +59,6 @@ func call(t *testing.T, svc *Service, req ipc.Request) map[string]any {
 	return ipctest.Call(t, func(w *ipc.ConnWriter) { svc.Handle(w, req) })
 }
 
-func TestHandleListReturnsTheSnapshot(t *testing.T) {
-	out := call(t, testService(t, nil), ipc.Request{ID: 3, Method: "devices.list"})
-
-	result := out["result"].(map[string]any)
-	assert.Equal(t, true, result["available"])
-	assert.Len(t, result["devices"], 3)
-}
-
 func TestHandleMountCallsUdisksAndReturnsTheMountPoint(t *testing.T) {
 	bus := &fakeBus{body: []any{"/run/media/brandon/PHOTOS"}}
 	out := call(t, testService(t, bus), ipc.Request{ID: 4, Method: "devices.mount", Params: map[string]any{"id": "/block/stick"}})

@@ -7,6 +7,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 	"syscall"
 	"unicode/utf8"
 )
@@ -332,7 +333,8 @@ func (r *runner) growTotals(children int) {
 }
 
 func (r *runner) tempPath(dst string) string {
-	return filepath.Join(filepath.Dir(dst), ".dfiles-tmp-"+r.job.id+r.job.nextID("-t")+"-"+truncateName(filepath.Base(dst), tempNameTail))
+	tail := strings.TrimRight(truncateName(filepath.Base(dst), tempNameTail), " .")
+	return filepath.Join(filepath.Dir(dst), ".dfiles-tmp-"+r.job.id+r.job.nextID("-t")+"-"+tail)
 }
 
 func truncateName(name string, limit int) string {

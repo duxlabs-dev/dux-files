@@ -31,8 +31,10 @@ github.com/cyphar/filepath-securejoin v0.7.0 h1:s0Y3ITPy6sQn5xt54DuYvTF8hu134ooY
 github.com/cyphar/filepath-securejoin v0.7.0/go.mod h1:ymLGms/u3BYaviIiuKFnUx8EkQEZeK6cInNoAPJA3o4=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/duxlabs-dev/dux-go v1.6.3-0.20261104145206-caf8643a6a6c h1:x00eW4nbWWNJFKcTp9U7rkiLjNw14t/bxa+9YHbYHUE=
-github.com/duxlabs-dev/dux-go v1.6.3-0.20261104145206-caf8643a6a6c/go.mod h1:b+hBqIgOVAmlFKJ+33SY2pH4kJjXpifNeioPMxwC4Nk=
+github.com/duxlabs-dev/dux-go v1.6.3-0.20261113025848-c9b121458954 h1:M+ds6TyOev1oTaLWhvbje7OVRyMtq5mE+zY/ysfYois=
+github.com/duxlabs-dev/dux-go v1.6.3-0.20261113025848-c9b121458954/go.mod h1:b67p+bMQvy+LqsAXCAOERXutm4SbQuTeqKsGeEnqR8w=
+github.com/ebitengine/purego v0.11.3 h1:OB+JLpdm7ioymhyA+6s5kbb/uOuYycAgL8NNTFc5MLg=
+github.com/ebitengine/purego v0.11.3/go.mod h1:DCHPP08djqhNSoTfImcnHYQRZmd0qhakvrozqaEYhGQ=
 github.com/fsnotify/fsnotify v1.10.1 h1:b0/UzAf9yR5rhf3RPm9gf3ehBPpf0oZKIjtpKrx59Ho=
 github.com/fsnotify/fsnotify v1.10.1/go.mod h1:TLheqan6HD6GBK6PrDWyDPBaEV8LspOxvPSjC+bVfgo=
 github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 h1:+zs/tPmkDkHx3U66DAb0lQFJrpS6731Oaa12ikc+DiI=

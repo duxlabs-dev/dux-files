@@ -24,7 +24,7 @@
     "%1 hidden": "%1 ausgeblendet"
   },
   "%1 holds it; Files takes over when it quits.": {
-    "%1 holds it; Files takes over when it quits.": ""
+    "%1 holds it; Files takes over when it quits.": "%1 hält es; Files übernimmt, wenn es beendet wird."
   },
   "%1 is encrypted. Enter its passphrase to unlock it.": {
     "%1 is encrypted. Enter its passphrase to unlock it.": "%1 ist verschlüsselt. Geben Sie die Passphrase ein, um diese zu entsperren."
@@ -50,6 +50,9 @@
   "%1 px": {
     "%1 px": "%1 px"
   },
+  "%1 running operations will be stopped part way through.": {
+    "%1 running operations will be stopped part way through.": ""
+  },
   "%1 s left": {
     "%1 s left": "%1 s verbleibend"
   },
@@ -69,7 +72,7 @@
     "%1 …": "%1 …"
   },
   "%1, %2 matches": {
-    "%1, %2 matches": ""
+    "%1, %2 matches": "%1, %2 Treffer"
   },
   "%1/s": {
     "%1/s": "%1/s"
@@ -206,6 +209,9 @@
   "Backend: started on demand through %1": {
     "Backend: started on demand through %1": "Backend: gestartet bei Abruf über %1"
   },
+  "Background blur": {
+    "Background blur": ""
+  },
   "Badges": {
     "Badges": "Badges"
   },
@@ -220,6 +226,9 @@
   },
   "Blue": {
     "Blue": "Blau"
+  },
+  "Blurs what shows through the window. Needs an opacity below 100%.": {
+    "Blurs what shows through the window. Needs an opacity below 100%.": ""
   },
   "Bookmark this folder": {
     "Bookmark this folder": "Diesen Ordner mit Lesezeichen versehen"
@@ -245,6 +254,9 @@
   "Choose a badge image": {
     "Choose a badge image": "Ein Badge-Bild wählen"
   },
+  "Choose folder…": {
+    "Choose folder…": ""
+  },
   "Clear": {
     "Clear": "Löschen"
   },
@@ -252,7 +264,7 @@
     "Clear Recent": "Zuletzt verwendet löschen"
   },
   "Clear the clipboard": {
-    "Clear the clipboard": ""
+    "Clear the clipboard": "Zwischenablage leeren"
   },
   "Clear the recent files list?": {
     "Clear the recent files list?": "Die Liste zuletzt verwendeter Dateien löschen?"
@@ -283,6 +295,9 @@
   },
   "Column view": {
     "Column view": "Spaltenansicht"
+  },
+  "Columns": {
+    "Columns": ""
   },
   "Comfortable": {
     "Comfortable": "Komfortabel"
@@ -354,7 +369,7 @@
     "Could not read that file, expected a JSON color theme.": "Diese Datei konnte nicht gelesen werden, erwartet wurde ein JSON-Farbschema."
   },
   "Count items in folders": {
-    "Count items in folders": ""
+    "Count items in folders": "Elemente in Ordnern zählen"
   },
   "Create": {
     "Create": "Erstellen"
@@ -374,6 +389,9 @@
   "Ctrl+Wheel resizes per window.": {
     "Ctrl+Wheel resizes per window.": "Strg+Rad ändert die Größe pro Fenster."
   },
+  "Current folder": {
+    "Current folder": ""
+  },
   "Custom": {
     "Custom": "Benutzerdefiniert"
   },
@@ -385,6 +403,9 @@
   },
   "Dark": {
     "Dark": "Dunkel"
+  },
+  "Date format": {
+    "Date format": ""
   },
   "Decrease": {
     "Decrease": "Verringern"
@@ -438,7 +459,7 @@
     "Display family": "Display-Familie"
   },
   "Do this for the rest": {
-    "Do this for the rest": ""
+    "Do this for the rest": "Für den Rest wiederholen"
   },
   "Docs": {
     "Docs": "Dokumentation"
@@ -468,7 +489,7 @@
     "Drives are unavailable because udisks2 is not running": "Laufwerke sind nicht verfügbar, da udisks2 nicht ausgeführt wird"
   },
   "Dropping without a modifier": {
-    "Dropping without a modifier": ""
+    "Dropping without a modifier": "Ablegen ohne Modifikatortaste"
   },
   "Duplicate": {
     "Duplicate": "Duplizieren"
@@ -501,7 +522,7 @@
     "Empty Trash": "Papierkorb leeren"
   },
   "Empty file": {
-    "Empty file": "Datei leeren"
+    "Empty file": "Leere Datei"
   },
   "Empty the trash?": {
     "Empty the trash?": "Papierkorb leeren?"
@@ -516,7 +537,7 @@
     "Estimating…": "Schätzung ..."
   },
   "Every folder goes back to the default sort and view.": {
-    "Every folder goes back to the default sort and view.": ""
+    "Every folder goes back to the default sort and view.": "Jeder Ordner kehrt zur Standardsortierung und -ansicht zurück."
   },
   "Everyone": {
     "Everyone": "Jeder"
@@ -605,6 +626,9 @@
   "Font source": {
     "Font source": "Schriftartquelle"
   },
+  "Foreground layers": {
+    "Foreground layers": ""
+  },
   "Forget": {
     "Forget": "Vergessen"
   },
@@ -645,7 +669,7 @@
     "General": "Allgemein"
   },
   "Getting around": {
-    "Getting around": ""
+    "Getting around": "Navigation"
   },
   "GitHub": {
     "GitHub": "GitHub"
@@ -663,7 +687,7 @@
     "Green": "Grün"
   },
   "Grid icon size": {
-    "Grid icon size": ""
+    "Grid icon size": "Symbolgröße in der Gitteransicht"
   },
   "Grid view": {
     "Grid view": "Gitteransicht"
@@ -674,6 +698,9 @@
   "Heroic": {
     "Heroic": "Heroic"
   },
+  "Hidden files after other files": {
+    "Hidden files after other files": ""
+  },
   "Hides the title and the window buttons, leaving a thin strip to drag the window.": {
     "Hides the title and the window buttons, leaving a thin strip to drag the window.": "Blendet den Titel und die Fensterschaltflächen aus, wobei ein schmaler Streifen zum Verschieben des Fensters verbleibt."
   },
@@ -682,6 +709,12 @@
   },
   "Host filesystem": {
     "Host filesystem": "Host-Dateisystem"
+  },
+  "ISO 8601": {
+    "ISO 8601": ""
+  },
+  "ISO 8601 with seconds": {
+    "ISO 8601 with seconds": ""
   },
   "Icons": {
     "Icons": "Icons"
@@ -726,7 +759,7 @@
     "Jump to a folder you visited": "Zu einem von Ihnen besuchten Ordner springen"
   },
   "Jump to a name or filter the folder with what you type": {
-    "Jump to a name or filter the folder with what you type": ""
+    "Jump to a name or filter the folder with what you type": "Zu einem Namen springen oder den Ordner mit Ihrer Eingabe filtern"
   },
   "Jump to name": {
     "Jump to name": "Springe zum Namen"
@@ -743,6 +776,9 @@
   "Keep running": {
     "Keep running": "Am Laufen halten"
   },
+  "Keeps cards and panes solid when the window is see-through.": {
+    "Keeps cards and panes solid when the window is see-through.": ""
+  },
   "Keyboard": {
     "Keyboard": "Tastatur"
   },
@@ -754,6 +790,15 @@
   },
   "Larger icons": {
     "Larger icons": "Größere Icons"
+  },
+  "Last used": {
+    "Last used": ""
+  },
+  "Layer opacity": {
+    "Layer opacity": ""
+  },
+  "Lets the desktop show through the window. Text and controls stay solid.": {
+    "Lets the desktop show through the window. Text and controls stay solid.": ""
   },
   "Libraries and Proton prefixes.": {
     "Libraries and Proton prefixes.": "Bibliotheken und Proton-Präfixe."
@@ -771,10 +816,10 @@
     "Linking": "Verknüpfen"
   },
   "Links to": {
-    "Links to": ""
+    "Links to": "Verknüpft mit"
   },
   "List icon size": {
-    "List icon size": ""
+    "List icon size": "Symbolgröße in der Listenansicht"
   },
   "List view": {
     "List view": "Listenansicht"
@@ -828,10 +873,10 @@
     "Move": "Bewegen"
   },
   "Move the tab left": {
-    "Move the tab left": ""
+    "Move the tab left": "Tab nach links verschieben"
   },
   "Move the tab right": {
-    "Move the tab right": ""
+    "Move the tab right": "Tab nach rechts verschieben"
   },
   "Move through the folder": {
     "Move through the folder": "Durch den Ordner navigieren"
@@ -846,7 +891,7 @@
     "Move to Trash": "In Papierkorb verschieben"
   },
   "Move to the search filters": {
-    "Move to the search filters": ""
+    "Move to the search filters": "Zu den Suchfiltern wechseln"
   },
   "Move to…": {
     "Move to…": "Verschieben nach ..."
@@ -861,16 +906,16 @@
     "Moved to trash": "In Papierkorb verschoben"
   },
   "Moving": {
-    "Moving": ""
+    "Moving": "Verschieben"
   },
   "Moving to trash": {
-    "Moving to trash": ""
+    "Moving to trash": "In den Papierkorb verschieben"
   },
   "Name": {
     "Name": "Name"
   },
   "Name the host terminal to launch.": {
-    "Name the host terminal to launch.": ""
+    "Name the host terminal to launch.": "Namen des zu startenden Host-Terminals festlegen."
   },
   "Names or paths, comma separated. Build and cache folders are skipped anyway.": {
     "Names or paths, comma separated. Build and cache folders are skipped anyway.": "Namen oder Pfade, getrennt durch Kommas. Build- und Cache-Ordner werden ohnehin übersprungen."
@@ -902,8 +947,14 @@
   "New tab": {
     "New tab": "Neuer Tab"
   },
+  "New tab folder": {
+    "New tab folder": ""
+  },
   "New window": {
     "New window": "Neues Fenster"
+  },
+  "New window folder": {
+    "New window folder": ""
   },
   "Next tab": {
     "Next tab": "Nächster Tab"
@@ -945,10 +996,10 @@
     "Off": "Aus"
   },
   "Off leaves decorations to the compositor. Applies to new windows.": {
-    "Off leaves decorations to the compositor. Applies to new windows.": ""
+    "Off leaves decorations to the compositor. Applies to new windows.": "Aus überlässt Dekorationen dem Compositor. Gilt für neue Fenster."
   },
   "Off only mounts.": {
-    "Off only mounts.": ""
+    "Off only mounts.": "Aus bewirkt nur das Einhängen."
   },
   "Offline": {
     "Offline": "Offline"
@@ -958,6 +1009,9 @@
   },
   "Only the window process serves the portal": {
     "Only the window process serves the portal": "Nur der Fensterprozess bedient das Portal"
+  },
+  "Opacity": {
+    "Opacity": ""
   },
   "Open": {
     "Open": "Öffnen"
@@ -1014,7 +1068,7 @@
     "Open the preview in a large view": "Die Vorschau in einer großen Ansicht öffnen"
   },
   "Open unmounted drives on click": {
-    "Open unmounted drives on click": ""
+    "Open unmounted drives on click": "Nicht eingehängte Laufwerke bei Klick öffnen"
   },
   "Open with": {
     "Open with": "Öffne mit"
@@ -1089,7 +1143,7 @@
     "Preference: %1 names Dux Files": "Voreinstellung: %1 benennt Dux Files"
   },
   "Preference: no file chooser backend configured": {
-    "Preference: no file chooser backend configured": ""
+    "Preference: no file chooser backend configured": "Einstellung: Kein Backend für Dateiauswahl konfiguriert"
   },
   "Prefix · %1": {
     "Prefix · %1": "Präfix · %1"
@@ -1127,6 +1181,9 @@
   "Quit": {
     "Quit": "Beenden"
   },
+  "Quit while file operations are running?": {
+    "Quit while file operations are running?": ""
+  },
   "Radius strength": {
     "Radius strength": "Radiusstärke"
   },
@@ -1149,13 +1206,16 @@
     "Redo": "Wiederherstellen"
   },
   "Redone": {
-    "Redone": ""
+    "Redone": "Wiederholt"
   },
   "Reduce motion": {
     "Reduce motion": "Bewegung reduzieren"
   },
   "Register as the session file manager": {
     "Register as the session file manager": "Als Sitzungsdateimanager registrieren"
+  },
+  "Relative": {
+    "Relative": ""
   },
   "Relevance": {
     "Relevance": "Relevanz"
@@ -1346,6 +1406,9 @@
   "Shared with other apps.": {
     "Shared with other apps.": "Geteilt mit anderen Apps."
   },
+  "Shares on %1": {
+    "Shares on %1": ""
+  },
   "Show": {
     "Show": "Zeigen"
   },
@@ -1374,7 +1437,7 @@
     "Showing the first %1 results": "Die ersten %1 Ergebnisse werden angezeigt"
   },
   "Shown in the size column.": {
-    "Shown in the size column.": ""
+    "Shown in the size column.": "Wird in der Spalte für die Größe angezeigt."
   },
   "Sidebar": {
     "Sidebar": "Seitenleiste"
@@ -1422,10 +1485,13 @@
     "Split view": "Geteilte Ansicht"
   },
   "Spring": {
-    "Spring": ""
+    "Spring": "Springen"
   },
   "Square": {
     "Square": "Quadrat"
+  },
+  "Startup folder": {
+    "Startup folder": ""
   },
   "Status": {
     "Status": "Status"
@@ -1437,7 +1503,7 @@
     "Steam, ~/VirtualBox VMs": "Steam, ~/VirtualBox VMs"
   },
   "Stop measuring": {
-    "Stop measuring": ""
+    "Stop measuring": "Messung beenden"
   },
   "Such as a separate /home.": {
     "Such as a separate /home.": "Wie zum Beispiel ein separates /home-Verzeichnis."
@@ -1446,13 +1512,16 @@
     "Support Dux Labs": "Dux Labs unterstützen"
   },
   "Switch pane": {
-    "Switch pane": ""
+    "Switch pane": "Bereich wechseln"
   },
   "System": {
     "System": "System"
   },
   "System default": {
     "System default": "Systemstandard"
+  },
+  "System locale": {
+    "System locale": ""
   },
   "System preference unavailable, using dark.": {
     "System preference unavailable, using dark.": "Systemvoreinstellung nicht verfügbar, verwendet wird dunkel."
@@ -1475,11 +1544,14 @@
   "The portal list is managed by the system.": {
     "The portal list is managed by the system.": "Die Portal-Liste wird vom System verwaltet."
   },
+  "The running operation will be stopped part way through.": {
+    "The running operation will be stopped part way through.": ""
+  },
   "The session bus refused it.": {
     "The session bus refused it.": "Der Session-Bus hat dies abgelehnt."
   },
   "The system application chooser opens instead": {
-    "The system application chooser opens instead": ""
+    "The system application chooser opens instead": "Stattdessen öffnet sich die System-App-Auswahl"
   },
   "Theme": {
     "Theme": "Theme"
@@ -1507,6 +1579,9 @@
   },
   "This month": {
     "This month": "Diesen Monat"
+  },
+  "This server offers no shares": {
+    "This server offers no shares": ""
   },
   "This session": {
     "This session": "Diese Sitzung"
@@ -1548,10 +1623,10 @@
     "Type": "Typ"
   },
   "Type a location": {
-    "Type a location": ""
+    "Type a location": "Einen Ort eingeben"
   },
   "Typing in the file list": {
-    "Typing in the file list": ""
+    "Typing in the file list": "Tippen in der Dateiliste"
   },
   "Typography": {
     "Typography": "Typografie"
@@ -1575,10 +1650,10 @@
     "Unlock": "Entsperren"
   },
   "Unmount": {
-    "Unmount": ""
+    "Unmount": "Aushängen"
   },
   "Unpacks into a folder beside it.": {
-    "Unpacks into a folder beside it.": ""
+    "Unpacks into a folder beside it.": "Entpackt in einen Ordner daneben."
   },
   "Untitled document": {
     "Untitled document": "Unbetiteltes Dokument"
@@ -1658,6 +1733,9 @@
   "Wrong password": {
     "Wrong password": "Falsches Passwort"
   },
+  "Your compositor does not support background blur.": {
+    "Your compositor does not support background blur.": ""
+  },
   "Zoom in": {
     "Zoom in": "Hineinzoomen"
   },
@@ -1665,58 +1743,64 @@
     "Zoom out": "Herauszoomen"
   },
   "accessibility animation disable": {
-    "accessibility animation disable": ""
+    "accessibility animation disable": "Barrierefreiheit Animation deaktivieren"
   },
   "animation click feedback": {
-    "animation click feedback": ""
+    "animation click feedback": "Animation Klick-Feedback"
   },
   "animation speed motion": {
-    "animation speed motion": ""
+    "animation speed motion": "Animationsgeschwindigkeit Bewegung"
   },
   "bounce animation motion": {
-    "bounce animation motion": ""
+    "bounce animation motion": "Bounce-Animation Bewegung"
   },
   "capability available sandbox": {
-    "capability available sandbox": ""
+    "capability available sandbox": "Fähigkeit verfügbar Sandbox"
+  },
+  "cards panes contrast glass": {
+    "cards panes contrast glass": ""
   },
   "config folder launcher wine prefix": {
-    "config folder launcher wine prefix": ""
+    "config folder launcher wine prefix": "Konfigurationsordner Launcher Wine-Prefix"
   },
   "console emulator shell command line": {
-    "console emulator shell command line": ""
+    "console emulator shell command line": "Konsolen-Emulator Shell-Befehlszeile"
   },
   "corners rounding shape square": {
-    "corners rounding shape square": ""
+    "corners rounding shape square": "Ecken Abrundung Form quadratisch"
   },
   "custom theme json file": {
     "custom theme json file": "Benutzerdefinierte Theme-JSON-Datei"
   },
   "daemon connected offline socket": {
-    "daemon connected offline socket": ""
+    "daemon connected offline socket": "Daemon verbunden offline Socket"
   },
   "daemon path unix": {
-    "daemon path unix": ""
+    "daemon path unix": "Daemon-Pfad Unix"
   },
   "daemon protocol": {
     "daemon protocol": "Daemon-Protokoll"
   },
   "daemon release build": {
-    "daemon release build": ""
+    "daemon release build": "Daemon Release Build"
   },
   "dark": {
     "dark": "Dunkel"
   },
   "decorations csd window header": {
-    "decorations csd window header": ""
+    "decorations csd window header": "Dekorationen CSD Fenster Kopfzeile"
   },
   "default file manager dbus reveal": {
-    "default file manager dbus reveal": ""
+    "default file manager dbus reveal": "Standard-Dateimanager D-Bus reveal"
+  },
+  "default folder directory start open home": {
+    "default folder directory start open home": ""
   },
   "delete confirmation prompt": {
     "delete confirmation prompt": "Bestätigungsaufforderung zum Löschen"
   },
   "density compact dense spacious comfortable spacing padding rows": {
-    "density compact dense spacious comfortable spacing padding rows": ""
+    "density compact dense spacious comfortable spacing padding rows": "Dichte kompakt dicht geräumig komfortabel Abstand Polsterung Zeilen"
   },
   "directories first sort": {
     "directories first sort": "Verzeichnisse zuerst sortieren"
@@ -1727,44 +1811,50 @@
   "dotfiles invisible": {
     "dotfiles invisible": "Dotfiles unsichtbar"
   },
+  "dotfiles sort last bottom": {
+    "dotfiles sort last bottom": ""
+  },
   "drag drop copy move ask default action": {
-    "drag drop copy move ask default action": ""
+    "drag drop copy move ask default action": "Drag & Drop Kopieren Verschieben Fragen Standardaktion"
   },
   "drives usb volumes sidebar hide": {
-    "drives usb volumes sidebar hide": ""
+    "drives usb volumes sidebar hide": "Laufwerke USB Volumes Seitenleiste ausblenden"
   },
   "flatpak app id": {
     "flatpak app id": "Flatpak-App-ID"
   },
   "focus ring width outline": {
-    "focus ring width outline": ""
+    "focus ring width outline": "Fokusring-Breite Umriss"
   },
   "folder memory per-folder remember": {
-    "folder memory per-folder remember": ""
+    "folder memory per-folder remember": "Ordner-Speicher pro Ordner merken"
   },
   "font bold typography": {
-    "font bold typography": ""
+    "font bold typography": "Schriftart fett Typografie"
   },
   "font family typeface dms system qt": {
-    "font family typeface dms system qt": ""
+    "font family typeface dms system qt": "Schriftfamilie Schriftart dms System qt"
   },
   "font size text zoom typography": {
-    "font size text zoom typography": ""
+    "font size text zoom typography": "Schriftgröße Text Zoom Typografie"
   },
   "font typeface": {
-    "font typeface": ""
+    "font typeface": "Schriftart Typeface"
   },
   "font typeface code mono": {
-    "font typeface code mono": ""
+    "font typeface code mono": "Schriftart Code Mono"
   },
   "font typeface headline title": {
-    "font typeface headline title": ""
+    "font typeface headline title": "Schriftart Überschrift Titel"
+  },
+  "frosted glass compositor": {
+    "frosted glass compositor": ""
   },
   "games library steamapps common": {
-    "games library steamapps common": ""
+    "games library steamapps common": "Spiele Bibliothek Steamapps Common"
   },
   "gvfs smb sftp remote servers sidebar hide": {
-    "gvfs smb sftp remote servers sidebar hide": ""
+    "gvfs smb sftp remote servers sidebar hide": "gvfs smb sftp Remote-Server Seitenleiste ausblenden"
   },
   "h j k l move, / searches and letters run commands instead of jumping to a name.": {
     "h j k l move, / searches and letters run commands instead of jumping to a name.": "h j k l verschieben, / sucht und Buchstaben führen Befehle aus, anstatt zu einem Namen zu springen."
@@ -1779,100 +1869,106 @@
     "history recently used opened sidebar": "Historie kürzlich verwendeter, geöffneter Seitenleiste"
   },
   "hjkl keyboard navigation modal": {
-    "hjkl keyboard navigation modal": ""
+    "hjkl keyboard navigation modal": "hjkl Tastaturnavigation modal"
   },
   "internal drives udisks home boot": {
-    "internal drives udisks home boot": ""
+    "internal drives udisks home boot": "Interne Laufwerke Udisks Home Boot"
   },
   "keyboard outline accessibility": {
-    "keyboard outline accessibility": ""
+    "keyboard outline accessibility": "Tastatur Umriss Barrierefreiheit"
   },
   "keys bindings hotkeys F1": {
-    "keys bindings hotkeys F1": ""
+    "keys bindings hotkeys F1": "Tastenbelegungen Hotkeys F1"
   },
   "light": {
     "light": "Hell"
   },
   "light dark mode system color scheme": {
-    "light dark mode system color scheme": ""
+    "light dark mode system color scheme": "Hell-Dunkel-Modus System-Farbschema"
   },
   "list grid columns icons tiles": {
-    "list grid columns icons tiles": ""
+    "list grid columns icons tiles": "Liste Gitter Spalten Symbole Kacheln"
   },
   "locale translation interface": {
     "locale translation interface": "Interface für lokale Übersetzung"
   },
   "lutris wine prefix": {
-    "lutris wine prefix": ""
+    "lutris wine prefix": "Lutris Wine-Prefix"
   },
   "mount usb removable sidebar": {
-    "mount usb removable sidebar": ""
+    "mount usb removable sidebar": "Einhängen USB Wechselmedien Seitenleiste"
   },
   "order direction ascending reverse": {
-    "order direction ascending reverse": ""
+    "order direction ascending reverse": "Reihenfolge Richtung aufsteigend umgekehrt"
   },
   "order name size modified type date": {
-    "order name size modified type date": ""
+    "order name size modified type date": "Sortierung Name Größe Geändert Typ Datum"
   },
   "palette dms preset custom accent": {
     "palette dms preset custom accent": "Palette, DMS, Preset, benutzerdefiniert, Akzent"
   },
   "portal file chooser picker xdg": {
-    "portal file chooser picker xdg": ""
+    "portal file chooser picker xdg": "Portal Dateiauswahl Picker xdg"
   },
   "preset palette swatch colors": {
-    "preset palette swatch colors": ""
+    "preset palette swatch colors": "Voreinstellung Palette Farbfelder"
   },
   "previews images video pdf": {
-    "previews images video pdf": ""
+    "previews images video pdf": "Vorschauen Bilder Video PDF"
   },
   "quit exit hide daemon keep running": {
-    "quit exit hide daemon keep running": ""
+    "quit exit hide daemon keep running": "Beenden Schließen Verbergen Daemon weiterlaufen"
   },
   "remote sftp smb previews": {
-    "remote sftp smb previews": ""
+    "remote sftp smb previews": "Entfernt sftp smb Vorschauen"
   },
   "reset clear per-folder memory": {
-    "reset clear per-folder memory": ""
+    "reset clear per-folder memory": "Zurücksetzen Speicher pro Ordner löschen"
   },
   "search dotfiles recursive": {
-    "search dotfiles recursive": ""
+    "search dotfiles recursive": "Suche Dotfiles rekursiv"
   },
   "search exclude ignore": {
-    "search exclude ignore": ""
+    "search exclude ignore": "Suche ausschließen ignorieren"
   },
   "single double click activate": {
-    "single double click activate": ""
+    "single double click activate": "Einfach- Doppel-Klick Aktivieren"
   },
   "size column entries": {
-    "size column entries": ""
+    "size column entries": "Größe Spalte Einträge"
   },
   "source code repository issues": {
-    "source code repository issues": ""
+    "source code repository issues": "Quellcode-Repository-Fehler"
   },
   "steam heroic lutris proton games sidebar hide": {
-    "steam heroic lutris proton games sidebar hide": ""
+    "steam heroic lutris proton games sidebar hide": "Steam Heroic Lutris Proton Spiele Seitenleiste ausblenden"
   },
   "steam proton valve": {
     "steam proton valve": "steam proton valve"
   },
   "suffix type filename": {
-    "suffix type filename": ""
+    "suffix type filename": "Suffix Typ Dateiname"
   },
   "tabs external open location": {
-    "tabs external open location": ""
+    "tabs external open location": "Tabs extern Ort öffnen"
   },
   "thumbnail size limit cap megabytes": {
-    "thumbnail size limit cap megabytes": ""
+    "thumbnail size limit cap megabytes": "Vorschaubild Größenbeschränkung Megabyte"
+  },
+  "time modified timestamp iso relative seconds": {
+    "time modified timestamp iso relative seconds": ""
   },
   "title bar header hide decorations": {
-    "title bar header hide decorations": ""
+    "title bar header hide decorations": "Titelleiste Kopfzeile Dekorationen ausblenden"
+  },
+  "transparency translucent glass see-through": {
+    "transparency translucent glass see-through": ""
   },
   "type-ahead jump filter search keyboard": {
-    "type-ahead jump filter search keyboard": ""
+    "type-ahead jump filter search keyboard": "Direkteingabe Sprung Filter Suche Tastatur"
   },
   "wine prefix proton compatdata": {
-    "wine prefix proton compatdata": ""
+    "wine prefix proton compatdata": "Wine-Präfix Proton Compatdata"
   },
   "xdg-desktop-portal": {
     "xdg-desktop-portal": "xdg-desktop-portal "
@@ -1881,15 +1977,15 @@
     "xdg-open follows the handler on your PATH.": "xdg-open folgt dem Handler auf Ihrem PATH."
   },
   "xdg-open handlr mimeo opener default application launch": {
-    "xdg-open handlr mimeo opener default application launch": ""
+    "xdg-open handlr mimeo opener default application launch": "xdg-open handlr mimeo Öffner Standardanwendung Start"
   },
   "zip tar unpack compressed": {
-    "zip tar unpack compressed": ""
+    "zip tar unpack compressed": "Zip Tar entpacken komprimiert"
   },
   "zoom rows": {
-    "zoom rows": ""
+    "zoom rows": "Zoom Zeilen"
   },
   "zoom thumbnails tiles": {
-    "zoom thumbnails tiles": ""
+    "zoom thumbnails tiles": "Zoom Vorschaubilder Kacheln"
   }
 }

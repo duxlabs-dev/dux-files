@@ -13,6 +13,8 @@ Row {
     property int hidden: 0
     property bool compact: false
     property bool showClipboard: true
+    property string hint: ""
+    property real textRoom: Number.POSITIVE_INFINITY
 
     readonly property int clipboardCount: ClipboardService.paths.length
     readonly property string countText: {
@@ -38,10 +40,12 @@ Row {
 
     StyledText {
         anchors.verticalCenter: parent.verticalCenter
-        visible: !status.compact && (status.total > 0 || status.hidden > 0)
-        text: status.countText
+        visible: !status.compact && (status.hint !== "" || status.total > 0 || status.hidden > 0)
+        width: Math.min(implicitWidth, Math.max(0, status.textRoom))
+        text: status.hint !== "" ? status.hint : status.countText
         color: Theme.surfaceVariantText
         font.pixelSize: Theme.fontSizeSmall
+        elide: Text.ElideMiddle
     }
 
     Rectangle {
@@ -86,6 +90,7 @@ Row {
                 iconSize: Theme.iconSizeSmall
                 iconColor: Theme.surfaceVariantText
                 tooltipText: I18n.tr("Clear the clipboard", "tooltip on the button dropping the copied or cut items")
+                tooltipSide: "top"
                 onClicked: ClipboardService.clear()
             }
         }

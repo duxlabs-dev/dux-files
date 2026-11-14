@@ -1,11 +1,11 @@
 module github.com/duxlabs-dev/dux-files/core
 
-go 1.27
+go 1.27.3
 
 require (
 	github.com/bodgit/sevenzip v1.6.5
 	github.com/cavaliergopher/cpio v1.0.1
-	github.com/duxlabs-dev/dux-go v1.6.3-0.20261104145206-caf8643a6a6c
+	github.com/duxlabs-dev/dux-go v1.6.3-0.20261113025848-c9b121458954
 	github.com/fsnotify/fsnotify v1.10.1
 	github.com/go-git/go-billy/v5 v5.9.2
 	github.com/go-git/go-git/v5 v5.19.3
@@ -34,6 +34,7 @@ require (
 	github.com/clipperhouse/displaywidth v0.11.0 // indirect
 	github.com/clipperhouse/uax29/v2 v2.7.0 // indirect
 	github.com/cyphar/filepath-securejoin v0.7.0 // indirect
+	github.com/ebitengine/purego v0.11.3 // indirect
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-logfmt/logfmt v0.6.1 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect

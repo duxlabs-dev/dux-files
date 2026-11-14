@@ -28,6 +28,9 @@ FocusScope {
     property bool dragEnabled: true
     property bool dropEnabled: true
     property bool menusEnabled: true
+    property bool framed: true
+    property bool internalPreview: true
+    property Item pathBarHost: null
     property int connectRequest: 0
 
     readonly property alias path: browser.path
@@ -39,6 +42,7 @@ FocusScope {
     readonly property bool trashActive: !resultsActive && TrashService.filesPath !== "" && browser.path === TrashService.filesPath
     readonly property bool recentActive: !resultsActive && browser.path === RecentService.path
     readonly property bool virtualActive: trashActive || recentActive
+    readonly property bool browserShown: !resultsActive && (!virtualActive || editingPath)
     readonly property var trashView: trashActive ? trashLoader.item : null
     readonly property var recentView: recentActive ? recentLoader.item : null
     readonly property var snapshotView: trashView ?? recentView
@@ -54,6 +58,26 @@ FocusScope {
     readonly property string browsingView: viewMode === "columns" ? viewMode : ""
     readonly property bool folderRemembered: SettingsData.rememberFolderViews && path !== "" && !virtualActive && !resultsActive
     readonly property bool singleClickActivates: SettingsData.clickToOpen === "single"
+    readonly property color surfaceColor: framed ? Theme.foregroundColor(Theme.cardSurface, true) : "transparent"
+    readonly property int itemTotal: resultsActive ? searchModel.count : snapshotView?.model.total ?? browser.directory.total
+    readonly property int hiddenTotal: overlay || showHidden ? 0 : browser.directory.hiddenCount
+    readonly property string placeTitle: overlay && !editingPath ? overlay.title : ""
+    readonly property var loneEntry: selection.count === 1 ? selectedEntries[0] ?? null : null
+    readonly property string loneFolder: loneEntry?.isDir ? loneEntry.path : ""
+    property int loneFolderCount: -1
+    readonly property string selectionHint: {
+        if (!loneEntry)
+            return "";
+        const name = FileFormat.shownName(loneEntry.displayName ?? "", loneEntry.name, loneEntry.isDir ?? false);
+        const detail = FileColumns.value("size", loneEntry, loneFolderCount);
+        return detail === "" ? name : `${name} · ${detail}`;
+    }
+
+    onLoneFolderChanged: {
+        loneFolderCount = body.childCounts?.[loneFolder] ?? -1;
+        if (loneFolder !== "" && loneFolderCount < 0)
+            loneFolderSettle.restart();
+    }
     readonly property real thumbnailSizeLimit: SettingsData.thumbnailSizeLimitMb > 0 ? SettingsData.thumbnailSizeLimitMb * 1000000 : -1
 
     signal activateRequested(var entry)
@@ -68,6 +92,7 @@ FocusScope {
     signal sortRequested(string key)
     signal columnsMenuRequested(real pointX, real pointY)
     signal previewToggleRequested
+    signal previewKeyRequested(string action, int step)
     signal focusRequested
     signal serverDialogRequested
     signal connectFailed(string uri, var result)
@@ -243,6 +268,18 @@ FocusScope {
 
     function dismissPathEditor(x, y) {
         browser.dismissPathEditor(x, y);
+    }
+
+    function countLoneFolder() {
+        const path = loneFolder;
+        if (path === "")
+            return;
+        DirectoryService.count([path], showHidden, result => {
+            const counted = result.counts?.[path];
+            if (path !== pane.loneFolder || !counted || counted.code)
+                return;
+            pane.loneFolderCount = counted.count;
+        });
     }
 
     function focusBody() {
@@ -424,6 +461,13 @@ FocusScope {
     }
 
     Timer {
+        id: loneFolderSettle
+
+        interval: FileBrowserMetrics.settleInterval
+        onTriggered: pane.countLoneFolder()
+    }
+
+    Timer {
         id: refocus
 
         interval: 0
@@ -505,8 +549,9 @@ FocusScope {
         id: browser
 
         anchors.fill: parent
-        visible: !pane.resultsActive && (!pane.virtualActive || pane.editingPath)
-        focus: !pane.resultsActive && (!pane.virtualActive || pane.editingPath)
+        visible: pane.browserShown
+        focus: pane.browserShown
+        showPathBar: pane.browserShown
         showSidebar: false
         showNavigation: false
         showHidden: pane.showHidden
@@ -521,8 +566,8 @@ FocusScope {
         columnWidths: SessionData.columnWidths
         dragEnabled: pane.dragEnabled
         dropEnabled: pane.dropEnabled
-        showSelectionFooter: true
-        previewDrawer: true
+        showSelectionFooter: pane.framed
+        previewDrawer: pane.internalPreview
         previewOpen: pane.previewOpen
         previewWidth: CacheData.previewWidth
         previewKeys: true
@@ -543,7 +588,9 @@ FocusScope {
         folderJump: FolderHistory
         unlistedPaths: [TrashService.filesPath, RecentService.path]
         header: pane.filtering ? filterHeader : null
-        pathBarTrailing: paneStatus
+        pathBarTrailing: pane.framed ? paneStatus : null
+        pathBarHost: pane.pathBarHost
+        pathBarColor: Theme.surfaceContainerLowest
         emptyText: {
             if (pane.virtualActive)
                 return "";
@@ -551,7 +598,7 @@ FocusScope {
                 return I18n.tr("No results", "search results header when nothing matched");
             return I18n.tr("This folder is empty", "empty directory placeholder");
         }
-        paneColor: Theme.foregroundColor(Theme.cardSurface, true)
+        paneColor: pane.surfaceColor
         paneRadius: FilesMetrics.paneRadius
         paneMargin: FilesMetrics.paneBodyMargin
         paneBorderWidth: pane.showActiveOutline && pane.active ? Theme.outlineWidthFocused : 0
@@ -572,6 +619,7 @@ FocusScope {
         onColumnResizeRequested: (id, width) => pane.setColumnWidth(id, width)
         onColumnPaneResizeRequested: width => SessionData.columnPaneWidth = width
         onPreviewToggleRequested: pane.previewToggleRequested()
+        onPreviewKeyRequested: (action, step) => pane.previewKeyRequested(action, step)
         onPreviewResized: width => pane.setPreviewWidth(width)
         onFocusRequested: pane.focusRequested()
         onTabRequested: target => pane.tabRequested(target)

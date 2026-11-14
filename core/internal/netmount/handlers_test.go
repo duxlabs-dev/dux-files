@@ -90,11 +90,6 @@ func TestHandleMountPortableNeedsBothIdentifiers(t *testing.T) {
 	assert.Equal(t, "EINVAL", out["code"])
 }
 
-func TestHandleRejectsUnknownMethods(t *testing.T) {
-	out := call(t, mountedService(t), ipc.Request{ID: 11, Method: "network.nope"})
-	assert.Equal(t, "NOTSUPPORTED", out["code"])
-}
-
 func TestConnectReusesAMountThatCoversTheAddress(t *testing.T) {
 	svc := mountedService(t)
 

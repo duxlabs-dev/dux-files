@@ -11,7 +11,6 @@ FileMenu {
     property int selectionCount: 0
     property bool hasDirectory: false
     property bool hasClipboard: false
-    property bool shiftHeld: false
     property bool forFolder: false
     property bool forPicker: false
     property bool selectedBookmarked: false
@@ -25,6 +24,7 @@ FileMenu {
     signal actionTriggered(string id)
 
     readonly property bool crossFolder: inResults || inRecent
+    readonly property bool singleFolder: hasDirectory && selectionCount === 1
     readonly property string context: {
         if (forPicker)
             return "picker";
@@ -47,15 +47,15 @@ FileMenu {
         }), FileActions.row("openWithMenu", {
             "enabled": selectionCount > 0
         }), FileActions.row("openInNewTab", {
-            "enabled": hasDirectory && selectionCount === 1
+            "visible": singleFolder
         }), FileActions.row("openInNewWindow", {
-            "enabled": hasDirectory && selectionCount === 1
+            "visible": singleFolder
         }), FileActions.row("openInPane", {
-            "enabled": hasDirectory && selectionCount === 1
+            "visible": singleFolder
         }), FileActions.row("bookmarkSelected", {
             "icon": FileActions.icon(selectedBookmarked ? "removeBookmark" : "bookmarkSelected"),
             "label": FileActions.label(selectedBookmarked ? "removeBookmark" : "bookmarkSelected"),
-            "enabled": hasDirectory && selectionCount === 1
+            "visible": singleFolder
         }), separator, FileActions.row("cut", {
             "enabled": selectionCount > 0
         }), FileActions.row("copy", {
@@ -65,9 +65,10 @@ FileMenu {
         }), FileActions.row("copyTo", {
             "enabled": selectionCount > 0
         }), FileActions.row("pasteInto", {
-            "enabled": hasDirectory && selectionCount === 1 && hasClipboard
+            "enabled": hasClipboard,
+            "visible": singleFolder
         }), FileActions.row("rename", {
-            "enabled": selectionCount === 1
+            "visible": selectionCount === 1
         }), FileActions.row("duplicate", {
             "enabled": selectionCount > 0,
             "visible": !crossFolder
@@ -90,17 +91,15 @@ FileMenu {
             "enabled": selectionCount > 0
         }), separator, FileActions.row("trash", {
             "enabled": selectionCount > 0,
-            "visible": !shiftHeld && !inTrash
+            "visible": !inTrash
         }), FileActions.row("deletePermanently", {
-            "enabled": selectionCount > 0,
-            "visible": shiftHeld || inTrash
+            "enabled": selectionCount > 0
         }), separator, FileActions.row("copyPath", {
             "enabled": selectionCount > 0
         }), FileActions.row("copyName", {
             "enabled": selectionCount > 0
         }), FileActions.row("customizeFolder", {
-            "enabled": selectionCount === 1 && hasDirectory,
-            "visible": selectionCount === 1 && hasDirectory && !crossFolder
+            "visible": singleFolder && !crossFolder
         }), FileActions.row("properties")]
 
     readonly property var backgroundRows: [FileActions.row("newFolder"), FileActions.row("newDocument"), FileActions.row("paste", {
@@ -156,7 +155,8 @@ FileMenu {
                 submenu: slot.modelData.submenu === true
                 enabled: !slot.separator && slot.modelData.enabled
                 onClicked: {
-                    menu.close();
+                    if (!submenu)
+                        menu.close();
                     menu.actionTriggered(slot.modelData.id);
                 }
             }

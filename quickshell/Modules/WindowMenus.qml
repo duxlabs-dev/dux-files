@@ -11,9 +11,6 @@ Item {
     required property var mainWindow
     required property Item anchorItem
 
-    property int activeModifiers: Qt.NoModifier
-    readonly property bool shiftHeld: (activeModifiers & Qt.ShiftModifier) !== 0
-
     function selectionIsDirectory() {
         const entries = mainWindow.selectedEntries();
         return entries.length > 0 && entries.every(entry => entry.isDir);
@@ -24,8 +21,7 @@ Item {
         return entries.length > 0 && entries.every(entry => !entry.isDir && FilesFormat.extractable(entry.mime));
     }
 
-    function showItemMenu(pointX, pointY, modifiers) {
-        activeModifiers = modifiers ?? Qt.NoModifier;
+    function showItemMenu(pointX, pointY) {
         openWithMenu.close();
         backgroundMenu.close();
         const point = mainWindow.activePane.mapToItem(anchorItem, pointX, pointY);
@@ -38,6 +34,10 @@ Item {
         backgroundMenu.close();
         const point = mainWindow.activePane.mapToItem(anchorItem, pointX, pointY);
         columnsMenu.openAt(point.x, point.y);
+    }
+
+    function showColumnsSubmenu(parentMenu, row) {
+        parentMenu.openSubmenu(columnsMenu, row);
     }
 
     function toggleColumn(id) {
@@ -59,9 +59,13 @@ Item {
         openWithMenu.mimes = mimes;
         openWithMenu.paths = paths;
         openWithMenu.apps = [];
-        itemMenu.close();
-        backgroundMenu.close();
-        openWithMenu.openAt(anchor.x, anchor.y);
+        if (anchor.visible) {
+            anchor.openSubmenu(openWithMenu);
+        } else {
+            itemMenu.close();
+            backgroundMenu.close();
+            openWithMenu.openAt(anchor.x, anchor.y);
+        }
         const token = ++openWithMenu.requestSerial;
         AppsService.sections(mimes, paths, response => {
             if (response.error || token !== openWithMenu.requestSerial || !openWithMenu.visible)
@@ -71,13 +75,23 @@ Item {
             const preferred = recommended.find(app => app.isDefault === true);
             const rest = recommended.filter(app => app !== preferred);
             openWithMenu.apps = (preferred ? [preferred] : []).concat(response.recent || [], rest).slice(0, 5);
+            if (openWithMenu.highlightedItem)
+                openWithMenu.highlightEdge(false);
         });
     }
 
-    function showNewDocumentMenu(pointX, pointY) {
+    function showNewDocumentMenu() {
+        if (backgroundMenu.visible) {
+            newDocumentMenu.presentBeside(backgroundMenu);
+            return;
+        }
         openWithMenu.close();
         itemMenu.close();
-        newDocumentMenu.present(pointX ?? backgroundMenu.x, pointY ?? backgroundMenu.y);
+        newDocumentMenu.present(backgroundMenu.x, backgroundMenu.y);
+    }
+
+    function showNewDocumentSubmenu(parentMenu, row) {
+        newDocumentMenu.presentBeside(parentMenu, row);
     }
 
     function showContextMenuAtCursor() {
@@ -88,10 +102,10 @@ Item {
         }
         const rect = pane.cursorRect();
         if (rect.width === 0) {
-            showItemMenu(pane.width / 2, pane.height / 2, Qt.NoModifier);
+            showItemMenu(pane.width / 2, pane.height / 2);
             return;
         }
-        showItemMenu(rect.x + Math.min(rect.width, rect.height), rect.y + rect.height, Qt.NoModifier);
+        showItemMenu(rect.x + Math.min(rect.width, rect.height), rect.y + rect.height);
     }
 
     function presentPlaceMenu(kind, path, source, pointX, pointY) {
@@ -116,7 +130,6 @@ Item {
         selectionCount: live ? menus.mainWindow.selectedPaths().length : 0
         hasDirectory: live && menus.selectionIsDirectory()
         hasClipboard: live && ClipboardService.hasFiles
-        shiftHeld: menus.shiftHeld
         extractable: live && menus.selectionIsExtractable()
         inResults: live && menus.mainWindow.activePane.resultsActive
         inTrash: live && menus.mainWindow.activePane.trashActive

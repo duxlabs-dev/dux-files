@@ -26,7 +26,7 @@ func kernelNetworkMounts() []Mount {
 func parseKernelNetworkMounts(mountinfo, fstab string) []Mount {
 	mounted := parseMountedNetworkMounts(mountinfo)
 	mounted = slices.DeleteFunc(mounted, func(mount Mount) bool {
-		return mount.Scheme == "fuse.gvfsd-fuse"
+		return excludedKernelMountType(mount.Scheme)
 	})
 	mountedByPath := make(map[string]Mount, len(mounted))
 	for _, mount := range mounted {
@@ -36,6 +36,9 @@ func parseKernelNetworkMounts(mountinfo, fstab string) []Mount {
 	seen := make(map[string]bool, len(mounted))
 	var out []Mount
 	for _, configured := range parseFstabNetworkMounts(fstab) {
+		if excludedKernelMountType(configured.Scheme) {
+			continue
+		}
 		if current, ok := mountedByPath[configured.Path]; ok {
 			current.Configured = true
 			out = append(out, current)
@@ -50,6 +53,15 @@ func parseKernelNetworkMounts(mountinfo, fstab string) []Mount {
 		}
 	}
 	return out
+}
+
+func excludedKernelMountType(scheme string) bool {
+	switch scheme {
+	case "autofs", "fuse.gvfsd-fuse":
+		return true
+	default:
+		return false
+	}
 }
 
 func MountedNetworkPaths(mountinfo string) []string {
