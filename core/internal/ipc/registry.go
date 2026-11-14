@@ -69,6 +69,7 @@ var Methods = []MethodSpec{
 	{Name: "files.op.cancel", Group: "files.op", Desc: "Cancel a running or queued job", Params: []ParamSpec{req("jobId", "job id")}},
 	{Name: "files.op.jobs", Group: "files.op", Desc: "List running, queued and recently finished jobs"},
 	{Name: "files.op.dropAction", Group: "files.op", Desc: "What a plain drag of paths onto dest would do", Params: []ParamSpec{req("paths", "absolute source paths"), req("dest", "absolute target directory")}},
+	{Name: "files.op.portalTransfer", Group: "files.op", Desc: "Register local paths with the desktop FileTransfer portal for sandboxed drag and drop", Params: []ParamSpec{req("paths", "absolute local paths")}},
 	{Name: "files.op.undo", Group: "files.op", Desc: "Undo the last undoable operation in a scope", Params: []ParamSpec{opt("scope", "undo stack key, one per window")}},
 	{Name: "files.op.forget", Group: "files.op", Desc: "Drop the undo and redo history of a scope, for a window that closed", Params: []ParamSpec{opt("scope", "undo stack key, one per window")}},
 	{Name: "files.op.redo", Group: "files.op", Desc: "Redo the last undone operation in a scope", Params: []ParamSpec{opt("scope", "undo stack key, one per window")}},
