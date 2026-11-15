@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Shapes
 import qs.Common
 import qs.Services
 import qs.DCommon.Widgets
@@ -15,6 +16,11 @@ Item {
     property var pathFor: (state, index) => ""
     property bool showHidden: false
     property var listings: ({})
+
+    readonly property int cardCount: tabs.length + 1
+    readonly property real cardGap: Theme.spacingM
+    readonly property var grid: fitGrid(sheet.width, flick.height)
+    readonly property real cardWidth: grid.width
 
     signal tabSelected(int index)
     signal tabClosed(int index)
@@ -39,6 +45,29 @@ Item {
         });
     }
 
+    function cardWidthFor(columns, room) {
+        return Math.min(FilesMetrics.overviewCardMaxWidth, Math.floor((room - (columns - 1) * cardGap) / columns));
+    }
+
+    function fitGrid(room, viewHeight) {
+        for (let columns = 1; columns <= cardCount; columns++) {
+            const width = cardWidthFor(columns, room);
+            if (width < FilesMetrics.overviewCardMinWidth)
+                break;
+            const rows = Math.ceil(cardCount / columns);
+            if (rows * width * FilesMetrics.overviewCardAspect + (rows - 1) * cardGap <= viewHeight)
+                return {
+                    "columns": columns,
+                    "width": width
+                };
+        }
+        const columns = Math.max(1, Math.floor((room + cardGap) / (FilesMetrics.overviewCardMinWidth + cardGap)));
+        return {
+            "columns": columns,
+            "width": cardWidthFor(columns, room)
+        };
+    }
+
     component Card: StyledButton {
         id: card
 
@@ -50,8 +79,8 @@ Item {
         readonly property color contentColor: current ? Theme.onSelectedContainer : Theme.surfaceText
 
         focusPolicy: Qt.TabFocus
-        width: FilesMetrics.overviewCardWidth
-        height: FilesMetrics.overviewCardHeight
+        width: overview.cardWidth
+        height: Math.round(width * FilesMetrics.overviewCardAspect)
         radius: Theme.cornerRadiusL
         color: fillColor
         border.width: hot || current ? Theme.outlineWidthFocused : Theme.outlineWidth
@@ -68,6 +97,8 @@ Item {
     }
 
     DFlickable {
+        id: flick
+
         anchors.fill: parent
         anchors.margins: Theme.spacingM
         contentHeight: sheet.height
@@ -77,7 +108,7 @@ Item {
             id: sheet
 
             width: parent.width
-            spacing: Theme.spacingM
+            spacing: overview.cardGap
 
             StyledText {
                 width: parent.width
@@ -89,8 +120,9 @@ Item {
             }
 
             Flow {
-                width: parent.width
-                spacing: Theme.spacingM
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: overview.grid.columns * (overview.cardWidth + overview.cardGap) - overview.cardGap
+                spacing: overview.cardGap
 
                 Repeater {
                     model: overview.tabs.length
@@ -102,8 +134,6 @@ Item {
 
                         readonly property string path: overview.pathFor(overview.tabs[index], index)
                         readonly property var entries: overview.listings[path] ?? []
-
-                        readonly property real frameWidth: Theme.spacingXS - border.width
 
                         current: index === overview.currentIndex
                         hot: tabDrop.containsDrag
@@ -125,29 +155,32 @@ Item {
                             }
                         }
 
-                        Rectangle {
-                            anchors.top: parent.top
-                            anchors.bottom: previewFrame.top
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            anchors.topMargin: tabCard.border.width
-                            anchors.leftMargin: tabCard.border.width
-                            anchors.rightMargin: tabCard.border.width
-                            topLeftRadius: previewFrame.bottomLeftRadius
-                            topRightRadius: previewFrame.bottomLeftRadius
-                            color: tabCard.fillColor
-                        }
+                        Shape {
+                            id: chrome
 
-                        Rectangle {
-                            id: previewFrame
+                            anchors.fill: parent
+                            anchors.margins: tabCard.border.width
+                            preferredRendererType: Shape.CurveRenderer
 
-                            anchors.fill: preview
-                            anchors.margins: -tabCard.frameWidth
-                            bottomLeftRadius: Math.max(0, tabCard.radius - tabCard.border.width)
-                            bottomRightRadius: bottomLeftRadius
-                            color: "transparent"
-                            border.width: tabCard.frameWidth
-                            border.color: tabCard.fillColor
+                            ShapePath {
+                                strokeColor: "transparent"
+                                fillColor: tabCard.fillColor
+                                fillRule: ShapePath.OddEvenFill
+
+                                PathRectangle {
+                                    width: chrome.width
+                                    height: chrome.height
+                                    radius: Math.max(0, tabCard.radius - tabCard.border.width)
+                                }
+
+                                PathRectangle {
+                                    x: preview.x - chrome.x
+                                    y: preview.y - chrome.y
+                                    width: preview.width
+                                    height: preview.height
+                                    radius: Math.max(0, tabCard.radius - Theme.spacingXS)
+                                }
+                            }
                         }
 
                         Rectangle {
@@ -237,7 +270,7 @@ Item {
                                         FileIcon {
                                             anchors.horizontalCenter: parent.horizontalCenter
                                             iconName: thumb.modelData.iconName ?? (thumb.modelData.isDir ? "folder" : "")
-                                            size: Theme.iconSize
+                                            size: Math.round(thumbs.cell * FilesMetrics.overviewIconShare)
                                         }
 
                                         StyledText {
@@ -247,6 +280,7 @@ Item {
                                             color: Theme.surfaceVariantText
                                             font.pixelSize: Theme.fontSizeSmall
                                             horizontalAlignment: Text.AlignHCenter
+                                            wrapMode: Text.NoWrap
                                             elide: Text.ElideMiddle
                                         }
                                     }

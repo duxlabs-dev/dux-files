@@ -9,7 +9,6 @@ Singleton {
     id: root
 
     property alias fileBrowserSettings: adapter.fileBrowserSettings
-    property alias sidebarWidth: adapter.sidebarWidth
     property alias previewWidth: adapter.previewWidth
 
     function saveCache() {
@@ -26,7 +25,6 @@ Singleton {
             id: adapter
 
             property var fileBrowserSettings: ({})
-            property int sidebarWidth: FilesMetrics.sidebarWidth
             property int previewWidth: 0
         }
     }

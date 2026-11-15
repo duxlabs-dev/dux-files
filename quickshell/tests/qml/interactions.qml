@@ -210,7 +210,6 @@ ShellRoot {
             win.minimumSize = Qt.size(1100, 760);
             win.implicitWidth = 1100;
             win.implicitHeight = 760;
-            CacheData.sidebarWidth = 240;
             DevicesService.transport = root.fakeTransport;
             NetworkService.transport = root.fakeTransport;
             tryCompare(surface, "width", 1100);
@@ -338,31 +337,36 @@ ShellRoot {
             check(pane.path, "/");
             pane.back();
             check(pane.path, "/");
-            function jobsButtonIn(item) {
-                if (item instanceof JobsButton)
+            function findIn(item, type) {
+                if (item instanceof type)
                     return item;
                 for (const child of item.children) {
-                    const found = jobsButtonIn(child);
+                    const found = findIn(child, type);
                     if (found)
                         return found;
                 }
                 return null;
             }
-            const topbarJobs = jobsButtonIn(win.topbar);
+            const topbarJobs = findIn(win.topbar, JobsButton);
+            const sidebarJobs = findIn(surface, SidebarJobs);
             verify(topbarJobs !== null);
-            DC.Host.ownWindowDecorations = false;
-            tryCompare(win, "headerHostsJobs", false);
-            const topbarY = win.topbar.mapToItem(surface, 0, 0).y;
+            verify(sidebarJobs !== null);
             FileOpsService.jobs = [
                 {
                     id: "j1",
-                    state: "running"
+                    kind: "copy",
+                    state: "running",
+                    progress: {
+                        bytesTotal: 0,
+                        bytesDone: 0,
+                        filesTotal: 0,
+                        filesDone: 0,
+                        currentPath: ""
+                    }
                 }
             ];
-            tryCompare(topbarJobs, "visible", true);
-            check(win.topbar.mapToItem(surface, 0, 0).y, topbarY);
-            DC.Host.ownWindowDecorations = true;
-            tryCompare(topbarJobs, "visible", false);
+            tryCompare(sidebarJobs, "visible", true);
+            check(topbarJobs.visible, false);
             FileOpsService.jobs = [];
             root.log.info("FIXTURE PASS");
         }

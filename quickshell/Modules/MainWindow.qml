@@ -46,7 +46,6 @@ FloatingWindow {
     readonly property PaneActions paneActions: paneActions
     readonly property WindowSidebarHost sidebar: sidebarHost
     readonly property FilesTopbar topbar: topbar
-    readonly property bool headerHostsJobs: !header.compositorDecorated
     readonly property PreviewOverlay preview: previewOverlay
     readonly property var activePane: splitView && activePaneIndex === 1 && secondPane ? secondPane : primaryPane
     readonly property string currentPath: activePane.path
@@ -487,11 +486,6 @@ FloatingWindow {
             height: Math.max(implicitHeight, tabBand.height)
             controls: windowControls
             onCloseRequested: window.requestClose()
-
-            JobsButton {
-                anchors.verticalCenter: parent.verticalCenter
-                hosted: window.headerHostsJobs
-            }
         }
 
         Item {
@@ -595,7 +589,7 @@ FloatingWindow {
                     showTabOverview: true
                     overviewOpen: window.overviewOpen
                     tabCount: window.tabManager.tabs.length
-                    showJobs: !window.headerHostsJobs
+                    showJobs: sidebarHost.compact
                     viewMode: window.activePane.viewMode
                     folderRemembered: window.activePane.folderRemembered
                     folderHasSettings: window.activePane.hasFolderSettings
@@ -737,12 +731,10 @@ FloatingWindow {
             CardSegment {
                 id: footer
 
-                readonly property bool underPreview: previewDrawer.width > 0
-
                 last: true
                 anchors.bottom: parent.bottom
+                anchors.right: previewDrawer.left
                 height: statusBar.implicitHeight + FilesMetrics.cardPadding * 2
-                topRightRadius: underPreview ? FilesMetrics.paneRadius : topRadius
             }
 
             StatusBar {
@@ -774,8 +766,7 @@ FloatingWindow {
                 rowColor: card.surfaceColor
                 viewMinimum: card.minimumWidth
                 closable: false
-                anchors.bottom: footer.top
-                anchors.bottomMargin: footer.underPreview ? FilesMetrics.contentSpacing : 0
+                anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 body: window.activePane.body
                 open: window.previewOpen && !window.activePane.body.columnsMode
@@ -790,10 +781,8 @@ FloatingWindow {
             id: sidebarHost
 
             contentMinWidth: Math.max(FilesMetrics.windowMinWidth, card.minimumWidth + FilesMetrics.contentMarginH + (previewDrawer.open ? FilesMetrics.previewMinWidth : 0))
-            anchors.top: tabBand.bottom
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
+            anchors.fill: parent
+            dockedTop: tabBand.y + tabBand.height
             mainWindow: window
             focusItem: surface.focusItem
             enabled: !window.preview.open

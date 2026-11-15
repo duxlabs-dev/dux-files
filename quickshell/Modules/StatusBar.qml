@@ -37,8 +37,8 @@ Item {
         total: bar.total
         hidden: bar.hidden
         hint: bar.hint
-        textRoom: bar.width - controls.width - Theme.spacingS * 2
-        compact: bar.width - controls.width < FilesMetrics.searchMinWidth
+        room: bar.width - controls.width - Theme.spacingS * 2
+        compact: room < FilesMetrics.searchMinWidth
     }
 
     Row {

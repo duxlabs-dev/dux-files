@@ -450,7 +450,7 @@ FloatingWindow {
             anchors.top: header.bottom
             anchors.bottom: parent.bottom
             anchors.left: parent.left
-            width: window.sidebarDocked ? Math.max(FilesMetrics.sidebarMinWidth, Math.min(CacheData.sidebarWidth, surface.width - Math.max(FilesMetrics.windowMinWidth, content.minimumWidth + FilesMetrics.contentMarginH))) : 0
+            width: window.sidebarDocked ? Math.max(FilesMetrics.sidebarMinWidth, Math.min(FilesMetrics.sidebarWidth, surface.width - Math.max(FilesMetrics.windowMinWidth, content.minimumWidth + FilesMetrics.contentMarginH))) : 0
             clip: true
 
             Behavior on width {
@@ -611,9 +611,9 @@ FloatingWindow {
                 id: statusSegment
 
                 anchors.bottom: actionSegment.top
+                anchors.right: previewDrawer.left
                 anchors.bottomMargin: Theme.groupedListGap
                 height: statusBar.implicitHeight + FilesMetrics.cardPadding * 2
-                topRightRadius: content.besidePreview ? FilesMetrics.paneRadius : topRadius
             }
 
             StatusBar {
@@ -794,7 +794,7 @@ FloatingWindow {
                 id: previewDrawer
 
                 anchors.top: topSegment.bottom
-                anchors.bottom: statusSegment.top
+                anchors.bottom: actionSegment.top
                 anchors.topMargin: content.besidePreview ? FilesMetrics.contentSpacing : 0
                 anchors.bottomMargin: anchors.topMargin
                 anchors.right: parent.right
