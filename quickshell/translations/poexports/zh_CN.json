@@ -584,6 +584,9 @@
   "Family": {
     "Family": ""
   },
+  "File name size": {
+    "File name size": ""
+  },
   "File operations": {
     "File operations": "文件操作"
   },
@@ -1250,6 +1253,9 @@
   "Reset this folder": {
     "Reset this folder": "重置此文件夹"
   },
+  "Reset to default": {
+    "Reset to default": ""
+  },
   "Resize icons": {
     "Resize icons": "调整图标大小"
   },
@@ -1822,6 +1828,9 @@
   },
   "font size text zoom typography": {
     "font size text zoom typography": "字体大小 文本 缩放 排版"
+  },
+  "font text names icons tiles rows": {
+    "font text names icons tiles rows": ""
   },
   "font typeface": {
     "font typeface": ""

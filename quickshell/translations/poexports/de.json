@@ -15,7 +15,7 @@
     "%1 folders could not be read": "%1 Ordner konnten nicht gelesen werden"
   },
   "%1 follows the handler on your %2.": {
-    "%1 follows the handler on your %2.": ""
+    "%1 follows the handler on your %2.": "%1 folgt dem Handler auf Ihrer %2."
   },
   "%1 h %2 min left": {
     "%1 h %2 min left": "%1 Std. %2 Min. verbleibend"
@@ -42,7 +42,7 @@
     "%1 items cut": "%1 Elemente ausgeschnitten"
   },
   "%1 keys": {
-    "%1 keys": ""
+    "%1 keys": "%1 Schlüssel"
   },
   "%1 levels deep": {
     "%1 levels deep": "%1 Ebenen tief"
@@ -54,10 +54,10 @@
     "%1 min left": "%1 Min. verbleibend"
   },
   "%1 not detected, using %2.": {
-    "%1 not detected, using %2.": ""
+    "%1 not detected, using %2.": "%1 nicht erkannt, verwendet wird %2."
   },
   "%1 not detected, using the %2 preset.": {
-    "%1 not detected, using the %2 preset.": ""
+    "%1 not detected, using the %2 preset.": "%1 nicht erkannt, verwendet wird das %2 Preset. "
   },
   "%1 px": {
     "%1 px": "%1 px"
@@ -69,7 +69,7 @@
     "%1 s left": "%1 Sek. verbleibend"
   },
   "%1 selected": {
-    "%1 selected": ""
+    "%1 selected": "%1 ausgewählt"
   },
   "%1 used · %2 free · %3 total": {
     "%1 used · %2 free · %3 total": "%1 verwendet · %2 frei · %3 insgesamt"
@@ -81,7 +81,7 @@
     "%1 will be moved to the trash.": "%1 wird in den Papierkorb verschoben."
   },
   "%1 with seconds": {
-    "%1 with seconds": ""
+    "%1 with seconds": "%1 mit Sekunden"
   },
   "%1 · %2": {
     "%1 · %2": "%1 · %2"
@@ -105,7 +105,7 @@
     "1 item cut": "1 Element ausgeschnitten"
   },
   "50 is the %1 default.": {
-    "50 is the %1 default.": ""
+    "50 is the %1 default.": "50 is die %1 Vorgabe."
   },
   "? or F1 in the main window.": {
     "? or F1 in the main window.": "? oder F1 im Hauptfenster."
@@ -135,10 +135,10 @@
     "Administrator access is not available": "Administratorzugriff ist nicht verfügbar"
   },
   "Administrator access is not available because %1 is not installed": {
-    "Administrator access is not available because %1 is not installed": ""
+    "Administrator access is not available because %1 is not installed": "Administratorzugriff ist nicht verfügbar, da %1 nicht installiert ist."
   },
   "Administrator access is not available because the %1 policy is not installed": {
-    "Administrator access is not available because the %1 policy is not installed": ""
+    "Administrator access is not available because the %1 policy is not installed": "Administratorzugriff ist nicht verfügbar, da die Richtlinie %1 nicht installiert ist."
   },
   "Administrator access is not available inside the sandbox": {
     "Administrator access is not available inside the sandbox": "Administratorzugriff ist innerhalb der Sandbox nicht verfügbar"
@@ -204,7 +204,7 @@
     "Automatic": "Automatisch"
   },
   "Automatic uses %1.": {
-    "Automatic uses %1.": ""
+    "Automatic uses %1.": "\"Automatisch\" verwendet %1."
   },
   "Available": {
     "Available": "Verfügbar"
@@ -351,7 +351,7 @@
     "Connected": "Verbunden"
   },
   "Connected, but the share has no local folder. The %1 service may not be running.": {
-    "Connected, but the share has no local folder. The %1 service may not be running.": ""
+    "Connected, but the share has no local folder. The %1 service may not be running.": "Verbunden, aber die Freigabe hat keinen lokalen Ordner. Der %1-Dienst wird eventuell nicht ausgeführt."
   },
   "Contents": {
     "Contents": "Inhalt"
@@ -498,13 +498,13 @@
     "Drives and mounting": "Laufwerke und Mounting"
   },
   "Drives are unavailable because %1 is not running": {
-    "Drives are unavailable because %1 is not running": ""
+    "Drives are unavailable because %1 is not running": "Laufwerke sind nicht verfügbar, da %1 nicht ausgeführt wird"
   },
   "Drives are unavailable because the sandbox cannot reach %1": {
-    "Drives are unavailable because the sandbox cannot reach %1": ""
+    "Drives are unavailable because the sandbox cannot reach %1": "Laufwerke sind nicht verfügbar, da die Sandbox %1 nicht erreichen kann"
   },
   "Drop on a tab to move files there": {
-    "Drop on a tab to move files there": ""
+    "Drop on a tab to move files there": "Auf einem Tab ablegen, um Dateien dorthin zu verschieben"
   },
   "Dropping without a modifier": {
     "Dropping without a modifier": "Ablegen ohne einen Modifikator"
@@ -584,6 +584,9 @@
   "Family": {
     "Family": "Familie"
   },
+  "File name size": {
+    "File name size": ""
+  },
   "File operations": {
     "File operations": "Dateioperationen"
   },
@@ -627,7 +630,7 @@
     "Folders to skip": "Ordner zum Überspringen"
   },
   "Follow %1 colors, falling back to a preset.": {
-    "Follow %1 colors, falling back to a preset.": ""
+    "Follow %1 colors, falling back to a preset.": "%1 Farben folgen, zurückfallend auf ein Preset"
   },
   "Following the system color scheme (currently %1).": {
     "Following the system color scheme (currently %1).": "Dem Farbschema des Systems folgend (derzeit %1)."
@@ -660,7 +663,7 @@
     "Games": "Spiele"
   },
   "Games and prefixes %1 installed.": {
-    "Games and prefixes %1 installed.": ""
+    "Games and prefixes %1 installed.": "%1 Spiele und Präfixe installiert."
   },
   "Games folder": {
     "Games folder": "Spieleordner"
@@ -723,7 +726,7 @@
     "Import": "Importieren"
   },
   "Import your %1 bookmarks?": {
-    "Import your %1 bookmarks?": ""
+    "Import your %1 bookmarks?": "Ihre %1 Lesezeichen importieren?"
   },
   "Include hidden files": {
     "Include hidden files": "Ausgeblendete Dateien einbeziehen"
@@ -792,10 +795,10 @@
     "Lets the desktop show through the window. Text and controls stay solid.": "Lässt den Desktop durch das Fenster hindurch sichtbar. Text und Steuerungen bleiben deckend."
   },
   "Libraries and %1 prefixes.": {
-    "Libraries and %1 prefixes.": ""
+    "Libraries and %1 prefixes.": "Bibliotheken und %1-Präfixe."
   },
   "Library": {
-    "Library": ""
+    "Library": "Bibliothek"
   },
   "Library · %1": {
     "Library · %1": "Bibliothek · %1"
@@ -918,10 +921,10 @@
     "Network in the sidebar": "Netzwerk in der Seitenleiste"
   },
   "Network locations are unavailable because %1 is not running": {
-    "Network locations are unavailable because %1 is not running": ""
+    "Network locations are unavailable because %1 is not running": "Netzwerkspeicherorte sind nicht verfügbar, da %1 nicht ausgeführt wird"
   },
   "Network locations are unavailable because the sandbox cannot reach %1": {
-    "Network locations are unavailable because the sandbox cannot reach %1": ""
+    "Network locations are unavailable because the sandbox cannot reach %1": "Netzwerkspeicherorte sind nicht verfügbar, da die Sandbox %1 nicht erreichen kann"
   },
   "Never": {
     "Never": "Niemals"
@@ -972,7 +975,7 @@
     "Not available because the sandbox cannot start programs on the host": "Nicht verfügbar, da die Sandbox Programme auf dem Host nicht starten kann"
   },
   "Not available inside the sandbox": {
-    "Not available inside the sandbox": "In der Sandbox nicht verfügbar"
+    "Not available inside the sandbox": "Innerhalb der Sandbox nicht verfügbar"
   },
   "Not available without access to the host filesystem": {
     "Not available without access to the host filesystem": "Ohne Zugriff auf das Host-Dateisystem nicht verfügbar"
@@ -987,7 +990,7 @@
     "Off": "Aus"
   },
   "Off leaves decorations to the compositor. Applies to new windows.": {
-    "Off leaves decorations to the compositor. Applies to new windows.": "Aus überlässt Dekorationen dem Compositor. Gilt für neue Fenster."
+    "Off leaves decorations to the compositor. Applies to new windows.": "\"Aus\" überlässt Dekorationen dem Compositor. Gilt für neue Fenster."
   },
   "Off only mounts.": {
     "Off only mounts.": "Aus bewirkt nur das Einhängen."
@@ -1080,7 +1083,7 @@
     "Owner": "Eigentümer"
   },
   "PDF preview is not available. Install %1 support to view this file.": {
-    "PDF preview is not available. Install %1 support to view this file.": ""
+    "PDF preview is not available. Install %1 support to view this file.": "PDF-Vorschau ist nicht verfügbar. Installieren Sie die %1-Unterstützung, um diese Datei anzuzeigen."
   },
   "Palette: %1": {
     "Palette: %1": "Palette: %1"
@@ -1131,7 +1134,7 @@
     "Preference: %1 is used": "Voreinstellung: %1 wird verwendet"
   },
   "Preference: %2 names %1": {
-    "Preference: %2 names %1": ""
+    "Preference: %2 names %1": "Präferenz: %2 Namee %1"
   },
   "Preference: no file chooser backend configured": {
     "Preference: no file chooser backend configured": "Einstellung: Kein Backend für Dateiauswahl konfiguriert"
@@ -1250,6 +1253,9 @@
   "Reset this folder": {
     "Reset this folder": "Diesen Ordner zurücksetzen"
   },
+  "Reset to default": {
+    "Reset to default": ""
+  },
   "Resize icons": {
     "Resize icons": "Icons in Größe ändern"
   },
@@ -1290,7 +1296,7 @@
     "Reverse the sort order": "Die Sortierreihenfolge umkehren"
   },
   "Revision": {
-    "Revision": ""
+    "Revision": "Revision"
   },
   "Ripple effects": {
     "Ripple effects": "Welleneffekte"
@@ -1314,7 +1320,7 @@
     "Run this file?": "Diese Datei ausführen?"
   },
   "Runtime": {
-    "Runtime": ""
+    "Runtime": "Laufzeit"
   },
   "Sandbox": {
     "Sandbox": "Sandbox"
@@ -1365,7 +1371,7 @@
     "Search the disk": "Die Festplatte durchsuchen"
   },
   "Search with the %1 index": {
-    "Search with the %1 index": ""
+    "Search with the %1 index": "Suche mit dem %1-Index"
   },
   "Search your home folder": {
     "Search your home folder": "Ihren Home-Ordner durchsuchen"
@@ -1407,7 +1413,7 @@
     "Show": "Zeigen"
   },
   "Show all tabs": {
-    "Show all tabs": ""
+    "Show all tabs": "Alle Tabs zeigen"
   },
   "Show devices": {
     "Show devices": "Geräte zeigen"
@@ -1458,7 +1464,7 @@
     "Smaller icons": "Kleinere Icons"
   },
   "Smooth": {
-    "Smooth": "Glätten"
+    "Smooth": "Sanft"
   },
   "Socket": {
     "Socket": "Socket"
@@ -1497,10 +1503,10 @@
     "Stop measuring": "Messung beenden"
   },
   "Such as a separate %1.": {
-    "Such as a separate %1.": ""
+    "Such as a separate %1.": "Wie zum Beispiel ein separater %1."
   },
   "Support %1": {
-    "Support %1": ""
+    "Support %1": "%1 unterstützen"
   },
   "Switch pane": {
     "Switch pane": "Fensterbereich wechseln"
@@ -1524,10 +1530,10 @@
     "Terminal, drag and thumbnails": "Terminal, Ziehen und Thumbnails"
   },
   "The %1 prefix of each game.": {
-    "The %1 prefix of each game.": ""
+    "The %1 prefix of each game.": "Das %1-Präfix jedes Spiels."
   },
   "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": {
-    "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": ""
+    "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": "Die Änderung wird nach dem Neustart von %1 wirksam. Von anderen Apps geöffnete Dialoge zum Öffnen und Speichern werden geschlossen."
   },
   "The files themselves stay where they are.": {
     "The files themselves stay where they are.": "Die Dateien selbst bleiben, wo sie sind."
@@ -1656,7 +1662,7 @@
     "Use": "Verwenden"
   },
   "Use %1 for open and save dialogs": {
-    "Use %1 for open and save dialogs": ""
+    "Use %1 for open and save dialogs": "%1 für Öffnen- und Speichern-Dialoge verwenden"
   },
   "Use a bundled color palette.": {
     "Use a bundled color palette.": "Eine gebundelte Farbpalette verwenden"
@@ -1677,7 +1683,7 @@
     "Username": "Benutzername"
   },
   "Using %1 dynamic colors.": {
-    "Using %1 dynamic colors.": ""
+    "Using %1 dynamic colors.": "Unter Verwendung von %1 dynamischen Farben."
   },
   "Version": {
     "Version": "Version"
@@ -1823,6 +1829,9 @@
   "font size text zoom typography": {
     "font size text zoom typography": "Schriftgröße Text Zoom Typografie"
   },
+  "font text names icons tiles rows": {
+    "font text names icons tiles rows": ""
+  },
   "font typeface": {
     "font typeface": "Schriftart Typeface"
   },
@@ -1833,7 +1842,7 @@
     "font typeface headline title": "Schriftart Typeface Überschrift Titel"
   },
   "frosted glass compositor": {
-    "frosted glass compositor": "Milchglas Compositor"
+    "frosted glass compositor": "Mattiertes Glas Compositor"
   },
   "games library steamapps common": {
     "games library steamapps common": "Spiele Bibliothek Steamapps Common"

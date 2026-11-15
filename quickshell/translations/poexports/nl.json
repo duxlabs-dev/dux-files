@@ -15,7 +15,7 @@
     "%1 folders could not be read": "%1 mappen konden niet worden gelezen"
   },
   "%1 follows the handler on your %2.": {
-    "%1 follows the handler on your %2.": ""
+    "%1 follows the handler on your %2.": "%1 volgt de handler in je %2."
   },
   "%1 h %2 min left": {
     "%1 h %2 min left": "Nog %1 u %2 min"
@@ -42,7 +42,7 @@
     "%1 items cut": "%1 items geknipt"
   },
   "%1 keys": {
-    "%1 keys": ""
+    "%1 keys": "%1-toetsen"
   },
   "%1 levels deep": {
     "%1 levels deep": "%1 niveaus diep"
@@ -54,10 +54,10 @@
     "%1 min left": "Nog %1 min"
   },
   "%1 not detected, using %2.": {
-    "%1 not detected, using %2.": ""
+    "%1 not detected, using %2.": "%1 niet gevonden, %2 wordt gebruikt."
   },
   "%1 not detected, using the %2 preset.": {
-    "%1 not detected, using the %2 preset.": ""
+    "%1 not detected, using the %2 preset.": "%1 niet gevonden, voorinstelling %2 wordt gebruikt."
   },
   "%1 px": {
     "%1 px": "%1 px"
@@ -69,7 +69,7 @@
     "%1 s left": "Nog %1 s"
   },
   "%1 selected": {
-    "%1 selected": ""
+    "%1 selected": "%1 geselecteerd"
   },
   "%1 used · %2 free · %3 total": {
     "%1 used · %2 free · %3 total": "%1 gebruikt · %2 vrij · %3 totaal"
@@ -81,7 +81,7 @@
     "%1 will be moved to the trash.": "%1 wordt naar de prullenbak verplaatst."
   },
   "%1 with seconds": {
-    "%1 with seconds": ""
+    "%1 with seconds": "%1 met seconden"
   },
   "%1 · %2": {
     "%1 · %2": "%1 · %2"
@@ -105,7 +105,7 @@
     "1 item cut": "1 item geknipt"
   },
   "50 is the %1 default.": {
-    "50 is the %1 default.": ""
+    "50 is the %1 default.": "50 is de standaardwaarde van %1."
   },
   "? or F1 in the main window.": {
     "? or F1 in the main window.": "? of F1 in het hoofdvenster."
@@ -135,10 +135,10 @@
     "Administrator access is not available": "Beheerderstoegang is niet beschikbaar"
   },
   "Administrator access is not available because %1 is not installed": {
-    "Administrator access is not available because %1 is not installed": ""
+    "Administrator access is not available because %1 is not installed": "Beheerderstoegang is niet beschikbaar omdat %1 niet geïnstalleerd is"
   },
   "Administrator access is not available because the %1 policy is not installed": {
-    "Administrator access is not available because the %1 policy is not installed": ""
+    "Administrator access is not available because the %1 policy is not installed": "Beheerderstoegang is niet beschikbaar omdat het %1-beleid niet geïnstalleerd is"
   },
   "Administrator access is not available inside the sandbox": {
     "Administrator access is not available inside the sandbox": "Beheerderstoegang is niet beschikbaar binnen de sandbox"
@@ -204,7 +204,7 @@
     "Automatic": "Automatisch"
   },
   "Automatic uses %1.": {
-    "Automatic uses %1.": ""
+    "Automatic uses %1.": "Automatisch gebruikt %1."
   },
   "Available": {
     "Available": "Beschikbaar"
@@ -351,7 +351,7 @@
     "Connected": "Verbonden"
   },
   "Connected, but the share has no local folder. The %1 service may not be running.": {
-    "Connected, but the share has no local folder. The %1 service may not be running.": ""
+    "Connected, but the share has no local folder. The %1 service may not be running.": "Verbonden, maar de gedeelde locatie heeft geen lokale map. De dienst %1 is mogelijk niet actief."
   },
   "Contents": {
     "Contents": "Inhoud"
@@ -498,13 +498,13 @@
     "Drives and mounting": "Schijven en aankoppelen"
   },
   "Drives are unavailable because %1 is not running": {
-    "Drives are unavailable because %1 is not running": ""
+    "Drives are unavailable because %1 is not running": "Stations zijn niet beschikbaar omdat %1 niet actief is"
   },
   "Drives are unavailable because the sandbox cannot reach %1": {
-    "Drives are unavailable because the sandbox cannot reach %1": ""
+    "Drives are unavailable because the sandbox cannot reach %1": "Stations zijn niet beschikbaar omdat de sandbox %1 niet kan bereiken"
   },
   "Drop on a tab to move files there": {
-    "Drop on a tab to move files there": ""
+    "Drop on a tab to move files there": "Zet neer op een tabblad om bestanden daarheen te verplaatsen"
   },
   "Dropping without a modifier": {
     "Dropping without a modifier": "Neerzetten zonder modificatietoets"
@@ -584,6 +584,9 @@
   "Family": {
     "Family": "Familie"
   },
+  "File name size": {
+    "File name size": ""
+  },
   "File operations": {
     "File operations": "Bestandsbewerkingen"
   },
@@ -627,7 +630,7 @@
     "Folders to skip": "Over te slaan mappen"
   },
   "Follow %1 colors, falling back to a preset.": {
-    "Follow %1 colors, falling back to a preset.": ""
+    "Follow %1 colors, falling back to a preset.": "Kleuren van %1 volgen, met een voorinstelling als terugval."
   },
   "Following the system color scheme (currently %1).": {
     "Following the system color scheme (currently %1).": "Volgt het kleurenschema van het systeem (momenteel %1)."
@@ -660,7 +663,7 @@
     "Games": "Spellen"
   },
   "Games and prefixes %1 installed.": {
-    "Games and prefixes %1 installed.": ""
+    "Games and prefixes %1 installed.": "Spellen en prefixes die %1 heeft geïnstalleerd."
   },
   "Games folder": {
     "Games folder": "Gamesmap"
@@ -723,7 +726,7 @@
     "Import": "Importeren"
   },
   "Import your %1 bookmarks?": {
-    "Import your %1 bookmarks?": ""
+    "Import your %1 bookmarks?": "Je %1-bladwijzers importeren?"
   },
   "Include hidden files": {
     "Include hidden files": "Verborgen bestanden meenemen"
@@ -792,10 +795,10 @@
     "Lets the desktop show through the window. Text and controls stay solid.": "Laat het bureaublad door het venster heen zien. Tekst en bedieningselementen blijven ondoorzichtig."
   },
   "Libraries and %1 prefixes.": {
-    "Libraries and %1 prefixes.": ""
+    "Libraries and %1 prefixes.": "Bibliotheken en %1-prefixes."
   },
   "Library": {
-    "Library": ""
+    "Library": "Bibliotheek"
   },
   "Library · %1": {
     "Library · %1": "Bibliotheek · %1"
@@ -918,10 +921,10 @@
     "Network in the sidebar": "Netwerk in de zijbalk"
   },
   "Network locations are unavailable because %1 is not running": {
-    "Network locations are unavailable because %1 is not running": ""
+    "Network locations are unavailable because %1 is not running": "Netwerklocaties zijn niet beschikbaar omdat %1 niet actief is"
   },
   "Network locations are unavailable because the sandbox cannot reach %1": {
-    "Network locations are unavailable because the sandbox cannot reach %1": ""
+    "Network locations are unavailable because the sandbox cannot reach %1": "Netwerklocaties zijn niet beschikbaar omdat de sandbox %1 niet kan bereiken"
   },
   "Never": {
     "Never": "Nooit"
@@ -1080,7 +1083,7 @@
     "Owner": "Eigenaar"
   },
   "PDF preview is not available. Install %1 support to view this file.": {
-    "PDF preview is not available. Install %1 support to view this file.": ""
+    "PDF preview is not available. Install %1 support to view this file.": "PDF-voorbeeld is niet beschikbaar. Installeer ondersteuning voor %1 om dit bestand te bekijken."
   },
   "Palette: %1": {
     "Palette: %1": "Palet: %1"
@@ -1131,7 +1134,7 @@
     "Preference: %1 is used": "Voorkeur: %1 wordt gebruikt"
   },
   "Preference: %2 names %1": {
-    "Preference: %2 names %1": ""
+    "Preference: %2 names %1": "Voorkeur: %2 noemt %1"
   },
   "Preference: no file chooser backend configured": {
     "Preference: no file chooser backend configured": "Voorkeur: geen backend voor bestandskiezer ingesteld"
@@ -1250,6 +1253,9 @@
   "Reset this folder": {
     "Reset this folder": "Deze map herstellen"
   },
+  "Reset to default": {
+    "Reset to default": ""
+  },
   "Resize icons": {
     "Resize icons": "Pictogramgrootte wijzigen"
   },
@@ -1290,7 +1296,7 @@
     "Reverse the sort order": "Sorteervolgorde omkeren"
   },
   "Revision": {
-    "Revision": ""
+    "Revision": "Revisie"
   },
   "Ripple effects": {
     "Ripple effects": "Rimpeleffecten"
@@ -1314,7 +1320,7 @@
     "Run this file?": "Dit bestand uitvoeren?"
   },
   "Runtime": {
-    "Runtime": ""
+    "Runtime": "Runtime"
   },
   "Sandbox": {
     "Sandbox": "Sandbox"
@@ -1365,7 +1371,7 @@
     "Search the disk": "De schijf doorzoeken"
   },
   "Search with the %1 index": {
-    "Search with the %1 index": ""
+    "Search with the %1 index": "Zoeken met de %1-index"
   },
   "Search your home folder": {
     "Search your home folder": "Je persoonlijke map doorzoeken"
@@ -1407,7 +1413,7 @@
     "Show": "Tonen"
   },
   "Show all tabs": {
-    "Show all tabs": ""
+    "Show all tabs": "Alle tabbladen tonen"
   },
   "Show devices": {
     "Show devices": "Apparaten tonen"
@@ -1497,10 +1503,10 @@
     "Stop measuring": "Meten stoppen"
   },
   "Such as a separate %1.": {
-    "Such as a separate %1.": ""
+    "Such as a separate %1.": "Zoals een aparte %1."
   },
   "Support %1": {
-    "Support %1": ""
+    "Support %1": "%1 steunen"
   },
   "Switch pane": {
     "Switch pane": "Van paneel wisselen"
@@ -1524,10 +1530,10 @@
     "Terminal, drag and thumbnails": "Terminal, slepen en miniaturen"
   },
   "The %1 prefix of each game.": {
-    "The %1 prefix of each game.": ""
+    "The %1 prefix of each game.": "De %1-prefix van elk spel."
   },
   "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": {
-    "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": ""
+    "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": "De wijziging wordt van kracht nadat %1 opnieuw is gestart. Open- en opslagvensters die andere apps geopend hebben, worden gesloten."
   },
   "The files themselves stay where they are.": {
     "The files themselves stay where they are.": "De bestanden zelf blijven waar ze zijn."
@@ -1656,7 +1662,7 @@
     "Use": "Gebruiken"
   },
   "Use %1 for open and save dialogs": {
-    "Use %1 for open and save dialogs": ""
+    "Use %1 for open and save dialogs": "%1 gebruiken voor open- en opslagvensters"
   },
   "Use a bundled color palette.": {
     "Use a bundled color palette.": "Een meegeleverd kleurenpalet gebruiken."
@@ -1677,7 +1683,7 @@
     "Username": "Gebruikersnaam"
   },
   "Using %1 dynamic colors.": {
-    "Using %1 dynamic colors.": ""
+    "Using %1 dynamic colors.": "Dynamische kleuren van %1 worden gebruikt."
   },
   "Version": {
     "Version": "Versie"
@@ -1822,6 +1828,9 @@
   },
   "font size text zoom typography": {
     "font size text zoom typography": "lettergrootte tekengrootte tekst zoomen typografie font size text zoom typography"
+  },
+  "font text names icons tiles rows": {
+    "font text names icons tiles rows": ""
   },
   "font typeface": {
     "font typeface": "lettertype font typeface"

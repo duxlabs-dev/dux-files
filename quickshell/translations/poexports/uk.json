@@ -584,6 +584,9 @@
   "Family": {
     "Family": "Сімейство"
   },
+  "File name size": {
+    "File name size": ""
+  },
   "File operations": {
     "File operations": "Операції з файлами"
   },
@@ -1250,6 +1253,9 @@
   "Reset this folder": {
     "Reset this folder": "Скинути налаштування цієї теки"
   },
+  "Reset to default": {
+    "Reset to default": ""
+  },
   "Resize icons": {
     "Resize icons": "Змінити розмір іконок"
   },
@@ -1822,6 +1828,9 @@
   },
   "font size text zoom typography": {
     "font size text zoom typography": "розмір шрифту масштаб тексту типографіка"
+  },
+  "font text names icons tiles rows": {
+    "font text names icons tiles rows": ""
   },
   "font typeface": {
     "font typeface": "гарнітура шрифту"

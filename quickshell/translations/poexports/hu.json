@@ -584,6 +584,9 @@
   "Family": {
     "Family": "Család"
   },
+  "File name size": {
+    "File name size": ""
+  },
   "File operations": {
     "File operations": "Fájlműveletek"
   },
@@ -1250,6 +1253,9 @@
   "Reset this folder": {
     "Reset this folder": "Mappa visszaállítása"
   },
+  "Reset to default": {
+    "Reset to default": ""
+  },
   "Resize icons": {
     "Resize icons": "Ikonok átméretezése"
   },
@@ -1822,6 +1828,9 @@
   },
   "font size text zoom typography": {
     "font size text zoom typography": "betűméret szöveg nagyítás tipográfia"
+  },
+  "font text names icons tiles rows": {
+    "font text names icons tiles rows": ""
   },
   "font typeface": {
     "font typeface": "betűtípus betűkészlet"

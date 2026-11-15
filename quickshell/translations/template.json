@@ -1365,6 +1365,13 @@
     "comment": ""
   },
   {
+    "term": "File name size",
+    "translation": "",
+    "context": "slider label for the font size of file names in grid, list and column views",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "File operations",
     "translation": "",
     "context": "jobs popover header",
@@ -2919,6 +2926,13 @@
     "comment": ""
   },
   {
+    "term": "Reset to default",
+    "translation": "",
+    "context": "settings row button restoring the density default",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Resize icons",
     "translation": "",
     "context": "keyboard shortcut",
@@ -4250,6 +4264,13 @@
   },
   {
     "term": "font size text zoom typography",
+    "translation": "",
+    "context": "settings search keywords, space separated, add synonyms in your language",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "font text names icons tiles rows",
     "translation": "",
     "context": "settings search keywords, space separated, add synonyms in your language",
     "reference": "",
