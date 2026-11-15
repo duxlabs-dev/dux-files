@@ -41,19 +41,39 @@ Item {
         if (paths.length === 0)
             return;
         DragService.begin(paths, currentPath);
+        const drag = DragService.generation;
         dragGhost.count = paths.length;
         dragGhost.iconName = entry?.iconName ?? "";
         dragGhost.thumbnail = entry?.thumbnail ?? "";
         dragGhost.mime = entry?.mime ?? "";
         dragGhost.path = entry?.path ?? "";
         dragGhost.isDir = entry?.isDir ?? false;
-        dragSource.Drag.mimeData = DragService.mimeData();
-        dragGhost.grabToImage(result => {
-            dragSource.Drag.imageSource = result.url;
+
+        let grabDone = false;
+        let portalDone = false;
+        let grabUrl = "";
+        let portalKey = "";
+
+        function launch() {
+            if (!grabDone || !portalDone || drag !== DragService.generation)
+                return;
+            dragSource.Drag.mimeData = DragService.mimeData(portalKey);
+            dragSource.Drag.imageSource = grabUrl;
             dragSource.Drag.active = true;
             dragSource.Drag.startDrag();
             dragSource.Drag.active = false;
             DragService.end();
+        }
+
+        dragGhost.grabToImage(result => {
+            grabUrl = result.url;
+            grabDone = true;
+            launch();
+        });
+        DragService.exportPortal(paths, key => {
+            portalKey = key;
+            portalDone = true;
+            launch();
         });
     }
 

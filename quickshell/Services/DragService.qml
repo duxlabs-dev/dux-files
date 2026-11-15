@@ -56,12 +56,20 @@ Singleton {
         active = false;
     }
 
-    function mimeData() {
-        return {
+    function mimeData(portalKey) {
+        const data = {
             "text/uri-list": paths.map(path => FilePaths.toFileUrl(path)).join("\r\n") + "\r\n",
-            "x-special/gnome-copied-files": "copy\n" + paths.map(path => FilePaths.toFileUrl(path)).join("\n") + "\n",
-            "text/plain;charset=utf-8": paths.join("\n")
+            "x-special/gnome-copied-files": "copy\n" + paths.map(path => FilePaths.toFileUrl(path)).join("\n") + "\n"
         };
+        if (portalKey)
+            data["application/vnd.portal.filetransfer"] = portalKey;
+        return data;
+    }
+
+    function exportPortal(sources, callback) {
+        transport.call("files.op.portalTransfer", {
+            "paths": sources
+        }, result => callback(result.key ?? ""));
     }
 
     function pathsFrom(drop) {
