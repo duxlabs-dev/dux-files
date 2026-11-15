@@ -828,6 +828,17 @@ Item {
                     settingKey: "showExtensions"
                 }
 
+                SettingsSliderRow {
+                    text: I18n.tr("File name size", "slider label for the font size of file names in grid, list and column views")
+                    keywords: I18n.tr("font text names icons tiles rows", "settings search keywords, space separated, add synonyms in your language")
+                    settingKey: "fileNameSize"
+                    minimum: 10
+                    maximum: 20
+                    unit: "px"
+                    value: SettingsData.fileNameSize
+                    onSliderValueChanged: newValue => SettingsData.fileNameSize = newValue
+                }
+
                 OptionDropdownRow {
                     text: I18n.tr("Date format", "setting label for how file timestamps are shown")
                     keywords: I18n.tr("time modified timestamp iso relative seconds", "settings search keywords, space separated, add synonyms in your language")
@@ -1100,6 +1111,7 @@ Item {
                     minimum: 0
                     maximum: 100
                     unit: ""
+                    settingKey: "radiusStrength"
                     onSliderValueChanged: newValue => SettingsData.radiusStrength = newValue
                 }
             }
@@ -1112,7 +1124,7 @@ Item {
                     keywords: I18n.tr("density compact dense spacious comfortable spacing padding rows", "settings search keywords, space separated, add synonyms in your language")
                     optionList: root.densityOptions
                     current: SettingsData.density
-                    onPicked: value => SettingsData.density = value
+                    onPicked: value => SettingsData.setDensity(value)
                 }
             }
 
@@ -1170,6 +1182,7 @@ Item {
                     showStops: true
                     unit: ""
                     value: SettingsData.fontWeight
+                    settingKey: "fontWeight"
                     onSliderValueChanged: newValue => SettingsData.fontWeight = newValue
                 }
 
@@ -1181,6 +1194,7 @@ Item {
                     maximum: 150
                     unit: "%"
                     value: Math.round(SettingsData.fontScale * 100)
+                    settingKey: "fontScale"
                     onSliderValueChanged: newValue => SettingsData.fontScale = newValue / 100
                 }
             }
@@ -1203,6 +1217,7 @@ Item {
                     maximum: 100
                     unit: "%"
                     value: Math.round(SettingsData.floatingWindowTransparency * 100)
+                    settingKey: "floatingWindowTransparency"
                     onSliderValueChanged: newValue => SettingsData.floatingWindowTransparency = newValue / 100
                 }
 
@@ -1220,6 +1235,7 @@ Item {
                     maximum: 100
                     unit: "%"
                     value: Math.round(SettingsData.floatingWindowForegroundTransparency * 100)
+                    settingKey: "floatingWindowForegroundTransparency"
                     onSliderValueChanged: newValue => SettingsData.floatingWindowForegroundTransparency = newValue / 100
                 }
 
@@ -1249,6 +1265,7 @@ Item {
                     maximum: 1000
                     unit: "ms"
                     value: SettingsData.animationDuration
+                    settingKey: "animationDuration"
                     onSliderValueChanged: newValue => SettingsData.animationDuration = newValue
                 }
 
@@ -1295,6 +1312,7 @@ Item {
                     step: 5
                     decimals: 1
                     unit: "px"
+                    settingKey: "focusRingWidth"
                     onSliderValueChanged: newValue => SettingsData.focusRingWidth = newValue / 10
                 }
             }
@@ -1374,6 +1392,7 @@ Item {
                     step: 16
                     unit: " MB"
                     value: SettingsData.thumbnailSizeLimitMb
+                    settingKey: "thumbnailSizeLimitMb"
                     onSliderValueChanged: newValue => SettingsData.thumbnailSizeLimitMb = newValue
                 }
 

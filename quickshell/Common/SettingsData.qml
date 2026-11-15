@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.DCommon.Common as DC
+import "SettingsDefaults.js" as Defaults
 
 Singleton {
     id: root
@@ -63,6 +64,7 @@ Singleton {
     property alias showHidden: adapter.showHidden
     property alias showExtensions: adapter.showExtensions
     property alias dateFormat: adapter.dateFormat
+    property alias fileNameSize: adapter.fileNameSize
     property alias foldersFirst: adapter.foldersFirst
     property alias hiddenLast: adapter.hiddenLast
     property alias rememberFolderViews: adapter.rememberFolderViews
@@ -89,6 +91,29 @@ Singleton {
     property alias vimKeys: adapter.vimKeys
     property alias listTyping: adapter.listTyping
     property alias gtkBookmarksOffered: adapter.gtkBookmarksOffered
+
+    function hasDefault(key) {
+        return Defaults.has(key);
+    }
+
+    function defaultFor(key) {
+        return Defaults.value(key, density);
+    }
+
+    function isDefault(key) {
+        return root[key] === defaultFor(key);
+    }
+
+    function resetToDefault(key) {
+        root[key] = defaultFor(key);
+    }
+
+    function setDensity(next) {
+        const moved = Defaults.transition(root, density, next);
+        density = next;
+        for (const key in moved)
+            root[key] = moved[key];
+    }
 
     function folderFor(setting, fallback) {
         if (setting === "home")
@@ -154,6 +179,7 @@ Singleton {
             property bool showHidden: false
             property bool showExtensions: true
             property string dateFormat: "locale"
+            property int fileNameSize: 14
             property bool foldersFirst: true
             property bool hiddenLast: true
             property bool rememberFolderViews: true

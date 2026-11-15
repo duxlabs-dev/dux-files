@@ -28,6 +28,8 @@ T.Control {
     property color rowColor: SettingsMetrics.rowColor
     property color iconColor: Theme.primary
     property color titleColor: Theme.surfaceText
+    property string settingKey: ""
+    readonly property bool modified: settingKey !== "" && SettingsData.hasDefault(settingKey) && !SettingsData.isDefault(settingKey)
 
     default property alias trailing: trailingSlot.data
     property alias leading: leadingSlot.data
@@ -222,8 +224,8 @@ T.Control {
                 id: textColumn
                 anchors.left: leadingArea.visible ? leadingArea.right : parent.left
                 anchors.leftMargin: leadingArea.visible ? Theme.spacingL : 0
-                anchors.right: trailingArea.visible ? trailingArea.left : parent.right
-                anchors.rightMargin: trailingArea.visible ? SettingsMetrics.rowContentSpacing : 0
+                anchors.right: resetButton.active ? resetButton.left : (trailingArea.visible ? trailingArea.left : parent.right)
+                anchors.rightMargin: resetButton.active || trailingArea.visible ? SettingsMetrics.rowContentSpacing : 0
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: Theme.spacingXXS
                 opacity: root.enabled ? 1 : SettingsMetrics.disabledOpacity
@@ -248,6 +250,26 @@ T.Control {
                     wrapMode: Text.WordWrap
                     visible: root.subtitle !== ""
                     horizontalAlignment: Text.AlignLeft
+                }
+            }
+
+            Loader {
+                id: resetButton
+                anchors.right: trailingArea.visible ? trailingArea.left : parent.right
+                anchors.rightMargin: trailingArea.visible ? Theme.spacingS : 0
+                anchors.verticalCenter: parent.verticalCenter
+                active: root.modified
+                visible: active
+
+                sourceComponent: DActionButton {
+                    buttonSize: Theme.iconButtonSize
+                    iconName: "restart_alt"
+                    iconSize: Theme.iconSizeMedium
+                    iconColor: Theme.surfaceVariantText
+                    tooltipText: I18n.tr("Reset to default", "settings row button restoring the density default")
+                    Accessible.name: tooltipText
+                    enabled: root.enabled
+                    onClicked: SettingsData.resetToDefault(root.settingKey)
                 }
             }
 
