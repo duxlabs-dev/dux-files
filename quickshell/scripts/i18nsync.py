@@ -31,6 +31,7 @@ LANGUAGES = {
     "zh-Hant": "zh_TW.json",
     "uk": "uk.json",
     "nl": "nl.json",
+    "ar": "ar.json"
 }
 
 
