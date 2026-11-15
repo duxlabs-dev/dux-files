@@ -31,6 +31,7 @@ LANGUAGES = {
     "zh-Hant": "zh_TW.json",
     "uk": "uk.json",
     "nl": "nl.json",
+    "ar": "ar.json",
 }
 
 
@@ -60,6 +61,7 @@ def get_env_or_error(var):
 
 def poeditor_request(endpoint, data):
     from urllib import parse
+
     url = f"https://api.poeditor.com/v2/{endpoint}"
     data_bytes = parse.urlencode(data).encode()
     req = request.Request(url, data=data_bytes, method="POST")
@@ -98,30 +100,37 @@ def upload_source_strings(api_token, project_id, prune=False):
         warn("No en.json to upload")
         return False
 
-    info("Uploading source strings to POEditor..." + (" (pruning terms not present locally)" if prune else ""))
+    info(
+        "Uploading source strings to POEditor..."
+        + (" (pruning terms not present locally)" if prune else "")
+    )
 
-    fields = {'api_token': api_token, 'id': project_id, 'updating': 'terms'}
+    fields = {"api_token": api_token, "id": project_id, "updating": "terms"}
     if prune:
-        fields['sync_terms'] = '1'
+        fields["sync_terms"] = "1"
 
-    boundary = '----WebKitFormBoundary7MA4YWxkTrZu0gW'
-    field_parts = ''.join(
-        f'--{boundary}\r\n'
+    boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW"
+    field_parts = "".join(
+        f"--{boundary}\r\n"
         f'Content-Disposition: form-data; name="{name}"\r\n\r\n'
-        f'{value}\r\n'
+        f"{value}\r\n"
         for name, value in fields.items()
     )
     file_header = (
-        f'--{boundary}\r\n'
+        f"--{boundary}\r\n"
         f'Content-Disposition: form-data; name="file"; filename="en.json"\r\n'
-        f'Content-Type: application/json\r\n\r\n'
+        f"Content-Type: application/json\r\n\r\n"
     )
-    body = (field_parts + file_header).encode() + EN_JSON.read_bytes() + f'\r\n--{boundary}--\r\n'.encode()
+    body = (
+        (field_parts + file_header).encode()
+        + EN_JSON.read_bytes()
+        + f"\r\n--{boundary}--\r\n".encode()
+    )
 
     req = request.Request(
-        'https://api.poeditor.com/v2/projects/upload',
+        "https://api.poeditor.com/v2/projects/upload",
         data=body,
-        headers={'Content-Type': f'multipart/form-data; boundary={boundary}'}
+        headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
     )
 
     try:
@@ -130,16 +139,18 @@ def upload_source_strings(api_token, project_id, prune=False):
     except Exception as e:
         error(f"Upload failed: {e}")
 
-    if result.get('response', {}).get('status') != 'success':
+    if result.get("response", {}).get("status") != "success":
         error(f"POEditor upload failed: {result}")
 
-    terms = result.get('result', {}).get('terms', {})
-    added = terms.get('added', 0)
-    updated = terms.get('updated', 0)
-    deleted = terms.get('deleted', 0)
+    terms = result.get("result", {}).get("terms", {})
+    added = terms.get("added", 0)
+    updated = terms.get("updated", 0)
+    deleted = terms.get("deleted", 0)
 
     if added or updated or deleted:
-        success(f"POEditor updated: {added} added, {updated} updated, {deleted} deleted")
+        success(
+            f"POEditor updated: {added} added, {updated} updated, {deleted} deleted"
+        )
         return True
     info("No changes uploaded to POEditor")
     return False
@@ -158,18 +169,21 @@ def download_translations(api_token, project_id):
         repo_file = POEXPORTS_DIR / filename
         info(f"Fetching {po_lang}...")
 
-        export_resp = poeditor_request('projects/export', {
-            'api_token': api_token,
-            'id': project_id,
-            'language': po_lang,
-            'type': 'key_value_json'
-        })
+        export_resp = poeditor_request(
+            "projects/export",
+            {
+                "api_token": api_token,
+                "id": project_id,
+                "language": po_lang,
+                "type": "key_value_json",
+            },
+        )
 
-        if export_resp.get('response', {}).get('status') != 'success':
+        if export_resp.get("response", {}).get("status") != "success":
             warn(f"Export request failed for {po_lang}")
             continue
 
-        url = export_resp.get('result', {}).get('url')
+        url = export_resp.get("result", {}).get("url")
         if not url:
             warn(f"No export URL for {po_lang}")
             continue
@@ -182,9 +196,9 @@ def download_translations(api_token, project_id):
             continue
 
         if json_changed(repo_file, new_data):
-            with open(repo_file, 'w') as f:
+            with open(repo_file, "w") as f:
                 json.dump(new_data, f, ensure_ascii=False, indent=2, sort_keys=True)
-                f.write('\n')
+                f.write("\n")
             success(f"Updated {filename}")
             any_changed = True
         else:
@@ -207,8 +221,8 @@ def check_sync_status():
     with open(SYNC_STATE) as f:
         state = json.load(f)
 
-    last_en = state.get('en_json', {})
-    last_translations = state.get('translations', {})
+    last_en = state.get("en_json", {})
+    last_translations = state.get("translations", {})
 
     if json.dumps(current_en, sort_keys=True) != json.dumps(last_en, sort_keys=True):
         return True
@@ -217,7 +231,9 @@ def check_sync_status():
         repo_file = POEXPORTS_DIR / filename
         current_trans = normalize_json(repo_file)
         last_trans = last_translations.get(filename, {})
-        if json.dumps(current_trans, sort_keys=True) != json.dumps(last_trans, sort_keys=True):
+        if json.dumps(current_trans, sort_keys=True) != json.dumps(
+            last_trans, sort_keys=True
+        ):
             return True
 
     if not LANGUAGES:
@@ -225,21 +241,26 @@ def check_sync_status():
 
     first_lang = next(iter(LANGUAGES))
     first_file = POEXPORTS_DIR / LANGUAGES[first_lang]
-    export_resp = poeditor_request('projects/export', {
-        'api_token': api_token,
-        'id': project_id,
-        'language': first_lang,
-        'type': 'key_value_json'
-    })
+    export_resp = poeditor_request(
+        "projects/export",
+        {
+            "api_token": api_token,
+            "id": project_id,
+            "language": first_lang,
+            "type": "key_value_json",
+        },
+    )
 
-    if export_resp.get('response', {}).get('status') == 'success':
-        url = export_resp.get('result', {}).get('url')
+    if export_resp.get("response", {}).get("status") == "success":
+        url = export_resp.get("result", {}).get("url")
         if url:
             try:
                 with request.urlopen(url) as response:
                     remote_data = json.loads(response.read().decode())
                     local_data = normalize_json(first_file)
-                    if json.dumps(remote_data, sort_keys=True) != json.dumps(local_data, sort_keys=True):
+                    if json.dumps(remote_data, sort_keys=True) != json.dumps(
+                        local_data, sort_keys=True
+                    ):
                         return True
             except Exception:
                 pass
@@ -248,16 +269,13 @@ def check_sync_status():
 
 
 def save_sync_state():
-    state = {
-        'en_json': normalize_json(EN_JSON),
-        'translations': {}
-    }
+    state = {"en_json": normalize_json(EN_JSON), "translations": {}}
     for filename in LANGUAGES.values():
         repo_file = POEXPORTS_DIR / filename
-        state['translations'][filename] = normalize_json(repo_file)
+        state["translations"][filename] = normalize_json(repo_file)
 
     SYNC_STATE.parent.mkdir(parents=True, exist_ok=True)
-    with open(SYNC_STATE, 'w') as f:
+    with open(SYNC_STATE, "w") as f:
         json.dump(state, f, indent=2)
 
 
@@ -268,7 +286,7 @@ def run_test():
     current_en = normalize_json(EN_JSON)
     success(f"✓ Extracted {len(current_en)} terms")
 
-    terms_with_context = sum(1 for entry in current_en if entry.get('comment'))
+    terms_with_context = sum(1 for entry in current_en if entry.get("comment"))
     if terms_with_context:
         success(f"✓ Found {terms_with_context} terms with translator contexts")
 
@@ -304,7 +322,9 @@ def run_sync(prune):
     project_id = get_env_or_error(PROJECT_ID_ENV)
 
     if prune:
-        warn("--prune deletes every POEditor term missing from the local en.json, including its translations.")
+        warn(
+            "--prune deletes every POEditor term missing from the local en.json, including its translations."
+        )
 
     extract_strings()
 
@@ -312,15 +332,19 @@ def run_sync(prune):
     staged_en = {}
     try:
         result = subprocess.run(
-            ['git', 'show', f':{EN_JSON_REL}'],
-            capture_output=True, text=True, cwd=REPO_ROOT
+            ["git", "show", f":{EN_JSON_REL}"],
+            capture_output=True,
+            text=True,
+            cwd=REPO_ROOT,
         )
         if result.returncode == 0:
             staged_en = json.loads(result.stdout)
     except Exception:
         pass
 
-    strings_changed = json.dumps(current_en, sort_keys=True) != json.dumps(staged_en, sort_keys=True)
+    strings_changed = json.dumps(current_en, sort_keys=True) != json.dumps(
+        staged_en, sort_keys=True
+    )
 
     if strings_changed or prune:
         upload_source_strings(api_token, project_id, prune)
@@ -330,7 +354,7 @@ def run_sync(prune):
     translations_changed = download_translations(api_token, project_id)
 
     if strings_changed or translations_changed:
-        subprocess.run(['git', 'add', TRANSLATIONS_REL], cwd=REPO_ROOT)
+        subprocess.run(["git", "add", TRANSLATIONS_REL], cwd=REPO_ROOT)
         save_sync_state()
         success("Sync complete - changes staged for commit")
     else:
@@ -342,12 +366,16 @@ def run_local():
     info("Updating en.json locally (no POEditor sync)")
 
     old_en = normalize_json(EN_JSON)
-    old_terms = {entry['term']: entry for entry in old_en} if isinstance(old_en, list) else {}
+    old_terms = (
+        {entry["term"]: entry for entry in old_en} if isinstance(old_en, list) else {}
+    )
 
     extract_strings()
 
     new_en = normalize_json(EN_JSON)
-    new_terms = {entry['term']: entry for entry in new_en} if isinstance(new_en, list) else {}
+    new_terms = (
+        {entry["term"]: entry for entry in new_en} if isinstance(new_en, list) else {}
+    )
 
     added = set(new_terms) - set(old_terms)
     removed = set(old_terms) - set(new_terms)
@@ -397,5 +425,5 @@ def main():
         error(f"Unknown command: {command}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
