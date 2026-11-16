@@ -76,6 +76,7 @@ Singleton {
         case "folder-templates":
         case "folder-videos":
             return Qt.resolvedUrl(`../assets/icons/${iconName}.svg`).toString();
+        case "folder-projects":
         case "user-home":
         case "user-desktop":
         case "inode-directory":

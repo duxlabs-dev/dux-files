@@ -182,6 +182,7 @@ ShellRoot {
             root.windowObject(windowId)?.openLocations(locations, false);
         }
         function onWindowAdded() {
+            DirectoryService.refreshUserDirs();
             focusRetry.restart();
         }
     }
