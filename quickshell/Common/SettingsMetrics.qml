@@ -24,6 +24,8 @@ Singleton {
     readonly property real rowMinHeightTwoLine: Theme.listItemTwoLineHeight + Theme.densityStepM
     readonly property real cardGap: Theme.spacingL + Theme.densityStepS
     readonly property real rowContentSpacing: Theme.spacingL
+    readonly property real resetChipPaddingH: Theme.spacingM
+    readonly property real resetChipPaddingV: Theme.spacingXS
     readonly property real sectionLabelTopGap: Math.max(Theme.spacingXS, Theme.spacingS + Theme.densityStepS)
     readonly property real sectionLabelBottomGap: Theme.spacingM
     readonly property real navIconSize: Theme.avatarSize
@@ -39,6 +41,7 @@ Singleton {
     readonly property color sidebarRowColor: rowColor
     readonly property color rowColor: Theme.foregroundColor(Theme.chipSurface, true)
     readonly property color controlSurface: Theme.chipSurfaceNested
+    readonly property color controlColor: Theme.foregroundColor(controlSurface, true)
     readonly property color selectedRowColor: Theme.selectedContainer
     readonly property int transitionDuration: Theme.expressiveDurations.expressiveFastSpatial
     readonly property int fadeDuration: Theme.expressiveDurations.expressiveEffects

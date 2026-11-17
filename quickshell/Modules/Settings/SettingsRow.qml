@@ -224,22 +224,74 @@ T.Control {
                 id: textColumn
                 anchors.left: leadingArea.visible ? leadingArea.right : parent.left
                 anchors.leftMargin: leadingArea.visible ? Theme.spacingL : 0
-                anchors.right: resetButton.active ? resetButton.left : (trailingArea.visible ? trailingArea.left : parent.right)
-                anchors.rightMargin: resetButton.active || trailingArea.visible ? SettingsMetrics.rowContentSpacing : 0
+                anchors.right: trailingArea.visible ? trailingArea.left : parent.right
+                anchors.rightMargin: trailingArea.visible ? SettingsMetrics.rowContentSpacing : 0
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: Theme.spacingXXS
                 opacity: root.enabled ? 1 : SettingsMetrics.disabledOpacity
                 visible: root.hasText
 
-                StyledText {
+                Item {
+                    id: titleLine
+
+                    readonly property bool resettable: root.settingKey !== "" && SettingsData.hasDefault(root.settingKey)
+                    readonly property real chipTrailing: Theme.spacingXS + Theme.iconSizeSmall + SettingsMetrics.resetChipPaddingH
+
                     width: parent.width
-                    text: root.title
-                    font.pixelSize: Theme.fontSizeMedium
-                    font.weight: Theme.fontWeightMedium
-                    color: root.titleColor
-                    wrapMode: Text.WordWrap
+                    height: titleText.implicitHeight
                     visible: root.title !== ""
-                    horizontalAlignment: Text.AlignLeft
+
+                    // The chip bleeds past the title box on every side, so the title never moves when a row turns modified
+                    Loader {
+                        id: resetChip
+                        anchors.left: parent.left
+                        anchors.leftMargin: -SettingsMetrics.resetChipPaddingH
+                        y: -SettingsMetrics.resetChipPaddingV
+                        width: SettingsMetrics.resetChipPaddingH + titleText.contentWidth + titleLine.chipTrailing
+                        height: titleText.implicitHeight + SettingsMetrics.resetChipPaddingV * 2
+                        active: root.modified && root.title !== ""
+
+                        sourceComponent: StyledButton {
+                            id: chip
+                            radius: Theme.fullRadius(width, height)
+                            color: SettingsMetrics.controlColor
+                            enabled: root.enabled
+                            Accessible.name: I18n.tr("Reset to default", "settings row button restoring the density default")
+                            Accessible.description: root.title
+                            onClicked: SettingsData.resetToDefault(root.settingKey)
+
+                            FocusRing {
+                                visible: chip.visualFocus
+                            }
+
+                            DIcon {
+                                anchors.right: parent.right
+                                anchors.rightMargin: SettingsMetrics.resetChipPaddingH - Theme.spacingXXS
+                                anchors.verticalCenter: parent.verticalCenter
+                                name: "restart_alt"
+                                size: Theme.iconSizeSmall
+                                color: Theme.surfaceVariantText
+                            }
+
+                            StateLayer {
+                                control: chip
+                                stateColor: root.titleColor
+                                tooltipText: I18n.tr("Reset to default", "settings row button restoring the density default")
+                            }
+                        }
+                    }
+
+                    StyledText {
+                        id: titleText
+                        anchors.left: parent.left
+                        width: parent.width - (titleLine.resettable ? titleLine.chipTrailing : 0)
+                        text: root.title
+                        font.pixelSize: Theme.fontSizeMedium
+                        font.weight: Theme.fontWeightMedium
+                        color: root.titleColor
+                        wrapMode: Text.WordWrap
+                        horizontalAlignment: Text.AlignLeft
+                    }
                 }
 
                 StyledText {
@@ -250,26 +302,6 @@ T.Control {
                     wrapMode: Text.WordWrap
                     visible: root.subtitle !== ""
                     horizontalAlignment: Text.AlignLeft
-                }
-            }
-
-            Loader {
-                id: resetButton
-                anchors.right: trailingArea.visible ? trailingArea.left : parent.right
-                anchors.rightMargin: trailingArea.visible ? Theme.spacingS : 0
-                anchors.verticalCenter: parent.verticalCenter
-                active: root.modified
-                visible: active
-
-                sourceComponent: DActionButton {
-                    buttonSize: Theme.iconButtonSize
-                    iconName: "restart_alt"
-                    iconSize: Theme.iconSizeMedium
-                    iconColor: Theme.surfaceVariantText
-                    tooltipText: I18n.tr("Reset to default", "settings row button restoring the density default")
-                    Accessible.name: tooltipText
-                    enabled: root.enabled
-                    onClicked: SettingsData.resetToDefault(root.settingKey)
                 }
             }
 
