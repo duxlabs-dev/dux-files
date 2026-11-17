@@ -42,6 +42,9 @@ test("isRunnable needs the execute bit and a program-like type", () => {
     assert.equal(ctx.isRunnable("application/x-shellscript", true), true);
     assert.equal(ctx.isRunnable("text/x-python", true), true);
     assert.equal(ctx.isRunnable("", true), true);
+    assert.equal(ctx.isRunnable("application/vnd.appimage", true), true);
+    assert.equal(ctx.isRunnable("application/x-iso9660-appimage", true), true);
+    assert.equal(ctx.isRunnable("application/vnd.appimage", false), false);
     assert.equal(ctx.isRunnable("image/png", true), false);
 });
 

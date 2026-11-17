@@ -105,6 +105,8 @@ Singleton {
         case mime === "application/x-executable":
         case mime === "application/x-sharedlib":
         case mime === "application/x-pie-executable":
+        case mime === "application/vnd.appimage":
+        case mime === "application/x-iso9660-appimage":
             return true;
         }
         return false;
