@@ -90,7 +90,11 @@ Item {
         onRecentMenuRequested: (pointX, pointY) => host.mainWindow.menus.presentPlaceMenu("recent", RecentService.path, sidebar, pointX, pointY)
         onBookmarkRenameRequested: path => host.mainWindow.dialogs.renameBookmark(path)
         onLeaveRequested: host.leave()
-        onDropRequested: (path, drop) => host.mainWindow.drag.applyDrop(DragService.pathsFrom(drop), path, DragService.overrideFor(drop.proposedAction))
+        onDropRequested: (path, drop) => {
+            if (DragService.extractArkDrop(drop, path))
+                return;
+            host.mainWindow.drag.applyDrop(DragService.pathsFrom(drop), path, DragService.overrideFor(drop.proposedAction));
+        }
     }
 
     Item {

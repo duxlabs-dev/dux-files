@@ -16,6 +16,34 @@ Singleton {
     property int generation: 0
     property var plainDrops: ({})
 
+    readonly property string arkServiceMime: "application/x-kde-ark-dndextract-service"
+    readonly property string arkPathMime: "application/x-kde-ark-dndextract-path"
+
+    function hasArkDrop(drop) {
+        const formats = drop.formats || [];
+        let service = false;
+        let path = false;
+        for (let i = 0; i < formats.length; i++) {
+            service = service || formats[i] === arkServiceMime;
+            path = path || formats[i] === arkPathMime;
+        }
+        return service && path;
+    }
+
+    function extractArkDrop(drop, dest) {
+        if (!hasArkDrop(drop) || dest === "" || dest === TrashService.filesPath || dest === RecentService.path)
+            return false;
+        transport.call("files.dndExtract", {
+            "service": drop.getDataAsString(arkServiceMime),
+            "path": drop.getDataAsString(arkPathMime),
+            "dest": dest
+        }, result => {
+            if (result.error)
+                ToastService.info(FileFormat.operationError(result.code, result.error));
+        });
+        return true;
+    }
+
     readonly property string hoverDest: active ? FileDragHover.dest : ""
     readonly property string action: {
         if (hoverDest === "" || paths.includes(hoverDest))
