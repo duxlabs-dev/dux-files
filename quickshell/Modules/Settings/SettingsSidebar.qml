@@ -14,6 +14,10 @@ Item {
     signal tabSelected(int index)
     signal searchAccepted
 
+    function focusSearch() {
+        searchField.forceActiveFocus();
+    }
+
     function clearSearch() {
         if (searchField.text === "")
             return false;
@@ -103,13 +107,17 @@ Item {
             padding: SettingsMetrics.paneMargin
             spacing: SettingsMetrics.sidebarGroupGap
 
-            DSearchField {
-                id: searchField
-
+            Item {
                 width: navColumn.width - navColumn.padding * 2
-                backgroundColor: Theme.surfaceContainerLowest
-                placeholderText: I18n.tr("Search settings", "placeholder in the settings search field")
-                onAccepted: root.searchAccepted()
+                height: searchField.height + SettingsMetrics.searchBarGap - navColumn.spacing
+
+                DSearchField {
+                    id: searchField
+
+                    width: parent.width
+                    placeholderText: I18n.tr("Search settings", "placeholder in the settings search field")
+                    onAccepted: root.searchAccepted()
+                }
             }
 
             Repeater {

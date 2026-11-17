@@ -11,6 +11,8 @@ Item {
 
     property int currentIndex: 0
     property var hostWindow: null
+    property real windowButtonsReserve: 0
+    property FloatingWindowControls windowDragControls: null
     property string searchQuery: ""
     property var results: []
     property var matchCounts: []
@@ -484,6 +486,15 @@ Item {
         onConfirmed: FolderViews.clear()
     }
 
+    MouseArea {
+        x: -SettingsMetrics.panePadding
+        width: parent.width + SettingsMetrics.panePadding * 2
+        height: pageHeader.height
+        enabled: root.windowDragControls !== null
+        onPressed: root.windowDragControls.tryStartMove()
+        onDoubleClicked: root.windowDragControls.tryToggleMaximize()
+    }
+
     Item {
         id: pageHeader
 
@@ -495,6 +506,7 @@ Item {
             id: pageHeading
             anchors.left: parent.left
             anchors.right: parent.right
+            anchors.rightMargin: Math.max(0, root.windowButtonsReserve - SettingsMetrics.panePadding - (root.width - pageHeader.width) / 2)
             anchors.verticalCenter: parent.verticalCenter
             wrapMode: Text.WordWrap
             horizontalAlignment: Text.AlignLeft

@@ -483,7 +483,6 @@ FloatingWindow {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            height: Math.max(implicitHeight, tabBand.height)
             controls: windowControls
             onCloseRequested: window.requestClose()
         }
@@ -493,7 +492,7 @@ FloatingWindow {
 
             anchors.left: parent.left
             anchors.right: parent.right
-            height: FilesMetrics.tabBandHeight
+            height: header.collapsed ? FilesMetrics.tabBandHeight : header.implicitHeight
             enabled: !window.preview.open
 
             FlatButton {
