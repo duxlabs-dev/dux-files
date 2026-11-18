@@ -188,14 +188,14 @@ ShellRoot {
     }
 
     Timer {
-        interval: 30000
+        interval: Timing.timeoutLong
         running: root.idle && !SettingsData.keepRunning && (root.dbusActivated || root.quitDeferred)
         onTriggered: root.quitWhenIdle()
     }
 
     Timer {
         id: focusRetry
-        interval: 150
+        interval: Timing.settle
         repeat: false
         onTriggered: root.focusWindow(WindowService.lastActiveId)
     }

@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import qs.Common
 import qs.Services
 
 Singleton {
@@ -263,7 +264,7 @@ Singleton {
     }
 
     readonly property Timer _historyTimeout: Timer {
-        interval: 30000
+        interval: Timing.timeoutLong
         onTriggered: root._dropFinished()
     }
 
