@@ -113,17 +113,17 @@ ShellRoot {
         iconGrid.contentY = iconGrid.maximumContentY;
         check("the icon grid can scroll past its first rows", [iconGrid.contentHeight > iconGrid.height, iconGrid.contentY > 0], [true, true]);
 
-        SettingsData.animationDuration = 400;
+        SettingsData.motionDuration = 4;
         SettingsData.setDensity("dense");
-        check("a density switch moves sliders on the old default and keeps user-set ones", [SettingsData.fileNameSize, SettingsData.animationDuration, SettingsData.isDefault("fileNameSize"), SettingsData.isDefault("animationDuration")], [12, 400, true, false]);
+        check("a density switch moves settings on the old default and keeps user-set ones", [SettingsData.fileNameSize, SettingsData.motionDuration, SettingsData.isDefault("fileNameSize"), SettingsData.isDefault("motionDuration")], [12, 4, true, false]);
 
         SettingsData.fileNameSize = 18;
         SettingsData.setDensity("spacious");
         check("a user-set file name size survives a density switch", SettingsData.fileNameSize, 18);
 
         SettingsData.resetToDefault("fileNameSize");
-        SettingsData.resetToDefault("animationDuration");
-        check("reset writes the current density's default", [SettingsData.fileNameSize, SettingsData.animationDuration], [15, 250]);
+        SettingsData.resetToDefault("motionDuration");
+        check("reset writes the current density's default", [SettingsData.fileNameSize, SettingsData.motionDuration], [15, 2]);
 
         DC.Style.settings = SettingsData;
         SettingsData.fontScale = 1.2;

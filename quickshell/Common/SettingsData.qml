@@ -27,7 +27,7 @@ Singleton {
     property alias customThemeFile: adapter.customThemeFile
     property alias radiusStrength: adapter.radiusStrength
     property alias density: adapter.density
-    property alias animationDuration: adapter.animationDuration
+    property alias motionDuration: adapter.motionDuration
     property alias reduceMotion: adapter.reduceMotion
     property alias springBounce: adapter.springBounce
     property alias enableRippleEffects: adapter.enableRippleEffects
@@ -115,6 +115,12 @@ Singleton {
             root[key] = moved[key];
     }
 
+    function adoptLegacyAnimationDuration(saved) {
+        if (typeof saved?.animationDuration !== "number" || "motionDuration" in saved)
+            return;
+        motionDuration = Defaults.motionStep(saved.animationDuration);
+    }
+
     function folderFor(setting, fallback) {
         if (setting === "home")
             return Paths.strip(Paths.home);
@@ -134,6 +140,7 @@ Singleton {
         name: "settings"
         path: Paths.configDir + "/ui-settings.json"
         watchChanges: true
+        parse: text => root.adoptLegacyAnimationDuration(store.objectFrom(text))
 
         adapter: JsonAdapter {
             id: adapter
@@ -143,7 +150,7 @@ Singleton {
             property string customThemeFile: ""
             property int radiusStrength: 50
             property string density: "comfortable"
-            property int animationDuration: 250
+            property int motionDuration: 2
             property bool reduceMotion: false
             property int springBounce: 1
             property bool enableRippleEffects: true

@@ -88,8 +88,9 @@ Item {
                 Behavior on width {
                     enabled: Theme.animationsEnabled
                     NumberAnimation {
-                        duration: Theme.shortDuration
-                        easing.type: Theme.standardEasing
+                        duration: Theme.expressiveDurations.expressiveSlowEffects
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Theme.expressiveCurves.expressiveSlowEffects
                     }
                 }
             }

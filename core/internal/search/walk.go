@@ -23,7 +23,9 @@ const (
 
 type hit struct {
 	files.Entry
-	Score int `json:"score"`
+	Score   int    `json:"score"`
+	Line    int    `json:"line,omitempty"`
+	Snippet string `json:"snippet,omitempty"`
 }
 
 type event struct {
@@ -39,6 +41,9 @@ type event struct {
 	Phase      string `json:"phase,omitempty"`
 	DepthLimit int    `json:"depthLimit,omitempty"`
 	Reason     string `json:"reason,omitempty"`
+	Contents   bool   `json:"contents,omitempty"`
+	Code       string `json:"code,omitempty"`
+	Error      string `json:"error,omitempty"`
 }
 
 type search struct {
@@ -72,28 +77,59 @@ func (sc *search) run(root, query string, opts Options) {
 	defer sc.retire()
 
 	targets := roots(opts.Scope, root, sc.svc.mounts)
-	terms := parseTerms(query)
-	em := newEmitter(sc, opts.limit())
-	reason := sc.svc.index.serve(sc, em, targets, query, terms, opts)
+	out := &sink{sc: sc, em: newEmitter(sc, opts.limit()), opts: opts, reservoir: reservoir{limit: fuzzyReservoir}}
+	reason := sc.svc.index.serve(sc, out, targets, query)
 	if reason == "" {
 		return
 	}
-	sc.walk(em, targets, terms, opts, reason)
+	found := sc.svc.tools.locate()
+	if opts.Contents && found.rg != "" && strings.TrimSpace(query) != "" {
+		sc.grep(out, found.rg, targets, query, reason)
+		return
+	}
+	m, err := newMatcher(query, opts)
+	if err != nil {
+		out.em.fail(files.CodeInvalid, err.Error())
+		return
+	}
+	backend := event{Kind: "backend", Reason: reason, Contents: found.rg != ""}
+	if found.fd != "" && m.selective() {
+		sc.find(out, found.fd, targets, m, backend)
+		return
+	}
+	sc.walk(out, targets, m, backend)
 }
 
-func (sc *search) walk(em *emitter, targets []string, terms []term, opts Options, reason string) {
-	sc.publish(event{Kind: "backend", Backend: "walk", Reason: reason})
-	var excludes []string
-	if sc.svc.excludes != nil {
-		excludes = sc.svc.excludes()
+func (sc *search) excludes() []string {
+	if sc.svc.excludes == nil {
+		return nil
 	}
+	return sc.svc.excludes()
+}
+
+func (sc *search) skipRules(includeIgnored bool) ignoreRules {
+	if includeIgnored {
+		return ignoreRules{}
+	}
+	return newSkipRules(sc.excludes())
+}
+
+func (sc *search) walk(out *sink, targets []string, m matcher, backend event) {
+	backend.Backend = "walk"
+	sc.publish(backend)
+	unreadable := sc.walkInto(out, targets, m)
+	out.flush()
+	out.em.finish(false, unreadable)
+}
+
+func (sc *search) walkInto(out *sink, targets []string, m matcher) int {
+	opts := out.opts
 	w := &walker{
-		sc:        sc,
-		em:        em,
-		terms:     terms,
-		opts:      opts,
-		rules:     newIgnoreRules(excludes, opts.IncludeIgnored),
-		reservoir: reservoir{limit: fuzzyReservoir},
+		sc:    sc,
+		out:   out,
+		match: m,
+		opts:  opts,
+		rules: newIgnoreRules(sc.excludes(), opts.IncludeIgnored),
 	}
 	for _, target := range targets {
 		info := &rootInfo{path: target}
@@ -118,8 +154,7 @@ func (sc *search) walk(em *emitter, targets []string, terms []term, opts Options
 		w.queue.close()
 	}()
 	workers.Wait()
-	w.flushReservoir()
-	em.finish(false, int(w.unreadable.Load()))
+	return int(w.unreadable.Load())
 }
 
 func (sc *search) publish(ev event) {
@@ -178,12 +213,11 @@ type rootInfo struct {
 
 type walker struct {
 	sc         *search
-	em         *emitter
-	terms      []term
+	out        *sink
+	match      matcher
 	opts       Options
 	rules      ignoreRules
 	queue      dirQueue
-	reservoir  reservoir
 	unreadable atomic.Int64
 }
 
@@ -238,15 +272,9 @@ func (w *walker) readDir(item dirItem) {
 				patterns: patterns,
 			})
 		}
-		points, tier := score(nameLower, relLower, item.depth, w.terms, w.opts.Fuzzy)
-		switch tier {
-		case tierNone:
-		case tierFuzzy:
-			w.reservoir.offer(full, points)
-		default:
-			if !w.emit(full, points) {
-				return
-			}
+		points, tier := w.match.score(name, nameLower, relLower, item.depth)
+		if !w.out.offer(full, points, tier) {
+			return
 		}
 	}
 }
@@ -259,20 +287,39 @@ func (w *walker) descends(dir string, root *rootInfo) bool {
 	return !ok || dev == root.device
 }
 
-func (w *walker) emit(path string, points int) bool {
-	entry, err := w.sc.svc.stater.Stat(path)
-	if err != nil || !w.opts.accepts(entry) {
-		return true
-	}
-	return w.em.emit(hit{Entry: entry, Score: points})
+type sink struct {
+	sc        *search
+	em        *emitter
+	opts      Options
+	reservoir reservoir
 }
 
-func (w *walker) flushReservoir() {
-	for _, f := range w.reservoir.drain() {
-		if w.sc.ctx.Err() != nil {
+func (s *sink) offer(path string, points, tier int) bool {
+	switch tier {
+	case tierNone:
+		return true
+	case tierFuzzy:
+		s.reservoir.offer(path, points)
+		return true
+	}
+	return s.emit(path, hit{Score: points})
+}
+
+func (s *sink) emit(path string, found hit) bool {
+	entry, err := s.sc.svc.stater.Stat(path)
+	if err != nil || !s.opts.accepts(entry) {
+		return true
+	}
+	found.Entry = entry
+	return s.em.emit(found)
+}
+
+func (s *sink) flush() {
+	for _, f := range s.reservoir.drain() {
+		if s.sc.ctx.Err() != nil {
 			return
 		}
-		if !w.emit(f.path, f.score) {
+		if !s.emit(f.path, hit{Score: f.score}) {
 			return
 		}
 	}
@@ -341,11 +388,21 @@ func (em *emitter) emit(h hit) bool {
 }
 
 func (em *emitter) finish(partial bool, unreadable int) {
+	em.end(event{Partial: partial, Unreadable: unreadable})
+}
+
+func (em *emitter) fail(code files.Code, message string) {
+	em.end(event{Code: string(code), Error: message})
+}
+
+func (em *emitter) end(outcome event) {
 	close(em.matches)
 	done := <-em.done
 	done.Cancelled = em.sc.ctx.Err() != nil && !done.Truncated
-	done.Partial = partial
-	done.Unreadable = unreadable
+	done.Partial = outcome.Partial
+	done.Unreadable = outcome.Unreadable
+	done.Code = outcome.Code
+	done.Error = outcome.Error
 	em.sc.retire()
 	em.sc.publish(done)
 }

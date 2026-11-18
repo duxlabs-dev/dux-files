@@ -114,9 +114,9 @@ Item {
         Behavior on width {
             enabled: Theme.animationsEnabled
             NumberAnimation {
-                duration: Theme.expressiveDurations.expressiveFastSpatial
+                duration: Theme.expressiveDurations.expressiveSlowEffects
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Theme.expressiveCurves.standard
+                easing.bezierCurve: Theme.expressiveCurves.expressiveSlowEffects
             }
         }
 
@@ -151,8 +151,9 @@ Item {
         Behavior on opacity {
             enabled: Theme.animationsEnabled
             NumberAnimation {
-                duration: Theme.shortDuration
-                easing.type: Theme.standardEasing
+                duration: Theme.expressiveDurations.expressiveFastEffects
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Theme.expressiveCurves.expressiveFastEffects
             }
         }
 

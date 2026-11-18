@@ -34,6 +34,7 @@ type Service struct {
 	workers      int
 	attachOnOpen atomic.Bool
 	index        indexBackend
+	tools        toolbox
 	mounts       func() []string
 	excludes     func() []string
 
@@ -51,10 +52,23 @@ func NewService(bus Publisher, stater Stater) *Service {
 		workers:  min(4, runtime.NumCPU()),
 		searches: map[string]*search{},
 		index:    indexBackend{now: time.Now, infoWait: infoTimeout, searchWait: searchTimeout},
+		tools:    newToolbox(),
 	}
 }
 
 func (s *Service) SetIndexEnabled(enabled bool) { s.index.enabled.Store(enabled) }
+
+func (s *Service) Tools() []string {
+	found := s.tools.locate()
+	var names []string
+	if found.fd != "" {
+		names = append(names, "fd")
+	}
+	if found.rg != "" {
+		names = append(names, "rg")
+	}
+	return names
+}
 
 func (s *Service) SetMounts(mounts func() []string) { s.mounts = mounts }
 

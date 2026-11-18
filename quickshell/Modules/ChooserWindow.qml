@@ -456,9 +456,9 @@ FloatingWindow {
             Behavior on width {
                 enabled: Theme.animationsEnabled
                 NumberAnimation {
-                    duration: Theme.expressiveDurations.expressiveFastSpatial
+                    duration: Theme.expressiveDurations.expressiveSlowEffects
                     easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Theme.expressiveCurves.standard
+                    easing.bezierCurve: Theme.expressiveCurves.expressiveSlowEffects
                 }
             }
 

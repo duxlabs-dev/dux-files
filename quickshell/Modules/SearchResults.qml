@@ -9,7 +9,6 @@ import qs.DCommon.FileBrowser
 ListingView {
     id: results
 
-    property bool indexAvailable: false
     readonly property alias chips: chips
     readonly property string scopeText: {
         switch (chips.scope) {
@@ -30,7 +29,7 @@ ListingView {
     title: model.query !== "" ? I18n.tr("Results for “%1” in %2", "search results header, query then folder").arg(model.query).arg(scopeText) : I18n.tr("Results in %1", "search results header without a query").arg(scopeText)
     summary: {
         if (model.error !== "")
-            return FileFormat.listingError(model.errorCode);
+            return model.errorCode === "EINVAL" ? I18n.tr("This is not a valid regular expression", "search results header when the regex chip is on and the query does not parse") : FileFormat.listingError(model.errorCode);
         const notes = [];
         switch (true) {
         case model.loading:
@@ -57,12 +56,12 @@ ListingView {
         }
         return notes.join(" · ");
     }
-    listColumns: ["location", "size", "modified"]
+    listColumns: model.servedBy === "rg" ? ["match", "location", "modified"] : ["location", "size", "modified"]
     columnSortKeys: ({
             "location": "location"
         })
     showHidden: chips.includeHidden
-    nameHighlight: model.query
+    nameHighlight: model.options.regex === true || model.options.contents === true ? "" : model.query
     filtering: false
     dragEnabled: host.dragEnabled
     backgroundMenu: false
@@ -83,20 +82,15 @@ ListingView {
         id: chips
 
         width: parent.width
-        contentsAvailable: results.indexAvailable
+        contentsAvailable: results.model.contentsAvailable
         onChanged: results.host.startSearch(results.model.query, chips.filterState)
     }
 
     Connections {
         target: results.model
 
-        function onServedByChanged() {
-            if (results.model.servedBy === "")
-                return;
-            if (chips.direct)
-                return;
-            results.indexAvailable = results.model.servedBy === "index";
-            if (!results.indexAvailable)
+        function onContentsAvailableChanged() {
+            if (!results.model.contentsAvailable)
                 chips.contents = false;
         }
     }

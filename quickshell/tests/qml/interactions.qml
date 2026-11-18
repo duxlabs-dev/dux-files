@@ -206,7 +206,7 @@ ShellRoot {
         function test_interactions() {
             const win = root.window;
             const surface = win.contentItem.children.find(child => child.isFloatingWindowSurface === true);
-            SettingsData.animationDuration = 0;
+            SettingsData.motionDuration = -1;
             win.minimumSize = Qt.size(1100, 760);
             win.implicitWidth = 1100;
             win.implicitHeight = 760;

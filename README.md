@@ -20,7 +20,7 @@ Tabs, a split view with two panes, and list, grid and column views. Sort and vie
 Type to jump to a name or filter the folder, jump to any folder you have visited before, and reopen closed tabs.
 
 **Search**
-Recursive search by name with filters. Uses [danksearch](https://github.com/duxlabs-dev/dux-search) when it is running and walks the tree when it isn't.
+Recursive search by name or file contents, with filters and regular expressions. Uses [danksearch](https://github.com/duxlabs-dev/dux-search) when it is running and searches the disk when it isn't, with `fd` and `ripgrep` when they are installed.
 
 **File operations**
 Copy, move, rename, trash and delete run as jobs with progress and conflict handling, and most of them can be undone. Denied operations offer Retry as administrator through polkit.
@@ -91,8 +91,10 @@ Picked up from `PATH` when the daemon starts:
 | `poppler` (`poppler-utils` on Debian) | pdf thumbnails |
 | `gvfs` | network shares and the trash on removable drives |
 | `udisks2` | the devices sidebar |
+| `ripgrep` 12 or newer | searching file contents without a danksearch index |
+| `fd` 8.7 or newer (`fdfind` on Debian) | faster name search on the disk |
 
-Images in png, jpeg, gif, bmp, tiff and webp are decoded in-process. Anything else uses the freedesktop thumbnailers installed on the system, so packages that ship one (glycin, gsf, evince, totem) just work. `dfiles ipc system.capabilities` shows what was found.
+Images in png, jpeg, gif, bmp, tiff and webp are decoded in-process. Anything else uses the freedesktop thumbnailers installed on the system, so packages that ship one (glycin, gsf, evince, totem) just work. `dfiles ipc system.capabilities` shows what was found. `ripgrep` and `fd` are looked up when a search runs, so installing them needs no restart.
 
 PDF previews use the optional `QtQuick.Pdf` QML module: `qt6-webengine` on Arch, `qt6-qtpdf` on Fedora, `qt6-pdf-imports` on openSUSE, `qml6-module-qtquick-pdf` on Debian and Ubuntu. The nix package wires it in by default, `dux-files.override { withPdfPreview = false; }` drops it.
 Without it, the preview shows an installation hint; image previews and the rest of the file manager still work.

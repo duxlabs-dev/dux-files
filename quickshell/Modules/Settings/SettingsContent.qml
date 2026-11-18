@@ -139,6 +139,11 @@ Item {
                 value: index
             }))
 
+    readonly property var motionDurationOptions: [I18n.tr("Off", "animation duration option"), I18n.tr("Shorter", "animation duration option"), I18n.tr("Short", "animation duration option"), I18n.tr("Medium", "animation duration option"), I18n.tr("Long", "animation duration option"), I18n.tr("Longer", "animation duration option")].map((label, index) => ({
+                label: label,
+                value: index - 1
+            }))
+
     readonly property var sortOptions: [
         {
             label: I18n.tr("Name", "file browser sort criterion option"),
@@ -1269,19 +1274,17 @@ Item {
             SettingsCard {
                 title: I18n.tr("Motion", "appearance settings section label")
 
-                SettingsSliderRow {
-                    text: I18n.tr("Duration", "animation duration slider label")
+                OptionDropdownRow {
+                    text: I18n.tr("Duration", "animation duration setting label")
                     keywords: I18n.tr("animation speed motion", "settings search keywords, space separated, add synonyms in your language")
-                    minimumLabel: I18n.tr("Off", "animation duration slider label at zero")
-                    minimum: 0
-                    maximum: 1000
-                    unit: "ms"
-                    value: SettingsData.animationDuration
-                    settingKey: "animationDuration"
-                    onSliderValueChanged: newValue => SettingsData.animationDuration = newValue
+                    settingKey: "motionDuration"
+                    optionList: root.motionDurationOptions
+                    current: SettingsData.motionDuration
+                    onPicked: value => SettingsData.motionDuration = value
                 }
 
                 SettingsButtonGroupRow {
+                    visible: !Theme.motionOff
                     text: I18n.tr("Spring", "spring bounce setting label")
                     keywords: I18n.tr("bounce animation motion", "settings search keywords, space separated, add synonyms in your language")
                     model: [I18n.tr("Smooth", "spring bounce option"), I18n.tr("Balanced", "spring bounce option"), I18n.tr("Playful", "spring bounce option")]
@@ -1293,12 +1296,14 @@ Item {
                 }
 
                 SettingsToggleRow {
+                    visible: !Theme.motionOff
                     text: I18n.tr("Ripple effects", "ripple effects toggle label")
                     keywords: I18n.tr("animation click feedback", "settings search keywords, space separated, add synonyms in your language")
                     settingKey: "enableRippleEffects"
                 }
 
                 SettingsToggleRow {
+                    visible: !Theme.motionOff
                     text: I18n.tr("Reduce motion", "reduce motion toggle label")
                     keywords: I18n.tr("accessibility animation disable", "settings search keywords, space separated, add synonyms in your language")
                     settingKey: "reduceMotion"

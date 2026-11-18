@@ -5,8 +5,10 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"sort"
 	"strings"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/pathutil"
 	"github.com/duxlabs-dev/dux-files/core/internal/xdg"
 
 	"github.com/go-git/go-billy/v5/osfs"
@@ -111,6 +113,32 @@ func (r ignoreRules) skipsPath(path, root string) bool {
 		dir = filepath.Dir(dir)
 	}
 	return false
+}
+
+func (r ignoreRules) globs(anchor string) []string {
+	var out []string
+	for name := range r.skipNames {
+		if !strings.Contains(name, "/") {
+			out = append(out, escapeGlob(name)+"/")
+		}
+	}
+	sort.Strings(out)
+	base := strings.TrimSuffix(anchor, "/")
+	for _, path := range r.skipPaths {
+		switch {
+		case anchor == "":
+			out = append(out, escapeGlob(path)+"/")
+		case pathutil.Under(path, anchor):
+			out = append(out, escapeGlob(path[len(base):])+"/")
+		}
+	}
+	return out
+}
+
+var globEscaper = strings.NewReplacer(`\`, `\\`, `*`, `\*`, `?`, `\?`, `[`, `\[`, `]`, `\]`, `{`, `\{`, `}`, `\}`, `!`, `\!`)
+
+func escapeGlob(text string) string {
+	return globEscaper.Replace(text)
 }
 
 func (r ignoreRules) rootPatterns(root string) []ignorePattern {

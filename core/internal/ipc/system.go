@@ -94,6 +94,7 @@ func HandleSystem(ctx context.Context, w *ConnWriter, req Request, deps Deps) {
 type capabilitiesResponse struct {
 	sandbox.Capabilities
 	Thumbnailers []string `json:"thumbnailers"`
+	SearchTools  []string `json:"searchTools"`
 }
 
 func capabilities(deps Deps) capabilitiesResponse {
@@ -111,9 +112,12 @@ func capabilities(deps Deps) capabilitiesResponse {
 	if caps.Filesystems == nil {
 		caps.Filesystems = []string{}
 	}
-	out := capabilitiesResponse{Capabilities: caps, Thumbnailers: []string{}}
+	out := capabilitiesResponse{Capabilities: caps, Thumbnailers: []string{}, SearchTools: []string{}}
 	if deps.Files != nil {
 		out.Thumbnailers = append(out.Thumbnailers, deps.Files.Capabilities()...)
+	}
+	if deps.Search != nil {
+		out.SearchTools = append(out.SearchTools, deps.Search.Tools()...)
 	}
 	return out
 }

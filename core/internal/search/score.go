@@ -1,6 +1,7 @@
 package search
 
 import (
+	"regexp"
 	"strings"
 	"unicode"
 	"unicode/utf8"
@@ -39,6 +40,73 @@ func parseTerms(query string) []term {
 		out = append(out, term{text: word, glob: strings.ContainsAny(word, "*?")})
 	}
 	return out
+}
+
+type matcher struct {
+	terms []term
+	fuzzy bool
+	re    *regexp.Regexp
+}
+
+func newMatcher(query string, opts Options) (matcher, error) {
+	if !opts.Regex || strings.TrimSpace(query) == "" {
+		return matcher{terms: parseTerms(query), fuzzy: opts.Fuzzy}, nil
+	}
+	re, err := regexp.Compile("(?i)" + query)
+	if err != nil {
+		return matcher{}, err
+	}
+	return matcher{re: re}, nil
+}
+
+func (m matcher) selective() bool {
+	return m.re != nil || len(m.terms) > 0
+}
+
+func (m matcher) score(name, nameLower, relLower string, depth int) (int, int) {
+	if m.re == nil {
+		return score(nameLower, relLower, depth, m.terms, m.fuzzy)
+	}
+	if !m.re.MatchString(name) {
+		return 0, tierNone
+	}
+	return scoreSubstring - min(depth*penaltyDepth, maxDepthPen), tierSubstring
+}
+
+func (m matcher) scorePath(root, path string) (int, int) {
+	rel := path[len(root)+1:]
+	name := rel[strings.LastIndexByte(rel, '/')+1:]
+	nameLower := strings.ToLower(name)
+	relLower := strings.ToLower(rel[:len(rel)-len(name)]) + nameLower
+	return m.score(name, nameLower, relLower, strings.Count(rel, "/"))
+}
+
+func (m matcher) fdPattern() string {
+	if m.re != nil || m.fuzzy {
+		return "."
+	}
+	longest := ""
+	for _, t := range m.terms {
+		for _, run := range strings.FieldsFunc(t.text, func(r rune) bool {
+			return r >= utf8.RuneSelf || (t.glob && (r == '*' || r == '?'))
+		}) {
+			if len(run) > len(longest) {
+				longest = run
+			}
+		}
+	}
+	if longest == "" {
+		return "."
+	}
+	var pattern strings.Builder
+	for _, letter := range longest {
+		if letter == 'i' {
+			pattern.WriteString("[iİ]")
+			continue
+		}
+		pattern.WriteString(regexp.QuoteMeta(string(letter)))
+	}
+	return pattern.String()
 }
 
 func score(nameLower, relLower string, depth int, terms []term, fuzzy bool) (int, int) {

@@ -130,6 +130,7 @@ Singleton {
             "includeIgnored": state.includeIgnored === true,
             "fuzzy": state.fuzzy === true,
             "contents": state.contents === true,
+            "regex": state.regex === true,
             "direct": state.direct === true,
             "crossDevice": state.crossDevice === true,
             "types": state.types ?? [],

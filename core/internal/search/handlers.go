@@ -36,6 +36,7 @@ func (s *Service) handleStart(ctx context.Context, w *ipc.ConnWriter, req ipc.Re
 		CrossDevice:     params.BoolLoose(p, "crossDevice"),
 		Fuzzy:           params.BoolLoose(p, "fuzzy"),
 		Contents:        params.BoolLoose(p, "contents"),
+		Regex:           params.BoolLoose(p, "regex"),
 		Direct:          params.BoolLoose(p, "direct"),
 		Types:           wire.StringList(p, "types"),
 		ModifiedAfterMs: int64(params.IntOpt(p, "modifiedAfterMs", 0)),

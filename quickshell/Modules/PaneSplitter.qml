@@ -22,8 +22,9 @@ Item {
         Behavior on color {
             enabled: Theme.animationsEnabled
             ColorAnimation {
-                duration: Theme.shortDuration
-                easing.type: Theme.standardEasing
+                duration: Theme.expressiveDurations.expressiveFastEffects
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Theme.expressiveCurves.expressiveFastEffects
             }
         }
     }

@@ -10,10 +10,18 @@ var DEFAULTS = {
     fontScale: [1.0, 1.0, 1.0, 1.0],
     floatingWindowTransparency: [1.0, 1.0, 1.0, 1.0],
     floatingWindowForegroundTransparency: [1.0, 1.0, 1.0, 1.0],
-    animationDuration: [250, 250, 250, 250],
+    motionDuration: [2, 2, 2, 2],
     focusRingWidth: [1.5, 1.5, 1.5, 1.5],
     thumbnailSizeLimitMb: [64, 64, 64, 64]
 };
+
+var MOTION_STEP_MS = [250, 375, 500, 750, 1000];
+
+function motionStep(durationMs) {
+    if (durationMs <= 0)
+        return -1;
+    return MOTION_STEP_MS.reduce((nearest, ms, step) => Math.abs(ms - durationMs) < Math.abs(MOTION_STEP_MS[nearest] - durationMs) ? step : nearest, 0);
+}
 
 function has(key) {
     return key in DEFAULTS;

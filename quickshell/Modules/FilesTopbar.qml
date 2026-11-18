@@ -672,10 +672,11 @@ Item {
         fieldHeight: FilesMetrics.topbarControlSize
         leftIconSize: Theme.iconSizeMedium
         backgroundColor: Theme.surfaceContainerLowest
-        bottomLeftRadius: recentPopup.visible ? 0 : radius
+        bottomLeftRadius: radius * (1 - recentPopup.attachment)
         bottomRightRadius: bottomLeftRadius
-        color: recentPopup.visible ? recentPopup.containerColor : Theme.foregroundColor(backgroundColor, !usePopupTransparency)
+        color: Theme.blend(Theme.foregroundColor(backgroundColor, !usePopupTransparency), recentPopup.containerColor, recentPopup.attachment)
         borderWidth: 0
+        border.pixelAligned: false
         focusedBorderWidth: Math.max(Theme.outlineWidthFocused, Theme.focusRingWidth)
         placeholderText: I18n.tr("Search in Files", "placeholder in the search field")
         keyForwardTargets: [topbar]
