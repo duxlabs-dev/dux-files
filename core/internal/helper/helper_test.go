@@ -6,7 +6,10 @@ import (
 	"encoding/json"
 	"io/fs"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strconv"
+	"syscall"
 	"testing"
 
 	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
@@ -338,6 +341,43 @@ func TestMainRefusesOutsidePkexec(t *testing.T) {
 	stderr.Reset()
 	assert.Equal(t, ExitRefused, Main([]string{OpLstat, "/"}, nil, nil, &stderr))
 	assert.Contains(t, stderr.String(), "root")
+}
+
+const helperProcessEnv = "DFILES_TEST_HELPER_PROCESS"
+
+func TestMain(m *testing.M) {
+	if os.Getenv(helperProcessEnv) == "" {
+		os.Exit(m.Run())
+	}
+	os.Exit(Main(os.Args[1:], os.Stdin, os.Stdout, os.Stderr))
+}
+
+func TestMainConfinedRootWritesWhereTheCallerCannot(t *testing.T) {
+	locked := filepath.Join(t.TempDir(), "locked")
+	require.NoError(t, os.Mkdir(locked, 0o000))
+	t.Cleanup(func() { _ = os.Chmod(locked, 0o700) })
+	made := filepath.Join(locked, "made")
+
+	self, err := os.Executable()
+	require.NoError(t, err)
+	var stderr bytes.Buffer
+	cmd := exec.Command(self, OpMkdir, made, "755")
+	cmd.Env = append(os.Environ(), helperProcessEnv+"=1", "PKEXEC_UID="+strconv.Itoa(os.Getuid()))
+	cmd.Stderr = &stderr
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Cloneflags:  syscall.CLONE_NEWUSER,
+		UidMappings: []syscall.SysProcIDMap{{ContainerID: 0, HostID: os.Getuid(), Size: 1}},
+		GidMappings: []syscall.SysProcIDMap{{ContainerID: 0, HostID: os.Getgid(), Size: 1}},
+	}
+	if err := cmd.Start(); err != nil {
+		t.Skip("user namespaces unavailable: " + err.Error())
+	}
+	require.NoError(t, cmd.Wait(), stderr.String())
+
+	require.NoError(t, os.Chmod(locked, 0o700))
+	info, err := os.Lstat(made)
+	require.NoError(t, err)
+	assert.True(t, info.IsDir())
 }
 
 func umask(t *testing.T) int {

@@ -5,80 +5,101 @@ import (
 	"fmt"
 	"os"
 	"runtime"
-	"strconv"
 	"strings"
 	"syscall"
-	"unsafe"
 
 	"golang.org/x/sys/unix"
 )
 
-const keptCaps = 1<<unix.CAP_CHOWN | 1<<unix.CAP_DAC_OVERRIDE | 1<<unix.CAP_DAC_READ_SEARCH | 1<<unix.CAP_FOWNER
+const (
+	keptCaps    = 1<<unix.CAP_CHOWN | 1<<unix.CAP_DAC_OVERRIDE | 1<<unix.CAP_DAC_READ_SEARCH | 1<<unix.CAP_FOWNER
+	boundedEnv  = "DFILES_HELPER_BOUNDED"
+	capSetWidth = 64
+)
 
-func confine(uid int) error {
-	if err := allThreads(unix.SYS_PRCTL, unix.PR_SET_KEEPCAPS, 1, 0); err != nil {
-		return fmt.Errorf("keepcaps: %w", err)
+func confine() error {
+	if os.Getenv(boundedEnv) == "" {
+		return execBounded()
 	}
-	if err := syscall.Seteuid(uid); err != nil {
-		return fmt.Errorf("seteuid: %w", err)
-	}
-	if err := allThreads(unix.SYS_SETFSUID, 0, 0, 0); err != nil {
-		return fmt.Errorf("setfsuid: %w", err)
-	}
-
-	header := unix.CapUserHeader{Version: unix.LINUX_CAPABILITY_VERSION_3}
-	data := [2]unix.CapUserData{{Effective: keptCaps, Permitted: keptCaps}}
-	if err := allThreads(unix.SYS_CAPSET, uintptr(unsafe.Pointer(&header)), uintptr(unsafe.Pointer(&data[0])), 0); err != nil {
-		return fmt.Errorf("capset: %w", err)
-	}
-	runtime.KeepAlive(&header)
-	runtime.KeepAlive(&data)
-
 	if err := unix.Prctl(unix.PR_SET_DUMPABLE, 0, 0, 0, 0); err != nil {
 		return fmt.Errorf("dumpable: %w", err)
 	}
-	if err := allThreads(unix.SYS_PRCTL, unix.PR_SET_NO_NEW_PRIVS, 1, 0); err != nil {
-		return fmt.Errorf("no_new_privs: %w", err)
-	}
-	return verifyConfined(uid)
+	return verifyConfined()
 }
 
-func allThreads(trap, a1, a2, a3 uintptr) error {
-	_, _, errno := syscall.AllThreadsSyscall(trap, a1, a2, a3)
-	if errno != 0 {
-		return errno
+func execBounded() error {
+	runtime.LockOSThread()
+	if err := dropBoundingSet(); err != nil {
+		return fmt.Errorf("capbset: %w", err)
+	}
+	header := unix.CapUserHeader{Version: unix.LINUX_CAPABILITY_VERSION_3}
+	data := [2]unix.CapUserData{{Effective: keptCaps, Permitted: keptCaps}}
+	if err := unix.Capset(&header, &data[0]); err != nil {
+		return fmt.Errorf("capset: %w", err)
+	}
+	if err := unix.Prctl(unix.PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0); err != nil {
+		return fmt.Errorf("no_new_privs: %w", err)
+	}
+	err := syscall.Exec("/proc/self/exe", os.Args, append(os.Environ(), boundedEnv+"=1"))
+	return fmt.Errorf("exec: %w", err)
+}
+
+func dropBoundingSet() error {
+	for capability := range capSetWidth {
+		if keptCaps&(1<<capability) != 0 {
+			continue
+		}
+		err := unix.Prctl(unix.PR_CAPBSET_DROP, uintptr(capability), 0, 0, 0)
+		pastLastCap := errors.Is(err, unix.EINVAL)
+		if pastLastCap {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
 
-func verifyConfined(uid int) error {
-	status, err := os.ReadFile("/proc/self/status")
+func verifyConfined() error {
+	caps := fmt.Sprintf("%016x", uint64(keptCaps))
+	want := map[string]string{
+		"Uid":        "0\t0\t0\t0",
+		"CapPrm":     caps,
+		"CapEff":     caps,
+		"CapBnd":     caps,
+		"NoNewPrivs": "1",
+	}
+	threads, err := os.ReadDir("/proc/self/task")
 	if err != nil {
 		return err
 	}
-	wantUID := "0\t" + strconv.Itoa(uid) + "\t0\t0"
-	var gotUID, gotCaps, gotPermitted, gotNNP string
-	for _, line := range strings.Split(string(status), "\n") {
+	for _, thread := range threads {
+		got, err := threadStatus(thread.Name())
+		if err != nil {
+			return err
+		}
+		for key, value := range want {
+			if got[key] != value {
+				return fmt.Errorf("privilege drop did not take effect on thread %s (%s %q, want %q)", thread.Name(), key, got[key], value)
+			}
+		}
+	}
+	return nil
+}
+
+func threadStatus(tid string) (map[string]string, error) {
+	raw, err := os.ReadFile("/proc/self/task/" + tid + "/status")
+	if err != nil {
+		return nil, err
+	}
+	status := map[string]string{}
+	for line := range strings.SplitSeq(string(raw), "\n") {
 		key, value, ok := strings.Cut(line, ":")
 		if !ok {
 			continue
 		}
-		value = strings.TrimSpace(value)
-		switch key {
-		case "Uid":
-			gotUID = value
-		case "CapEff":
-			gotCaps = value
-		case "CapPrm":
-			gotPermitted = value
-		case "NoNewPrivs":
-			gotNNP = value
-		}
+		status[key] = strings.TrimSpace(value)
 	}
-	caps, parseErr := strconv.ParseUint(gotCaps, 16, 64)
-	permitted, permErr := strconv.ParseUint(gotPermitted, 16, 64)
-	if parseErr != nil || permErr != nil || caps != keptCaps || permitted != keptCaps || gotUID != wantUID || gotNNP != "1" {
-		return errors.New("privilege drop did not take effect (uid " + gotUID + ", caps " + gotCaps + "/" + gotPermitted + ", nnp " + gotNNP + ")")
-	}
-	return nil
+	return status, nil
 }
