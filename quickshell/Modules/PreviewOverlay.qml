@@ -152,7 +152,7 @@ FocusScope {
         anchors.fill: parent
         anchors.margins: Theme.spacingXL
         radius: Theme.cornerRadiusL
-        color: Theme.foregroundColor(Theme.surfaceContainer, true)
+        color: Theme.foregroundColor(Theme.cardSurface, true)
         border.width: Theme.outlineWidth
         border.color: Theme.outlineVariant
 

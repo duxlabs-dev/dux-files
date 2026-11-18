@@ -77,7 +77,7 @@ Item {
             visible: !row.finished
             Layout.preferredHeight: Theme.spacingXS
             radius: Theme.cornerRadiusFull
-            color: Theme.surfaceContainerHigh
+            color: Theme.chipSurface
 
             Rectangle {
                 width: parent.width * row.fraction

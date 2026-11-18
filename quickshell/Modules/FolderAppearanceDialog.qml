@@ -106,7 +106,7 @@ OverlayDialog {
                     width: 32
                     height: 32
                     radius: width / 2
-                    color: modelData === "" ? Theme.surfaceContainerHigh : modelData
+                    color: modelData === "" ? Theme.chipSurface : modelData
                     border.width: (root.look?.color ?? "") === modelData ? Theme.focusRingWidth : 1
                     border.color: Theme.outlineVariant
 
@@ -125,7 +125,7 @@ OverlayDialog {
                 width: 32
                 height: 32
                 radius: width / 2
-                color: root.customColor ? root.look.color : Theme.surfaceContainerHigh
+                color: root.customColor ? root.look.color : Theme.chipSurface
                 border.width: root.customColor || root.pickingColor ? Theme.focusRingWidth : 1
                 border.color: Theme.outlineVariant
 

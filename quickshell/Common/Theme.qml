@@ -184,17 +184,21 @@ Singleton {
     property color primary: currentThemeData.primary
     property color primaryText: currentThemeData.primaryText
     readonly property real containerTint: currentThemeData.containerTint ?? Tonal.defaultTint(surfaceContainer)
-    property color primaryContainer: currentThemeData.softPrimaryContainer || Tonal.softContainer(primary, surfaceContainer, containerTint)
+    // softContainer steps below its base on light surfaces, and the dim host is the lowest role there
+    readonly property color softContainerBase: lightSurfaces ? surfaceLadder.host : surfaceContainer
+    property color primaryContainer: currentThemeData.softPrimaryContainer || Tonal.softContainer(primary, softContainerBase, containerTint)
     property color secondary: currentThemeData.secondary
-    property color secondaryContainer: currentThemeData.secondaryContainer || blend(surfaceContainerHigh, secondary, 0.35)
+    readonly property color themeSecondaryContainer: currentThemeData.secondaryContainer || blend(surfaceContainerHigh, secondary, 0.35)
+    property color secondaryContainer: Tonal.standApart(themeSecondaryContainer, selectionNeighbors, selectedContainerDistinction)
     property color tertiary: currentThemeData.tertiary || currentThemeData.secondary
-    property color tertiaryContainer: currentThemeData.tertiaryContainer || blend(surfaceContainerHigh, tertiary, 0.35)
+    readonly property color themeTertiaryContainer: currentThemeData.tertiaryContainer || blend(surfaceContainerHigh, tertiary, 0.35)
+    property color tertiaryContainer: Tonal.standApart(themeTertiaryContainer, selectionNeighbors, selectedContainerDistinction)
     readonly property real selectedContainerTint: currentThemeData.selectedContainerTint ?? 0.2
     // DMS exports surfaceContainerHigh as secondary_container when the theme sets none
     // A selected row has to read against the rows beside it and the surface behind them
-    readonly property var selectionNeighbors: [hostSurface, cardSurface, chipSurface]
+    readonly property var selectionNeighbors: [hostSurface, cardSurface, chipSurface, hostRecessSurface]
     readonly property real selectedContainerDistinction: 1.15
-    readonly property bool themedSelectedContainer: !!currentThemeData.secondaryContainer && !Qt.colorEqual(secondaryContainer, surfaceContainerHigh) && Contrast.isTonal(secondaryContainer, onSecondaryContainer) && Contrast.isTonal(secondaryContainer, surfaceText) && Contrast.worstRatio(secondaryContainer, selectionNeighbors) >= selectedContainerDistinction
+    readonly property bool themedSelectedContainer: !!currentThemeData.secondaryContainer && !Qt.colorEqual(themeSecondaryContainer, surfaceContainerHigh) && Contrast.isTonal(secondaryContainer, onSecondaryContainer) && Contrast.isTonal(secondaryContainer, surfaceText) && Contrast.worstRatio(secondaryContainer, selectionNeighbors) >= selectedContainerDistinction
     readonly property color selectedContainer: currentThemeData.selectedContainer || (themedSelectedContainer ? secondaryContainer : Contrast.distinctTint(chipSurface, primary, surfaceText, selectedContainerTint, selectionNeighbors, selectedContainerDistinction))
     readonly property color accentOnSelectedContainer: currentThemeData.accentOnSelectedContainer || (Contrast.ratio(primary, selectedContainer) >= 3 ? primary : onSelectedContainer)
     readonly property color accentOnPrimaryContainer: currentThemeData.accentOnPrimaryContainer || (Contrast.ratio(primary, primaryContainer) >= 3 ? primary : onPrimaryContainer)
@@ -215,11 +219,17 @@ Singleton {
     property color surfaceContainer: currentThemeData.surfaceContainer
     property color surfaceContainerHigh: currentThemeData.surfaceContainerHigh
     property color surfaceContainerHighest: currentThemeData.surfaceContainerHighest || surfaceContainerHigh
-    // Light mode runs the ladder the other way so the host stays the darkest tone and chips the lightest, as in dark mode
-    readonly property color hostSurface: isLightMode ? surfaceContainerHighest : surface
-    readonly property color cardSurface: surfaceContainer
-    readonly property color chipSurface: isLightMode ? surface : surfaceContainerHigh
-    readonly property color chipSurfaceNested: surfaceContainerHighest
+    // Keyed on the surface tone, not isLightMode: a dark-only theme keeps its dark ladder in light mode
+    readonly property bool lightSurfaces: Tonal.isLight(surface)
+    readonly property var surfaceLadder: Tonal.surfaceLadder(surface, surfaceContainerLow, surfaceContainer, surfaceContainerHigh, surfaceContainerHighest)
+    readonly property color hostSurface: surfaceLadder.host
+    readonly property color cardSurface: surfaceLadder.card
+    readonly property color chipSurface: surfaceLadder.chip
+    readonly property color chipSurfaceNested: surfaceLadder.nested
+    // A hovered light chip lands on the dim host tone, so a chip straight on the host takes the card tone there
+    readonly property color hostChipSurface: lightSurfaces ? cardSurface : chipSurface
+    // A region of the host set back from the rest, like a sidebar. Dark lifts the neighboring pane instead; a light pane cannot rise under white cards.
+    readonly property color hostRecessSurface: lightSurfaces ? Tonal.dropTone(hostSurface, Tonal.LIGHT_RECESS_DROP) : hostSurface
     readonly property color tooltipSurface: inverseSurface
     readonly property color tooltipText: Contrast.readableOn(tooltipSurface, [inverseOnSurface].concat(onContainerCandidates))
     property color inverseSurface: currentThemeData.inverseSurface || surfaceText
@@ -271,12 +281,12 @@ Singleton {
         Binding {
             target: root
             property: "onSecondaryContainer"
-            value: root.currentThemeData.onSecondaryContainer || Contrast.readableOn(root.secondaryContainer, root.onContainerCandidates)
+            value: root.readableOnContainer(root.secondaryContainer, root.currentThemeData.onSecondaryContainer)
         },
         Binding {
             target: root
             property: "onTertiaryContainer"
-            value: root.currentThemeData.onTertiaryContainer || Contrast.readableOn(root.tertiaryContainer, root.onContainerCandidates)
+            value: root.readableOnContainer(root.tertiaryContainer, root.currentThemeData.onTertiaryContainer)
         },
         Binding {
             target: root
@@ -295,6 +305,13 @@ Singleton {
         }
     ]
     readonly property var onContainerCandidates: [surfaceText, surface, contrastLight, contrastDark]
+
+    // The theme's own on-color wins while it still reads on the container
+    function readableOnContainer(container, explicit) {
+        if (!explicit)
+            return Contrast.readableOn(container, onContainerCandidates);
+        return Contrast.readableOn(container, [Qt.color(explicit)].concat(onContainerCandidates));
+    }
     readonly property real tonalTintAlpha: 0.16
 
     property color error: currentThemeData.error
@@ -308,10 +325,11 @@ Singleton {
     property color primaryPressed: Qt.rgba(primary.r, primary.g, primary.b, 0.16)
     property color primarySelected: Qt.rgba(primary.r, primary.g, primary.b, 0.3)
 
-    property color surfaceHover: Qt.rgba(surfaceVariant.r, surfaceVariant.g, surfaceVariant.b, 0.08)
-    property color surfacePressed: Qt.rgba(surfaceVariant.r, surfaceVariant.g, surfaceVariant.b, 0.12)
-    property color surfaceLight: Qt.rgba(surfaceVariant.r, surfaceVariant.g, surfaceVariant.b, 0.1)
-    property color surfaceVariantAlpha: Qt.rgba(surfaceVariant.r, surfaceVariant.g, surfaceVariant.b, 0.2)
+    // Alpha of the text color reads on every role in both modes; alpha of a surface tone vanishes on light surfaces
+    property color surfaceHover: withAlpha(surfaceText, stateLayerHover)
+    property color surfacePressed: withAlpha(surfaceText, stateLayerPressed)
+    property color surfaceLight: withAlpha(surfaceText, 0.03)
+    property color surfaceVariantAlpha: withAlpha(surfaceText, 0.06)
 
     property color surfaceTextHover: Qt.rgba(surfaceText.r, surfaceText.g, surfaceText.b, 0.08)
     property color surfaceTextMedium: Qt.rgba(surfaceText.r, surfaceText.g, surfaceText.b, 0.7)
@@ -466,7 +484,8 @@ Singleton {
     }
     readonly property real scrimAlpha: 0.55
     readonly property color scrimColor: currentThemeData.scrim || "#000000"
-    readonly property color backdropColor: surface.hslLightness >= 0.5 ? surfaceDim : scrimColor
+    // A light scrim has to end up below the dim host, so it starts one host step under it
+    readonly property color backdropColor: lightSurfaces ? Tonal.dropTone(surfaceLadder.host, Tonal.LIGHT_HOST_DROP) : scrimColor
     readonly property real buttonHeightXXS: 28
     readonly property real buttonHeightXS: 32
     readonly property real buttonHeightS: 40
@@ -549,7 +568,7 @@ Singleton {
     readonly property bool connectedSurfaceBlurEnabled: true
 
     readonly property color windowSurface: withAlpha(hostSurface, floatingWindowTransparency)
-    readonly property color floatingWindowPaneSurface: withAlpha(surfaceContainer, floatingWindowForegroundAlpha)
+    readonly property color floatingWindowPaneSurface: withAlpha(cardSurface, floatingWindowForegroundAlpha)
     readonly property color floatingSurface: withAlpha(hostSurface, popupTransparency)
     readonly property color nestedSurface: foregroundColor(cardSurface)
     readonly property color floatingWindowSurface: withAlpha(hostSurface, floatingWindowTransparency)

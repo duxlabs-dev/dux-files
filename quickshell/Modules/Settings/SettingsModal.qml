@@ -99,6 +99,12 @@ FloatingWindow {
                 height: parent.height - parent.topPadding
                 clip: true
 
+                Rectangle {
+                    anchors.fill: sidebar
+                    color: SettingsMetrics.sidebarColor
+                    visible: sidebar.visible && color.a > 0
+                }
+
                 SettingsSidebar {
                     id: sidebar
                     anchors.left: parent.left

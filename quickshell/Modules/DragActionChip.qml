@@ -42,7 +42,7 @@ Rectangle {
     implicitWidth: row.implicitWidth + FileBrowserMetrics.pathPillPadding * 2
     implicitHeight: FileBrowserMetrics.pathPillHeight
     radius: FileBrowserMetrics.pathPillRadius
-    color: Theme.surfaceContainerHigh
+    color: Theme.chipSurface
     border.width: Theme.outlineWidth
     border.color: Theme.primary
 
