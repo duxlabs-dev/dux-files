@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import qs.Common
+import qs.Modules
 import qs.Services
 
 ShellRoot {
@@ -61,6 +62,12 @@ ShellRoot {
                 "result": fixture.nextResult
             });
         }
+    }
+
+    Component {
+        id: propertiesTab
+
+        PropertiesOpenWith {}
     }
 
     Component.onCompleted: {
@@ -124,6 +131,24 @@ ShellRoot {
         };
         AppsService.allApps(response => fixture.replies = fixture.replies.concat([response]));
         check("result is unwrapped", replies[0].apps[0].id, "editor.desktop");
+
+        nextResult = {
+            "mimeType": "text/plain",
+            "apps": [
+                {
+                    "id": "editor.desktop",
+                    "name": "Editor"
+                }
+            ]
+        };
+        const untyped = propertiesTab.createObject(fixture, {
+            "path": "/tmp/init.vim"
+        });
+        check("properties types an untyped file by its path", lastSent().params, {
+            "path": "/tmp/init.vim"
+        });
+        check("properties lists apps for an untyped file", [untyped.resolvedMime, untyped.apps.length], ["text/plain", 1]);
+        untyped.destroy();
 
         nextError = "denied";
         AppsService.run("/tmp/a.sh", response => fixture.replies = fixture.replies.concat([response]));

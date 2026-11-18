@@ -50,6 +50,11 @@ func TestHandleForMimeTypesAPath(t *testing.T) {
 	result := resultOf(t, call(t, svc, ipc.Request{ID: 2, Method: "files.apps.forMime", Params: map[string]any{"path": note}}))
 	assert.Equal(t, "text/plain", result["mimeType"])
 
+	blank := testfs.WriteBytes(t, filepath.Join(root, "files", "blank.unknownext"), nil)
+	result = resultOf(t, call(t, svc, ipc.Request{ID: 5, Method: "files.apps.forMime", Params: map[string]any{"path": blank}}))
+	assert.Equal(t, "text/plain", result["mimeType"])
+	assert.NotEmpty(t, result["apps"])
+
 	out := call(t, svc, ipc.Request{ID: 3, Method: "files.apps.forMime", Params: map[string]any{}})
 	assert.Equal(t, "EINVAL", out["code"])
 }
