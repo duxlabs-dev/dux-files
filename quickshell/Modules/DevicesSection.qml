@@ -97,7 +97,7 @@ FilePlaceSection {
             return "";
         if (!SandboxService.available("devices"))
             return FilesFormat.featureUnavailable(SandboxService.reason("devices"));
-        return I18n.tr("Drives are unavailable because udisks2 is not running", "sidebar explanation when the device service is missing");
+        return I18n.tr("Drives are unavailable because %1 is not running", "sidebar explanation when the device service is missing, %1 is the service name").arg("udisks2");
     }
     showEmpty: !DevicesService.available
     visible: SettingsData.showDevicesSection && (shownDevices.length > 0 || NetworkService.portables.length > 0 || NetworkService.deviceMounts.length > 0 || (showEmpty && emptyText !== ""))
@@ -119,7 +119,13 @@ FilePlaceSection {
         FilePlaceRow {
             required property var modelData
 
-            label: modelData.mounted && modelData.mountPoint ? modelData.mountPoint : modelData.name || modelData.label || I18n.tr("File system", "storage volume containing the root directory")
+            label: {
+                if (modelData.label)
+                    return modelData.label;
+                if (modelData.mounted && modelData.mountPoint)
+                    return modelData.mountPoint;
+                return modelData.name || I18n.tr("File system", "storage volume containing the root directory");
+            }
             subtitle: modelData.device || ""
             iconName: modelData.encrypted && !modelData.unlocked ? "lock" : modelData.iconName
             ringValue: modelData.mounted ? DevicesService.usageRatio(modelData.mountPoint) : -1
@@ -176,23 +182,8 @@ FilePlaceSection {
     Repeater {
         model: NetworkService.deviceMounts
 
-        FilePlaceRow {
-            required property var modelData
-
-            label: modelData.name
-            iconName: modelData.iconName
-            actionIcon: "eject"
-            actionTooltip: I18n.tr("Disconnect", "network mount action")
-            busy: section.busyId === modelData.id
-            dropPath: modelData.path
-            onClicked: section.navigateRequested(modelData.path)
-            onMiddleClicked: section.tabRequested(modelData.path)
-            onDropped: drop => section.dropRequested(modelData.path, drop)
-            onSpringLoaded: section.navigateRequested(modelData.path)
-            onActionTriggered: {
-                section.busyId = modelData.id;
-                NetworkService.disconnect(modelData.id, () => section.busyId = "");
-            }
+        NetworkMountRow {
+            host: section
         }
     }
 }

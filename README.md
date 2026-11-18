@@ -44,7 +44,7 @@ Owns `org.freedesktop.FileManager1`, so "show in folder" from browsers and other
 
 ### From source
 
-You need Go and `quickshell`.
+You need Go and dux-qt-base, the Dux build of Quickshell that runs the UI (the `dux-qt-base` package, `libdux-qt-base0` on Debian and Ubuntu). `make QTBASE=1` builds it from the `dux-qt-base` submodule and embeds it in `dfiles` instead.
 
 ```bash
 git clone --recurse-submodules https://github.com/duxlabs-dev/dux-files.git

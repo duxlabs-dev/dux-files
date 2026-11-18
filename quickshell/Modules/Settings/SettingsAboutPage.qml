@@ -60,7 +60,7 @@ Item {
         },
         {
             "id": "indexSearch",
-            "label": I18n.tr("Search with the danksearch index", "capability row on the about page")
+            "label": I18n.tr("Search with the %1 index", "capability row on the about page, %1 is the search service name").arg("danksearch")
         }
     ]
 
@@ -98,10 +98,8 @@ Item {
 
             DButton {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: I18n.tr("Support Dux Labs", "about page hero button, opens the Ko-fi donation page")
+                text: I18n.tr("Support %1", "about page hero button, opens the Ko-fi donation page, %1 is Dux Labs").arg("Dux Labs")
                 iconName: "favorite"
-                backgroundColor: Theme.primary
-                textColor: Theme.onPrimary
                 onClicked: DuxFilesService.openUri(root.kofiUrl)
             }
         }
@@ -117,10 +115,38 @@ Item {
 
             SettingsLinkRow {
                 iconName: "code"
-                title: I18n.tr("GitHub", "about page resource button")
+                title: "GitHub"
                 keywords: I18n.tr("source code repository issues", "settings search keywords, space separated, add synonyms in your language")
                 subtitle: root.host(root.githubUrl)
                 url: root.githubUrl
+            }
+        }
+
+        SettingsCard {
+            title: I18n.tr("Runtime", "about page runtime section header")
+
+            SettingsRow {
+                title: RuntimeInfo.name
+                trailingBadge: RuntimeInfo.version
+            }
+
+            SettingsRow {
+                visible: RuntimeInfo.revision !== ""
+                title: I18n.tr("Revision", "about page runtime build revision")
+                subtitle: RuntimeInfo.revision
+            }
+
+            SettingsRow {
+                visible: RuntimeInfo.library !== ""
+                title: I18n.tr("Library", "about page runtime library path")
+                body: StyledText {
+                    width: parent.width
+                    text: RuntimeInfo.library
+                    textFormat: Text.PlainText
+                    font.pixelSize: Theme.fontSizeSmall
+                    color: Theme.surfaceVariantText
+                    wrapMode: Text.WrapAnywhere
+                }
             }
         }
 

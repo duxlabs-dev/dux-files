@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/xdg"
 )
 
 const (
@@ -38,20 +40,19 @@ type Env struct {
 }
 
 func FromProcess() Env {
-	home, _ := os.UserHomeDir()
 	exec, _ := os.Executable()
 	if resolved, err := filepath.EvalSymlinks(exec); err == nil {
 		exec = resolved
 	}
 	return Env{
-		DataHome:   envOr("XDG_DATA_HOME", filepath.Join(home, ".local", "share")),
-		ConfigHome: envOr("XDG_CONFIG_HOME", filepath.Join(home, ".config")),
-		StateHome:  envOr("XDG_STATE_HOME", filepath.Join(home, ".local", "state")),
-		ConfigDirs: splitPathList(envOr("XDG_CONFIG_DIRS", "/etc/xdg")),
-		DataDirs:   splitPathList(envOr("XDG_DATA_DIRS", "/usr/local/share:/usr/share")),
+		DataHome:   xdg.DataHome(),
+		ConfigHome: xdg.ConfigHome(),
+		StateHome:  xdg.StateHome(),
+		ConfigDirs: xdg.ConfigDirs(),
+		DataDirs:   xdg.DataDirs(),
 		SysConfDir: "/etc",
 		DataDir:    "/usr/share",
-		Desktops:   splitList(os.Getenv("XDG_CURRENT_DESKTOP")),
+		Desktops:   xdg.SplitPathList(os.Getenv("XDG_CURRENT_DESKTOP")),
 		PortalDir:  os.Getenv("XDG_DESKTOP_PORTAL_DIR"),
 		Exec:       exec,
 	}
@@ -59,16 +60,16 @@ func FromProcess() Env {
 
 func (e Env) WithEnviron(environ map[string]string) Env {
 	if v, ok := environ["XDG_CURRENT_DESKTOP"]; ok {
-		e.Desktops = splitList(v)
+		e.Desktops = xdg.SplitPathList(v)
 	}
 	if v, ok := environ["XDG_DESKTOP_PORTAL_DIR"]; ok {
 		e.PortalDir = v
 	}
 	if v, ok := environ["XDG_DATA_DIRS"]; ok {
-		e.DataDirs = splitPathList(valueOr(v, "/usr/local/share:/usr/share"))
+		e.DataDirs = xdg.SplitPathList(valueOr(v, xdg.DefaultDataDirs))
 	}
 	if v, ok := environ["XDG_CONFIG_DIRS"]; ok {
-		e.ConfigDirs = splitPathList(valueOr(v, "/etc/xdg"))
+		e.ConfigDirs = xdg.SplitPathList(valueOr(v, xdg.DefaultConfigDirs))
 	}
 	if v := environ["XDG_DATA_HOME"]; v != "" {
 		e.DataHome = v
@@ -149,32 +150,9 @@ func validDesktops(desktops []string) []string {
 	return out
 }
 
-func envOr(key, fallback string) string {
-	return valueOr(os.Getenv(key), fallback)
-}
-
 func valueOr(value, fallback string) string {
 	if value == "" {
 		return fallback
 	}
 	return value
-}
-
-func splitPathList(value string) []string {
-	return splitOn(value, string(os.PathListSeparator))
-}
-
-func splitList(value string) []string {
-	return splitOn(value, ":")
-}
-
-func splitOn(value, sep string) []string {
-	var out []string
-	for _, part := range strings.Split(value, sep) {
-		if part == "" {
-			continue
-		}
-		out = append(out, part)
-	}
-	return out
 }

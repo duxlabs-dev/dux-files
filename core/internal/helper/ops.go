@@ -287,10 +287,26 @@ func rename(from, to string, noReplace bool) error {
 	if noReplace {
 		flags = unix.RENAME_NOREPLACE
 	}
-	if err := unix.Renameat2(fromParent, fromName, toParent, toName, flags); err != nil {
+	err = unix.Renameat2(fromParent, fromName, toParent, toName, flags)
+	if noReplace && (errors.Is(err, unix.EINVAL) || errors.Is(err, unix.ENOSYS)) {
+		err = renameatIfAbsent(fromParent, fromName, toParent, toName)
+	}
+	if err != nil {
 		return &os.LinkError{Op: "rename", Old: from, New: to, Err: err}
 	}
 	return nil
+}
+
+func renameatIfAbsent(fromParent int, fromName string, toParent int, toName string) error {
+	var st unix.Stat_t
+	err := unix.Fstatat(toParent, toName, &st, unix.AT_SYMLINK_NOFOLLOW)
+	switch {
+	case err == nil:
+		return unix.EEXIST
+	case !errors.Is(err, unix.ENOENT):
+		return err
+	}
+	return unix.Renameat(fromParent, fromName, toParent, toName)
 }
 
 func utimes(path string, mtimeNs int64) error {

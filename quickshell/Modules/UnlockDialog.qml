@@ -40,13 +40,9 @@ OverlayDialog {
     supportingText: device ? I18n.tr("%1 is encrypted. Enter its passphrase to unlock it.", "unlock dialog explanation").arg(device.name) : ""
     onAccepted: submit()
 
-    DTextField {
+    PasswordField {
         id: passphraseField
 
-        width: parent.width
-        outlined: true
-        echoMode: TextInput.Password
-        showPasswordToggle: true
         isError: root.errorText !== ""
         supportingText: root.errorText
         labelText: I18n.tr("Passphrase", "label for an encrypted device passphrase input")
@@ -54,14 +50,8 @@ OverlayDialog {
     }
 
     actions: [
-        TextButton {
-            text: I18n.tr("Cancel", "dialog button to cancel")
-            onClicked: root.close()
-        },
         DButton {
             text: I18n.tr("Unlock", "unlock dialog header for an encrypted device")
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             onClicked: root.submit()
         }
     ]

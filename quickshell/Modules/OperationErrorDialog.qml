@@ -5,34 +5,17 @@ import qs.Services
 import qs.DCommon.Widgets
 import qs.DCommon.FileBrowser
 
-OverlayDialog {
+PausedJobDialog {
     id: root
 
-    property string opScope: ""
-    property bool catchUnscoped: false
-
-    readonly property var paused: FileOpsService.jobs.filter(job => job.state === "paused-error" && (job.scope === opScope || (catchUnscoped && job.scope === "")))
-    readonly property var current: paused.length > 0 ? paused[0] : null
-    readonly property var failure: current ? current.failure : null
+    readonly property var failure: prompt
     readonly property bool elevationOffered: offers("retryElevated")
     readonly property bool deniedUnelevated: failure !== null && failure.code === "EACCES" && !elevationOffered
-    property bool applyToAll: false
 
-    function answer(action) {
-        if (!current || !failure)
-            return;
-        FileOpsService.respond(current.id, failure.id, action, applyToAll);
-        applyToAll = false;
-    }
-
-    function offers(action) {
-        return failure ? (failure.actions || []).includes(action) : false;
-    }
-
-    onFailureChanged: failure ? open() : close()
+    pausedState: "paused-error"
+    promptKey: "failure"
     title: failure ? FileFormat.operationError(failure.code, failure.message) : ""
     supportingText: failure ? failure.path : ""
-    closeEnabled: false
 
     ColumnLayout {
         width: parent.width
@@ -65,29 +48,21 @@ OverlayDialog {
     }
 
     actions: [
-        TextButton {
-            text: I18n.tr("Cancel", "dialog button to cancel")
-            onClicked: root.answer("cancel")
-        },
         DButton {
             visible: root.offers("skip")
             text: I18n.tr("Skip", "file conflict dialog button to leave the item alone")
-            backgroundColor: Theme.secondaryContainer
-            textColor: Theme.onSecondaryContainer
+            variant: "tonal"
             onClicked: root.answer("skip")
         },
         DButton {
             visible: root.offers("retry")
             text: I18n.tr("Try again", "file operation error dialog button to retry")
-            backgroundColor: root.elevationOffered ? Theme.secondaryContainer : Theme.primary
-            textColor: root.elevationOffered ? Theme.onSecondaryContainer : Theme.primaryText
+            variant: root.elevationOffered ? "tonal" : "filled"
             onClicked: root.answer("retry")
         },
         DButton {
             visible: root.elevationOffered
             text: I18n.tr("Retry as administrator", "file operation error dialog button to retry with elevated rights")
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             onClicked: root.answer("retryElevated")
         }
     ]

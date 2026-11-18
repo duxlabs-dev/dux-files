@@ -2,10 +2,13 @@ package filechooser
 
 import (
 	"errors"
-	"net/url"
 	"path/filepath"
 	"strings"
 	"sync"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/fileuri"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/dbusutil"
 
 	"github.com/duxlabs-dev/dux-go/log"
 	"github.com/godbus/dbus/v5"
@@ -73,8 +76,7 @@ type Service struct {
 	conn    *dbus.Conn
 	ui      UI
 	globs   func(mime string) []string
-	enabled bool
-	reason  string
+	owner   *dbusutil.NameOwner
 	pending map[string]*pending
 	watched map[string]int
 	signals chan *dbus.Signal
@@ -123,7 +125,7 @@ func New(conn *dbus.Conn, ui UI, globs func(mime string) []string) (*Service, er
 	if ui == nil {
 		return nil, errors.New("no chooser ui")
 	}
-	s := &Service{conn: conn, ui: ui, globs: globs, pending: map[string]*pending{}, watched: map[string]int{}, signals: make(chan *dbus.Signal, 16)}
+	s := &Service{conn: conn, ui: ui, globs: globs, owner: dbusutil.NewNameOwner(conn, BusName, "filechooser"), pending: map[string]*pending{}, watched: map[string]int{}, signals: make(chan *dbus.Signal, 16)}
 	if err := conn.Export(object{service: s}, Path, Interface); err != nil {
 		return nil, err
 	}
@@ -294,7 +296,7 @@ func results(req *Request, answer Answer) map[string]dbus.Variant {
 		if !filepath.IsAbs(path) {
 			continue
 		}
-		uris = append(uris, (&url.URL{Scheme: "file", Path: filepath.Clean(path)}).String())
+		uris = append(uris, fileuri.Build(filepath.Clean(path)))
 	}
 	if req.Method == MethodSave && len(uris) > 1 {
 		uris = uris[:1]
@@ -328,34 +330,8 @@ func toWire(f Filter) wireFilter {
 func (s *Service) SetEnabled(enabled bool) Status {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	switch {
-	case enabled && !s.enabled:
-		s.requestLocked()
-	case !enabled && s.enabled:
-		s.releaseLocked()
-	}
+	s.owner.SetEnabled(enabled)
 	return s.statusLocked()
-}
-
-func (s *Service) requestLocked() {
-	reply, err := s.conn.RequestName(BusName, 0)
-	if err != nil {
-		s.reason = err.Error()
-		log.Warnf("filechooser: request %s: %v", BusName, err)
-		return
-	}
-	s.enabled = true
-	s.reason = ""
-	if reply == dbus.RequestNameReplyInQueue {
-		log.Infof("filechooser: %s is held by another process; queued", BusName)
-	}
-}
-
-func (s *Service) releaseLocked() {
-	if _, err := s.conn.ReleaseName(BusName); err != nil {
-		log.Warnf("filechooser: release %s: %v", BusName, err)
-	}
-	s.enabled = false
 }
 
 func (s *Service) Status() Status {
@@ -365,28 +341,15 @@ func (s *Service) Status() Status {
 }
 
 func (s *Service) statusLocked() Status {
-	return Status{Enabled: s.enabled, Owned: s.ownedLocked(), Reason: s.reason}
-}
-
-func (s *Service) ownedLocked() bool {
-	var unique string
-	if err := s.conn.BusObject().Call("org.freedesktop.DBus.GetNameOwner", 0, BusName).Store(&unique); err != nil {
-		return false
-	}
-	names := s.conn.Names()
-	return len(names) > 0 && names[0] == unique
+	return Status{Enabled: s.owner.Enabled(), Owned: s.owner.Owned(), Reason: s.owner.Reason()}
 }
 
 func (s *Service) ReloadBus() error {
-	return s.conn.BusObject().Call("org.freedesktop.DBus.ReloadConfig", 0).Err
+	return dbusutil.ReloadConfig(s.conn)
 }
 
 func (s *Service) FrontendPID() (int, bool) {
-	var pid uint32
-	if err := s.conn.BusObject().Call("org.freedesktop.DBus.GetConnectionUnixProcessID", 0, FrontendName).Store(&pid); err != nil {
-		return 0, false
-	}
-	return int(pid), true
+	return dbusutil.ProcessID(s.conn, FrontendName)
 }
 
 func (s *Service) Close() {
@@ -395,9 +358,7 @@ func (s *Service) Close() {
 		p.resolve(Answer{Response: ResponseCancelled})
 		s.ui.CloseChooser(id)
 	}
-	if s.enabled {
-		s.releaseLocked()
-	}
+	s.owner.Release()
 	s.mu.Unlock()
 	s.conn.RemoveSignal(s.signals)
 	close(s.signals)

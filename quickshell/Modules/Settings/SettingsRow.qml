@@ -28,6 +28,8 @@ T.Control {
     property color rowColor: SettingsMetrics.rowColor
     property color iconColor: Theme.primary
     property color titleColor: Theme.surfaceText
+    property string settingKey: ""
+    readonly property bool modified: settingKey !== "" && SettingsData.hasDefault(settingKey) && !SettingsData.isDefault(settingKey)
 
     default property alias trailing: trailingSlot.data
     property alias leading: leadingSlot.data
@@ -229,15 +231,67 @@ T.Control {
                 opacity: root.enabled ? 1 : SettingsMetrics.disabledOpacity
                 visible: root.hasText
 
-                StyledText {
+                Item {
+                    id: titleLine
+
+                    readonly property bool resettable: root.settingKey !== "" && SettingsData.hasDefault(root.settingKey)
+                    readonly property real chipTrailing: Theme.spacingXS + Theme.iconSizeSmall + SettingsMetrics.resetChipPaddingH
+
                     width: parent.width
-                    text: root.title
-                    font.pixelSize: Theme.fontSizeMedium
-                    font.weight: Theme.fontWeightMedium
-                    color: root.titleColor
-                    wrapMode: Text.WordWrap
+                    height: titleText.implicitHeight
                     visible: root.title !== ""
-                    horizontalAlignment: Text.AlignLeft
+
+                    // The chip bleeds past the title box on every side, so the title never moves when a row turns modified
+                    Loader {
+                        id: resetChip
+                        anchors.left: parent.left
+                        anchors.leftMargin: -SettingsMetrics.resetChipPaddingH
+                        y: -SettingsMetrics.resetChipPaddingV
+                        width: SettingsMetrics.resetChipPaddingH + titleText.contentWidth + titleLine.chipTrailing
+                        height: titleText.implicitHeight + SettingsMetrics.resetChipPaddingV * 2
+                        active: root.modified && root.title !== ""
+
+                        sourceComponent: StyledButton {
+                            id: chip
+                            radius: Theme.fullRadius(width, height)
+                            color: SettingsMetrics.controlColor
+                            enabled: root.enabled
+                            Accessible.name: I18n.tr("Reset to default", "settings row button restoring the density default")
+                            Accessible.description: root.title
+                            onClicked: SettingsData.resetToDefault(root.settingKey)
+
+                            FocusRing {
+                                visible: chip.visualFocus
+                            }
+
+                            DIcon {
+                                anchors.right: parent.right
+                                anchors.rightMargin: SettingsMetrics.resetChipPaddingH - Theme.spacingXXS
+                                anchors.verticalCenter: parent.verticalCenter
+                                name: "restart_alt"
+                                size: Theme.iconSizeSmall
+                                color: Theme.surfaceVariantText
+                            }
+
+                            StateLayer {
+                                control: chip
+                                stateColor: root.titleColor
+                                tooltipText: I18n.tr("Reset to default", "settings row button restoring the density default")
+                            }
+                        }
+                    }
+
+                    StyledText {
+                        id: titleText
+                        anchors.left: parent.left
+                        width: parent.width - (titleLine.resettable ? titleLine.chipTrailing : 0)
+                        text: root.title
+                        font.pixelSize: Theme.fontSizeMedium
+                        font.weight: Theme.fontWeightMedium
+                        color: root.titleColor
+                        wrapMode: Text.WordWrap
+                        horizontalAlignment: Text.AlignLeft
+                    }
                 }
 
                 StyledText {

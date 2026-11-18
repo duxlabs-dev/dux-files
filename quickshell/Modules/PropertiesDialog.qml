@@ -85,7 +85,7 @@ OverlayDialog {
             },
             {
                 "label": I18n.tr("Location", "properties row showing the folder an item lives in"),
-                "value": Paths.shortenHome(primary.path.substring(0, primary.path.lastIndexOf("/")) || "/")
+                "value": Paths.shortenHome(FilePaths.parentOf(primary.path) || "/")
             }
         ];
         if (multiple)
@@ -259,13 +259,9 @@ OverlayDialog {
         }
     }
 
-    actions: [
-        TextButton {
-            text: I18n.tr("Close", "dialog button dismissing a dialog")
-            onClicked: {
-                root.stopScan();
-                root.close();
-            }
-        }
-    ]
+    cancelText: I18n.tr("Close", "dialog button dismissing a dialog")
+    cancelAction: () => {
+        root.stopScan();
+        root.close();
+    }
 }

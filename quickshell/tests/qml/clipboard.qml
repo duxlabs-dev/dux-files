@@ -25,6 +25,10 @@ ShellRoot {
     }
 
     readonly property QtObject transport: QtObject {
+        function call(method, params, callback) {
+            sendRequest(method, params, response => callback?.(DuxFilesService.unwrap(response)));
+        }
+
         function sendRequest(method, params, callback) {
             fixture.sent = fixture.sent.concat([
                 {

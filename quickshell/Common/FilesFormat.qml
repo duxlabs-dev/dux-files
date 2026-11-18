@@ -13,9 +13,9 @@ Singleton {
         case "SANDBOXED":
             return I18n.tr("Administrator access is not available inside the sandbox", "file operation error dialog explanation");
         case "NOPKEXEC":
-            return I18n.tr("Administrator access is not available because pkexec is not installed", "file operation error dialog explanation");
+            return I18n.tr("Administrator access is not available because %1 is not installed", "file operation error dialog explanation, %1 is a command").arg("pkexec");
         case "NOPOLICY":
-            return I18n.tr("Administrator access is not available because the polkit policy is not installed", "file operation error dialog explanation");
+            return I18n.tr("Administrator access is not available because the %1 policy is not installed", "file operation error dialog explanation, %1 is polkit").arg("polkit");
         default:
             return I18n.tr("Administrator access is not available", "file operation error dialog explanation");
         }
@@ -28,9 +28,9 @@ Singleton {
         case "NOHOSTFS":
             return I18n.tr("Not available without access to the host filesystem", "explanation for a feature that needs the flatpak host filesystem permission");
         case "NOUDISKS":
-            return I18n.tr("Drives are unavailable because the sandbox cannot reach udisks2", "explanation when the flatpak lacks the udisks2 permission");
+            return I18n.tr("Drives are unavailable because the sandbox cannot reach %1", "explanation when the flatpak lacks the udisks2 permission, %1 is the service name").arg("udisks2");
         case "NOGVFS":
-            return I18n.tr("Network locations are unavailable because the sandbox cannot reach gvfs", "explanation when the flatpak lacks the gvfs permissions");
+            return I18n.tr("Network locations are unavailable because the sandbox cannot reach %1", "explanation when the flatpak lacks the gvfs permissions, %1 is the service name").arg("gvfs");
         case "NOHOSTSPAWN":
             return I18n.tr("Not available because the sandbox cannot start programs on the host", "explanation for a feature that needs flatpak-spawn");
         case "PORTALCHOOSER":
@@ -42,6 +42,10 @@ Singleton {
         default:
             return I18n.tr("Not available", "explanation for a feature the environment does not permit");
         }
+    }
+
+    function matching(count, text) {
+        return I18n.tr("%1 matching “%2”", "filter bar above a folder listing, count then the typed text").arg(FileFormat.count(count)).arg(text);
     }
 
     function timeLeft(seconds) {
@@ -101,6 +105,8 @@ Singleton {
         case mime === "application/x-executable":
         case mime === "application/x-sharedlib":
         case mime === "application/x-pie-executable":
+        case mime === "application/vnd.appimage":
+        case mime === "application/x-iso9660-appimage":
             return true;
         }
         return false;

@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/wire"
+
 	"github.com/duxlabs-dev/dux-go/files"
 )
 
@@ -54,15 +56,15 @@ func FindMountable(scheme string, mountables []Mountable) (Mountable, bool) {
 func ParseURI(raw string, mountables []Mountable) (Spec, error) {
 	parsed, err := url.Parse(strings.TrimSpace(raw))
 	if err != nil {
-		return Spec{}, fail(files.CodeInvalid, "%s is not a valid address", raw)
+		return Spec{}, wire.Fail(files.CodeInvalid, "%s is not a valid address", raw)
 	}
 	if parsed.Scheme == "" || parsed.Host == "" {
-		return Spec{}, fail(files.CodeInvalid, "%s needs a scheme and a host, for example sftp://host/path", raw)
+		return Spec{}, wire.Fail(files.CodeInvalid, "%s needs a scheme and a host, for example sftp://host/path", raw)
 	}
 
 	mountable, ok := FindMountable(parsed.Scheme, mountables)
 	if !ok {
-		return Spec{}, fail(files.CodeNotSupported, "no gvfs backend handles %s://", parsed.Scheme)
+		return Spec{}, wire.Fail(files.CodeNotSupported, "no gvfs backend handles %s://", parsed.Scheme)
 	}
 
 	spec := Spec{Prefix: "/", Items: map[string]string{"type": mountable.Type}}

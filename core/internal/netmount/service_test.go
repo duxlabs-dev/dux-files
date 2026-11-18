@@ -2,6 +2,7 @@ package netmount
 
 import (
 	"testing"
+	"time"
 
 	"github.com/duxlabs-dev/dux-files/core/internal/dbustest"
 	"github.com/godbus/dbus/v5"
@@ -68,9 +69,33 @@ func trackedService(t *testing.T, tracker *fakeTracker) *Service {
 	return svc
 }
 
+type snapshots chan Snapshot
+
+func (p snapshots) Publish(_ string, data any) {
+	if snapshot, ok := data.(Snapshot); ok {
+		p <- snapshot
+	}
+}
+
+func (p snapshots) next(t *testing.T) Snapshot {
+	t.Helper()
+	select {
+	case snapshot := <-p:
+		return snapshot
+	case <-time.After(5 * time.Second):
+		t.Fatal("no mounts snapshot published")
+		return Snapshot{}
+	}
+}
+
 func trackedBus(t *testing.T, tracker *fakeTracker) (string, *dbus.Conn) {
 	t.Helper()
 	address := dbustest.Bus(t)
+	return address, ownTracker(t, address, tracker)
+}
+
+func ownTracker(t *testing.T, address string, tracker *fakeTracker) *dbus.Conn {
+	t.Helper()
 	daemon := dbustest.Connect(t, address)
 	require.NoError(t, daemon.Export(tracker, TrackerPath, TrackerIface))
 	for i, mount := range tracker.mounts {
@@ -88,15 +113,23 @@ func trackedBus(t *testing.T, tracker *fakeTracker) (string, *dbus.Conn) {
 	reply, err := daemon.RequestName(VfsBus, dbus.NameFlagDoNotQueue)
 	require.NoError(t, err)
 	require.Equal(t, dbus.RequestNameReplyPrimaryOwner, reply)
-	return address, daemon
+	return daemon
 }
 
 func gvfsMount(uri string, visible bool) wireMount {
+	mount := fuselessMount(uri, visible)
+	if visible {
+		mount.FuseMountpoint = byteStringOf("/run/user/1000/gvfs/ftp:host=example")
+	}
+	return mount
+}
+
+func fuselessMount(uri string, visible bool) wireMount {
 	spec, err := ParseURI(uri, mountables)
 	if err != nil {
 		panic(err)
 	}
-	mount := wireMount{
+	return wireMount{
 		DBusID:      ":1.9",
 		ObjectPath:  "/org/gtk/vfs/mount/1",
 		DisplayName: "probe",
@@ -105,10 +138,6 @@ func gvfsMount(uri string, visible bool) wireMount {
 		UserVisible: visible,
 		Spec:        encodeSpec(spec),
 	}
-	if visible {
-		mount.FuseMountpoint = byteStringOf("/run/user/1000/gvfs/ftp:host=example")
-	}
-	return mount
 }
 
 func TestConnectReusesAMountGvfsAlreadyHolds(t *testing.T) {
@@ -133,4 +162,36 @@ func TestConnectListsTheSharesOfABareSMBServer(t *testing.T) {
 		{Name: "Back up", URI: "smb://example/Back%20up"},
 		{Name: "media", URI: "smb://example/media", Comment: "Music and video"},
 	}, connected.Shares)
+}
+
+func TestDaemonRestartDropsStaleMountsAndReloads(t *testing.T) {
+	address, daemon := trackedBus(t, &fakeTracker{mounts: []wireMount{fuselessMount("ftp://example/", true)}})
+	published := make(snapshots, 8)
+	svc := NewService(published, t.TempDir())
+	conn, err := dbus.Connect(address, dbus.WithIncomingInterceptor(svc.intercept))
+	require.NoError(t, err)
+	svc.run(conn)
+	t.Cleanup(svc.Close)
+
+	before := svc.Snapshot()
+	require.True(t, before.Available)
+	require.Len(t, before.Mounts, 1)
+	assert.Empty(t, before.Mounts[0].Path)
+
+	require.NoError(t, daemon.Close())
+	gone := published.next(t)
+	assert.False(t, gone.Available)
+	assert.Equal(t, "gvfs is not running", gone.Reason)
+	assert.Empty(t, gone.Mounts)
+	assert.Empty(t, gone.Schemes)
+
+	ownTracker(t, address, &fakeTracker{mounts: []wireMount{gvfsMount("ftp://example/", true)}})
+	back := published.next(t)
+	assert.True(t, back.Available)
+	require.Len(t, back.Mounts, 1)
+	assert.Equal(t, "/run/user/1000/gvfs/ftp:host=example", back.Mounts[0].Path)
+
+	connected, err := svc.Connect("ftp://example/pub", "")
+	require.NoError(t, err)
+	assert.Equal(t, "/run/user/1000/gvfs/ftp:host=example/pub", connected.Location)
 }

@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -20,12 +22,6 @@ func mkdir(t *testing.T, path string) string {
 	t.Helper()
 	require.NoError(t, os.MkdirAll(path, 0o755))
 	return path
-}
-
-func write(t *testing.T, path, body string) {
-	t.Helper()
-	require.NoError(t, os.MkdirAll(filepath.Dir(path), 0o755))
-	require.NoError(t, os.WriteFile(path, []byte(body), 0o644))
 }
 
 func keys(groups []Group) []string {
@@ -51,7 +47,7 @@ func TestDiscoverSteamLibrary(t *testing.T) {
 	library := filepath.Join(root, ".local", "share", "Steam")
 	mkdir(t, filepath.Join(library, "steamapps", "common", "Supreme"))
 	mkdir(t, filepath.Join(library, "steamapps", "compatdata", "1091500"))
-	write(t, filepath.Join(library, "steamapps", "libraryfolders.vdf"), `
+	testfs.Write(t, filepath.Join(library, "steamapps", "libraryfolders.vdf"), `
 "libraryfolders"
 {
 	"0" { "path"		"`+library+`" }
@@ -72,7 +68,7 @@ func TestDiscoverHeroicPrefixes(t *testing.T) {
 	root := home(t)
 	named := mkdir(t, filepath.Join(root, "Games", "Heroic", "Prefixes", "Sugar"))
 	untitled := mkdir(t, filepath.Join(root, "Games", "Heroic", "Prefixes", "Rocket League"))
-	write(t, filepath.Join(root, ".config", "heroic", "GamesConfig", "sugar.json"),
+	testfs.Write(t, filepath.Join(root, ".config", "heroic", "GamesConfig", "sugar.json"),
 		`{"sugar":{"title":"Sugar","winePrefix":"`+named+`"},"rocket":{"winePrefix":"`+untitled+`"},"gone":{"winePrefix":"/nope/missing"},"version":"v0","explicit":true}`)
 
 	groups := Discover(root)
@@ -89,7 +85,7 @@ func TestDiscoverHeroicPrefixes(t *testing.T) {
 func TestDiscoverLutrisReadsDataHome(t *testing.T) {
 	root := home(t)
 	prefix := mkdir(t, filepath.Join(root, "Games", "pes"))
-	write(t, filepath.Join(root, ".local", "share", "lutris", "games", "sp-football.yml"),
+	testfs.Write(t, filepath.Join(root, ".local", "share", "lutris", "games", "sp-football.yml"),
 		"game:\n  exe: game.exe\n  prefix: "+prefix+"\nname: pes\n")
 
 	groups := Discover(root)

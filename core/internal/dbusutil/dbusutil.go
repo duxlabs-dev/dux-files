@@ -2,7 +2,9 @@ package dbusutil
 
 import (
 	"bytes"
+	"errors"
 
+	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/godbus/dbus/v5"
 )
 
@@ -20,4 +22,16 @@ func ErrorMessage(call dbus.Error) string {
 		return call.Name
 	}
 	return text
+}
+
+func WrapDBus(err error, code func(call dbus.Error, text string) files.Code) error {
+	if err == nil {
+		return nil
+	}
+	call, ok := err.(dbus.Error)
+	if !ok {
+		return &files.Error{Code: files.CodeIO, Err: err}
+	}
+	text := ErrorMessage(call)
+	return &files.Error{Code: code(call, text), Err: errors.New(text)}
 }

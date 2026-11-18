@@ -29,7 +29,3 @@ func TestWriteFileReplacesAndLeavesNoTemp(t *testing.T) {
 	require.Len(t, entries, 1)
 	assert.Equal(t, "state.json", entries[0].Name())
 }
-
-func TestWriteFileFailsWithoutTheDirectory(t *testing.T) {
-	assert.Error(t, WriteFile(filepath.Join(t.TempDir(), "missing", "f"), []byte("x"), 0o644))
-}

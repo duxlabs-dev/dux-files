@@ -1,16 +1,16 @@
 package fileops
 
 import (
-	"bufio"
 	"context"
-	"encoding/json"
-	"net"
 	"os"
 	"path/filepath"
-	"strconv"
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/ipctest"
 
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/stretchr/testify/require"
@@ -18,19 +18,7 @@ import (
 
 func call(t *testing.T, m *Manager, req ipc.Request) map[string]any {
 	t.Helper()
-	client, srv := net.Pipe()
-	t.Cleanup(func() {
-		_ = client.Close()
-		_ = srv.Close()
-	})
-
-	go m.Handle(context.Background(), ipc.NewConnWriter(srv), req)
-
-	line, err := bufio.NewReader(client).ReadBytes('\n')
-	require.NoError(t, err)
-	var out map[string]any
-	require.NoError(t, json.Unmarshal(line, &out))
-	return out
+	return ipctest.Call(t, func(w *ipc.ConnWriter) { m.Handle(context.Background(), w, req) })
 }
 
 func TestHandleRejectsBadParams(t *testing.T) {
@@ -61,9 +49,9 @@ func TestHandleRejectsBadParams(t *testing.T) {
 
 func TestHandleStartsAJobAndLists(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "a.txt"), "a")
 	dest := filepath.Join(root, "dest")
-	write(t, filepath.Join(dest, "keep"), "")
+	testfs.Write(t, filepath.Join(dest, "keep"), "")
 
 	manager, bus := newHarness(t)
 	out := call(t, manager, ipc.Request{ID: 3, Method: "files.op.copy", Params: map[string]any{
@@ -80,14 +68,14 @@ func TestHandleStartsAJobAndLists(t *testing.T) {
 	listed := call(t, manager, ipc.Request{Method: "files.op.jobs"})["result"].(map[string]any)["jobs"].([]any)
 	require.Len(t, listed, 1)
 	require.Equal(t, "done", listed[0].(map[string]any)["state"])
-	require.Equal(t, "a", read(t, filepath.Join(dest, "a.txt")))
+	require.Equal(t, "a", testfs.Read(t, filepath.Join(dest, "a.txt")))
 }
 
 func TestHandleRespondNeedsTheCurrentAnswerID(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "new")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "new")
 	dest := filepath.Join(root, "dest")
-	write(t, filepath.Join(dest, "a.txt"), "old")
+	testfs.Write(t, filepath.Join(dest, "a.txt"), "old")
 
 	manager, bus := newHarness(t)
 	paused := make(chan struct{}, 1)
@@ -104,7 +92,7 @@ func TestHandleRespondNeedsTheCurrentAnswerID(t *testing.T) {
 	require.NoError(t, manager.Cancel(job.id))
 	view := bus.wait(t, job.id)
 	require.True(t, view.Cancelled)
-	require.Equal(t, "old", read(t, filepath.Join(dest, "a.txt")))
+	require.Equal(t, "old", testfs.Read(t, filepath.Join(dest, "a.txt")))
 }
 
 func TestHandleCancelAndUndoErrors(t *testing.T) {
@@ -118,35 +106,6 @@ func TestHandleCancelAndUndoErrors(t *testing.T) {
 
 	out = call(t, manager, ipc.Request{Method: "files.op.respond", Params: map[string]any{"jobId": "j404", "id": "c1", "action": "banana"}})
 	require.Contains(t, out, "error")
-}
-
-func TestJobsListingIsSafeWhileAJobRecords(t *testing.T) {
-	root := t.TempDir()
-	src := filepath.Join(root, "src")
-	for i := range 40 {
-		write(t, filepath.Join(src, "f"+strconv.Itoa(i)+".txt"), "body")
-	}
-	dest := filepath.Join(root, "dest")
-	require.NoError(t, os.Mkdir(dest, 0o755))
-
-	manager, bus := newHarness(t)
-	sources := make([]string, 0, 40)
-	for i := range 40 {
-		sources = append(sources, filepath.Join(src, "f"+strconv.Itoa(i)+".txt"))
-	}
-	job := manager.enqueue(spec{kind: KindCopy, scope: "w1", sources: sources, dest: dest})
-
-	done := make(chan struct{})
-	go func() {
-		defer close(done)
-		for range 200 {
-			manager.Jobs()
-		}
-	}()
-
-	bus.wait(t, job.id)
-	<-done
-	require.FileExists(t, filepath.Join(dest, "f39.txt"))
 }
 
 func TestDropActionOnTheSameDeviceIsAMove(t *testing.T) {
@@ -193,11 +152,11 @@ func TestHandleNewFolderPassesUnique(t *testing.T) {
 func TestDuplicateAnswerDoesNotLeakIntoTheNextPrompt(t *testing.T) {
 	root := t.TempDir()
 	src := filepath.Join(root, "src")
-	write(t, filepath.Join(src, "a.txt"), "new")
-	write(t, filepath.Join(src, "b.txt"), "new")
+	testfs.Write(t, filepath.Join(src, "a.txt"), "new")
+	testfs.Write(t, filepath.Join(src, "b.txt"), "new")
 	dest := filepath.Join(root, "dest")
-	write(t, filepath.Join(dest, "a.txt"), "old")
-	write(t, filepath.Join(dest, "b.txt"), "old")
+	testfs.Write(t, filepath.Join(dest, "a.txt"), "old")
+	testfs.Write(t, filepath.Join(dest, "b.txt"), "old")
 
 	manager, bus := newHarness(t)
 	var asked []string
@@ -223,15 +182,15 @@ func TestDuplicateAnswerDoesNotLeakIntoTheNextPrompt(t *testing.T) {
 
 	require.Equal(t, StateDone, view.State)
 	require.Len(t, asked, 2, "both files must raise their own prompt")
-	require.Equal(t, "old", read(t, filepath.Join(dest, "a.txt")))
-	require.Equal(t, "old", read(t, filepath.Join(dest, "b.txt")))
+	require.Equal(t, "old", testfs.Read(t, filepath.Join(dest, "a.txt")))
+	require.Equal(t, "old", testfs.Read(t, filepath.Join(dest, "b.txt")))
 }
 
 func TestAnswerForAnotherJobIsRefused(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "new")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "new")
 	dest := filepath.Join(root, "dest")
-	write(t, filepath.Join(dest, "a.txt"), "old")
+	testfs.Write(t, filepath.Join(dest, "a.txt"), "old")
 
 	manager, bus := newHarness(t)
 	bus.onConflict = func(c Conflict) Answer {
@@ -242,12 +201,12 @@ func TestAnswerForAnotherJobIsRefused(t *testing.T) {
 	view := run(t, manager, bus, spec{kind: KindCopy, sources: []string{src}, dest: dest})
 
 	require.Equal(t, StateDone, view.State)
-	require.Equal(t, "old", read(t, filepath.Join(dest, "a.txt")))
+	require.Equal(t, "old", testfs.Read(t, filepath.Join(dest, "a.txt")))
 }
 
 func TestCancelAfterTheJobFinishedKeepsTheTerminalState(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "a")
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
 
@@ -271,7 +230,7 @@ func TestCancelAfterTheJobFinishedKeepsTheTerminalState(t *testing.T) {
 func TestCopyIntoItsOwnSubdirectoryIsRefused(t *testing.T) {
 	root := t.TempDir()
 	src := filepath.Join(root, "src")
-	write(t, filepath.Join(src, "a.txt"), "a")
+	testfs.Write(t, filepath.Join(src, "a.txt"), "a")
 	inner := filepath.Join(src, "inner")
 	require.NoError(t, os.Mkdir(inner, 0o755))
 

@@ -8,6 +8,10 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/ini"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/xdg"
+
 	"github.com/duxlabs-dev/dux-files/core/internal/atomicfile"
 )
 
@@ -36,12 +40,12 @@ func assocPaths() []string {
 		paths = append(paths, filepath.Join(dir, "mimeapps.list"))
 	}
 
-	add(xdgConfigHome())
-	for _, dir := range xdgConfigDirs() {
+	add(xdg.ConfigHome())
+	for _, dir := range xdg.ConfigDirs() {
 		add(dir)
 	}
-	add(filepath.Join(xdgDataHome(), "applications"))
-	for _, dir := range xdgDataDirs() {
+	add(filepath.Join(xdg.DataHome(), "applications"))
+	for _, dir := range xdg.DataDirs() {
 		add(filepath.Join(dir, "applications"))
 	}
 	return paths
@@ -61,7 +65,7 @@ func currentDesktops() []string {
 	return out
 }
 
-func writePath() string { return filepath.Join(xdgConfigHome(), "mimeapps.list") }
+func writePath() string { return filepath.Join(xdg.ConfigHome(), "mimeapps.list") }
 
 func loadAssocFiles() []assocFile {
 	var files []assocFile
@@ -192,10 +196,7 @@ func (s *Service) SetDefault(mimeType, desktopID string) error {
 	canonical := s.detector.db.Canonical(mimeType)
 	updated := setGroupLine(original, groupDefaults, canonical, desktopID)
 	updated = setGroupLine(updated, groupAdded, canonical, addedLine(updated, canonical, desktopID))
-	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
-		return err
-	}
-	return atomicfile.WriteFile(path, updated, 0o644)
+	return atomicfile.WriteFileMkdir(path, updated, 0o644, 0o755)
 }
 
 func safeIniField(s string) bool {
@@ -211,15 +212,12 @@ func setGroupLine(original []byte, group, key, value string) []byte {
 
 	start, end := -1, -1
 	for i, raw := range lines {
-		trimmed := strings.TrimSpace(raw)
-		if !strings.HasPrefix(trimmed, "[") || !strings.HasSuffix(trimmed, "]") {
-			continue
-		}
-		if trimmed == "["+group+"]" {
+		name, ok := ini.Header(raw)
+		switch {
+		case !ok:
+		case name == group:
 			start = i
-			continue
-		}
-		if start >= 0 && end < 0 {
+		case start >= 0 && end < 0:
 			end = i
 		}
 	}
@@ -235,7 +233,7 @@ func setGroupLine(original []byte, group, key, value string) []byte {
 	}
 
 	for i := start + 1; i < end; i++ {
-		if strings.HasPrefix(strings.TrimSpace(lines[i]), key+"=") {
+		if ini.Key(lines[i]) == key {
 			lines[i] = line
 			return joinLines(lines)
 		}

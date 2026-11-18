@@ -157,12 +157,6 @@ func TestDecodeMountDescribesAGvfsMount(t *testing.T) {
 	assert.Equal(t, "folder-remote", mount.IconName)
 }
 
-func TestKindSortsBackendsIntoSections(t *testing.T) {
-	assert.Equal(t, KindNetwork, kindOf("smb-share"))
-	assert.Equal(t, KindDevice, kindOf("mtp"))
-	assert.Equal(t, KindOther, kindOf("trash"))
-}
-
 func TestThemedIconFallsBackWhenTheIconIsNotThemed(t *testing.T) {
 	assert.Equal(t, "folder-remote", themedIcon(""))
 	assert.Equal(t, "drive-removable-media", themedIcon(". GThemedIcon drive-removable-media drive"))

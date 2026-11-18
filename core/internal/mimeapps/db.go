@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/xdg"
 )
 
 type DB struct {
@@ -34,61 +36,11 @@ func appendXDG(dirs []string, leaf string) []string {
 		dirs = append(dirs, dir)
 	}
 
-	add(filepath.Join(xdgDataHome(), leaf))
-	for _, dir := range xdgDataDirs() {
+	add(filepath.Join(xdg.DataHome(), leaf))
+	for _, dir := range xdg.DataDirs() {
 		add(filepath.Join(dir, leaf))
 	}
 	return dirs
-}
-
-func xdgDataHome() string {
-	if dir := os.Getenv("XDG_DATA_HOME"); dir != "" {
-		return dir
-	}
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return ""
-	}
-	return filepath.Join(home, ".local", "share")
-}
-
-func xdgDataDirs() []string {
-	raw := os.Getenv("XDG_DATA_DIRS")
-	if raw == "" {
-		raw = "/usr/local/share:/usr/share"
-	}
-	var out []string
-	for _, dir := range strings.Split(raw, ":") {
-		if dir = strings.TrimSpace(dir); dir != "" {
-			out = append(out, dir)
-		}
-	}
-	return out
-}
-
-func xdgConfigHome() string {
-	if dir := os.Getenv("XDG_CONFIG_HOME"); dir != "" {
-		return dir
-	}
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return ""
-	}
-	return filepath.Join(home, ".config")
-}
-
-func xdgConfigDirs() []string {
-	raw := os.Getenv("XDG_CONFIG_DIRS")
-	if raw == "" {
-		raw = "/etc/xdg"
-	}
-	var out []string
-	for _, dir := range strings.Split(raw, ":") {
-		if dir = strings.TrimSpace(dir); dir != "" {
-			out = append(out, dir)
-		}
-	}
-	return out
 }
 
 func LoadDB(dirs []string) *DB {

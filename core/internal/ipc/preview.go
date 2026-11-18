@@ -15,6 +15,8 @@ import (
 	"syscall"
 	"unicode/utf8"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/wire"
+
 	"github.com/duxlabs-dev/dux-go/ipc/params"
 	_ "golang.org/x/image/bmp"
 	_ "golang.org/x/image/tiff"
@@ -44,7 +46,7 @@ type imageSizeResult struct {
 func HandlePreview(_ context.Context, w *ConnWriter, req Request) {
 	path := params.StringOpt(req.Params, "path", "")
 	if !filepath.IsAbs(path) {
-		w.RespondError(req.ID, "path is not an absolute path")
+		wire.RespondError(w, req.ID, wire.Invalid("path is not an absolute path"))
 		return
 	}
 	limit := params.IntOpt(req.Params, "maxBytes", 0)
@@ -65,7 +67,7 @@ func HandlePreview(_ context.Context, w *ConnWriter, req Request) {
 func HandleImageSize(_ context.Context, w *ConnWriter, req Request) {
 	path := params.StringOpt(req.Params, "path", "")
 	if !filepath.IsAbs(path) {
-		w.RespondError(req.ID, "path is not an absolute path")
+		wire.RespondError(w, req.ID, wire.Invalid("path is not an absolute path"))
 		return
 	}
 	result, err := readImageSize(path)

@@ -4,8 +4,6 @@ import (
 	"cmp"
 	"context"
 	"errors"
-	"fmt"
-	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -13,12 +11,12 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/wire"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/fileuri"
+
 	"github.com/duxlabs-dev/dux-go/files"
 )
-
-func fail(code files.Code, format string, args ...any) error {
-	return &files.Error{Code: code, Err: fmt.Errorf(format, args...)}
-}
 
 type Service struct {
 	detector *Detector
@@ -71,7 +69,7 @@ func (s *Service) MimeOf(path string) (string, error) {
 
 func (s *Service) Open(ctx context.Context, paths []string, opts LaunchOptions) error {
 	if len(paths) == 0 {
-		return fail(files.CodeInvalid, "no paths given")
+		return wire.Fail(files.CodeInvalid, "no paths given")
 	}
 	if opts.Opener != "" {
 		return s.openViaCommand(paths, opts)
@@ -95,7 +93,7 @@ func (s *Service) Open(ctx context.Context, paths []string, opts LaunchOptions) 
 		s.noteOpened(entry, group.paths, group.mimes)
 	}
 	if len(unhandled) > 0 {
-		return fail(files.CodeNotSupported, "no application is registered for %s", strings.Join(unhandled, ", "))
+		return wire.Fail(files.CodeNotSupported, "no application is registered for %s", strings.Join(unhandled, ", "))
 	}
 	return nil
 }
@@ -103,7 +101,7 @@ func (s *Service) Open(ctx context.Context, paths []string, opts LaunchOptions) 
 func (s *Service) openViaCommand(paths []string, opts LaunchOptions) error {
 	command := strings.Fields(opts.Opener)
 	if len(command) == 0 {
-		return fail(files.CodeInvalid, "empty opener command")
+		return wire.Fail(files.CodeInvalid, "empty opener command")
 	}
 	for _, path := range paths {
 		dir := cmp.Or(opts.WorkingDir, filepath.Dir(path))
@@ -117,9 +115,9 @@ func (s *Service) openViaCommand(paths []string, opts LaunchOptions) error {
 		switch {
 		case err == nil:
 		case errors.Is(err, exec.ErrNotFound):
-			return fail(files.CodeNotFound, "opener %q is not installed", command[0])
+			return wire.Fail(files.CodeNotFound, "opener %q is not installed", command[0])
 		default:
-			return fail(files.CodeIO, "opener %s: %v", command[0], err)
+			return wire.Fail(files.CodeIO, "opener %s: %v", command[0], err)
 		}
 	}
 	s.noteOpened(nil, paths, nil)
@@ -128,7 +126,7 @@ func (s *Service) openViaCommand(paths []string, opts LaunchOptions) error {
 
 func (s *Service) OpenWith(ctx context.Context, desktopID string, paths []string, opts LaunchOptions) error {
 	if len(paths) == 0 {
-		return fail(files.CodeInvalid, "no paths given")
+		return wire.Fail(files.CodeInvalid, "no paths given")
 	}
 	if Sandboxed() {
 		return openViaPortal(ctx, paths, true)
@@ -136,7 +134,7 @@ func (s *Service) OpenWith(ctx context.Context, desktopID string, paths []string
 
 	entry := s.EntryByID(desktopID)
 	if !entry.Launchable() {
-		return fail(files.CodeNotFound, "desktop entry %q is not installed", desktopID)
+		return wire.Fail(files.CodeNotFound, "desktop entry %q is not installed", desktopID)
 	}
 	opts.Paths = paths
 	if err := s.Launch(entry, opts); err != nil {
@@ -159,16 +157,16 @@ func (s *Service) Run(path string, opts LaunchOptions) error {
 		return files.Wrap(path, err)
 	}
 	if info.IsDir() {
-		return fail(files.CodeInvalid, "%s is a directory", path)
+		return wire.Fail(files.CodeInvalid, "%s is a directory", path)
 	}
 	if info.Mode()&0o111 == 0 {
-		return fail(files.CodeAccess, "%s is not marked executable", path)
+		return wire.Fail(files.CodeAccess, "%s is not marked executable", path)
 	}
 
 	if s.detector.Detect(path, false) == TypeDesktop {
 		entry := parseDesktopFile(path, baseName(path))
 		if entry == nil {
-			return fail(files.CodeInvalid, "%s is not a valid desktop entry", path)
+			return wire.Fail(files.CodeInvalid, "%s is not a valid desktop entry", path)
 		}
 		opts.Paths = nil
 		return s.Launch(entry, opts)
@@ -183,12 +181,12 @@ func (s *Service) Run(path string, opts LaunchOptions) error {
 func (s *Service) OpenURI(ctx context.Context, uri string) error {
 	scheme, _, ok := strings.Cut(uri, ":")
 	if !ok || scheme == "" {
-		return fail(files.CodeInvalid, "invalid uri %q", uri)
+		return wire.Fail(files.CodeInvalid, "invalid uri %q", uri)
 	}
 	if scheme == "file" {
 		path := fileURIPath(uri)
 		if path == "" {
-			return fail(files.CodeInvalid, "invalid file uri %q", uri)
+			return wire.Fail(files.CodeInvalid, "invalid file uri %q", uri)
 		}
 		return s.Open(ctx, []string{path}, LaunchOptions{})
 	}
@@ -198,7 +196,7 @@ func (s *Service) OpenURI(ctx context.Context, uri string) error {
 
 	id := s.Default("x-scheme-handler/" + strings.ToLower(scheme))
 	if id == "" {
-		return fail(files.CodeNotSupported, "no handler registered for %q", scheme)
+		return wire.Fail(files.CodeNotSupported, "no handler registered for %q", scheme)
 	}
 	if err := s.Launch(s.EntryByID(id), LaunchOptions{Paths: []string{uri}}); err != nil {
 		return &files.Error{Code: files.CodeIO, Err: err}
@@ -247,9 +245,6 @@ func (s *Service) groupByApp(paths []string) ([]appGroup, []string, error) {
 }
 
 func fileURIPath(uri string) string {
-	parsed, err := url.Parse(uri)
-	if err != nil || parsed.Scheme != "file" {
-		return ""
-	}
-	return parsed.Path
+	path, _ := fileuri.Parse(uri)
+	return path
 }

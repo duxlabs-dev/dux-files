@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -16,8 +18,8 @@ func sampleTree(t *testing.T) (root, project string) {
 	t.Helper()
 	root = t.TempDir()
 	project = filepath.Join(root, "project")
-	write(t, filepath.Join(project, "README.md"), "hello")
-	write(t, filepath.Join(project, "src", "main.go"), "package main")
+	testfs.Write(t, filepath.Join(project, "README.md"), "hello")
+	testfs.Write(t, filepath.Join(project, "src", "main.go"), "package main")
 	require.NoError(t, os.Chmod(filepath.Join(project, "src", "main.go"), 0o755))
 	require.NoError(t, os.Symlink("README.md", filepath.Join(project, "link")))
 	require.NoError(t, os.MkdirAll(filepath.Join(project, "empty"), 0o755))
@@ -44,9 +46,9 @@ func TestCompressAndExtractRoundTrip(t *testing.T) {
 			require.Equal(t, StateDone, view.State, view.Error)
 
 			base := filepath.Join(out, "bundle")
-			assert.Equal(t, "hello", read(t, filepath.Join(base, "project", "README.md")))
-			assert.Equal(t, "package main", read(t, filepath.Join(base, "project", "src", "main.go")))
-			assert.Equal(t, "hello", read(t, filepath.Join(base, "README.md")), "a second top-level source lands beside the first")
+			assert.Equal(t, "hello", testfs.Read(t, filepath.Join(base, "project", "README.md")))
+			assert.Equal(t, "package main", testfs.Read(t, filepath.Join(base, "project", "src", "main.go")))
+			assert.Equal(t, "hello", testfs.Read(t, filepath.Join(base, "README.md")), "a second top-level source lands beside the first")
 			info, err := os.Stat(filepath.Join(base, "project", "src", "main.go"))
 			require.NoError(t, err)
 			assert.Equal(t, os.FileMode(0o755), info.Mode().Perm())
@@ -66,12 +68,12 @@ func TestCompressAndExtractRoundTrip(t *testing.T) {
 
 func TestCompressKeepsBothWhenTheNameIsTaken(t *testing.T) {
 	root, project := sampleTree(t)
-	write(t, filepath.Join(root, "project.zip"), "old")
+	testfs.Write(t, filepath.Join(root, "project.zip"), "old")
 	manager, bus := newHarness(t)
 
 	view := run(t, manager, bus, spec{kind: KindCompress, sources: []string{project}, dest: root, name: "project", format: FormatZip})
 	require.Equal(t, StateDone, view.State, view.Error)
-	assert.Equal(t, "old", read(t, filepath.Join(root, "project.zip")))
+	assert.Equal(t, "old", testfs.Read(t, filepath.Join(root, "project.zip")))
 	assert.FileExists(t, filepath.Join(root, "project (copy).zip"))
 }
 
@@ -122,7 +124,7 @@ func TestExtractDetectsFormatWithoutAnExtension(t *testing.T) {
 	require.Equal(t, StateDone, view.State, view.Error)
 	assert.FileExists(t, filepath.Join(out, "bare", "project", "README.md"))
 
-	write(t, filepath.Join(root, "plain.bin"), "not an archive")
+	testfs.Write(t, filepath.Join(root, "plain.bin"), "not an archive")
 	view = run(t, manager, bus, spec{kind: KindExtract, sources: []string{filepath.Join(root, "plain.bin")}, dest: out})
 	assert.Equal(t, StateFailed, view.State)
 	assert.NoDirExists(t, filepath.Join(out, "plain.bin"))
@@ -165,8 +167,8 @@ func extractFixture(t *testing.T, archive string) (string, View) {
 
 func assertSampleTree(t *testing.T, base string) {
 	t.Helper()
-	assert.Equal(t, "hello", read(t, filepath.Join(base, "README.md")))
-	assert.Equal(t, "package main", read(t, filepath.Join(base, "src", "main.go")))
+	assert.Equal(t, "hello", testfs.Read(t, filepath.Join(base, "README.md")))
+	assert.Equal(t, "package main", testfs.Read(t, filepath.Join(base, "src", "main.go")))
 	info, err := os.Stat(filepath.Join(base, "src", "main.go"))
 	require.NoError(t, err)
 	assert.Equal(t, os.FileMode(0o755), info.Mode().Perm())
@@ -196,8 +198,8 @@ func TestExtractRar(t *testing.T) {
 	out, view := extractFixture(t, fixture(t, "libarchive.rar"))
 	require.Equal(t, StateDone, view.State, view.Error)
 	base := filepath.Join(out, "libarchive")
-	assert.Equal(t, "test text document\r\n", read(t, filepath.Join(base, "test.txt")))
-	assert.Equal(t, "test text document\r\n", read(t, filepath.Join(base, "testdir", "test.txt")))
+	assert.Equal(t, "test text document\r\n", testfs.Read(t, filepath.Join(base, "test.txt")))
+	assert.Equal(t, "test text document\r\n", testfs.Read(t, filepath.Join(base, "testdir", "test.txt")))
 	assert.DirExists(t, filepath.Join(base, "testemptydir"))
 	target, err := os.Readlink(filepath.Join(base, "testlink"))
 	require.NoError(t, err)
@@ -209,7 +211,7 @@ func TestExtractLoneCompressedFileBesideItself(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			out, view := extractFixture(t, fixture(t, name))
 			require.Equal(t, StateDone, view.State, view.Error)
-			assert.Equal(t, "hello", read(t, filepath.Join(out, "hello.txt")))
+			assert.Equal(t, "hello", testfs.Read(t, filepath.Join(out, "hello.txt")))
 			assert.NoDirExists(t, filepath.Join(out, "hello.txt"))
 			assert.Equal(t, []Created{{Path: filepath.Join(out, "hello.txt"), Dir: false}}, view.Created)
 			assert.True(t, view.Undoable)
@@ -237,7 +239,7 @@ func TestDetectFormatByMagic(t *testing.T) {
 		})
 	}
 	plain := filepath.Join(t.TempDir(), "plain")
-	write(t, plain, "not an archive")
+	testfs.Write(t, plain, "not an archive")
 	assert.False(t, IsArchive(plain))
 	assert.False(t, IsArchive(filepath.Join(t.TempDir(), "missing")))
 }
@@ -306,7 +308,7 @@ func TestCompressSkipsAnUnreadableSubdirectory(t *testing.T) {
 	root, project := sampleTree(t)
 	locked := filepath.Join(project, "locked")
 	require.NoError(t, os.Mkdir(locked, 0o755))
-	write(t, filepath.Join(locked, "secret.txt"), "x")
+	testfs.Write(t, filepath.Join(locked, "secret.txt"), "x")
 	require.NoError(t, os.Chmod(locked, 0o000))
 	t.Cleanup(func() { _ = os.Chmod(locked, 0o755) })
 
@@ -332,7 +334,7 @@ func TestExtractSkipsTheRootEntryOfATar(t *testing.T) {
 
 	out, view := extractFixture(t, archive)
 	require.Equal(t, StateDone, view.State, view.Error)
-	assert.Equal(t, "hello", read(t, filepath.Join(out, "rooted", "sample", "hello.txt")))
+	assert.Equal(t, "hello", testfs.Read(t, filepath.Join(out, "rooted", "sample", "hello.txt")))
 }
 
 func zipWith(t *testing.T, path string, entries map[string]string) string {
@@ -366,32 +368,32 @@ func TestExtractLiftsASoleEntryNamedLikeTheArchive(t *testing.T) {
 	project := zipWith(t, filepath.Join(root, "project.zip"), map[string]string{"project/README.md": "hello", "project/src/main.go": "package main"})
 	view := extract(project)
 	assert.Equal(t, []Created{{Path: filepath.Join(out, "project"), Dir: true}}, view.Created)
-	assert.Equal(t, "hello", read(t, filepath.Join(out, "project", "README.md")))
-	assert.Equal(t, "package main", read(t, filepath.Join(out, "project", "src", "main.go")))
+	assert.Equal(t, "hello", testfs.Read(t, filepath.Join(out, "project", "README.md")))
+	assert.Equal(t, "package main", testfs.Read(t, filepath.Join(out, "project", "src", "main.go")))
 
 	view = extract(project)
 	assert.Equal(t, []Created{{Path: filepath.Join(out, "project (copy)"), Dir: true}}, view.Created)
-	assert.Equal(t, "hello", read(t, filepath.Join(out, "project (copy)", "README.md")))
+	assert.Equal(t, "hello", testfs.Read(t, filepath.Join(out, "project (copy)", "README.md")))
 
 	release := zipWith(t, filepath.Join(root, "release-1.0.zip"), map[string]string{"release/": "", "release/bin": "x"})
 	extract(release)
-	assert.Equal(t, "x", read(t, filepath.Join(out, "release-1.0", "release", "bin")), "a differently named folder keeps the archive folder")
+	assert.Equal(t, "x", testfs.Read(t, filepath.Join(out, "release-1.0", "release", "bin")), "a differently named folder keeps the archive folder")
 
 	notes := zipWith(t, filepath.Join(root, "notes.zip"), map[string]string{"notes.txt": "n"})
 	view = extract(notes)
 	assert.Equal(t, []Created{{Path: filepath.Join(out, "notes.txt"), Dir: false}}, view.Created)
-	assert.Equal(t, "n", read(t, filepath.Join(out, "notes.txt")))
+	assert.Equal(t, "n", testfs.Read(t, filepath.Join(out, "notes.txt")))
 	view = extract(notes)
-	assert.Equal(t, "n", read(t, filepath.Join(out, "notes (copy).txt")))
+	assert.Equal(t, "n", testfs.Read(t, filepath.Join(out, "notes (copy).txt")))
 
 	readme := zipWith(t, filepath.Join(root, "docs.zip"), map[string]string{"README.md": "r"})
 	extract(readme)
-	assert.Equal(t, "r", read(t, filepath.Join(out, "docs", "README.md")), "a differently named file keeps the archive folder")
+	assert.Equal(t, "r", testfs.Read(t, filepath.Join(out, "docs", "README.md")), "a differently named file keeps the archive folder")
 
 	pair := zipWith(t, filepath.Join(root, "pair.zip"), map[string]string{"pair/x": "1", "other/y": "2"})
 	extract(pair)
-	assert.Equal(t, "1", read(t, filepath.Join(out, "pair", "pair", "x")))
-	assert.Equal(t, "2", read(t, filepath.Join(out, "pair", "other", "y")))
+	assert.Equal(t, "1", testfs.Read(t, filepath.Join(out, "pair", "pair", "x")))
+	assert.Equal(t, "2", testfs.Read(t, filepath.Join(out, "pair", "other", "y")))
 
 	undo, err := manager.Undo("")
 	require.NoError(t, err)

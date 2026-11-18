@@ -8,6 +8,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -64,8 +66,8 @@ func TestLaunchWritesThroughTheChosenApp(t *testing.T) {
 	svc, root := fixture(t)
 
 	marker := filepath.Join(root, "launched")
-	target := writeFile(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
-	writeFile(t, filepath.Join(root, "xdg", "data", "applications", "recorder.desktop"), []byte(
+	target := testfs.WriteBytes(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
+	testfs.WriteBytes(t, filepath.Join(root, "xdg", "data", "applications", "recorder.desktop"), []byte(
 		"[Desktop Entry]\nType=Application\nName=Recorder\nExec=sh -c \"echo \\\"$1\\\" > "+marker+"\" sh %f\nMimeType=text/plain;\n"))
 
 	require.NoError(t, svc.OpenWith(context.Background(), "recorder.desktop", []string{target}, LaunchOptions{}))
@@ -79,8 +81,8 @@ func TestOpenUsesTheDefaultApp(t *testing.T) {
 	svc, root := fixture(t)
 
 	marker := filepath.Join(root, "opened")
-	target := writeFile(t, filepath.Join(root, "files", "shot.png"), []byte("\x89PNG\r\n\x1a\n"))
-	writeFile(t, filepath.Join(root, "xdg", "data", "applications", "viewer.desktop"), []byte(
+	target := testfs.WriteBytes(t, filepath.Join(root, "files", "shot.png"), []byte("\x89PNG\r\n\x1a\n"))
+	testfs.WriteBytes(t, filepath.Join(root, "xdg", "data", "applications", "viewer.desktop"), []byte(
 		"[Desktop Entry]\nType=Application\nName=Viewer\nExec=sh -c \"echo \\\"$1\\\" > "+marker+"\" sh %f\nMimeType=image/png;\n"))
 
 	require.NoError(t, svc.Open(context.Background(), []string{target}, LaunchOptions{}))
@@ -93,7 +95,7 @@ func TestOpenUsesTheDefaultApp(t *testing.T) {
 func TestOpenReportsMissingHandler(t *testing.T) {
 	svc, root := fixture(t)
 
-	target := writeFile(t, filepath.Join(root, "files", "disc.iso"), []byte("nothing handles this"))
+	target := testfs.WriteBytes(t, filepath.Join(root, "files", "disc.iso"), []byte("nothing handles this"))
 	err := svc.Open(context.Background(), []string{target}, LaunchOptions{})
 	require.Error(t, err)
 	assert.Equal(t, files.CodeNotSupported, files.CodeOf(err))
@@ -105,11 +107,11 @@ func TestOpenReportsMissingHandler(t *testing.T) {
 func TestOpenGroupsPathsByTheirDefaultApp(t *testing.T) {
 	svc, root := fixture(t)
 
-	note := writeFile(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
-	shot := writeFile(t, filepath.Join(root, "files", "shot.png"), []byte("\x89PNG\r\n\x1a\n"))
-	readme := writeFile(t, filepath.Join(root, "files", "readme.md"), []byte("# hi"))
-	disc := writeFile(t, filepath.Join(root, "files", "disc.iso"), []byte("nothing handles this"))
-	photo := writeFile(t, filepath.Join(root, "files", "photo.jpg"), []byte("\xff\xd8\xff"))
+	note := testfs.WriteBytes(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
+	shot := testfs.WriteBytes(t, filepath.Join(root, "files", "shot.png"), []byte("\x89PNG\r\n\x1a\n"))
+	readme := testfs.WriteBytes(t, filepath.Join(root, "files", "readme.md"), []byte("# hi"))
+	disc := testfs.WriteBytes(t, filepath.Join(root, "files", "disc.iso"), []byte("nothing handles this"))
+	photo := testfs.WriteBytes(t, filepath.Join(root, "files", "photo.jpg"), []byte("\xff\xd8\xff"))
 
 	groups, unhandled, err := svc.groupByApp([]string{note, shot, readme, disc, photo})
 	require.NoError(t, err)
@@ -125,9 +127,9 @@ func TestOpenStillLaunchesTheHandledPaths(t *testing.T) {
 	svc, root := fixture(t)
 
 	marker := filepath.Join(root, "opened")
-	shot := writeFile(t, filepath.Join(root, "files", "shot.png"), []byte("\x89PNG\r\n\x1a\n"))
-	disc := writeFile(t, filepath.Join(root, "files", "disc.iso"), []byte("nothing handles this"))
-	writeFile(t, filepath.Join(root, "xdg", "data", "applications", "viewer.desktop"), []byte(
+	shot := testfs.WriteBytes(t, filepath.Join(root, "files", "shot.png"), []byte("\x89PNG\r\n\x1a\n"))
+	disc := testfs.WriteBytes(t, filepath.Join(root, "files", "disc.iso"), []byte("nothing handles this"))
+	testfs.WriteBytes(t, filepath.Join(root, "xdg", "data", "applications", "viewer.desktop"), []byte(
 		"[Desktop Entry]\nType=Application\nName=Viewer\nExec=sh -c \"echo \\\"$1\\\" > "+marker+"\" sh %f\nMimeType=image/png;\n"))
 
 	err := svc.Open(context.Background(), []string{disc, shot}, LaunchOptions{})
@@ -142,7 +144,7 @@ func TestOpenStillLaunchesTheHandledPaths(t *testing.T) {
 func TestOpenWithRejectsUnknownEntry(t *testing.T) {
 	svc, root := fixture(t)
 
-	target := writeFile(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
+	target := testfs.WriteBytes(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
 	err := svc.OpenWith(context.Background(), "nope.desktop", []string{target}, LaunchOptions{})
 	require.Error(t, err)
 	assert.Equal(t, files.CodeNotFound, files.CodeOf(err))
@@ -152,7 +154,7 @@ func TestRunRequiresTheExecuteBit(t *testing.T) {
 	svc, root := fixture(t)
 
 	marker := filepath.Join(root, "ran")
-	script := writeFile(t, filepath.Join(root, "files", "go.sh"), []byte("#!/bin/sh\ntouch "+marker+"\n"))
+	script := testfs.WriteBytes(t, filepath.Join(root, "files", "go.sh"), []byte("#!/bin/sh\ntouch "+marker+"\n"))
 
 	err := svc.Run(script, LaunchOptions{})
 	require.Error(t, err)
@@ -173,7 +175,7 @@ func TestRunLaunchesATrustedDesktopFile(t *testing.T) {
 	svc, root := fixture(t)
 
 	marker := filepath.Join(root, "desktop-ran")
-	entry := writeFile(t, filepath.Join(root, "files", "launcher.desktop"), []byte(
+	entry := testfs.WriteBytes(t, filepath.Join(root, "files", "launcher.desktop"), []byte(
 		"[Desktop Entry]\nType=Application\nName=Launcher\nExec=touch "+marker+"\n"))
 
 	err := svc.Run(entry, LaunchOptions{})
@@ -190,7 +192,7 @@ func TestRunLaunchesATrustedDesktopFile(t *testing.T) {
 
 func TestDesktopDisplayNeedsTrust(t *testing.T) {
 	svc, root := fixture(t)
-	entry := writeFile(t, filepath.Join(root, "files", "launcher.desktop"), []byte(
+	entry := testfs.WriteBytes(t, filepath.Join(root, "files", "launcher.desktop"), []byte(
 		"[Desktop Entry]\nType=Application\nName=Launcher\nIcon=rocket\nExec=true\n"))
 
 	_, _, ok := svc.Detector().DesktopDisplay(entry, false)
@@ -226,7 +228,7 @@ func TestOpenTerminalInheritsTheDirectory(t *testing.T) {
 	svc, root := fixture(t)
 
 	marker := filepath.Join(root, "cwd")
-	term := writeFile(t, filepath.Join(root, "bin", "faketerm"), []byte("#!/bin/sh\npwd > "+marker+"\n"))
+	term := testfs.WriteBytes(t, filepath.Join(root, "bin", "faketerm"), []byte("#!/bin/sh\npwd > "+marker+"\n"))
 	require.NoError(t, os.Chmod(term, 0o755))
 	t.Setenv("PATH", filepath.Join(root, "bin")+string(os.PathListSeparator)+os.Getenv("PATH"))
 
@@ -267,10 +269,10 @@ func TestOpenDelegatesToTheOpener(t *testing.T) {
 	svc, root := fixture(t)
 
 	marker := filepath.Join(root, "opened")
-	opener := writeFile(t, filepath.Join(root, "bin", "opener"), []byte("#!/bin/sh\necho \"$1 $2\" >> "+marker+"\n"))
+	opener := testfs.WriteBytes(t, filepath.Join(root, "bin", "opener"), []byte("#!/bin/sh\necho \"$1 $2\" >> "+marker+"\n"))
 	require.NoError(t, os.Chmod(opener, 0o755))
-	note := writeFile(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
-	disc := writeFile(t, filepath.Join(root, "files", "disc.iso"), []byte("nothing handles this"))
+	note := testfs.WriteBytes(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
+	disc := testfs.WriteBytes(t, filepath.Join(root, "files", "disc.iso"), []byte("nothing handles this"))
 
 	require.NoError(t, svc.Open(context.Background(), []string{note, disc}, LaunchOptions{Opener: opener + " --quiet"}))
 	require.Eventually(t, func() bool {
@@ -288,7 +290,7 @@ func TestOpenReportsAMissingOpener(t *testing.T) {
 	svc, root := fixture(t)
 	t.Setenv("PATH", root)
 
-	note := writeFile(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
+	note := testfs.WriteBytes(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
 	err := svc.Open(context.Background(), []string{note}, LaunchOptions{Opener: "no-such-opener"})
 	require.Error(t, err)
 	assert.Equal(t, files.CodeNotFound, files.CodeOf(err))

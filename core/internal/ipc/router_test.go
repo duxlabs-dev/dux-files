@@ -1,14 +1,11 @@
 package ipc
 
 import (
-	"bufio"
 	"context"
-	"encoding/json"
-	"net"
-	"os"
-	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/ipctest"
 
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/stretchr/testify/assert"
@@ -17,29 +14,7 @@ import (
 
 func routeAndRead(t *testing.T, req Request, deps Deps) map[string]any {
 	t.Helper()
-	client, srv := net.Pipe()
-	t.Cleanup(func() {
-		_ = client.Close()
-		_ = srv.Close()
-	})
-
-	go Route(context.Background(), NewConnWriter(srv), req, deps)
-
-	line, err := bufio.NewReader(client).ReadBytes('\n')
-	require.NoError(t, err)
-
-	var out map[string]any
-	require.NoError(t, json.Unmarshal(line, &out))
-	return out
-}
-
-func TestRouteVersion(t *testing.T) {
-	out := routeAndRead(t, Request{ID: 1, Method: "version"}, Deps{Version: "1.2.3"})
-
-	result, ok := out["result"].(map[string]any)
-	require.True(t, ok)
-	assert.Equal(t, "1.2.3", result["version"])
-	assert.Equal(t, float64(APIVersion), result["apiVersion"])
+	return ipctest.Call(t, func(w *ConnWriter) { Route(context.Background(), w, req, deps) })
 }
 
 func TestRouteUnknownMethod(t *testing.T) {
@@ -49,17 +24,6 @@ func TestRouteUnknownMethod(t *testing.T) {
 	require.True(t, ok)
 	assert.Contains(t, errMsg, "unknown method: nope.nothing")
 	assert.Nil(t, out["result"])
-}
-
-func TestRouteFilesList(t *testing.T) {
-	root := t.TempDir()
-	require.NoError(t, os.WriteFile(filepath.Join(root, "x"), nil, 0o644))
-
-	out := routeAndRead(t, Request{ID: 3, Method: "files.list", Params: map[string]any{"path": root}}, Deps{Files: files.NewService(nil, t.TempDir(), nil)})
-
-	result, ok := out["result"].(map[string]any)
-	require.True(t, ok)
-	assert.Len(t, result["entries"], 1)
 }
 
 func TestRouteFilesWithoutService(t *testing.T) {

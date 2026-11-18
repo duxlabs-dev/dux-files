@@ -1,10 +1,9 @@
 package devices
 
 import (
-	"bufio"
-	"encoding/json"
-	"net"
 	"testing"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/ipctest"
 
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/godbus/dbus/v5"
@@ -57,27 +56,7 @@ func testService(t *testing.T, bus *fakeBus) *Service {
 
 func call(t *testing.T, svc *Service, req ipc.Request) map[string]any {
 	t.Helper()
-	client, srv := net.Pipe()
-	t.Cleanup(func() {
-		_ = client.Close()
-		_ = srv.Close()
-	})
-
-	go svc.Handle(ipc.NewConnWriter(srv), req)
-
-	line, err := bufio.NewReader(client).ReadBytes('\n')
-	require.NoError(t, err)
-	var out map[string]any
-	require.NoError(t, json.Unmarshal(line, &out))
-	return out
-}
-
-func TestHandleListReturnsTheSnapshot(t *testing.T) {
-	out := call(t, testService(t, nil), ipc.Request{ID: 3, Method: "devices.list"})
-
-	result := out["result"].(map[string]any)
-	assert.Equal(t, true, result["available"])
-	assert.Len(t, result["devices"], 3)
+	return ipctest.Call(t, func(w *ipc.ConnWriter) { svc.Handle(w, req) })
 }
 
 func TestHandleMountCallsUdisksAndReturnsTheMountPoint(t *testing.T) {

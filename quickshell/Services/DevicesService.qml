@@ -66,42 +66,42 @@ Singleton {
     }
 
     function mount(id, callback) {
-        _send("devices.mount", {
+        transport.callReporting("devices.mount", {
             "id": id
-        }, callback);
+        }, root.requestFailed, callback);
     }
 
     function unmount(id, force, callback) {
-        _send("devices.unmount", {
+        transport.callReporting("devices.unmount", {
             "id": id,
             "force": force === true
-        }, callback);
+        }, root.requestFailed, callback);
     }
 
     function eject(id, callback) {
-        _send("devices.eject", {
+        transport.callReporting("devices.eject", {
             "id": id
-        }, callback);
+        }, root.requestFailed, callback);
     }
 
     function powerOff(id, callback) {
-        _send("devices.powerOff", {
+        transport.callReporting("devices.powerOff", {
             "id": id
-        }, callback);
+        }, root.requestFailed, callback);
     }
 
     function unlock(id, passphrase, callback) {
-        _send("devices.unlock", {
+        transport.callReporting("devices.unlock", {
             "id": id,
             "passphrase": passphrase,
             "mount": true
-        }, callback);
+        }, root.requestFailed, callback);
     }
 
     function lock(id, callback) {
-        _send("devices.lock", {
+        transport.callReporting("devices.lock", {
             "id": id
-        }, callback);
+        }, root.requestFailed, callback);
     }
 
     function _onEvent(data) {
@@ -109,13 +109,5 @@ Singleton {
         reason = data.reason || "";
         devices = data.devices || [];
         refreshUsage(false);
-    }
-
-    function _send(method, params, callback) {
-        transport.call(method, params, result => {
-            if (result.error)
-                root.requestFailed(result.error, result.code);
-            callback?.(result);
-        });
     }
 }

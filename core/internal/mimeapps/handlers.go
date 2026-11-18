@@ -64,7 +64,7 @@ func (s *Service) Handle(ctx context.Context, w *ipc.ConnWriter, req ipc.Request
 	case "files.apps.terminals":
 		w.Respond(req.ID, map[string]any{"terminals": Terminals()})
 	default:
-		wire.RespondError(w, req.ID, fail(files.CodeNotSupported, "unknown method: %s", req.Method))
+		wire.RespondError(w, req.ID, wire.Fail(files.CodeNotSupported, "unknown method: %s", req.Method))
 	}
 }
 
@@ -179,7 +179,7 @@ func (s *Service) handleSetDefault(w *ipc.ConnWriter, req ipc.Request) {
 		return
 	}
 	if Sandboxed() && !writableConfig() {
-		wire.RespondError(w, req.ID, fail(files.CodeSandboxed, "the sandbox cannot write mimeapps.list"))
+		wire.RespondError(w, req.ID, wire.Fail(files.CodeSandboxed, "the sandbox cannot write mimeapps.list"))
 		return
 	}
 	if err := s.SetDefault(mimeType, desktopID); err != nil {

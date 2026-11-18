@@ -3,6 +3,8 @@
 //@ pragma Env QT_QUICK_CONTROLS_STYLE=Material
 //@ pragma UseQApplication
 //@ pragma AppId dev.duxlabs.files
+//@ pragma RenderControl
+//@ pragma DiskCache
 
 pragma ComponentBehavior: Bound
 
@@ -21,8 +23,7 @@ ShellRoot {
     readonly property bool enableHotReload: Quickshell.env("DFILES_ENABLE_HOTRELOAD") === "1" || Quickshell.env("DFILES_ENABLE_HOTRELOAD") === "true"
 
     readonly property bool dbusActivated: Quickshell.env("DFILES_DBUS_ACTIVATED") === "1"
-    readonly property bool keepRunning: Quickshell.env("DFILES_KEEP_RUNNING") === "1"
-    readonly property bool quitOnLastClose: SettingsData.closeBehavior === "quit" && !keepRunning
+    readonly property bool quitOnLastClose: SettingsData.closeBehavior === "quit" && !SettingsData.keepRunning
     readonly property bool idle: WindowService.count === 0 && ChooserService.count === 0 && FileOpsService.activeCount === 0
     property bool quitDeferred: false
 
@@ -181,13 +182,14 @@ ShellRoot {
             root.windowObject(windowId)?.openLocations(locations, false);
         }
         function onWindowAdded() {
+            DirectoryService.refreshUserDirs();
             focusRetry.restart();
         }
     }
 
     Timer {
         interval: 30000
-        running: root.idle && !root.keepRunning && (root.dbusActivated || root.quitDeferred)
+        running: root.idle && !SettingsData.keepRunning && (root.dbusActivated || root.quitDeferred)
         onTriggered: root.quitWhenIdle()
     }
 
@@ -204,9 +206,9 @@ ShellRoot {
         model: ChooserService.requests
 
         ChooserWindow {
-            required property string id
+            required property var model
 
-            request: ChooserService.requestFor(id)
+            request: ChooserService.requestFor(model.requestId)
         }
     }
 

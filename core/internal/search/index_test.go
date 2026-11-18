@@ -8,6 +8,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -341,11 +343,11 @@ func TestEverywhereWalksHomeAndMountedDrives(t *testing.T) {
 func TestWalkSkipsHeavyFoldersIgnoreFilesAndUserExclusions(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())
 	root := t.TempDir()
-	writeFile(t, filepath.Join(root, ".gitignore"), "*.log\n")
-	writeFile(t, filepath.Join(root, "node_modules", "match-a.txt"), "x")
-	writeFile(t, filepath.Join(root, "Steam", "match-b.txt"), "x")
-	writeFile(t, filepath.Join(root, "match-c.log"), "x")
-	writeFile(t, filepath.Join(root, "src", "match-d.txt"), "x")
+	testfs.Write(t, filepath.Join(root, ".gitignore"), "*.log\n")
+	testfs.Write(t, filepath.Join(root, "node_modules", "match-a.txt"), "x")
+	testfs.Write(t, filepath.Join(root, "Steam", "match-b.txt"), "x")
+	testfs.Write(t, filepath.Join(root, "match-c.log"), "x")
+	testfs.Write(t, filepath.Join(root, "src", "match-d.txt"), "x")
 	bus := newBus()
 	svc := newTestService(t, bus)
 	svc.SetExcludes(func() []string { return []string{"Steam"} })
@@ -363,9 +365,9 @@ func TestWalkSkipsHeavyFoldersIgnoreFilesAndUserExclusions(t *testing.T) {
 
 func TestWalkScoresResultsAndHoldsFuzzyMatchesForLast(t *testing.T) {
 	root := t.TempDir()
-	writeFile(t, filepath.Join(root, "z", "r-e-p-o-r-t.txt"), "x")
-	writeFile(t, filepath.Join(root, "z", "y", "report.txt"), "x")
-	writeFile(t, filepath.Join(root, "my-report.txt"), "x")
+	testfs.Write(t, filepath.Join(root, "z", "r-e-p-o-r-t.txt"), "x")
+	testfs.Write(t, filepath.Join(root, "z", "y", "report.txt"), "x")
+	testfs.Write(t, filepath.Join(root, "my-report.txt"), "x")
 	bus := newBus()
 	svc := newTestService(t, bus)
 	svc.workers = 1
@@ -389,9 +391,9 @@ func TestWalkScoresResultsAndHoldsFuzzyMatchesForLast(t *testing.T) {
 
 func TestWalkMatchesTermsAgainstThePath(t *testing.T) {
 	root := t.TempDir()
-	writeFile(t, filepath.Join(root, "search", "walk.go"), "x")
-	writeFile(t, filepath.Join(root, "search", "other.go"), "x")
-	writeFile(t, filepath.Join(root, "walk", "readme.md"), "x")
+	testfs.Write(t, filepath.Join(root, "search", "walk.go"), "x")
+	testfs.Write(t, filepath.Join(root, "search", "other.go"), "x")
+	testfs.Write(t, filepath.Join(root, "walk", "readme.md"), "x")
 	bus := newBus()
 	svc := newTestService(t, bus)
 	_, topic, err := svc.Start(context.Background(), root, "search walk", Options{})

@@ -40,9 +40,9 @@ FocusScope {
     readonly property alias textView: reader
     readonly property string errorMessage: {
         if (kind === "pdf" && PdfService.unavailable)
-            return I18n.tr("PDF preview is not available. Install Qt PDF support to view this file.", "large preview warning when the optional Qt PDF module is missing");
+            return I18n.tr("PDF preview is not available. Install %1 support to view this file.", "large preview warning when an optional module is missing, %1 is Qt PDF").arg("Qt PDF");
         if (PreviewView.playsMedia(kind) && mediaComponent?.status === Component.Error)
-            return I18n.tr("Video and audio preview is not available. Install Qt Multimedia to play this file.", "large preview warning when the optional Qt Multimedia module is missing");
+            return I18n.tr("Video and audio preview is not available. Install %1 support to play this file.", "large preview warning when an optional module is missing, %1 is Qt Multimedia").arg("Qt Multimedia");
         if ((kind === "image" && picture.status === Image.Error) || (kind === "pdf" && (pages.status === Loader.Error || pageView?.failed)) || (PreviewView.playsMedia(kind) && mediaView?.failed) || (PreviewView.readsText(kind) && reader.failed))
             return I18n.tr("This file could not be opened", "large preview placeholder");
         return "";

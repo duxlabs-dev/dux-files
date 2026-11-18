@@ -87,7 +87,9 @@ FloatingWindow {
 
     readonly property bool compact: width < FilesMetrics.sidebarOverlayBreakpoint
     readonly property bool sidebarDocked: sidebarShown && !compact
+    readonly property bool previewShown: previewOpen && !compact
     readonly property bool textEditing: surface.focusItem instanceof TextInput || surface.focusItem instanceof TextEdit
+    readonly property bool dialogOpen: overwriteDialog.visible || connectDialog.visible || unlockDialog.visible || conflictDialog.visible || errorDialog.visible || credentialDialog.visible || paneActions.trashDialogOpen
 
     title: (request?.title ?? "") !== "" ? request.title : defaultTitle
     implicitWidth: Math.min(FileBrowserMetrics.pickerWidth, (screen?.width ?? FileBrowserMetrics.pickerWidth) * FileBrowserMetrics.pickerScreenFraction)
@@ -105,7 +107,11 @@ FloatingWindow {
         blurWidth: window.width
         blurHeight: window.height
     }
-    Component.onCompleted: start()
+    Component.onCompleted: {
+        if ("appId" in window)
+            window.appId = "dev.duxlabs.files.chooser";
+        start();
+    }
     Component.onDestruction: FileOpsService.forget(opScope)
 
     function start() {
@@ -215,11 +221,11 @@ FloatingWindow {
         if (settled)
             return;
         settled = true;
+        ChooserService.answer(requestId, answer);
         if (pane.path !== "")
             persist({
                 "lastPath": pane.path
             });
-        ChooserService.answer(requestId, answer);
     }
 
     function cancel() {
@@ -329,24 +335,15 @@ FloatingWindow {
             finish([]);
             return;
         }
-        let remaining = targets.length;
-        const existing = [];
-        for (const target of targets) {
-            DirectoryService.stat(target, result => {
-                if (!result.error)
-                    existing.push(target);
-                remaining--;
-                if (remaining > 0)
-                    return;
-                if (existing.length === 0) {
-                    window.finish(targets);
-                    return;
-                }
-                window.pendingTargets = targets;
-                window.overwriteTarget = existing.map(path => FilePaths.baseName(path)).join(", ");
-                overwriteDialog.open();
-            });
-        }
+        DirectoryService.statAll(targets, entries => {
+            if (entries.length === 0) {
+                window.finish(targets);
+                return;
+            }
+            window.pendingTargets = targets;
+            window.overwriteTarget = entries.map(entry => FilePaths.baseName(entry.path)).join(", ");
+            overwriteDialog.open();
+        });
     }
 
     function confirmOverwrite() {
@@ -363,9 +360,11 @@ FloatingWindow {
     }
 
     function clearSearch() {
-        search.text = "";
-        pane.closeSearch();
-        pane.focusBody();
+        topbar.clearSearch();
+    }
+
+    function focusSearch() {
+        topbar.focusSearch();
     }
 
     function escapeBack() {
@@ -375,10 +374,14 @@ FloatingWindow {
         return true;
     }
 
-    function createFolder() {
-        if (pane.path === "" || pane.virtualActive)
+    function dismissEditors(position) {
+        const inPane = pane.mapFromItem(surface, position.x, position.y);
+        pane.dismissPathEditor(inPane.x, inPane.y);
+        if (!topbar.searchFocused)
             return;
-        FileOpsService.newFolder(pane.path, I18n.tr("Untitled folder", "default name for a new folder"), opScope, true);
+        const inTopbar = topbar.mapFromItem(surface, position.x, position.y);
+        if (!topbar.searchContains(inTopbar.x, inTopbar.y))
+            pane.focusBody();
     }
 
     function setChoice(id, value) {
@@ -387,10 +390,17 @@ FloatingWindow {
         });
     }
 
+    component FooterDropdown: DDropdown {
+        triggerHeight: FilesMetrics.topbarControlSize
+        triggerRadius: Theme.fullRadius(width, triggerHeight)
+        normalBorderColor: "transparent"
+    }
+
     FocusScope {
         id: surface
 
         readonly property bool isFloatingWindowSurface: true
+        readonly property color surfaceColor: window.color
         readonly property Item focusItem: Window.activeFocusItem
 
         anchors.fill: parent
@@ -403,44 +413,10 @@ FloatingWindow {
         }
 
         Keys.onPressed: event => {
-            const control = (event.modifiers & Qt.ControlModifier) !== 0;
-            const shift = (event.modifiers & Qt.ShiftModifier) !== 0;
-            const alt = (event.modifiers & Qt.AltModifier) !== 0;
             switch (event.key) {
             case Qt.Key_Escape:
                 if (!window.escapeBack())
                     window.cancel();
-                break;
-            case Qt.Key_L:
-                if (!control)
-                    return;
-                pane.editPath();
-                break;
-            case Qt.Key_H:
-                if (!control)
-                    return;
-                window.setShowHidden(!window.showHidden);
-                break;
-            case Qt.Key_F:
-                if (!control)
-                    return;
-                search.forceActiveFocus();
-                search.selectAll();
-                break;
-            case Qt.Key_N:
-                if (!control || !shift)
-                    return;
-                window.createFolder();
-                break;
-            case Qt.Key_Left:
-                if (!alt)
-                    return;
-                pane.back();
-                break;
-            case Qt.Key_Right:
-                if (!alt)
-                    return;
-                pane.forward();
                 break;
             case Qt.Key_Return:
             case Qt.Key_Enter:
@@ -472,10 +448,9 @@ FloatingWindow {
             id: sidebarSlot
 
             anchors.top: header.bottom
-            anchors.bottom: footer.top
-            anchors.bottomMargin: FilesMetrics.contentSpacing
+            anchors.bottom: parent.bottom
             anchors.left: parent.left
-            width: window.sidebarDocked ? Math.max(FilesMetrics.sidebarMinWidth, Math.min(CacheData.sidebarWidth, surface.width - Math.max(FilesMetrics.windowMinWidth, topbar.minimumWidth + FilesMetrics.contentMarginH))) : 0
+            width: window.sidebarDocked ? Math.max(FilesMetrics.sidebarMinWidth, Math.min(FilesMetrics.sidebarWidth, surface.width - Math.max(FilesMetrics.windowMinWidth, content.minimumWidth + FilesMetrics.contentMarginH))) : 0
             clip: true
 
             Behavior on width {
@@ -507,334 +482,354 @@ FloatingWindow {
             id: content
 
             anchors.top: header.bottom
-            anchors.bottom: footer.top
+            anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottomMargin: FilesMetrics.contentSpacing
+            anchors.bottomMargin: FilesMetrics.contentMarginV
             anchors.leftMargin: Math.max(FilesMetrics.contentMarginH, sidebarSlot.width)
             anchors.rightMargin: FilesMetrics.contentMarginH
 
-            Item {
-                id: topbar
+            readonly property real minimumWidth: topbar.minimumWidth + FilesMetrics.cardPadding * 2
+            readonly property bool besidePreview: previewDrawer.width > 0
 
-                readonly property real minimumWidth: leftActions.width + rightActions.width + FilesMetrics.topbarSpacing * 2 + FilesMetrics.topbarControlSize
+            CardSegment {
+                id: topSegment
+
+                first: true
+                anchors.top: parent.top
+                height: topbar.height + FilesMetrics.cardPadding * 2
+                bottomRightRadius: content.besidePreview ? FilesMetrics.paneRadius : bottomRadius
+            }
+
+            FilesTopbar {
+                id: topbar
 
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: FilesMetrics.topbarControlSize
-
-                Row {
-                    id: leftActions
-
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: FilesMetrics.topbarGroupSpacing
-
-                    FlatButton {
-                        anchors.verticalCenter: parent.verticalCenter
-                        visible: !window.compact
-                        iconName: "menu"
-                        tooltipText: I18n.tr("Toggle sidebar", "tooltip on the button showing or hiding the sidebar")
-                        onClicked: window.setSidebarShown(!window.sidebarShown)
-                    }
-
-                    NavButtonPair {
-                        anchors.verticalCenter: parent.verticalCenter
-                        backEnabled: pane.canGoBack
-                        forwardEnabled: pane.canGoForward
-                        onBackRequested: pane.back()
-                        onForwardRequested: pane.forward()
-                    }
-
-                    FlatButton {
-                        anchors.verticalCenter: parent.verticalCenter
-                        enabled: pane.path !== "" && !pane.virtualActive
-                        iconName: "create_new_folder"
-                        backgroundColor: Theme.chipSurface
-                        tooltipText: I18n.tr("New folder", "file browser toolbar button creating a folder")
-                        onClicked: window.createFolder()
-                    }
-                }
-
-                Row {
-                    id: rightActions
-
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: FilesMetrics.topbarSpacing
-
-                    FlatButton {
-                        anchors.verticalCenter: parent.verticalCenter
-                        iconName: window.showHidden ? "visibility" : "visibility_off"
-                        iconColor: window.showHidden ? Theme.onPrimary : Theme.surfaceText
-                        backgroundColor: window.showHidden ? Theme.primary : Theme.chipSurface
-                        tooltipText: I18n.tr("Show hidden files", "file browser toolbar toggle")
-                        onClicked: window.setShowHidden(!window.showHidden)
-                    }
-
-                    FlatButton {
-                        anchors.verticalCenter: parent.verticalCenter
-                        iconName: window.viewMode === "grid" ? "view_list" : "grid_view"
-                        backgroundColor: Theme.chipSurface
-                        tooltipText: window.viewMode === "grid" ? I18n.tr("List view", "file browser toolbar button switching to the list") : I18n.tr("Grid view", "file browser toolbar button switching to the grid")
-                        onClicked: window.setViewMode(window.viewMode === "grid" ? "list" : "grid")
-                    }
-
-                    FlatButton {
-                        anchors.verticalCenter: parent.verticalCenter
-                        visible: !window.compact
-                        iconName: "view_sidebar"
-                        iconColor: window.previewOpen ? Theme.onPrimary : Theme.surfaceText
-                        backgroundColor: window.previewOpen ? Theme.primary : Theme.chipSurface
-                        tooltipText: I18n.tr("Preview", "view menu entry and shortcut showing or hiding the preview drawer")
-                        onClicked: window.setPreviewOpen(!window.previewOpen)
-                    }
-
-                    FileSortButton {
-                        anchors.verticalCenter: parent.verticalCenter
-                        sortKey: window.sortKey
-                        descending: window.sortDescending
-                        showLabel: !window.compact
-                        onSortKeySelected: key => window.setSort(key)
-                        onDirectionToggled: window.setDirection(!window.sortDescending)
-                    }
-                }
-
-                DSearchField {
-                    id: search
-
-                    anchors.left: leftActions.right
-                    anchors.right: rightActions.left
-                    anchors.leftMargin: FilesMetrics.topbarSpacing
-                    anchors.rightMargin: FilesMetrics.topbarSpacing
-                    anchors.verticalCenter: parent.verticalCenter
-                    fieldHeight: FilesMetrics.topbarControlSize
-                    leftIconSize: Theme.iconSizeMedium
-                    backgroundColor: Theme.surfaceContainerLowest
-                    placeholderText: I18n.tr("Search in Files", "placeholder in the search field")
-                    onTextChanged: {
-                        if (text !== pane.nameFilter)
-                            pane.nameFilter = text;
-                    }
-                    onAccepted: {
-                        if (text.trim() !== "")
-                            pane.startSearch(text.trim(), null);
-                    }
-                    Keys.onEscapePressed: event => {
-                        event.accepted = true;
-                        window.clearSearch();
-                    }
-                    Keys.onDownPressed: event => {
-                        event.accepted = true;
-                        pane.focusBody();
-                    }
-                }
-            }
-
-            FilesPane {
-                id: pane
-
-                anchors.top: topbar.bottom
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.topMargin: FilesMetrics.contentSpacing
-                focus: !window.saving
-                folderViews: false
-                showHidden: window.showHidden
-                sortKey: window.sortKey
-                sortDescending: window.sortDescending
+                anchors.margins: FilesMetrics.cardPadding
+                showSidebarToggle: !window.compact
+                showNewFolder: true
+                showSplit: false
+                showOverflow: false
+                allowColumns: false
+                showHiddenToggle: true
+                showViewControls: false
+                flatNavigation: true
+                hostsPath: true
+                placeTitle: pane.placeTitle
+                selectionCount: pane.editingPath ? 0 : pane.selection.count
+                selectionBytes: pane.body.selectedBytes()
+                selectionActions: false
+                hiddenShown: window.showHidden
+                compact: window.compact
+                backEnabled: pane.canGoBack
+                forwardEnabled: pane.canGoForward
+                sortKey: pane.effectiveSortKey
+                sortDescending: pane.effectiveSortDescending
+                resultsActive: pane.resultsActive
                 viewMode: window.viewMode
-                previewOpen: window.previewOpen && !window.compact
-                filters: window.filterGlobs
-                multiSelect: window.multiple
-                escapeClearsSelection: false
-                typeAhead: true
-                dragEnabled: false
-                dropEnabled: false
-                onActivateRequested: entry => window.activate(entry)
-                onOpenRequested: entries => window.openEntries(entries)
-                onItemMenuRequested: (index, pointX, pointY, modifiers) => menus.showItemMenu(pointX, pointY)
-                onBackgroundMenuRequested: (pointX, pointY) => menus.showBackgroundMenu(pointX, pointY)
-                onTabRequested: path => pane.navigate(path)
-                onRenameRequested: (target, name) => FileOpsService.rename(target, name, window.opScope)
-                onSortRequested: key => window.setSort(key)
-                onPreviewToggleRequested: window.setPreviewOpen(!window.previewOpen)
-                onServerDialogRequested: connectDialog.ask()
-                onConnectFailed: (uri, result) => connectDialog.showFailure(uri, result)
-                onNameFilterChanged: {
-                    if (search.text !== nameFilter)
-                        search.text = nameFilter;
+                previewOpen: window.previewOpen
+                trashActive: pane.trashActive
+                recentActive: pane.recentActive
+                filterText: pane.nameFilter
+                currentPath: pane.path
+                onFilterChanged: text => pane.nameFilter = text
+                onSearchRequested: query => pane.startSearch(query, null)
+                onSearchCleared: {
+                    pane.closeSearch();
+                    pane.focusBody();
                 }
-                onFilterRequested: text => {
-                    search.text = pane.nameFilter + text;
-                    search.forceActiveFocus();
-                    search.cursorPosition = search.text.length;
+                onLocationRequested: location => {
+                    pane.openTypedLocation(location);
+                    pane.focusBody();
                 }
-                onFilterFocusRequested: search.forceActiveFocus()
-                onPathChanged: {
-                    window.errorText = "";
-                    if (path !== "")
-                        FolderHistory.visit(path);
+                onResultsRequested: {
+                    pane.focusBody();
+                    pane.body.jumpTo(0, Qt.NoModifier);
                 }
+                onSelectionCleared: pane.selection.clear()
+                onSidebarToggled: window.setSidebarShown(!window.sidebarShown)
+                onHiddenToggled: window.setShowHidden(!window.showHidden)
+                onBackRequested: pane.back()
+                onForwardRequested: pane.forward()
+                onNewFolderRequested: menus.runAction("newFolder")
+                onNewDocumentRequested: (parentMenu, row) => menus.showNewDocumentSubmenu(parentMenu, row)
             }
-        }
 
-        Column {
-            id: footer
+            CardSegment {
+                id: listSegment
 
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.leftMargin: FilesMetrics.contentMarginH
-            anchors.rightMargin: FilesMetrics.contentMarginH
-            anchors.bottomMargin: FilesMetrics.contentMarginV
-            spacing: Theme.spacingS
+                anchors.top: topSegment.bottom
+                anchors.bottom: statusSegment.top
+                anchors.right: previewDrawer.left
+                anchors.topMargin: Theme.groupedListGap
+                anchors.bottomMargin: Theme.groupedListGap
 
-            Flow {
-                width: parent.width
-                spacing: Theme.spacingM
-                visible: window.filters.length > 0 || window.choices.length > 0
+                FilesPane {
+                    id: pane
 
-                DDropdown {
-                    id: filterDropdown
-
-                    visible: window.filters.length > 0
-                    showLabel: false
-                    options: window.filters.map(filter => filter.name)
-                    currentValue: window.filterIndex >= 0 && window.filterIndex < window.filters.length ? window.filters[window.filterIndex].name : ""
-                    onValueChanged: value => {
-                        const index = window.filters.findIndex(filter => filter.name === value);
-                        if (index >= 0)
-                            window.filterIndex = index;
+                    anchors.fill: parent
+                    focus: !window.saving
+                    framed: false
+                    internalPreview: false
+                    pathBarHost: topbar.pathSlot
+                    folderViews: false
+                    showHidden: window.showHidden
+                    sortKey: window.sortKey
+                    sortDescending: window.sortDescending
+                    viewMode: window.viewMode
+                    previewOpen: window.previewShown
+                    filters: window.filterGlobs
+                    multiSelect: window.multiple
+                    escapeClearsSelection: false
+                    typeAhead: true
+                    dragEnabled: false
+                    dropEnabled: false
+                    onActivateRequested: entry => window.activate(entry)
+                    onOpenRequested: entries => window.openEntries(entries)
+                    onItemMenuRequested: (index, pointX, pointY, modifiers) => menus.showItemMenu(pointX, pointY)
+                    onBackgroundMenuRequested: (pointX, pointY) => menus.showBackgroundMenu(pointX, pointY)
+                    onTabRequested: path => pane.navigate(path)
+                    onRenameRequested: (target, name) => FileOpsService.rename(target, name, window.opScope)
+                    onSortRequested: key => window.setSort(key)
+                    onPreviewToggleRequested: window.setPreviewOpen(!window.previewOpen)
+                    onPreviewKeyRequested: (action, step) => previewDrawer.handleKey(action, step)
+                    onServerDialogRequested: connectDialog.ask()
+                    onConnectFailed: (uri, result) => connectDialog.showFailure(uri, result)
+                    onFilterRequested: text => topbar.openFilter(text)
+                    onFilterFocusRequested: topbar.focusFilter()
+                    onPathChanged: {
+                        window.errorText = "";
+                        if (path !== "")
+                            FolderHistory.visit(path);
                     }
                 }
+            }
 
-                Repeater {
-                    model: window.choices
+            CardSegment {
+                id: statusSegment
 
-                    delegate: Row {
-                        id: choiceRow
+                anchors.bottom: actionSegment.top
+                anchors.right: previewDrawer.left
+                anchors.bottomMargin: Theme.groupedListGap
+                height: statusBar.implicitHeight + FilesMetrics.cardPadding * 2
+            }
 
-                        required property var modelData
+            StatusBar {
+                id: statusBar
 
-                        readonly property bool isToggle: (modelData.options ?? []).length === 0
-                        readonly property string value: window.choiceValues[modelData.id] ?? ""
+                anchors.fill: statusSegment
+                anchors.margins: FilesMetrics.cardPadding
+                total: pane.itemTotal
+                hidden: pane.hiddenTotal
+                hint: pane.selectionHint
+                viewMode: window.viewMode
+                viewModes: topbar.viewModes
+                showPreview: !window.compact
+                previewOpen: window.previewOpen
+                previewLabel: topbar.previewLabel
+                sortKeys: topbar.activeSortKeys
+                sortKey: pane.effectiveSortKey
+                sortDescending: pane.effectiveSortDescending
+                onViewModeSelected: mode => window.setViewMode(mode)
+                onPreviewToggled: window.setPreviewOpen(!window.previewOpen)
+                onSortKeySelected: key => window.setSort(key)
+                onSortDirectionToggled: window.setDirection(!window.sortDescending)
+            }
 
-                        spacing: Theme.spacingS
+            CardSegment {
+                id: actionSegment
 
-                        StyledText {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: choiceRow.modelData.label
-                            color: Theme.surfaceText
-                            font.pixelSize: Theme.fontSizeMedium
-                        }
+                last: true
+                anchors.bottom: parent.bottom
+                height: footer.height + FilesMetrics.cardPadding * 2
+            }
 
-                        DToggle {
-                            anchors.verticalCenter: parent.verticalCenter
-                            visible: choiceRow.isToggle
-                            hideText: true
-                            text: choiceRow.modelData.label
-                            checked: choiceRow.value === "true"
-                            onToggled: value => window.setChoice(choiceRow.modelData.id, value ? "true" : "false")
-                        }
+            Column {
+                id: footer
 
-                        DDropdown {
-                            anchors.verticalCenter: parent.verticalCenter
-                            visible: !choiceRow.isToggle
-                            showLabel: false
-                            options: (choiceRow.modelData.options ?? []).map(option => option.label)
-                            currentValue: (choiceRow.modelData.options ?? []).find(option => option.id === choiceRow.value)?.label ?? ""
-                            onValueChanged: value => {
-                                const option = (choiceRow.modelData.options ?? []).find(option => option.label === value);
-                                if (option)
-                                    window.setChoice(choiceRow.modelData.id, option.id);
+                anchors.bottom: actionSegment.bottom
+                anchors.left: actionSegment.left
+                anchors.right: actionSegment.right
+                anchors.margins: FilesMetrics.cardPadding
+                spacing: Theme.spacingS
+
+                Flow {
+                    width: parent.width
+                    spacing: Theme.spacingM
+                    visible: window.choices.length > 0
+
+                    Repeater {
+                        model: window.choices
+
+                        delegate: Row {
+                            id: choiceRow
+
+                            required property var modelData
+
+                            readonly property bool isToggle: (modelData.options ?? []).length === 0
+                            readonly property string value: window.choiceValues[modelData.id] ?? ""
+
+                            spacing: Theme.spacingS
+
+                            StyledText {
+                                anchors.verticalCenter: parent.verticalCenter
+                                text: choiceRow.modelData.label
+                                color: Theme.surfaceText
+                                font.pixelSize: Theme.fontSizeMedium
+                            }
+
+                            DToggle {
+                                anchors.verticalCenter: parent.verticalCenter
+                                visible: choiceRow.isToggle
+                                hideText: true
+                                text: choiceRow.modelData.label
+                                checked: choiceRow.value === "true"
+                                onToggled: value => window.setChoice(choiceRow.modelData.id, value ? "true" : "false")
+                            }
+
+                            FooterDropdown {
+                                anchors.verticalCenter: parent.verticalCenter
+                                visible: !choiceRow.isToggle
+                                options: (choiceRow.modelData.options ?? []).map(option => option.label)
+                                currentValue: (choiceRow.modelData.options ?? []).find(option => option.id === choiceRow.value)?.label ?? ""
+                                onValueChanged: value => {
+                                    const option = (choiceRow.modelData.options ?? []).find(option => option.label === value);
+                                    if (option)
+                                        window.setChoice(choiceRow.modelData.id, option.id);
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            StyledText {
-                width: parent.width
-                visible: window.savingFiles && window.incomingFiles.length > 0
-                text: I18n.tr("Saving %1 into the chosen folder", "file chooser footer listing the names an app wants to save").arg(window.incomingFiles.join(", "))
-                color: Theme.surfaceVariantText
-                font.pixelSize: Theme.fontSizeSmall
-                elide: Text.ElideMiddle
-            }
-
-            StyledText {
-                width: parent.width
-                visible: window.errorText !== ""
-                text: window.errorText
-                color: Theme.error
-                font.pixelSize: Theme.fontSizeSmall
-                elide: Text.ElideRight
-            }
-
-            Item {
-                width: parent.width
-                height: Theme.buttonHeightS
-
-                DTextField {
-                    id: nameField
-
-                    anchors.left: parent.left
-                    anchors.right: buttons.left
-                    anchors.rightMargin: Theme.spacingM
-                    anchors.verticalCenter: parent.verticalCenter
-                    visible: window.saving
-                    controlHeight: Theme.buttonHeightS
-                    placeholderText: I18n.tr("Enter filename...", "file browser save filename input placeholder")
-                    isError: text.trim() !== "" && !window.canAccept
-                    onAccepted: window.acceptCurrent()
-                    Keys.onEscapePressed: event => {
-                        event.accepted = true;
-                        if (!window.escapeBack())
-                            window.cancel();
-                    }
+                StyledText {
+                    width: parent.width
+                    visible: window.savingFiles && window.incomingFiles.length > 0
+                    text: I18n.tr("Saving %1 into the chosen folder", "file chooser footer listing the names an app wants to save").arg(window.incomingFiles.join(", "))
+                    color: Theme.surfaceVariantText
+                    font.pixelSize: Theme.fontSizeSmall
+                    elide: Text.ElideMiddle
                 }
 
-                Row {
-                    id: buttons
+                StyledText {
+                    width: parent.width
+                    visible: window.errorText !== ""
+                    text: window.errorText
+                    color: Theme.error
+                    font.pixelSize: Theme.fontSizeSmall
+                    elide: Text.ElideRight
+                }
 
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: Theme.spacingS
-                    LayoutMirroring.enabled: I18n.isRtl
+                Item {
+                    id: actionRow
 
-                    TextButton {
-                        text: I18n.tr("Cancel", "dialog button to cancel")
-                        onClicked: window.cancel()
+                    width: parent.width
+                    height: FilesMetrics.topbarControlSize
+
+                    DTextField {
+                        id: nameField
+
+                        anchors.left: parent.left
+                        anchors.right: filterDropdown.visible ? filterDropdown.left : buttons.left
+                        anchors.rightMargin: Theme.spacingM
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: window.saving
+                        fieldHeight: FilesMetrics.topbarControlSize
+                        cornerRadius: Theme.fullRadius(width, height)
+                        backgroundColor: Theme.surfaceContainerLowest
+                        borderWidth: 0
+                        focusedBorderWidth: Math.max(Theme.outlineWidthFocused, Theme.focusRingWidth)
+                        placeholderText: I18n.tr("Enter filename...", "file browser save filename input placeholder")
+                        isError: text.trim() !== "" && !window.canAccept
+                        onAccepted: window.acceptCurrent()
+                        Keys.onEscapePressed: event => {
+                            event.accepted = true;
+                            if (!window.escapeBack())
+                                window.cancel();
+                        }
                     }
 
-                    DButton {
-                        enabled: window.canAccept
-                        text: window.acceptText
-                        onClicked: window.acceptCurrent()
+                    FooterDropdown {
+                        id: filterDropdown
+
+                        anchors.right: buttons.left
+                        anchors.rightMargin: Theme.spacingM
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: window.filters.length > 0
+                        dropdownWidth: Math.min(FilesMetrics.chooserFilterWidth, actionRow.width * FilesMetrics.chooserFilterShare)
+                        options: window.filters.map(filter => filter.name)
+                        currentValue: window.filterIndex >= 0 && window.filterIndex < window.filters.length ? window.filters[window.filterIndex].name : ""
+                        onValueChanged: value => {
+                            const index = window.filters.findIndex(filter => filter.name === value);
+                            if (index >= 0)
+                                window.filterIndex = index;
+                        }
                     }
+
+                    Row {
+                        id: buttons
+
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: Theme.spacingS
+                        LayoutMirroring.enabled: I18n.isRtl
+
+                        TextButton {
+                            text: I18n.tr("Cancel", "dialog button to cancel")
+                            onClicked: window.cancel()
+                        }
+
+                        DButton {
+                            enabled: window.canAccept
+                            text: window.acceptText
+                            onClicked: window.acceptCurrent()
+                        }
+                    }
+                }
+            }
+
+            FilePreviewDrawer {
+                id: previewDrawer
+
+                anchors.top: topSegment.bottom
+                anchors.bottom: actionSegment.top
+                anchors.topMargin: content.besidePreview ? FilesMetrics.contentSpacing : 0
+                anchors.bottomMargin: anchors.topMargin
+                anchors.right: parent.right
+                chipColor: Theme.surfaceContainerLowest
+                rowColor: topSegment.color
+                closable: false
+                body: pane.body
+                open: window.previewShown
+                available: content.width
+                preferredWidth: CacheData.previewWidth
+                onResized: width => pane.setPreviewWidth(width)
+                onFocusRequested: pane.focusBody()
+            }
+        }
+
+        Item {
+            anchors.fill: parent
+            z: 1
+
+            TapHandler {
+                acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+                enabled: pane.editingPath || topbar.searchFocused
+                onPressedChanged: {
+                    if (pressed)
+                        window.dismissEditors(point.position);
                 }
             }
         }
 
-        Connections {
-            target: FileOpsService
+        PaneActions {
+            id: paneActions
 
-            function onJobFinished(job) {
-                if (job.scope !== window.opScope)
-                    return;
-                if (job.state === "failed") {
-                    ToastService.info(FileFormat.operationError(job.code, job.error));
-                    return;
-                }
-                const created = job.created?.[0]?.path ?? "";
-                const creates = job.kind === "newFolder" || job.kind === "newFile";
-                if (!creates || created === "" || FilePaths.parentOf(created) !== pane.path)
-                    return;
-                pane.revealAndRename(created);
-            }
+            opScope: window.opScope
+            panes: [pane]
+            handlesJobs: true
         }
 
         Connections {
@@ -868,6 +863,24 @@ FloatingWindow {
             anchors.fill: parent
             chooser: window
             pane: pane
+            actions: paneActions
+        }
+
+        ServiceErrorToasts {
+            active: surface.Window.active
+        }
+
+        CredentialDialog {
+            id: credentialDialog
+        }
+
+        Connections {
+            target: NetworkService
+            enabled: surface.Window.active
+
+            function onAskRequested(ask) {
+                credentialDialog.present(ask);
+            }
         }
 
         ConnectServerDialog {
@@ -886,16 +899,32 @@ FloatingWindow {
         }
 
         ConflictDialog {
+            id: conflictDialog
+
             opScope: window.opScope
         }
 
         OperationErrorDialog {
+            id: errorDialog
+
             opScope: window.opScope
         }
 
         Toast {
             anchors.fill: parent
             shown: surface.Window.active
+        }
+    }
+
+    Instantiator {
+        model: Shortcuts.chooser()
+
+        Shortcut {
+            required property var modelData
+
+            enabled: !window.dialogOpen && (modelData.scope === "path" || !window.textEditing)
+            sequences: modelData.keys
+            onActivated: menus.runAction(modelData.id)
         }
     }
 

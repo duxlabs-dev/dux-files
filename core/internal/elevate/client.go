@@ -16,6 +16,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/xdg"
+
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/duxlabs-dev/dux-go/portal"
 
@@ -93,10 +95,7 @@ func (c *Client) executable() (string, error) {
 
 func actionDirs() []string {
 	dirs := []string{"/usr/share/polkit-1/actions"}
-	for _, dir := range strings.Split(os.Getenv("XDG_DATA_DIRS"), ":") {
-		if dir == "" {
-			continue
-		}
+	for _, dir := range xdg.DataDirs() {
 		dirs = append(dirs, filepath.Join(dir, "polkit-1", "actions"))
 	}
 	return dirs

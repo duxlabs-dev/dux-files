@@ -1,10 +1,10 @@
 package netmount
 
 import (
-	"errors"
-	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/wire"
 
 	"github.com/duxlabs-dev/dux-files/core/internal/dbusutil"
 	"github.com/duxlabs-dev/dux-go/files"
@@ -24,23 +24,11 @@ const (
 	gioBusy             = 26
 )
 
-func fail(code files.Code, format string, args ...any) error {
-	return &files.Error{Code: code, Err: fmt.Errorf(format, args...)}
-}
-
 func wrapDBus(err error) error {
-	if err == nil {
-		return nil
+	if call, ok := err.(dbus.Error); ok && call.Name == "org.freedesktop.DBus.Error.ServiceUnknown" {
+		return wire.Fail(files.CodeNotSupported, "gvfs is not running")
 	}
-	call, ok := err.(dbus.Error)
-	if !ok {
-		return &files.Error{Code: files.CodeIO, Err: err}
-	}
-	if call.Name == "org.freedesktop.DBus.Error.ServiceUnknown" {
-		return fail(files.CodeNotSupported, "gvfs is not running")
-	}
-	text := dbusutil.ErrorMessage(call)
-	return &files.Error{Code: codeFor(call, text), Err: errors.New(text)}
+	return dbusutil.WrapDBus(err, codeFor)
 }
 
 func codeFor(call dbus.Error, text string) files.Code {

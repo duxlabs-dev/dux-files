@@ -40,69 +40,61 @@ Singleton {
     }
 
     function copy(paths, dest, scope) {
-        _start("files.op.copy", {
+        _scoped("files.op.copy", {
             "paths": paths,
-            "dest": dest,
-            "scope": scope || ""
-        });
+            "dest": dest
+        }, scope);
     }
 
     function move(paths, dest, scope) {
-        _start("files.op.move", {
+        _scoped("files.op.move", {
             "paths": paths,
-            "dest": dest,
-            "scope": scope || ""
-        });
+            "dest": dest
+        }, scope);
     }
 
     function rename(path, name, scope) {
-        _start("files.op.rename", {
+        _scoped("files.op.rename", {
             "path": path,
-            "name": name,
-            "scope": scope || ""
-        });
+            "name": name
+        }, scope);
     }
 
     function newFolder(dir, name, scope, unique) {
-        _start("files.op.newFolder", {
+        _scoped("files.op.newFolder", {
             "path": dir,
             "name": name,
-            "unique": unique === true,
-            "scope": scope || ""
-        });
+            "unique": unique === true
+        }, scope);
     }
 
     function newFile(dir, name, template, scope, unique) {
-        _start("files.op.newFile", {
+        _scoped("files.op.newFile", {
             "path": dir,
             "name": name,
             "template": template || "",
-            "unique": unique === true,
-            "scope": scope || ""
-        });
+            "unique": unique === true
+        }, scope);
     }
 
     function link(paths, dest, scope) {
-        _start("files.op.link", {
+        _scoped("files.op.link", {
             "paths": paths,
-            "dest": dest,
-            "scope": scope || ""
-        });
+            "dest": dest
+        }, scope);
     }
 
     function trash(paths, scope) {
-        _start("files.op.trash", {
-            "paths": paths,
-            "scope": scope || ""
-        });
+        _scoped("files.op.trash", {
+            "paths": paths
+        }, scope);
     }
 
     function restore(names, trashDir, scope) {
-        _start("files.op.restore", {
+        _scoped("files.op.restore", {
             "names": names,
-            "trashDir": trashDir,
-            "scope": scope || ""
-        });
+            "trashDir": trashDir
+        }, scope);
     }
 
     function deletePermanently(paths) {
@@ -116,22 +108,20 @@ Singleton {
     }
 
     function compress(paths, dest, name, format, password, scope) {
-        _start("files.op.compress", {
+        _scoped("files.op.compress", {
             "paths": paths,
             "dest": dest,
             "name": name,
             "format": format || "zip",
-            "password": password || "",
-            "scope": scope || ""
-        });
+            "password": password || ""
+        }, scope);
     }
 
     function extract(paths, dest, scope) {
-        _start("files.op.extract", {
+        _scoped("files.op.extract", {
             "paths": paths,
-            "dest": dest,
-            "scope": scope || ""
-        });
+            "dest": dest
+        }, scope);
     }
 
     function setPermissions(paths, mode, recursive) {
@@ -176,64 +166,56 @@ Singleton {
     }
 
     function undo(scope) {
-        _start("files.op.undo", {
-            "scope": scope || ""
-        });
+        _scoped("files.op.undo", {}, scope);
     }
 
     function forget(scope) {
-        transport.sendRequest("files.op.forget", {
+        transport.call("files.op.forget", {
             "scope": scope || ""
         }, null);
     }
 
     function redo(scope) {
-        _start("files.op.redo", {
-            "scope": scope || ""
-        });
+        _scoped("files.op.redo", {}, scope);
     }
 
     function duplicate(paths, scope) {
-        _start("files.op.duplicate", {
-            "paths": paths,
-            "scope": scope || ""
-        });
+        _scoped("files.op.duplicate", {
+            "paths": paths
+        }, scope);
     }
 
     function newFolderWith(paths, dir, name, scope, unique) {
-        _start("files.op.newFolderWith", {
+        _scoped("files.op.newFolderWith", {
             "paths": paths,
             "path": dir,
             "name": name,
-            "unique": unique === true,
-            "scope": scope || ""
-        });
+            "unique": unique === true
+        }, scope);
     }
 
     function pasteImage(dir, name, scope) {
-        _start("files.op.pasteImage", {
+        _scoped("files.op.pasteImage", {
             "path": dir,
-            "name": name,
-            "scope": scope || ""
-        });
+            "name": name
+        }, scope);
     }
 
     function refresh() {
-        transport.sendRequest("files.op.jobs", null, response => {
-            if (response.error)
+        transport.call("files.op.jobs", null, result => {
+            if (result.error)
                 return;
             _byId = ({});
-            for (const job of (response.result || {}).jobs || [])
+            for (const job of result.jobs || [])
                 _byId[job.id] = job;
             _rebuild();
         });
     }
 
     function refreshElevation() {
-        transport.sendRequest("system.elevation", null, response => {
-            if (response.error)
+        transport.call("system.elevation", null, result => {
+            if (result.error)
                 return;
-            const result = response.result || {};
             elevation = {
                 "available": result.available === true,
                 "route": result.route || "",
@@ -242,15 +224,19 @@ Singleton {
         });
     }
 
+    function _scoped(method, params, scope) {
+        params.scope = scope || "";
+        _start(method, params);
+    }
+
     function _start(method, params) {
-        transport.sendRequest(method, params, response => {
-            if (response.error) {
-                root.requestFailed(response.error);
+        transport.call(method, params, result => {
+            if (result.error) {
+                root.requestFailed(result.error);
                 return;
             }
-            const job = (response.result || {}).job;
-            if (job)
-                root._store(job);
+            if (result.job)
+                root._store(result.job);
         });
     }
 

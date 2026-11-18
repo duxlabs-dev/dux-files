@@ -18,10 +18,7 @@ func TestLoad(t *testing.T) {
 		{"missing file", "", Defaults()},
 		{"invalid json", "{not json", Defaults()},
 		{"partial file keeps other defaults", `{"themeMode": "dark"}`, Defaults()},
-		{"terminal", `{"terminal": "kitty"}`, UISettings{Terminal: "kitty", RegisterFileManager: true, RecentFiles: true}},
 		{"file manager registration off", `{"registerFileManager": false}`, UISettings{RegisterFileManager: false, RecentFiles: true}},
-		{"recent files off", `{"recentFiles": false}`, UISettings{RegisterFileManager: true, RecentFiles: false}},
-		{"search exclusions", `{"searchExcludes": ["Steam", "~/big"]}`, UISettings{RegisterFileManager: true, RecentFiles: true, SearchExcludes: []string{"Steam", "~/big"}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

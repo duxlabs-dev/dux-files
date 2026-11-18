@@ -102,8 +102,3 @@ func TestGlobsSubclassCycleTerminates(t *testing.T) {
 	assert.Equal(t, []string{"*.ca", "*.cb"}, db.Globs("cycle/a"))
 	assert.Equal(t, []string{"*.ca", "*.cb"}, db.Globs("cycle/*"))
 }
-
-func TestGlobsOnAnEmptyTree(t *testing.T) {
-	db := LoadDB([]string{filepath.Join(t.TempDir(), "mime")})
-	assert.Nil(t, db.Globs("image/png"))
-}

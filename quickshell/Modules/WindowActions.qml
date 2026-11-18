@@ -19,75 +19,33 @@ QtObject {
         onTriggered: actions.vimPrefix = ""
     }
 
-    function trashAction(id) {
-        switch (id) {
-        case "trash":
-            return "deletePermanently";
-        case "openWith":
-        case "openWithMenu":
-        case "openFolderWith":
-        case "openContainingFolder":
-        case "openInNewTab":
-        case "openInNewWindow":
-        case "openInPane":
-        case "openTerminal":
-        case "cut":
-        case "copy":
-        case "paste":
-        case "pasteInto":
-        case "pasteLink":
-        case "rename":
-        case "duplicate":
-        case "moveTo":
-        case "copyTo":
-        case "newFolder":
-        case "newFolderWith":
-        case "newDocument":
-        case "compress":
-        case "extract":
-        case "extractTo":
-        case "properties":
-        case "customizeFolder":
-        case "copyPath":
-        case "bookmark":
-        case "bookmarkSelected":
-            return "";
-        default:
-            return id;
-        }
-    }
-
-    function recentAction(id) {
-        switch (id) {
-        case "openTerminal":
-        case "openFolderWith":
-        case "paste":
-        case "pasteLink":
-        case "rename":
-        case "duplicate":
-        case "newFolder":
-        case "newFolderWith":
-        case "newDocument":
-        case "compress":
-        case "extract":
-        case "bookmark":
-            return "";
-        case "pasteInto":
-            return mainWindow.selectedPaths().length === 1 ? id : "";
-        case "copyPath":
-        case "properties":
-            return mainWindow.selectedPaths().length > 0 ? id : "";
-        default:
-            return id;
-        }
-    }
-
     function scopedAction(id) {
         if (activePane.trashActive)
-            return trashAction(id);
+            return trashScoped(id);
         if (activePane.recentActive)
-            return recentAction(id);
+            return recentScoped(id);
         return id;
+    }
+
+    function trashScoped(id) {
+        if (id === "trash")
+            return "deletePermanently";
+        return FileActions.available(id, "trash") ? id : "";
+    }
+
+    function recentScoped(id) {
+        if (!FileActions.available(id, "recent"))
+            return "";
+        const selected = mainWindow.selectedPaths().length;
+        switch (id) {
+        case "pasteInto":
+            return selected === 1 ? id : "";
+        case "copyPath":
+        case "properties":
+            return selected > 0 ? id : "";
+        default:
+            return id;
+        }
     }
 
     function runAction(id) {
@@ -126,7 +84,10 @@ QtObject {
             mainWindow.tabManager.newTab("", false);
             return;
         case "newWindow":
-            newWindowAt(currentPath);
+            if (SettingsData.newWindowFolder === "current")
+                newWindowAt(currentPath);
+            else
+                mainWindow.newWindowRequested([]);
             return;
         case "openInNewWindow":
             openSelectionInNewWindow();
@@ -273,13 +234,13 @@ QtObject {
             ClipboardService.cutPaths(mainWindow.selectedPaths());
             return;
         case "paste":
-            pasteInto(currentPath, false);
+            mainWindow.paneActions.pasteInto(currentPath, false);
             return;
         case "pasteInto":
-            pasteInto(mainWindow.firstSelected()?.path ?? currentPath, false);
+            mainWindow.paneActions.pasteInto(mainWindow.firstSelected()?.path ?? currentPath, false);
             return;
         case "pasteLink":
-            pasteInto(currentPath, true);
+            mainWindow.paneActions.pasteInto(currentPath, true);
             return;
         case "rename":
             renameSelection();
@@ -306,7 +267,7 @@ QtObject {
             mainWindow.dialogs.askTransferTo(mainWindow.selectedPaths(), false);
             return;
         case "newFolder":
-            FileOpsService.newFolder(currentPath, I18n.tr("Untitled folder", "default name for a new folder"), opScope, true);
+            mainWindow.paneActions.newFolder(currentPath);
             return;
         case "newFolderWith":
             newFolderWithSelection();
@@ -318,20 +279,15 @@ QtObject {
             mainWindow.dialogs.showAppearance(mainWindow.selectedEntries());
             return;
         case "copyPath":
-            copyText((mainWindow.selectedPaths().length > 0 ? mainWindow.selectedPaths() : [currentPath]).join("\n"));
+            mainWindow.paneActions.copyText((mainWindow.selectedPaths().length > 0 ? mainWindow.selectedPaths() : [currentPath]).join("\n"));
             return;
         case "copyName":
-            copyText(mainWindow.selectedEntries().map(entry => entry.name).join("\n"));
+            mainWindow.paneActions.copyText(mainWindow.selectedEntries().map(entry => entry.name).join("\n"));
             return;
         case "contextMenu":
             mainWindow.menus.showContextMenuAtCursor();
             return;
         }
-    }
-
-    function copyText(text) {
-        Paths.copyPathToClipboard(text);
-        ClipboardService.clear();
     }
 
     function openSelectionInNewTab() {
@@ -505,18 +461,7 @@ QtObject {
     }
 
     function trashSelection() {
-        const paths = mainWindow.selectedPaths();
-        trashPaths(paths, paths.length === 1 ? mainWindow.firstSelected().name : FileFormat.count(paths.length));
-    }
-
-    function trashPaths(paths, subject) {
-        if (paths.length === 0)
-            return;
-        if (!SettingsData.confirmTrash) {
-            FileOpsService.trash(paths, opScope);
-            return;
-        }
-        mainWindow.dialogs.confirmTrash(paths, subject);
+        mainWindow.paneActions.trashPaths(mainWindow.selectedPaths());
     }
 
     function deleteSelection() {
@@ -531,26 +476,6 @@ QtObject {
         if (!entry)
             return;
         activePane.beginRename(entry.path);
-    }
-
-    function pasteInto(dest, asLink) {
-        ClipboardService.read(result => {
-            if (result.paths.length === 0) {
-                if (!asLink)
-                    FileOpsService.pasteImage(dest, I18n.tr("Pasted image", "file name for an image pasted from the clipboard"), mainWindow.opScope);
-                return;
-            }
-            if (asLink) {
-                FileOpsService.link(result.paths, dest, mainWindow.opScope);
-                return;
-            }
-            if (result.cut) {
-                FileOpsService.move(result.paths, dest, mainWindow.opScope);
-                ClipboardService.clear();
-                return;
-            }
-            FileOpsService.copy(result.paths, dest, mainWindow.opScope);
-        });
     }
 
     function showProperties() {

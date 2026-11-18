@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -12,7 +14,7 @@ import (
 
 func addApp(t *testing.T, root, id, mimes string) {
 	t.Helper()
-	writeFile(t, filepath.Join(root, "xdg", "data", "applications", id), []byte(
+	testfs.WriteBytes(t, filepath.Join(root, "xdg", "data", "applications", id), []byte(
 		"[Desktop Entry]\nType=Application\nName="+id+"\nExec=sh -c \"true\" %f\nMimeType="+mimes+"\n"))
 }
 
@@ -129,8 +131,8 @@ func TestSectionsMixedTypesIntersect(t *testing.T) {
 
 func TestSectionsHandlerTypesPaths(t *testing.T) {
 	svc, root := fixture(t)
-	note := writeFile(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
-	shot := writeFile(t, filepath.Join(root, "files", "shot.png"), []byte("\x89PNG\r\n\x1a\n"))
+	note := testfs.WriteBytes(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
+	shot := testfs.WriteBytes(t, filepath.Join(root, "files", "shot.png"), []byte("\x89PNG\r\n\x1a\n"))
 
 	result := resultOf(t, call(t, svc, ipc.Request{ID: 1, Method: "files.apps.sections", Params: map[string]any{"paths": []any{note, shot}}}))
 	assert.Equal(t, []any{"text/plain", "image/png"}, result["mimeTypes"])
@@ -149,7 +151,7 @@ func TestSectionsHandlerTypesPaths(t *testing.T) {
 
 func TestOpenWithHandlerRecordsTheChoice(t *testing.T) {
 	svc, root := fixture(t)
-	note := writeFile(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
+	note := testfs.WriteBytes(t, filepath.Join(root, "files", "note.txt"), []byte("hello"))
 
 	result := resultOf(t, call(t, svc, ipc.Request{ID: 1, Method: "files.openWith", Params: map[string]any{"paths": []any{note}, "desktopId": "viewer.desktop"}}))
 	assert.Equal(t, true, result["recorded"])

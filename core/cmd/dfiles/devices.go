@@ -8,29 +8,15 @@ import (
 	"slices"
 	"text/tabwriter"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/devices"
+
 	"github.com/spf13/cobra"
 )
 
-type device struct {
-	ID         string `json:"id"`
-	Kind       string `json:"kind"`
-	Name       string `json:"name"`
-	Device     string `json:"device"`
-	Label      string `json:"label"`
-	UUID       string `json:"uuid"`
-	FSType     string `json:"fstype"`
-	Size       uint64 `json:"size"`
-	Mounted    bool   `json:"mounted"`
-	MountPoint string `json:"mountPoint"`
-	Encrypted  bool   `json:"encrypted"`
-	Unlocked   bool   `json:"unlocked"`
-	Hidden     bool   `json:"hidden"`
-}
-
 type deviceList struct {
-	Available bool     `json:"available"`
-	Reason    string   `json:"reason"`
-	Devices   []device `json:"devices"`
+	Available bool             `json:"available"`
+	Reason    string           `json:"reason"`
+	Devices   []devices.Device `json:"devices"`
 }
 
 var (
@@ -133,19 +119,19 @@ func deviceAction(method, target string, extra map[string]any, describe func(map
 	})
 }
 
-func findDevice(devices []device, target string) (device, error) {
-	for _, dev := range devices {
+func findDevice(list []devices.Device, target string) (devices.Device, error) {
+	for _, dev := range list {
 		if target != "" && slices.Contains([]string{dev.ID, dev.Device, dev.UUID, dev.Label, dev.MountPoint}, target) {
 			return dev, nil
 		}
 	}
-	return device{}, fmt.Errorf("no device matches %s; see 'dfiles devices list'", target)
+	return devices.Device{}, fmt.Errorf("no device matches %s; see 'dfiles devices list'", target)
 }
 
-func printDevices(devices []device) {
+func printDevices(list []devices.Device) {
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
 	fmt.Fprintln(w, "DEVICE\tNAME\tKIND\tFSTYPE\tSIZE\tMOUNTED AT")
-	for _, dev := range devices {
+	for _, dev := range list {
 		if dev.Hidden && !devicesAllFlag {
 			continue
 		}
@@ -153,11 +139,11 @@ func printDevices(devices []device) {
 		if dev.Kind == "system" && name == "" {
 			name = "My Computer"
 		}
-		fstype := dev.FSType
+		fstype := dev.Fstype
 		if dev.Encrypted && !dev.Unlocked {
 			fstype = "locked"
 		}
-		fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\t%s\n", dev.Device, cmp.Or(name, "-"), dev.Kind, cmp.Or(fstype, "-"), humanSize(dev.Size), cmp.Or(dev.MountPoint, "-"))
+		fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\t%s\n", dev.Device, cmp.Or(name, "-"), dev.Kind, cmp.Or(fstype, "-"), devices.HumanSize(dev.Size), cmp.Or(dev.MountPoint, "-"))
 	}
 	_ = w.Flush()
 }
@@ -183,19 +169,4 @@ func init() {
 	devicesListCmd.Flags().BoolVar(&devicesAllFlag, "all", false, "Include system partitions the sidebar hides")
 	devicesUnmountCmd.Flags().BoolVar(&devicesForceFlag, "force", false, "Unmount even while files are open")
 	devicesCmd.AddCommand(devicesListCmd, devicesMountCmd, devicesUnmountCmd, devicesEjectCmd)
-}
-
-func humanSize(bytes uint64) string {
-	const unit = 1000
-	if bytes < unit {
-		return fmt.Sprintf("%d B", bytes)
-	}
-	value := float64(bytes)
-	for _, suffix := range []string{"kB", "MB", "GB", "TB"} {
-		value /= unit
-		if value < unit {
-			return fmt.Sprintf("%.1f %s", value, suffix)
-		}
-	}
-	return fmt.Sprintf("%.1f PB", value/unit)
 }

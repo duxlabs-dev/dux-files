@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -94,7 +96,7 @@ func TestSymlinkComponentsAreRefused(t *testing.T) {
 		})
 	}
 
-	assert.Equal(t, "x", string(mustRead(t, filepath.Join(real, "f"))))
+	assert.Equal(t, "x", string(testfs.ReadBytes(t, filepath.Join(real, "f"))))
 	_, err := os.Lstat(filepath.Join(real, "new"))
 	assert.True(t, os.IsNotExist(err), "nothing was written through the symlink")
 
@@ -171,7 +173,7 @@ func TestWriteCommitsFramesAndDropsAbortedFiles(t *testing.T) {
 
 	_, err := runOp(t, committed("hello ", "world"), OpWrite, path, "640")
 	require.NoError(t, err)
-	assert.Equal(t, "hello world", string(mustRead(t, path)))
+	assert.Equal(t, "hello world", string(testfs.ReadBytes(t, path)))
 	info, err := os.Lstat(path)
 	require.NoError(t, err)
 	assert.Equal(t, fs.FileMode(0o640), info.Mode().Perm()&^fs.FileMode(umask(t)))
@@ -179,7 +181,7 @@ func TestWriteCommitsFramesAndDropsAbortedFiles(t *testing.T) {
 	_, err = runOp(t, committed("again"), OpWrite, path, "644")
 	require.Error(t, err)
 	assert.Equal(t, files.CodeExists, files.CodeFromOS(err))
-	assert.Equal(t, "hello world", string(mustRead(t, path)), "an existing file is never replaced")
+	assert.Equal(t, "hello world", string(testfs.ReadBytes(t, path)), "an existing file is never replaced")
 
 	aborted := filepath.Join(root, "aborted")
 	_, err = runOp(t, frames("partial"), OpWrite, aborted, "644")
@@ -190,7 +192,7 @@ func TestWriteCommitsFramesAndDropsAbortedFiles(t *testing.T) {
 	empty := filepath.Join(root, "empty")
 	_, err = runOp(t, committed(), OpWrite, empty, "644")
 	require.NoError(t, err)
-	assert.Empty(t, mustRead(t, empty))
+	assert.Empty(t, testfs.ReadBytes(t, empty))
 }
 
 func TestMkdirSymlinkRenameRemove(t *testing.T) {
@@ -213,12 +215,12 @@ func TestMkdirSymlinkRenameRemove(t *testing.T) {
 	require.NoError(t, os.WriteFile(filepath.Join(root, "taken"), []byte("t"), 0o644))
 	_, err = runOp(t, nil, OpRename, filepath.Join(root, "a", "b", "c", "f"), filepath.Join(root, "taken"), FlagNoReplace)
 	assert.Equal(t, files.CodeExists, files.CodeFromOS(err), "noreplace keeps the existing target")
-	assert.Equal(t, "t", string(mustRead(t, filepath.Join(root, "taken"))))
+	assert.Equal(t, "t", string(testfs.ReadBytes(t, filepath.Join(root, "taken"))))
 	_, err = runOp(t, nil, OpRename, filepath.Join(root, "a"), filepath.Join(root, "moved"), "overwrite")
 	assert.Equal(t, files.CodeInvalid, files.CodeOf(err))
 	_, err = runOp(t, nil, OpRename, filepath.Join(root, "a"), filepath.Join(root, "moved"))
 	require.NoError(t, err)
-	assert.Equal(t, "f", string(mustRead(t, filepath.Join(root, "moved", "b", "c", "f"))))
+	assert.Equal(t, "f", string(testfs.ReadBytes(t, filepath.Join(root, "moved", "b", "c", "f"))))
 
 	_, err = runOp(t, nil, OpRemove, filepath.Join(root, "moved"))
 	assert.Equal(t, files.CodeExists, files.CodeFromOS(err), "remove refuses a non-empty directory")
@@ -234,10 +236,26 @@ func TestMkdirSymlinkRenameRemove(t *testing.T) {
 	require.NoError(t, err)
 	_, statErr := os.Lstat(filepath.Join(root, "moved"))
 	assert.True(t, os.IsNotExist(statErr))
-	assert.Equal(t, "k", string(mustRead(t, filepath.Join(outside, "keep"))), "removeall never follows symlinks out of the tree")
+	assert.Equal(t, "k", string(testfs.ReadBytes(t, filepath.Join(outside, "keep"))), "removeall never follows symlinks out of the tree")
 
 	_, err = runOp(t, nil, OpRemoveAll, filepath.Join(root, "moved"))
 	require.NoError(t, err, "removeall of a missing path succeeds like os.RemoveAll")
+}
+
+func TestRenameatIfAbsentKeepsAnExistingTarget(t *testing.T) {
+	root := t.TempDir()
+	require.NoError(t, os.WriteFile(filepath.Join(root, "a"), []byte("a"), 0o644))
+	require.NoError(t, os.WriteFile(filepath.Join(root, "b"), []byte("b"), 0o644))
+	dir, err := unix.Open(root, unix.O_PATH|unix.O_DIRECTORY, 0)
+	require.NoError(t, err)
+	defer unix.Close(dir)
+
+	require.ErrorIs(t, renameatIfAbsent(dir, "a", dir, "b"), fs.ErrExist)
+	assert.Equal(t, "b", string(testfs.ReadBytes(t, filepath.Join(root, "b"))))
+
+	require.NoError(t, renameatIfAbsent(dir, "a", dir, "c"))
+	assert.Equal(t, "a", string(testfs.ReadBytes(t, filepath.Join(root, "c"))))
+	assert.NoFileExists(t, filepath.Join(root, "a"))
 }
 
 func TestUtimesSetsTheModificationTime(t *testing.T) {
@@ -320,13 +338,6 @@ func TestMainRefusesOutsidePkexec(t *testing.T) {
 	stderr.Reset()
 	assert.Equal(t, ExitRefused, Main([]string{OpLstat, "/"}, nil, nil, &stderr))
 	assert.Contains(t, stderr.String(), "root")
-}
-
-func mustRead(t *testing.T, path string) []byte {
-	t.Helper()
-	body, err := os.ReadFile(path)
-	require.NoError(t, err)
-	return body
 }
 
 func umask(t *testing.T) int {

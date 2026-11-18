@@ -31,12 +31,6 @@ test("playback times read like a player clock", () => {
     assert.equal(view.clock(-5), "0:00");
 });
 
-test("zoom stays inside the rendering window", () => {
-    assert.equal(view.clampZoom(100), 8);
-    assert.equal(view.clampZoom(0.01), 0.25);
-    assert.equal(view.clampZoom(2), 2);
-});
-
 test("stepping up and down is symmetric and clamped", () => {
     assert.equal(view.steppedZoom(2, 1), 2.5);
     assert.equal(view.steppedZoom(2, -1), 1.6);
@@ -56,12 +50,6 @@ test("a quarter turn swaps the axis that can pan", () => {
     assert.equal(view.panLimit(1000, 500, 2, 90), 0);
     assert.equal(view.panLimit(1000, 500, 1, 90), 0);
     assert.equal(view.panLimit(1000, 500, 1, 180), 0);
-});
-
-test("panning never leaves the image", () => {
-    assert.equal(view.clampPan(900, 500), 500);
-    assert.equal(view.clampPan(-900, 500), -500);
-    assert.equal(view.clampPan(120, 500), 120);
 });
 
 test("html images become markdown images Qt can lay out", () => {

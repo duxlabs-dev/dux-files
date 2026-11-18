@@ -4,7 +4,6 @@ package recent
 import (
 	"encoding/xml"
 	"fmt"
-	"net/url"
 	"os"
 	"path/filepath"
 	"sort"
@@ -12,6 +11,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/fileuri"
 
 	"github.com/duxlabs-dev/dux-files/core/internal/atomicfile"
 )
@@ -149,10 +150,7 @@ func (s *Store) edit(change func([]Item) []Item) error {
 	if info, err := os.Stat(s.Path); err == nil {
 		mode = info.Mode().Perm()
 	}
-	if err := os.MkdirAll(filepath.Dir(s.Path), 0o700); err != nil {
-		return err
-	}
-	return atomicfile.WriteFile(s.Path, Marshal(change(items)), mode)
+	return atomicfile.WriteFileMkdir(s.Path, Marshal(change(items)), mode, 0o700)
 }
 
 func add(items []Item, path, mimeType string, app Application, now time.Time) []Item {
@@ -202,11 +200,7 @@ func FileURI(path string) string {
 }
 
 func PathOf(uri string) (string, bool) {
-	parsed, err := url.Parse(uri)
-	if err != nil || !strings.EqualFold(parsed.Scheme, "file") || (parsed.Host != "" && parsed.Host != "localhost") || !strings.HasPrefix(parsed.Path, "/") {
-		return "", false
-	}
-	return filepath.Clean(parsed.Path), true
+	return fileuri.Parse(uri)
 }
 
 type xbel struct {

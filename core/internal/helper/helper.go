@@ -74,7 +74,7 @@ func Main(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 		report(stderr, invalid("dfiles helper must be started as root"))
 		return ExitRefused
 	}
-	if err := confine(callerUID); err != nil {
+	if err := confine(); err != nil {
 		report(stderr, err)
 		return ExitRefused
 	}

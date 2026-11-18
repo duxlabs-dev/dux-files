@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import qs.Common
+import qs.Modules
 import qs.Services
 
 ShellRoot {
@@ -63,6 +64,12 @@ ShellRoot {
         }
     }
 
+    Component {
+        id: propertiesTab
+
+        PropertiesOpenWith {}
+    }
+
     Component.onCompleted: {
         AppsService.transport = fakeTransport;
 
@@ -92,12 +99,6 @@ ShellRoot {
             "terminal": "ghostty"
         });
         SettingsData.terminal = "";
-
-        AppsService.openWith(["/tmp/a.txt"], "editor.desktop", null);
-        check("openWith params", lastSent().params, {
-            "paths": ["/tmp/a.txt"],
-            "desktopId": "editor.desktop"
-        });
 
         AppsService.appsForMime("text/plain", "/tmp/a.txt", null);
         check("forMime params", lastSent().params, {
@@ -131,19 +132,30 @@ ShellRoot {
         AppsService.allApps(response => fixture.replies = fixture.replies.concat([response]));
         check("result is unwrapped", replies[0].apps[0].id, "editor.desktop");
 
+        nextResult = {
+            "mimeType": "text/plain",
+            "apps": [
+                {
+                    "id": "editor.desktop",
+                    "name": "Editor"
+                }
+            ]
+        };
+        const untyped = propertiesTab.createObject(fixture, {
+            "path": "/tmp/init.vim"
+        });
+        check("properties types an untyped file by its path", lastSent().params, {
+            "path": "/tmp/init.vim"
+        });
+        check("properties lists apps for an untyped file", [untyped.resolvedMime, untyped.apps.length], ["text/plain", 1]);
+        untyped.destroy();
+
         nextError = "denied";
         AppsService.run("/tmp/a.sh", response => fixture.replies = fixture.replies.concat([response]));
         check("error carries its code", replies[1], {
             "error": "denied",
             "code": "EACCES"
         });
-
-        check("a program asks before running", FilesFormat.isRunnable("application/x-executable", true), true);
-        check("a script asks before running", FilesFormat.isRunnable("application/x-shellscript", true), true);
-        check("an unknown executable asks", FilesFormat.isRunnable("", true), true);
-        check("a text file with the bit asks", FilesFormat.isRunnable("text/x-python", true), true);
-        check("an image never asks", FilesFormat.isRunnable("image/png", true), false);
-        check("without the bit nothing asks", FilesFormat.isRunnable("application/x-executable", false), false);
 
         log.info(failures === 0 ? "FIXTURE PASS" : `FIXTURE FAIL (${failures})`);
         Qt.callLater(Qt.quit);

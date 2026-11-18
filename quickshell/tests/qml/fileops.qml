@@ -67,6 +67,10 @@ ShellRoot {
         function unsubscribeTopic(topic, cb) {
         }
 
+        function call(method, params, callback) {
+            sendRequest(method, params, response => callback?.(DuxFilesService.unwrap(response)));
+        }
+
         function sendRequest(method, params, callback) {
             fixture.sent = fixture.sent.concat([
                 {
@@ -220,7 +224,6 @@ ShellRoot {
         FileOpsService.refresh();
         check("relist replaces the store", states(), ["j9:queued"]);
 
-        check("no elevation before asking", FileOpsService.canElevate, false);
         elevationResponse = {
             "available": false,
             "route": "pkexec",

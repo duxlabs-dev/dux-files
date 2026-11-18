@@ -51,10 +51,13 @@ QtObject {
         primaryPane.restoreState(state.panes?.[0] ?? {
             "path": Paths.strip(Paths.home)
         });
-        if (secondPane)
+        leaveMissingFolder(primaryPane);
+        if (secondPane) {
             secondPane.restoreState(state.panes?.[1] ?? {
                 "path": primaryPane.path
             });
+            leaveMissingFolder(secondPane);
+        }
         activePaneRequested(secondPane ? (state.active ?? 0) : 0);
         applyingTab = false;
     }
@@ -74,7 +77,7 @@ QtObject {
         next.push({
             "panes": [
                 {
-                    "path": path === "" ? activePane.path : path
+                    "path": path === "" ? SettingsData.folderFor(SettingsData.newTabFolder, activePane.path) : path
                 },
                 null],
             "active": 0
@@ -173,9 +176,13 @@ QtObject {
         persistTabs();
     }
 
-    function dropOnTab(index, drop) {
+    function tabPath(index) {
         const state = tabState(index);
-        const dest = index === currentTab ? activePane.path : (state?.panes?.[state.active ?? 0]?.path || state?.panes?.[0]?.path || "");
+        return index === currentTab ? activePane.path : (state?.panes?.[state.active ?? 0]?.path || state?.panes?.[0]?.path || "");
+    }
+
+    function dropOnTab(index, drop) {
+        const dest = tabPath(index);
         const paths = DragService.pathsFrom(drop);
         if (dest === "" || dest === RecentService.path || paths.length === 0 || paths.includes(dest))
             return;
@@ -207,12 +214,12 @@ QtObject {
         SessionData.currentTab = currentTab;
     }
 
-    function homeTabs() {
+    function tabsAt(path) {
         return [
             {
                 "panes": [
                     {
-                        "path": Paths.strip(Paths.home)
+                        "path": path
                     },
                     null],
                 "active": 0
@@ -222,13 +229,29 @@ QtObject {
 
     function restoreSession() {
         const stored = SessionData.tabs;
-        tabs = Array.isArray(stored) && stored.length > 0 ? stored : homeTabs();
+        const folder = SettingsData.folderFor(SettingsData.startupFolder, "");
+        if (folder !== "")
+            tabs = tabsAt(folder);
+        else
+            tabs = Array.isArray(stored) && stored.length > 0 ? stored : tabsAt(Paths.strip(Paths.home));
         currentTab = Math.max(0, Math.min(SessionData.currentTab, tabs.length - 1));
         applyTab(currentTab);
     }
 
+    function leaveMissingFolder(pane) {
+        const path = pane.path;
+        if (!path.startsWith("/"))
+            return;
+        DirectoryService.stat(path, result => {
+            if (result.code === "ENOENT" && pane.path === path)
+                pane.restoreState({
+                    "path": Paths.strip(Paths.home)
+                });
+        });
+    }
+
     function startFresh() {
-        tabs = homeTabs();
+        tabs = tabsAt(SettingsData.folderFor(SettingsData.newWindowFolder, Paths.strip(Paths.home)));
         currentTab = 0;
         applyTab(0);
     }

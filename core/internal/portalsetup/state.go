@@ -44,10 +44,7 @@ func writeState(env Env, state installState) error {
 	if err != nil {
 		return err
 	}
-	if err := os.MkdirAll(stateDir(env), 0o755); err != nil {
-		return err
-	}
-	return atomicfile.WriteFile(statePath(env), append(data, '\n'), 0o644)
+	return atomicfile.WriteFileMkdir(statePath(env), append(data, '\n'), 0o644, 0o755)
 }
 
 func removeState(env Env) error {

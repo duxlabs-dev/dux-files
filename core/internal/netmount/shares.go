@@ -8,6 +8,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/wire"
+
 	"github.com/duxlabs-dev/dux-files/core/internal/dbusutil"
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/duxlabs-dev/dux-go/log"
@@ -111,7 +113,7 @@ func (s *Service) listShares(conn *dbus.Conn, mount wireMount, server string) ([
 	select {
 	case <-lister.done:
 	case <-time.After(browseTimeout):
-		return nil, fail(files.CodeIO, "%s did not finish listing its shares", server)
+		return nil, wire.Fail(files.CodeIO, "%s did not finish listing its shares", server)
 	}
 
 	lister.mu.Lock()

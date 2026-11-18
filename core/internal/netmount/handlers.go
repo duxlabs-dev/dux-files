@@ -41,7 +41,7 @@ func (s *Service) Handle(w *ipc.ConnWriter, req ipc.Request) {
 	case "network.mountPortable":
 		s.handleMountPortable(w, req)
 	default:
-		wire.RespondError(w, req.ID, fail(files.CodeNotSupported, "unknown network method: %s", req.Method))
+		wire.RespondError(w, req.ID, wire.Fail(files.CodeNotSupported, "unknown network method: %s", req.Method))
 	}
 }
 

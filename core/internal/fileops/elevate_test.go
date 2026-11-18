@@ -10,6 +10,8 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/stretchr/testify/assert"
@@ -64,7 +66,7 @@ func TestDeniedErrorOffersElevationOnlyWhenARouteExists(t *testing.T) {
 	} {
 		t.Run(name, func(t *testing.T) {
 			root := t.TempDir()
-			src := write(t, filepath.Join(root, "a.txt"), "a")
+			src := testfs.Write(t, filepath.Join(root, "a.txt"), "a")
 			require.NoError(t, os.Chmod(src, 0o000))
 
 			manager, bus := newHarness(t)
@@ -90,7 +92,7 @@ func TestRetryElevatedRunsTheStepThroughTheElevator(t *testing.T) {
 		t.Skip("root ignores mode bits")
 	}
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "a.txt"), "secret")
+	src := testfs.Write(t, filepath.Join(root, "a.txt"), "secret")
 	require.NoError(t, os.Chmod(src, 0o000))
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
@@ -115,7 +117,7 @@ func TestRetryElevatedRunsTheStepThroughTheElevator(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, os.FileMode(0), info.Mode().Perm(), "the source mode is preserved")
 	require.NoError(t, os.Chmod(copied, 0o600))
-	assert.Equal(t, "secret", read(t, copied))
+	assert.Equal(t, "secret", testfs.Read(t, copied))
 	assert.Empty(t, tempsIn(t, dest))
 	assert.True(t, view.Undoable, "an elevated read into a normal folder is undone like any copy")
 }
@@ -125,7 +127,7 @@ func TestElevatedWriteIntoALockedFolder(t *testing.T) {
 		t.Skip("root ignores mode bits")
 	}
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "a.txt"), "payload")
+	src := testfs.Write(t, filepath.Join(root, "a.txt"), "payload")
 	dest := filepath.Join(root, "locked")
 	require.NoError(t, os.Mkdir(dest, 0o500))
 	t.Cleanup(func() { _ = os.Chmod(dest, 0o700) })
@@ -140,7 +142,7 @@ func TestElevatedWriteIntoALockedFolder(t *testing.T) {
 
 	require.Equal(t, StateDone, view.State, view.Error)
 	assert.Equal(t, 1, elevator.creates, "the temp file was created through the route")
-	assert.Equal(t, "payload", read(t, filepath.Join(dest, "a.txt")))
+	assert.Equal(t, "payload", testfs.Read(t, filepath.Join(dest, "a.txt")))
 	assert.Equal(t, 0, view.Warnings, "mode and mtime are preserved through the route")
 	assert.Empty(t, tempsIn(t, dest))
 }
@@ -150,9 +152,9 @@ func TestUnverifiedTargetIsNeverReplaced(t *testing.T) {
 		t.Skip("root ignores mode bits")
 	}
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "a.txt"), "new")
+	src := testfs.Write(t, filepath.Join(root, "a.txt"), "new")
 	dest := filepath.Join(root, "unlistable")
-	write(t, filepath.Join(dest, "a.txt"), "old")
+	testfs.Write(t, filepath.Join(dest, "a.txt"), "old")
 	require.NoError(t, os.Chmod(dest, 0o200))
 	t.Cleanup(func() { _ = os.Chmod(dest, 0o700) })
 
@@ -170,7 +172,7 @@ func TestUnverifiedTargetIsNeverReplaced(t *testing.T) {
 
 	require.Equal(t, StateDone, view.State, view.Error)
 	assert.Equal(t, []string{"EACCES", "EEXIST"}, codes)
-	assert.Equal(t, "old", read(t, filepath.Join(dest, "a.txt")))
+	assert.Equal(t, "old", testfs.Read(t, filepath.Join(dest, "a.txt")))
 	assert.Equal(t, 1, view.Skipped)
 	assert.Empty(t, tempsIn(t, dest))
 	assert.False(t, view.Undoable)
@@ -181,8 +183,8 @@ func TestOneElevatedAnswerCoversTheRestOfTheJob(t *testing.T) {
 		t.Skip("root ignores mode bits")
 	}
 	root := t.TempDir()
-	first := write(t, filepath.Join(root, "a.txt"), "a")
-	second := write(t, filepath.Join(root, "b.txt"), "b")
+	first := testfs.Write(t, filepath.Join(root, "a.txt"), "a")
+	second := testfs.Write(t, filepath.Join(root, "b.txt"), "b")
 	require.NoError(t, os.Chmod(first, 0o000))
 	require.NoError(t, os.Chmod(second, 0o000))
 	dest := filepath.Join(root, "dest")
@@ -209,8 +211,8 @@ func TestStickyRetryElevatedDoesNotLoopWhenTheElevatedStepFails(t *testing.T) {
 		t.Skip("root ignores mode bits")
 	}
 	root := t.TempDir()
-	first := write(t, filepath.Join(root, "a.txt"), "a")
-	second := write(t, filepath.Join(root, "b.txt"), "b")
+	first := testfs.Write(t, filepath.Join(root, "a.txt"), "a")
+	second := testfs.Write(t, filepath.Join(root, "b.txt"), "b")
 	require.NoError(t, os.Chmod(first, 0o000))
 	require.NoError(t, os.Chmod(second, 0o000))
 	dest := filepath.Join(root, "dest")
@@ -241,9 +243,10 @@ func TestTrashHasNoElevatedForm(t *testing.T) {
 	if os.Getuid() == 0 {
 		t.Skip("root ignores mode bits")
 	}
+	trashHome(t)
 	root := t.TempDir()
 	locked := filepath.Join(root, "locked")
-	victim := write(t, filepath.Join(locked, "a.txt"), "a")
+	victim := testfs.Write(t, filepath.Join(locked, "a.txt"), "a")
 	require.NoError(t, os.Chmod(locked, 0o500))
 	t.Cleanup(func() { _ = os.Chmod(locked, 0o700) })
 
@@ -262,7 +265,7 @@ func TestTrashHasNoElevatedForm(t *testing.T) {
 
 func TestSetOwnerResolvesNamesAndNumbers(t *testing.T) {
 	root := t.TempDir()
-	target := write(t, filepath.Join(root, "a.txt"), "a")
+	target := testfs.Write(t, filepath.Join(root, "a.txt"), "a")
 	me, err := user.Current()
 	require.NoError(t, err)
 	group, err := user.LookupGroupId(me.Gid)
@@ -309,7 +312,7 @@ func TestSetOwnerToAnotherUserIsElevated(t *testing.T) {
 		t.Skip("root can chown freely")
 	}
 	root := t.TempDir()
-	target := write(t, filepath.Join(root, "a.txt"), "a")
+	target := testfs.Write(t, filepath.Join(root, "a.txt"), "a")
 
 	manager, bus := newHarness(t)
 	elevator := &fakeElevator{}

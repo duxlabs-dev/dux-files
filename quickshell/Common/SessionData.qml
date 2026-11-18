@@ -3,15 +3,9 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Io
-import qs.Services
 
 Singleton {
     id: root
-
-    readonly property var log: Log.scoped("SessionData")
-
-    readonly property string sessionPath: Paths.strip(Paths.stateDir) + "/session.json"
 
     property real windowWidth: 960
     property real windowHeight: 640
@@ -46,10 +40,7 @@ Singleton {
         })
 
     property var legacyRecentDirs: []
-
-    property bool _loaded: false
     property bool _applying: false
-    property bool _selfWrite: false
 
     function lastUsed(key, fallback) {
         return browsing?.[key] ?? fallback;
@@ -62,70 +53,36 @@ Singleton {
     }
 
     onPersistedStateChanged: {
-        if (!_loaded || _applying)
+        if (_applying)
             return;
-        writeDebounce.restart();
+        store.save();
     }
 
     function _apply(text) {
-        if (text === "") {
-            _loaded = true;
+        const data = store.objectFrom(text);
+        if (!data)
             return;
-        }
-
-        let data = null;
-        try {
-            data = JSON.parse(text);
-        } catch (e) {
-            log.warn(`ignoring unreadable session state: ${e}`);
-        }
-
-        if (Array.isArray(data?.recentDirs))
+        if (Array.isArray(data.recentDirs))
             legacyRecentDirs = data.recentDirs;
         _applying = true;
         for (const key in persistedState) {
-            if (!data || data[key] === undefined)
+            if (data[key] === undefined)
                 continue;
             root[key] = data[key];
         }
         _applying = false;
-        _loaded = true;
     }
 
     // blocking read so the first window opens with the saved state
-    Component.onCompleted: sessionFile.text()
+    Component.onCompleted: store.read()
 
-    Timer {
-        id: writeDebounce
+    JsonStore {
+        id: store
 
-        interval: 400
-        onTriggered: {
-            if (!Paths.ready) {
-                restart();
-                return;
-            }
-            root._selfWrite = true;
-            sessionFile.setText(JSON.stringify(root.persistedState, null, 1));
-        }
-    }
-
-    FileView {
-        id: sessionFile
-
-        path: root.sessionPath
-        blockLoading: true
-        atomicWrites: true
+        name: "session state"
+        path: Paths.strip(Paths.stateDir) + "/session.json"
         watchChanges: true
-        printErrors: false
-
-        onLoaded: root._apply(text())
-        onLoadFailed: root._loaded = true
-        onFileChanged: {
-            if (root._selfWrite) {
-                root._selfWrite = false;
-                return;
-            }
-            reload();
-        }
+        serialize: () => JSON.stringify(root.persistedState, null, 1)
+        parse: text => root._apply(text)
     }
 }

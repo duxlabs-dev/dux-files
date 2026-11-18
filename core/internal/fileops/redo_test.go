@@ -6,6 +6,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
 	"github.com/duxlabs-dev/dux-go/ipc"
 	"github.com/stretchr/testify/require"
 )
@@ -19,7 +21,7 @@ func redo(t *testing.T, m *Manager, bus *testBus, scope string) View {
 
 func TestRedoMoveAndRenameReplayTheRecordedPairs(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "a")
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
 	manager, bus := newHarness(t)
@@ -35,7 +37,7 @@ func TestRedoMoveAndRenameReplayTheRecordedPairs(t *testing.T) {
 	require.Equal(t, "redo", redone.Replay)
 	require.True(t, redone.Undoable)
 	require.NoFileExists(t, src)
-	require.Equal(t, "a", read(t, filepath.Join(dest, "a.txt")))
+	require.Equal(t, "a", testfs.Read(t, filepath.Join(dest, "a.txt")))
 
 	undo(t, manager, bus, "w1")
 	require.FileExists(t, src)
@@ -45,13 +47,13 @@ func TestRedoMoveAndRenameReplayTheRecordedPairs(t *testing.T) {
 	require.FileExists(t, src)
 	redo(t, manager, bus, "w1")
 	require.NoFileExists(t, src)
-	require.Equal(t, "a", read(t, filepath.Join(root, "src", "b.txt")))
+	require.Equal(t, "a", testfs.Read(t, filepath.Join(root, "src", "b.txt")))
 }
 
 func TestRedoRecreatesWhatAnUndoDeleted(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "a")
-	template := write(t, filepath.Join(root, "templates", "Sheet.csv"), "a,b\n")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "a")
+	template := testfs.Write(t, filepath.Join(root, "templates", "Sheet.csv"), "a,b\n")
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
 	manager, bus := newHarness(t)
@@ -91,12 +93,12 @@ func TestRedoRecreatesWhatAnUndoDeleted(t *testing.T) {
 			require.NoFileExists(t, tc.made)
 		})
 	}
-	require.Equal(t, "a,b\n", read(t, template))
+	require.Equal(t, "a,b\n", testfs.Read(t, template))
 }
 
 func TestRedoExtractUnpacksAgain(t *testing.T) {
 	root := t.TempDir()
-	write(t, filepath.Join(root, "project", "README.md"), "hi")
+	testfs.Write(t, filepath.Join(root, "project", "README.md"), "hi")
 	out := filepath.Join(root, "out")
 	require.NoError(t, os.Mkdir(out, 0o755))
 	manager, bus := newHarness(t)
@@ -111,13 +113,13 @@ func TestRedoExtractUnpacksAgain(t *testing.T) {
 	require.NoDirExists(t, filepath.Join(out, "project"))
 
 	require.Equal(t, StateDone, redo(t, manager, bus, "w1").State)
-	require.Equal(t, "hi", read(t, unpacked))
+	require.Equal(t, "hi", testfs.Read(t, unpacked))
 }
 
 func TestRedoTrashAndRestore(t *testing.T) {
 	trashHome(t)
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "a.txt"), "a")
 	manager, bus := newHarness(t)
 
 	run(t, manager, bus, spec{kind: KindTrash, scope: "w1", sources: []string{src}})
@@ -141,12 +143,12 @@ func TestRedoTrashAndRestore(t *testing.T) {
 	undo(t, manager, bus, "w1")
 	require.NoFileExists(t, src)
 	require.Equal(t, StateDone, redo(t, manager, bus, "w1").State)
-	require.Equal(t, "a", read(t, src))
+	require.Equal(t, "a", testfs.Read(t, src))
 }
 
 func TestRedoIsClearedByANewOperation(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "a")
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
 	manager, bus := newHarness(t)
@@ -171,7 +173,7 @@ func TestRedoIsClearedByANewOperation(t *testing.T) {
 
 func TestACancelledOrSkippedUndoPushesNoRedo(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "a")
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
 	manager, bus := newHarness(t)
@@ -179,7 +181,7 @@ func TestACancelledOrSkippedUndoPushesNoRedo(t *testing.T) {
 
 	run(t, manager, bus, spec{kind: KindCopy, scope: "w1", sources: []string{src}, dest: dest})
 	copied := filepath.Join(dest, "a.txt")
-	write(t, copied, "edited")
+	testfs.Write(t, copied, "edited")
 	require.NoError(t, os.Chtimes(copied, time.Now().Add(time.Hour), time.Now().Add(time.Hour)))
 
 	undone := undo(t, manager, bus, "w1")
@@ -187,7 +189,7 @@ func TestACancelledOrSkippedUndoPushesNoRedo(t *testing.T) {
 	require.False(t, undone.Redoable)
 	_, err := manager.Redo("w1")
 	require.Error(t, err)
-	require.Equal(t, "edited", read(t, copied))
+	require.Equal(t, "edited", testfs.Read(t, copied))
 
 	require.NoError(t, os.Chmod(dest, 0o555))
 	t.Cleanup(func() { os.Chmod(dest, 0o755) })
@@ -203,7 +205,7 @@ func TestACancelledOrSkippedUndoPushesNoRedo(t *testing.T) {
 
 func TestARedoFromABeforeANewerOperationIsDropped(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "a")
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
 	manager, bus := newHarness(t)
@@ -230,7 +232,7 @@ func TestARedoFromABeforeANewerOperationIsDropped(t *testing.T) {
 
 func TestForgetDropsAScope(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "src", "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "a")
 	dest := filepath.Join(root, "dest")
 	require.NoError(t, os.Mkdir(dest, 0o755))
 	manager, bus := newHarness(t)
@@ -250,7 +252,7 @@ func TestForgetDropsAScope(t *testing.T) {
 
 func TestProtectedArchiveIsNotRedone(t *testing.T) {
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "a.txt"), "a")
+	src := testfs.Write(t, filepath.Join(root, "a.txt"), "a")
 	manager, bus := newHarness(t)
 
 	run(t, manager, bus, spec{kind: KindCompress, scope: "w1", sources: []string{src}, dest: root, name: "secret", format: FormatZip, password: "pw"})
@@ -266,9 +268,9 @@ func TestProtectedArchiveIsNotRedone(t *testing.T) {
 
 func TestDuplicateNamesCopiesBesideTheOriginal(t *testing.T) {
 	root := t.TempDir()
-	file := write(t, filepath.Join(root, "a.txt"), "a")
+	file := testfs.Write(t, filepath.Join(root, "a.txt"), "a")
 	dir := filepath.Join(root, "docs")
-	write(t, filepath.Join(dir, "inner.txt"), "i")
+	testfs.Write(t, filepath.Join(dir, "inner.txt"), "i")
 	manager, bus := newHarness(t)
 
 	dupe := func() View {
@@ -278,8 +280,8 @@ func TestDuplicateNamesCopiesBesideTheOriginal(t *testing.T) {
 	first := dupe()
 	require.Equal(t, StateDone, first.State)
 	require.Equal(t, []Created{{Path: filepath.Join(root, "a (copy).txt")}, {Path: filepath.Join(root, "docs (copy)"), Dir: true}}, first.Created)
-	require.Equal(t, "a", read(t, filepath.Join(root, "a (copy).txt")))
-	require.Equal(t, "i", read(t, filepath.Join(root, "docs (copy)", "inner.txt")))
+	require.Equal(t, "a", testfs.Read(t, filepath.Join(root, "a (copy).txt")))
+	require.Equal(t, "i", testfs.Read(t, filepath.Join(root, "docs (copy)", "inner.txt")))
 	require.Empty(t, bus.kinds("conflict"))
 
 	second := dupe()
@@ -290,13 +292,13 @@ func TestDuplicateNamesCopiesBesideTheOriginal(t *testing.T) {
 	require.NoFileExists(t, filepath.Join(root, "a (copy 2).txt"))
 	require.NoDirExists(t, filepath.Join(root, "docs (copy 2)"))
 	require.FileExists(t, filepath.Join(root, "a (copy).txt"))
-	require.Equal(t, "a", read(t, file))
+	require.Equal(t, "a", testfs.Read(t, file))
 }
 
 func TestNewFolderWithSelectionIsOneUndoStep(t *testing.T) {
 	root := t.TempDir()
-	a := write(t, filepath.Join(root, "a.txt"), "a")
-	b := write(t, filepath.Join(root, "b.txt"), "b")
+	a := testfs.Write(t, filepath.Join(root, "a.txt"), "a")
+	b := testfs.Write(t, filepath.Join(root, "b.txt"), "b")
 	require.NoError(t, os.Mkdir(filepath.Join(root, "Untitled folder"), 0o755))
 	manager, bus := newHarness(t)
 
@@ -305,14 +307,14 @@ func TestNewFolderWithSelectionIsOneUndoStep(t *testing.T) {
 	folder := filepath.Join(root, "Untitled folder 2")
 	require.Equal(t, []Created{{Path: folder, Dir: true}}, view.Created)
 	require.True(t, view.Undoable)
-	require.Equal(t, "a", read(t, filepath.Join(folder, "a.txt")))
-	require.Equal(t, "b", read(t, filepath.Join(folder, "b.txt")))
+	require.Equal(t, "a", testfs.Read(t, filepath.Join(folder, "a.txt")))
+	require.Equal(t, "b", testfs.Read(t, filepath.Join(folder, "b.txt")))
 	require.NoFileExists(t, a)
 
 	undone := undo(t, manager, bus, "w1")
 	require.Equal(t, StateDone, undone.State)
-	require.Equal(t, "a", read(t, a))
-	require.Equal(t, "b", read(t, b))
+	require.Equal(t, "a", testfs.Read(t, a))
+	require.Equal(t, "b", testfs.Read(t, b))
 	require.NoDirExists(t, folder)
 	_, err := manager.Undo("w1")
 	require.Error(t, err)
@@ -320,24 +322,24 @@ func TestNewFolderWithSelectionIsOneUndoStep(t *testing.T) {
 	redone := redo(t, manager, bus, "w1")
 	require.Equal(t, StateDone, redone.State)
 	require.Equal(t, folder, redone.Created[0].Path)
-	require.Equal(t, "a", read(t, filepath.Join(folder, "a.txt")))
+	require.Equal(t, "a", testfs.Read(t, filepath.Join(folder, "a.txt")))
 	require.NoFileExists(t, b)
 }
 
 func TestNewFolderWithSelectionKeepsAFolderSomeoneFilled(t *testing.T) {
 	root := t.TempDir()
-	a := write(t, filepath.Join(root, "a.txt"), "a")
+	a := testfs.Write(t, filepath.Join(root, "a.txt"), "a")
 	manager, bus := newHarness(t)
 	bus.onFailure = func(f Failure) Answer { return Answer{ID: f.ID, Action: ActionSkip} }
 
 	run(t, manager, bus, spec{kind: KindNewFolderWith, scope: "w1", sources: []string{a}, dest: root, name: "Group"})
 	folder := filepath.Join(root, "Group")
-	write(t, filepath.Join(folder, "later.txt"), "kept")
+	testfs.Write(t, filepath.Join(folder, "later.txt"), "kept")
 
 	undone := undo(t, manager, bus, "w1")
 	require.Equal(t, StateDone, undone.State)
-	require.Equal(t, "a", read(t, a))
-	require.Equal(t, "kept", read(t, filepath.Join(folder, "later.txt")))
+	require.Equal(t, "a", testfs.Read(t, a))
+	require.Equal(t, "kept", testfs.Read(t, filepath.Join(folder, "later.txt")))
 	require.Equal(t, 1, undone.Skipped)
 }
 
@@ -366,7 +368,7 @@ func TestPasteImageWritesTheClipboardImage(t *testing.T) {
 	first := bus.wait(t, job["id"].(string))
 	require.Equal(t, StateDone, first.State)
 	require.Equal(t, []Created{{Path: filepath.Join(root, "Pasted image.png")}}, first.Created)
-	require.Equal(t, "png-bytes", read(t, filepath.Join(root, "Pasted image.png")))
+	require.Equal(t, "png-bytes", testfs.Read(t, filepath.Join(root, "Pasted image.png")))
 	require.True(t, first.Undoable)
 	require.Empty(t, tempsIn(t, root))
 

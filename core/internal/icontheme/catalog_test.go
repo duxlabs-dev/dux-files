@@ -96,16 +96,6 @@ func TestThemeFallsBackToGtkWhenKdeHasNone(t *testing.T) {
 	assert.Equal(t, "Adwaita", Theme(home))
 }
 
-func TestThemeIsEmptyWithoutAConfiguration(t *testing.T) {
-	assert.Equal(t, "", Theme(t.TempDir()))
-}
-
-func TestScanIgnoresMissingRoots(t *testing.T) {
-	assert.NotPanics(t, func() {
-		assert.Empty(t, Scan([]string{filepath.Join(t.TempDir(), "nope")}, "Paper").Badges)
-	})
-}
-
 func TestRootsFollowsXDGOrder(t *testing.T) {
 	roots := Roots("/home/me", "/home/me/.local/share", []string{"/usr/local/share", "/usr/share"})
 

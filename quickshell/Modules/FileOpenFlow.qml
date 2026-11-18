@@ -195,15 +195,6 @@ QtObject {
         pane?.reveal(paths);
     }
 
-    function revealCreated(job) {
-        const created = job.created?.[0]?.path ?? "";
-        if (created === "")
-            return;
-        const dir = FilePaths.parentOf(created);
-        const pane = [activePane, primaryPane, secondPane].find(candidate => candidate?.path === dir);
-        pane?.revealAndRename(created);
-    }
-
     function offerRestore(entries) {
         const items = entries.map(entry => ({
                     "trashDir": entry.trashDir,
@@ -246,7 +237,7 @@ QtObject {
             case "newFolder":
             case "newFile":
             case "newFolderWith":
-                flow.revealCreated(job);
+                mainWindow.paneActions.revealCreated(job);
                 return;
             case "duplicate":
             case "pasteImage":

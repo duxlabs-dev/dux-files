@@ -4,7 +4,7 @@ Dux Files is an open-source, MIT-licensed standalone file manager for linux. It 
 
 ## Repo Structure
 
-Two apps that operate together, plus a `dux-qml-common` submodule holding the shared QML widget library used across the Dux suite (symlinked in as `quickshell/DCommon`).
+Two apps that operate together, plus a `dux-qml-common` submodule holding the shared QML widget library used across the Dux suite (symlinked in as `quickshell/DCommon`), and a `dux-qt-base` submodule, the quickshell runtime fork.
 
 ### 1- core
 
@@ -14,6 +14,7 @@ Go backend, daemon, and CLI (`cmd/dfiles`). Runs the unix socket server the UI t
 - internal/ipc/ - unix socket handlers the UI calls, plus the method registry that drives `dfiles ipc list` and shell completion
 - internal/colorscheme/ - desktop portal color-scheme watcher
 - internal/shellembed/ - the QML tree embedded into the binary at build time (`make sync-shell`)
+- internal/qtbaseembed/ - libdux-qt-base.so embedded with `QTBASE=1` (withqtbase tag). By default `dfiles qs` dlopens an installed libdux-qt-base.so.0, next to `dfiles` or in the system library dirs, and fails without one; `dfiles run --qs-child` (DFILES_QS_CHILD=1) runs the UI on upstream `qs` instead. The QML must keep loading on upstream quickshell: fork-only pragmas and window properties are warnings or guarded assignments, never bindings.
 
 ### 2- quickshell
 
@@ -28,7 +29,7 @@ The entire UI, a quickshell app. Talks to core over two unix sockets: one for re
 
 ### Other directories
 
-- distro/ - nix packaging
+- distro/ - nix and flatpak packaging
 - assets/ - icon, desktop entry, metainfo, systemd unit
 
 ## General Rules

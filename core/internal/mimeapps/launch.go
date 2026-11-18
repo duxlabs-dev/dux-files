@@ -3,11 +3,14 @@ package mimeapps
 import (
 	"errors"
 	"fmt"
-	"net/url"
 	"os"
 	"os/exec"
 	"strings"
 	"syscall"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/wire"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/fileuri"
 
 	"github.com/duxlabs-dev/dux-go/files"
 )
@@ -70,14 +73,14 @@ func (s *Service) OpenTerminal(dir, preferred string) error {
 			term = os.Getenv("TERMINAL")
 		}
 		if term == "" {
-			return fail(files.CodeSandboxed, "set a terminal in settings: the sandbox cannot see the host's")
+			return wire.Fail(files.CodeSandboxed, "set a terminal in settings: the sandbox cannot see the host's")
 		}
 		return hostSpawn(specFor(term).argv(dir), dir)
 	}
 
 	term, err := s.terminal(preferred)
 	if err != nil {
-		return fail(files.CodeNotSupported, "%s", err)
+		return wire.Fail(files.CodeNotSupported, "%s", err)
 	}
 	return spawn(term.argv(dir), dir, "", false)
 }
@@ -188,7 +191,7 @@ func pathURI(path string) string {
 	if !strings.HasPrefix(path, "/") {
 		return path
 	}
-	return (&url.URL{Scheme: "file", Path: path}).String()
+	return fileuri.Build(path)
 }
 
 func spawn(argv []string, dir, activationToken string, startupNotify bool) error {

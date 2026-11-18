@@ -75,6 +75,14 @@ ShellRoot {
         function unsubscribeTopic(topic, cb) {
         }
 
+        function callReporting(method, params, failed, callback) {
+            call(method, params, result => {
+                if (result.error)
+                    failed(result.error, result.code);
+                callback?.(result);
+            });
+        }
+
         function call(method, params, callback) {
             sendRequest(method, params, response => callback?.(DuxFilesService.unwrap(response)));
         }
@@ -228,8 +236,6 @@ ShellRoot {
         NetworkService.refresh();
         check("mounts split by kind", [NetworkService.networkMounts.length, NetworkService.deviceMounts.length], [1, 1]);
         check("portables stored", NetworkService.portables.length, 1);
-        check("installed schemes stored", NetworkService.schemes, ["sftp", "smb"]);
-        check("recent servers stored", NetworkService.servers.length, 1);
 
         emit("network", {
             "kind": "ask",

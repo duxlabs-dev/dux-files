@@ -4,6 +4,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/ini"
 )
 
 const preferredGroup = "preferred"
@@ -105,7 +107,7 @@ func locatePreferred(lines []string) (int, int) {
 
 func groupIndex(lines []string, group string) int {
 	for i, line := range lines {
-		if name, ok := groupHeader(line); ok && name == group {
+		if name, ok := ini.Header(line); ok && name == group {
 			return i
 		}
 	}
@@ -114,10 +116,10 @@ func groupIndex(lines []string, group string) int {
 
 func keyIndex(lines []string, header int, key string) int {
 	for i := header + 1; i < len(lines); i++ {
-		if _, ok := groupHeader(lines[i]); ok {
+		if _, ok := ini.Header(lines[i]); ok {
 			return -1
 		}
-		if lineKey(lines[i]) == key {
+		if ini.Key(lines[i]) == key {
 			return i
 		}
 	}
@@ -127,7 +129,7 @@ func keyIndex(lines []string, header int, key string) int {
 func lastContentLine(lines []string, header int) int {
 	last := header
 	for i := header + 1; i < len(lines); i++ {
-		if _, ok := groupHeader(lines[i]); ok {
+		if _, ok := ini.Header(lines[i]); ok {
 			return last
 		}
 		if strings.TrimSpace(lines[i]) != "" {
@@ -135,26 +137,6 @@ func lastContentLine(lines []string, header int) int {
 		}
 	}
 	return last
-}
-
-func groupHeader(line string) (string, bool) {
-	trimmed := strings.TrimSpace(line)
-	if len(trimmed) < 2 || trimmed[0] != '[' || trimmed[len(trimmed)-1] != ']' {
-		return "", false
-	}
-	return trimmed[1 : len(trimmed)-1], true
-}
-
-func lineKey(line string) string {
-	trimmed := strings.TrimSpace(line)
-	if trimmed == "" || strings.HasPrefix(trimmed, "#") {
-		return ""
-	}
-	key, _, found := strings.Cut(trimmed, "=")
-	if !found {
-		return ""
-	}
-	return strings.TrimSpace(key)
 }
 
 func insertAt(lines []string, at int, line string) []string {

@@ -66,7 +66,7 @@ OverlayDialog {
     }
 
     function showFailure(target, result) {
-        errorText = result.error || I18n.tr("Connected, but the share has no local folder. The gvfs FUSE service may not be running.", "connect dialog error when a mounted share has no fuse path");
+        errorText = result.error || I18n.tr("Connected, but the share has no local folder. The %1 service may not be running.", "connect dialog error when a mounted share has no fuse path, %1 is the service name").arg("gvfs FUSE");
         if (visible)
             return;
         addressField.text = target;
@@ -159,14 +159,8 @@ OverlayDialog {
     }
 
     actions: [
-        TextButton {
-            text: I18n.tr("Cancel", "dialog button to cancel")
-            onClicked: root.close()
-        },
         DButton {
             text: I18n.tr("Connect", "connect to server dialog action")
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             enabled: !NetworkService.connecting
             onClicked: root.submit("")
         }

@@ -10,6 +10,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
 	"github.com/sorairolake/lzip-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -30,8 +32,8 @@ var protectedFixtures = []struct {
 	{"rar5-psw.rar", "password", assertRarNumbers},
 	{"rar5-hpsw.rar", "password", assertRarNumbers},
 	{"rar3-comment-psw.rar", "password", func(t *testing.T, base string) {
-		assert.Equal(t, "", read(t, filepath.Join(base, "file1.txt")))
-		assert.Equal(t, "", read(t, filepath.Join(base, "file2.txt")))
+		assert.Equal(t, "", testfs.Read(t, filepath.Join(base, "file1.txt")))
+		assert.Equal(t, "", testfs.Read(t, filepath.Join(base, "file2.txt")))
 	}},
 }
 
@@ -41,8 +43,8 @@ func assertRarNumbers(t *testing.T, base string) {
 	for i := range 512 {
 		fmt.Fprintf(&want, "%03d\n", i)
 	}
-	assert.Equal(t, want.String(), read(t, filepath.Join(base, "stest1.txt")))
-	assert.Equal(t, want.String(), read(t, filepath.Join(base, "stest2.txt")))
+	assert.Equal(t, want.String(), testfs.Read(t, filepath.Join(base, "stest1.txt")))
+	assert.Equal(t, want.String(), testfs.Read(t, filepath.Join(base, "stest2.txt")))
 }
 
 func unlockWith(passwords ...string) func(PasswordPrompt) Answer {
@@ -126,7 +128,7 @@ func TestExtractSkipsAProtectedArchiveWhenDeclined(t *testing.T) {
 	assert.Len(t, prompts(bus), 1)
 	assert.Equal(t, 1, view.Skipped)
 	assert.NoDirExists(t, filepath.Join(out, "secret-aes256"))
-	assert.Equal(t, "hello", read(t, filepath.Join(out, "hello.txt")), "the rest of the job still runs")
+	assert.Equal(t, "hello", testfs.Read(t, filepath.Join(out, "hello.txt")), "the rest of the job still runs")
 }
 
 func TestExtractCancelsFromThePasswordPrompt(t *testing.T) {
@@ -246,15 +248,15 @@ func TestExtractLzip(t *testing.T) {
 
 	out, view := extractFixture(t, tarLz)
 	require.Equal(t, StateDone, view.State, view.Error)
-	assert.Equal(t, "hello", read(t, filepath.Join(out, "sample", "README.md")))
+	assert.Equal(t, "hello", testfs.Read(t, filepath.Join(out, "sample", "README.md")))
 
 	out, view = extractFixture(t, fileLz)
 	require.Equal(t, StateDone, view.State, view.Error)
-	assert.Equal(t, "hello", read(t, filepath.Join(out, "hello.txt")))
+	assert.Equal(t, "hello", testfs.Read(t, filepath.Join(out, "hello.txt")))
 
 	out, view = extractFixture(t, bare)
 	require.Equal(t, StateDone, view.State, view.Error)
-	assert.Equal(t, "hello", read(t, filepath.Join(out, "bare", "sample", "README.md")))
+	assert.Equal(t, "hello", testfs.Read(t, filepath.Join(out, "bare", "sample", "README.md")))
 }
 
 func writeLzip(t *testing.T, path string, body []byte) {

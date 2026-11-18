@@ -25,30 +25,15 @@ FilePlaceSection {
             return "";
         if (!SandboxService.available("network"))
             return FilesFormat.featureUnavailable(SandboxService.reason("network"));
-        return I18n.tr("Network locations are unavailable because gvfs is not running", "sidebar explanation when the network service is missing");
+        return I18n.tr("Network locations are unavailable because %1 is not running", "sidebar explanation when the network service is missing, %1 is the service name").arg("gvfs");
     }
     showEmpty: true
 
     Repeater {
         model: NetworkService.networkMounts
 
-        FilePlaceRow {
-            required property var modelData
-
-            label: modelData.name
-            iconName: modelData.iconName
-            actionIcon: "eject"
-            actionTooltip: I18n.tr("Disconnect", "network mount action")
-            busy: section.busyId === modelData.id
-            dropPath: modelData.path
-            onClicked: section.navigateRequested(modelData.path)
-            onMiddleClicked: section.tabRequested(modelData.path)
-            onDropped: drop => section.dropRequested(modelData.path, drop)
-            onSpringLoaded: section.navigateRequested(modelData.path)
-            onActionTriggered: {
-                section.busyId = modelData.id;
-                NetworkService.disconnect(modelData.id, () => section.busyId = "");
-            }
+        NetworkMountRow {
+            host: section
         }
     }
 

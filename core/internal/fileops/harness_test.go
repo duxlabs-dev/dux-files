@@ -2,7 +2,6 @@ package fileops
 
 import (
 	"os"
-	"path/filepath"
 	"strconv"
 	"sync"
 	"testing"
@@ -103,20 +102,6 @@ func (b *testBus) kinds(kind string) []event {
 func run(t *testing.T, m *Manager, bus *testBus, s spec) View {
 	t.Helper()
 	return bus.wait(t, m.enqueue(s).id)
-}
-
-func write(t *testing.T, path, body string) string {
-	t.Helper()
-	require.NoError(t, os.MkdirAll(filepath.Dir(path), 0o755))
-	require.NoError(t, os.WriteFile(path, []byte(body), 0o644))
-	return path
-}
-
-func read(t *testing.T, path string) string {
-	t.Helper()
-	body, err := os.ReadFile(path)
-	require.NoError(t, err)
-	return string(body)
 }
 
 func tempsIn(t *testing.T, dir string) []string {

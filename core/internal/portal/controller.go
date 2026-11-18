@@ -8,6 +8,8 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/dbusutil"
+
 	"github.com/duxlabs-dev/dux-files/core/internal/filechooser"
 	"github.com/duxlabs-dev/dux-files/core/internal/portalsetup"
 	"github.com/godbus/dbus/v5"
@@ -67,16 +69,9 @@ func (c *Controller) frontendPID() (int, bool) {
 	if c.service != nil {
 		return c.service.FrontendPID()
 	}
-	conn, err := dbus.ConnectSessionBus()
-	if err != nil {
-		return 0, false
-	}
-	defer conn.Close()
-	var pid uint32
-	if err := conn.BusObject().Call("org.freedesktop.DBus.GetConnectionUnixProcessID", 0, filechooser.FrontendName).Store(&pid); err != nil {
-		return 0, false
-	}
-	return int(pid), true
+	pid, ok := 0, false
+	dbusutil.WithSessionBus(func(conn *dbus.Conn) { pid, ok = dbusutil.ProcessID(conn, filechooser.FrontendName) })
+	return pid, ok
 }
 
 func (c *Controller) Pending() []filechooser.Request {
@@ -115,12 +110,7 @@ func (c *Controller) reloadBus() {
 		_ = c.service.ReloadBus()
 		return
 	}
-	conn, err := dbus.ConnectSessionBus()
-	if err != nil {
-		return
-	}
-	defer conn.Close()
-	_ = conn.BusObject().Call("org.freedesktop.DBus.ReloadConfig", 0).Err
+	dbusutil.WithSessionBus(func(conn *dbus.Conn) { _ = dbusutil.ReloadConfig(conn) })
 }
 
 func (c *Controller) Uninstall() (Report, error) {

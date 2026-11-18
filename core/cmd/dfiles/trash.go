@@ -3,12 +3,12 @@ package main
 import (
 	"cmp"
 	"fmt"
-	"path/filepath"
 	"slices"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/fileops"
 
 	"github.com/spf13/cobra"
 
-	"github.com/duxlabs-dev/dux-go/paths"
 	"github.com/duxlabs-dev/dux-go/trash"
 )
 
@@ -139,7 +139,7 @@ func trashDirsFor(names []string) (map[string][]string, []string, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	home := filepath.Join(paths.XDGDataHome(), "Trash")
+	home := fileops.HomeTrash()
 	byDir := map[string][]string{}
 	var order []string
 	for _, name := range names {

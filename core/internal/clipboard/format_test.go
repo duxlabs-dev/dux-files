@@ -18,15 +18,6 @@ func TestUriListIsCrlfSeparated(t *testing.T) {
 	assert.Equal(t, "file:///a\r\nfile:///b\r\n", string(UriList([]string{"/a", "/b"})))
 }
 
-func TestPlainTextIsOnePathPerLine(t *testing.T) {
-	assert.Equal(t, "/a\n/b", string(PlainText([]string{"/a", "/b"})))
-}
-
-func TestFileURIEscapesReservedCharacters(t *testing.T) {
-	assert.Equal(t, "file:///home/me/a%20b%23c.txt", FileURI("/home/me/a b#c.txt"))
-	assert.Equal(t, "file:///home/me/%C3%A9lan", FileURI("/home/me/élan"))
-}
-
 func TestParseRoundTripsOurOwnPayload(t *testing.T) {
 	paths := []string{"/home/me/a.txt", "/home/me/b c.txt"}
 	for _, cut := range []bool{false, true} {

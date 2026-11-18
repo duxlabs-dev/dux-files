@@ -8,6 +8,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
+
 	"github.com/duxlabs-dev/dux-go/trash"
 	"github.com/stretchr/testify/require"
 )
@@ -15,6 +17,7 @@ import (
 func trashHome(t *testing.T) string {
 	t.Helper()
 	dataHome := t.TempDir()
+	t.Setenv("HOME", dataHome)
 	t.Setenv("XDG_DATA_HOME", dataHome)
 	home := filepath.Join(dataHome, "Trash")
 	listTrash = func() ([]trash.Entry, error) {
@@ -39,16 +42,16 @@ func infoNames(t *testing.T, trashDir string) []string {
 func TestTrashMovesIntoHomeTrash(t *testing.T) {
 	trashDir := trashHome(t)
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "a file.txt"), "body")
+	src := testfs.Write(t, filepath.Join(root, "a file.txt"), "body")
 
 	manager, bus := newHarness(t)
 	view := run(t, manager, bus, spec{kind: KindTrash, sources: []string{src}})
 
 	require.Equal(t, StateDone, view.State)
 	require.NoFileExists(t, src)
-	require.Equal(t, "body", read(t, filepath.Join(trashDir, "files", "a file.txt")))
+	require.Equal(t, "body", testfs.Read(t, filepath.Join(trashDir, "files", "a file.txt")))
 
-	info := read(t, filepath.Join(trashDir, "info", "a file.txt.trashinfo"))
+	info := testfs.Read(t, filepath.Join(trashDir, "info", "a file.txt.trashinfo"))
 	require.Contains(t, info, "[Trash Info]")
 	require.Contains(t, info, "Path="+strings.ReplaceAll(src, " ", "%20"))
 }
@@ -57,13 +60,13 @@ func TestTrashWritesDirectorySizes(t *testing.T) {
 	trashDir := trashHome(t)
 	root := t.TempDir()
 	dir := filepath.Join(root, "álbum")
-	write(t, filepath.Join(dir, "a.txt"), "12345")
-	write(t, filepath.Join(dir, "b.txt"), "67890")
+	testfs.Write(t, filepath.Join(dir, "a.txt"), "12345")
+	testfs.Write(t, filepath.Join(dir, "b.txt"), "67890")
 
 	manager, bus := newHarness(t)
 	run(t, manager, bus, spec{kind: KindTrash, sources: []string{dir}})
 
-	line := strings.TrimSpace(read(t, filepath.Join(trashDir, "directorysizes")))
+	line := strings.TrimSpace(testfs.Read(t, filepath.Join(trashDir, "directorysizes")))
 	fields := strings.SplitN(line, " ", 3)
 	require.Len(t, fields, 3)
 	require.Equal(t, "10", fields[0])
@@ -75,7 +78,7 @@ func TestRestoreReturnsFileAndDropsDirectorySize(t *testing.T) {
 	trashDir := trashHome(t)
 	root := t.TempDir()
 	dir := filepath.Join(root, "docs")
-	write(t, filepath.Join(dir, "a.txt"), "a")
+	testfs.Write(t, filepath.Join(dir, "a.txt"), "a")
 
 	manager, bus := newHarness(t)
 	run(t, manager, bus, spec{kind: KindTrash, sources: []string{dir}})
@@ -83,7 +86,7 @@ func TestRestoreReturnsFileAndDropsDirectorySize(t *testing.T) {
 
 	view := run(t, manager, bus, spec{kind: KindRestore, sources: []string{"docs"}, trashDir: trashDir})
 	require.Equal(t, StateDone, view.State)
-	require.Equal(t, "a", read(t, filepath.Join(dir, "a.txt")))
+	require.Equal(t, "a", testfs.Read(t, filepath.Join(dir, "a.txt")))
 	require.NoFileExists(t, filepath.Join(trashDir, "info", "docs.trashinfo"))
 	require.NoFileExists(t, filepath.Join(trashDir, "directorysizes"))
 }
@@ -91,25 +94,25 @@ func TestRestoreReturnsFileAndDropsDirectorySize(t *testing.T) {
 func TestRestoreConflictKeepsBoth(t *testing.T) {
 	trashDir := trashHome(t)
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "a.txt"), "trashed")
+	src := testfs.Write(t, filepath.Join(root, "a.txt"), "trashed")
 
 	manager, bus := newHarness(t)
 	run(t, manager, bus, spec{kind: KindTrash, sources: []string{src}})
-	write(t, src, "recreated")
+	testfs.Write(t, src, "recreated")
 
 	bus.onConflict = func(c Conflict) Answer { return Answer{ID: c.ID, Action: ActionKeepBoth} }
 	view := run(t, manager, bus, spec{kind: KindRestore, sources: []string{"a.txt"}, trashDir: trashDir})
 
 	require.Equal(t, StateDone, view.State)
-	require.Equal(t, "recreated", read(t, src))
-	require.Equal(t, "trashed", read(t, filepath.Join(root, "a (copy).txt")))
+	require.Equal(t, "recreated", testfs.Read(t, src))
+	require.Equal(t, "trashed", testfs.Read(t, filepath.Join(root, "a (copy).txt")))
 }
 
 func TestEmptyTrashRemovesEverything(t *testing.T) {
 	trashDir := trashHome(t)
 	root := t.TempDir()
-	write(t, filepath.Join(root, "a.txt"), "a")
-	write(t, filepath.Join(root, "dir", "b.txt"), "b")
+	testfs.Write(t, filepath.Join(root, "a.txt"), "a")
+	testfs.Write(t, filepath.Join(root, "dir", "b.txt"), "b")
 
 	manager, bus := newHarness(t)
 	run(t, manager, bus, spec{kind: KindTrash, sources: []string{
@@ -128,12 +131,12 @@ func TestEmptyTrashRemovesEverything(t *testing.T) {
 func TestDeleteFromTheTrashDropsItsInfoAndDirectorySize(t *testing.T) {
 	trashDir := trashHome(t)
 	root := t.TempDir()
-	write(t, filepath.Join(root, "docs", "a.txt"), "a")
-	write(t, filepath.Join(root, "notes.txt"), "n")
+	testfs.Write(t, filepath.Join(root, "docs", "a.txt"), "a")
+	testfs.Write(t, filepath.Join(root, "notes.txt"), "n")
 
 	manager, bus := newHarness(t)
 	run(t, manager, bus, spec{kind: KindTrash, sources: []string{filepath.Join(root, "docs"), filepath.Join(root, "notes.txt")}})
-	require.Contains(t, read(t, filepath.Join(trashDir, "directorysizes")), " docs")
+	require.Contains(t, testfs.Read(t, filepath.Join(trashDir, "directorysizes")), " docs")
 
 	view := run(t, manager, bus, spec{kind: KindDelete, sources: []string{filepath.Join(trashDir, "files", "docs")}})
 	require.Equal(t, StateDone, view.State)
@@ -146,8 +149,8 @@ func TestDeleteFromTheTrashDropsItsInfoAndDirectorySize(t *testing.T) {
 func TestDeleteOutsideATrashKeepsLookalikeInfo(t *testing.T) {
 	trashHome(t)
 	root := t.TempDir()
-	target := write(t, filepath.Join(root, "files", "a.txt"), "a")
-	info := write(t, filepath.Join(root, "info", "a.txt.trashinfo"), "[Trash Info]\n")
+	target := testfs.Write(t, filepath.Join(root, "files", "a.txt"), "a")
+	info := testfs.Write(t, filepath.Join(root, "info", "a.txt.trashinfo"), "[Trash Info]\n")
 
 	manager, bus := newHarness(t)
 	view := run(t, manager, bus, spec{kind: KindDelete, sources: []string{target}})
@@ -160,20 +163,20 @@ func TestDeleteOutsideATrashKeepsLookalikeInfo(t *testing.T) {
 func TestRestoreRecreatesAMissingParent(t *testing.T) {
 	trashDir := trashHome(t)
 	root := t.TempDir()
-	src := write(t, filepath.Join(root, "gone", "deeper", "a.txt"), "body")
-	blocked := write(t, filepath.Join(root, "blocked", "b.txt"), "kept")
+	src := testfs.Write(t, filepath.Join(root, "gone", "deeper", "a.txt"), "body")
+	blocked := testfs.Write(t, filepath.Join(root, "blocked", "b.txt"), "kept")
 
 	manager, bus := newHarness(t)
 	run(t, manager, bus, spec{kind: KindTrash, sources: []string{src, blocked}})
 	require.NoError(t, os.RemoveAll(filepath.Join(root, "gone")))
 	require.NoError(t, os.RemoveAll(filepath.Join(root, "blocked")))
-	write(t, filepath.Join(root, "blocked"), "a file where the folder was")
+	testfs.Write(t, filepath.Join(root, "blocked"), "a file where the folder was")
 
 	bus.onFailure = func(f Failure) Answer { return Answer{ID: f.ID, Action: ActionSkip} }
 	view := run(t, manager, bus, spec{kind: KindRestore, sources: []string{"a.txt", "b.txt"}, trashDir: trashDir})
 	require.Equal(t, StateDone, view.State)
 	require.Equal(t, 1, view.Skipped)
-	require.Equal(t, "body", read(t, src))
+	require.Equal(t, "body", testfs.Read(t, src))
 	require.Equal(t, []string{"b.txt.trashinfo"}, infoNames(t, trashDir))
 }
 
@@ -193,8 +196,8 @@ func TestRestoreRefusesAPathLeavingItsVolume(t *testing.T) {
 		"linked.txt":   "link/linked.txt",
 	}
 	for name, path := range stored {
-		write(t, filepath.Join(trashDir, "files", name), "body")
-		write(t, filepath.Join(trashDir, "info", name+trashInfoExt), "[Trash Info]\nPath="+path+"\nDeletionDate=2026-10-14T10:00:00\n")
+		testfs.Write(t, filepath.Join(trashDir, "files", name), "body")
+		testfs.Write(t, filepath.Join(trashDir, "info", name+trashInfoExt), "[Trash Info]\nPath="+path+"\nDeletionDate=2026-10-14T10:00:00\n")
 	}
 
 	manager, bus := newHarness(t)
@@ -236,11 +239,11 @@ func TestRestoreReplacesAndMergesDirectories(t *testing.T) {
 	trashDir := trashHome(t)
 	root := t.TempDir()
 	dir := filepath.Join(root, "docs")
-	write(t, filepath.Join(dir, "trashed.txt"), "trashed")
+	testfs.Write(t, filepath.Join(dir, "trashed.txt"), "trashed")
 
 	manager, bus := newHarness(t)
 	run(t, manager, bus, spec{kind: KindTrash, sources: []string{dir}})
-	write(t, filepath.Join(dir, "recreated.txt"), "recreated")
+	testfs.Write(t, filepath.Join(dir, "recreated.txt"), "recreated")
 
 	var offered []Action
 	bus.onConflict = func(c Conflict) Answer {
@@ -251,8 +254,8 @@ func TestRestoreReplacesAndMergesDirectories(t *testing.T) {
 
 	require.Equal(t, StateDone, view.State)
 	require.Contains(t, offered, ActionMerge, "two directories must be offered a merge")
-	require.Equal(t, "trashed", read(t, filepath.Join(dir, "trashed.txt")))
-	require.Equal(t, "recreated", read(t, filepath.Join(dir, "recreated.txt")))
+	require.Equal(t, "trashed", testfs.Read(t, filepath.Join(dir, "trashed.txt")))
+	require.Equal(t, "recreated", testfs.Read(t, filepath.Join(dir, "recreated.txt")))
 	require.NoFileExists(t, filepath.Join(trashDir, "info", "docs.trashinfo"))
 }
 
@@ -264,7 +267,7 @@ func TestDirectorySizeIsLeftOutWhenTheScanDidNotFinish(t *testing.T) {
 	trashDir := trashHome(t)
 	root := t.TempDir()
 	dir := filepath.Join(root, "docs")
-	write(t, filepath.Join(dir, "a.txt"), "12345")
+	testfs.Write(t, filepath.Join(dir, "a.txt"), "12345")
 
 	manager, bus := newHarness(t)
 	view := run(t, manager, bus, spec{kind: KindTrash, sources: []string{dir}})

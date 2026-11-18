@@ -138,22 +138,15 @@ func (r *runner) dissolveFolder() error {
 	pairs := r.job.spec.pairs
 	r.setTotals(len(pairs)+1, 0, false)
 
-	for _, p := range pairs {
-		if r.job.closed() {
-			return nil
-		}
+	err := eachSource(r, pairs, func(p pair) error {
 		if !r.guarded(p.src) {
 			return errors.New("changed since the operation it would replay: " + p.src)
 		}
 		_, err := r.transfer(p.src, p.dst, true)
-		switch {
-		case errors.Is(err, errSkipped):
-			continue
-		case errors.Is(err, context.Canceled):
-			return nil
-		case err != nil:
-			return err
-		}
+		return err
+	})
+	if err != nil {
+		return err
 	}
 
 	folder := r.job.spec.dest
@@ -220,24 +213,18 @@ func (r *runner) link() error {
 	sources := r.job.spec.sources
 	r.setTotals(len(sources), 0, false)
 
-	for _, src := range sources {
-		if r.job.closed() {
-			return nil
-		}
+	return eachSource(r, sources, func(src string) error {
 		dst := filepath.Join(r.job.spec.dest, filepath.Base(src))
 		if _, err := os.Lstat(dst); err == nil {
 			dst = uniquePath(dst)
 		}
 		if err := r.retry(dst, func(fs FS) error { return fs.Symlink(src, dst) }); err != nil {
-			if errors.Is(err, errSkipped) {
-				continue
-			}
-			return skipToNil(err)
+			return err
 		}
 		r.remember(KindDelete, dst, "")
 		r.advance(dst, 1, 0)
-	}
-	return nil
+		return nil
+	})
 }
 
 func (r *runner) setPermissions() error {
@@ -245,44 +232,26 @@ func (r *runner) setPermissions() error {
 	sources := r.job.spec.sources
 	r.setTotals(len(sources), 0, false)
 
-	for _, path := range sources {
-		if r.job.closed() {
-			return nil
-		}
-		err := r.retry(path, func(fs FS) error { return fs.Chmod(path, mode, r.job.spec.recursive) })
-		switch {
-		case errors.Is(err, errSkipped):
-			continue
-		case errors.Is(err, context.Canceled):
-			return nil
-		case err != nil:
+	return eachSource(r, sources, func(path string) error {
+		if err := r.retry(path, func(fs FS) error { return fs.Chmod(path, mode, r.job.spec.recursive) }); err != nil {
 			return err
 		}
 		r.advance(path, 1, 0)
-	}
-	return nil
+		return nil
+	})
 }
 
 func (r *runner) setOwner() error {
 	sources := r.job.spec.sources
 	r.setTotals(len(sources), 0, false)
 
-	for _, path := range sources {
-		if r.job.closed() {
-			return nil
-		}
-		err := r.retry(path, func(fs FS) error { return fs.Lchown(path, r.job.spec.uid, r.job.spec.gid, r.job.spec.recursive) })
-		switch {
-		case errors.Is(err, errSkipped):
-			continue
-		case errors.Is(err, context.Canceled):
-			return nil
-		case err != nil:
+	return eachSource(r, sources, func(path string) error {
+		if err := r.retry(path, func(fs FS) error { return fs.Lchown(path, r.job.spec.uid, r.job.spec.gid, r.job.spec.recursive) }); err != nil {
 			return err
 		}
 		r.advance(path, 1, 0)
-	}
-	return nil
+		return nil
+	})
 }
 
 func (r *runner) deleteAll() error {
@@ -290,27 +259,18 @@ func (r *runner) deleteAll() error {
 	count, bytes, complete := r.scan(sources)
 	r.setTotals(count, bytes, !complete)
 
-	for _, path := range sources {
-		if r.job.closed() {
-			return nil
-		}
+	return eachSource(r, sources, func(path string) error {
 		if !r.guarded(path) {
 			return errors.New("changed since the operation it would replay: " + path)
 		}
-		err := r.retry(path, func(fs FS) error { return fs.RemoveAll(path) })
-		switch {
-		case errors.Is(err, errSkipped):
-			continue
-		case errors.Is(err, context.Canceled):
-			return nil
-		case err != nil:
+		if err := r.retry(path, func(fs FS) error { return fs.RemoveAll(path) }); err != nil {
 			return err
 		}
 		forgetTrashed(path)
 		counted := r.scanned[path]
 		r.advance(path, max(counted.files, 1), counted.bytes)
-	}
-	return nil
+		return nil
+	})
 }
 
 func (r *runner) guarded(path string) bool {

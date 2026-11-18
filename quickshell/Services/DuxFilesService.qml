@@ -221,6 +221,14 @@ Singleton {
         sendRequest(method, params, callback ? response => callback(unwrap(response)) : null);
     }
 
+    function callReporting(method, params, failed, callback) {
+        call(method, params, result => {
+            if (result.error)
+                failed(result.error, result.code);
+            callback?.(result);
+        });
+    }
+
     function unwrap(response) {
         if (!response.error)
             return response.result || {};
@@ -241,10 +249,10 @@ Singleton {
     }
 
     function openUri(url) {
-        sendRequest("system.openUri", {
+        call("system.openUri", {
             "uri": url
-        }, response => {
-            if (response.error)
+        }, result => {
+            if (result.error)
                 Qt.openUrlExternally(url);
         });
     }

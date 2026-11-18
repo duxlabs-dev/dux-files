@@ -1,7 +1,6 @@
 package fileops
 
 import (
-	"context"
 	"errors"
 	"net/url"
 	"os"
@@ -9,6 +8,10 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/pathutil"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/atomicfile"
 
 	"github.com/duxlabs-dev/dux-go/paths"
 	"github.com/duxlabs-dev/dux-go/trash"
@@ -23,45 +26,31 @@ func (r *runner) trash() error {
 	count, bytes, complete := r.scan(sources)
 	r.setTotals(count, bytes, !complete)
 
-	for _, path := range sources {
-		if r.job.closed() {
-			return nil
-		}
-
+	return eachSource(r, sources, func(path string) error {
 		var entry trash.Entry
 		err := r.retryLocal(path, func() error {
 			var putErr error
 			entry, putErr = trash.Put(path)
 			return putErr
 		})
-		switch {
-		case errors.Is(err, errSkipped):
-			continue
-		case errors.Is(err, context.Canceled):
-			return nil
-		case err != nil:
+		if err != nil {
 			return err
 		}
-
 		counted, measured := r.scanned[path]
 		if entry.IsDir && measured {
 			writeDirectorySize(entry, counted.bytes)
 		}
 		r.rememberPair(KindRestore, pair{src: entry.Name, dst: entry.TrashDir}, guard{})
 		r.advance(path, max(counted.files, 1), counted.bytes)
-	}
-	return nil
+		return nil
+	})
 }
 
 func (r *runner) restore() error {
 	items := r.restoreItems()
 	r.setTotals(len(items), 0, false)
 
-	for _, item := range items {
-		if r.job.closed() {
-			return nil
-		}
-
+	return eachSource(r, items, func(item pair) error {
 		source := filepath.Join(item.dst, "files", item.src)
 		var target string
 		err := r.retryLocal(source, func() error {
@@ -72,32 +61,20 @@ func (r *runner) restore() error {
 			}
 			return os.MkdirAll(filepath.Dir(target), 0o755)
 		})
-		switch {
-		case errors.Is(err, errSkipped):
-			continue
-		case errors.Is(err, context.Canceled):
-			return nil
-		case err != nil:
+		if err != nil {
 			return err
 		}
-
 		done, err := r.transfer(source, target, true)
-		switch {
-		case errors.Is(err, errSkipped):
-			continue
-		case errors.Is(err, context.Canceled):
-			return nil
-		case err != nil:
+		if err != nil {
 			return err
 		}
-
 		os.Remove(filepath.Join(item.dst, "info", item.src+trashInfoExt))
 		dropDirectorySize(item.dst, item.src)
 		if done.undoable {
 			r.rememberPair(KindTrash, pair{src: done.dst, dst: ""}, guard{})
 		}
-	}
-	return nil
+		return nil
+	})
 }
 
 func (r *runner) restoreItems() []pair {
@@ -134,7 +111,7 @@ func restoreTarget(trashDir, name string) (string, error) {
 		stored = decoded
 	}
 	target, ok := RestorePath(trashDir, stored)
-	if !ok || (trashDir != homeTrash() && !resolvesInside(target, trashTopDir(trashDir))) {
+	if !ok || (trashDir != HomeTrash() && !resolvesInside(target, trashTopDir(trashDir))) {
 		return "", errors.New("invalid .trashinfo: Path leaves its volume: " + stored)
 	}
 	return target, nil
@@ -147,10 +124,10 @@ func RestorePath(trashDir, stored string) (string, bool) {
 	topDir := trashTopDir(trashDir)
 	if filepath.IsAbs(stored) {
 		target := filepath.Clean(stored)
-		return target, trashDir == homeTrash() || isUnder(target, topDir)
+		return target, trashDir == HomeTrash() || pathutil.Under(target, topDir)
 	}
 	target := filepath.Join(topDir, stored)
-	return target, isUnder(target, topDir)
+	return target, pathutil.Under(target, topDir)
 }
 
 func trashTopDir(trashDir string) string {
@@ -161,7 +138,7 @@ func trashTopDir(trashDir string) string {
 	return topDir
 }
 
-func homeTrash() string {
+func HomeTrash() string {
 	return filepath.Join(paths.XDGDataHome(), "Trash")
 }
 
@@ -185,7 +162,7 @@ func resolvesInside(target, topDir string) bool {
 	if err != nil {
 		return false
 	}
-	return resolved == root || isUnder(resolved, root)
+	return resolved == root || pathutil.Under(resolved, root)
 }
 
 func forgetTrashed(path string) {
@@ -202,7 +179,7 @@ func forgetTrashed(path string) {
 func isTrashDir(dir string) bool {
 	uid := strconv.Itoa(os.Getuid())
 	switch {
-	case dir == homeTrash():
+	case dir == HomeTrash():
 		return true
 	case filepath.Base(dir) == ".Trash-"+uid:
 		return true
@@ -219,19 +196,17 @@ func (r *runner) emptyTrash() error {
 	r.setTotals(len(entries), 0, false)
 
 	dirs := map[string]bool{}
-	for _, entry := range entries {
-		if r.job.closed() {
-			return nil
-		}
+	err = eachSource(r, entries, func(entry trash.Entry) error {
 		if err := r.retry(entry.FilesPath, func(fs FS) error { return fs.RemoveAll(entry.FilesPath) }); err != nil {
-			if errors.Is(err, errSkipped) {
-				continue
-			}
-			return skipToNil(err)
+			return err
 		}
 		os.Remove(entry.InfoPath)
 		dirs[entry.TrashDir] = true
 		r.advance(entry.FilesPath, 1, entry.Size)
+		return nil
+	})
+	if err != nil {
+		return err
 	}
 
 	for dir := range dirs {
@@ -281,23 +256,7 @@ func rewriteDirectorySizes(trashDir, name, line string) {
 		return
 	}
 
-	tmp, err := os.CreateTemp(trashDir, ".directorysizes-*")
-	if err != nil {
-		return
-	}
-	defer os.Remove(tmp.Name())
-
-	if _, err := tmp.WriteString(strings.Join(kept, "\n") + "\n"); err != nil {
-		tmp.Close()
-		return
-	}
-	if err := tmp.Close(); err != nil {
-		return
-	}
-	if err := os.Chmod(tmp.Name(), 0o600); err != nil {
-		return
-	}
-	_ = os.Rename(tmp.Name(), path)
+	_ = atomicfile.WriteFile(path, []byte(strings.Join(kept, "\n")+"\n"), 0o600)
 }
 
 func directorySizeName(line string) string {

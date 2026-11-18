@@ -60,7 +60,7 @@ github.com/clipperhouse/uax29/v2/graphemes
 ## explicit; go 1.18
 github.com/cyphar/filepath-securejoin
 github.com/cyphar/filepath-securejoin/internal/consts
-# github.com/duxlabs-dev/dux-go v1.6.3-0.20261031181736-024402301dff
+# github.com/duxlabs-dev/dux-go v1.6.3-0.20261107145002-3c9896096bc7
 ## explicit; go 1.27
 github.com/duxlabs-dev/dux-go/dbusutil
 github.com/duxlabs-dev/dux-go/files
@@ -69,6 +69,7 @@ github.com/duxlabs-dev/dux-go/ipc/params
 github.com/duxlabs-dev/dux-go/log
 github.com/duxlabs-dev/dux-go/paths
 github.com/duxlabs-dev/dux-go/portal
+github.com/duxlabs-dev/dux-go/qtbase
 github.com/duxlabs-dev/dux-go/shellapp
 github.com/duxlabs-dev/dux-go/shellapp/shellfs
 github.com/duxlabs-dev/dux-go/syncmap
@@ -76,6 +77,12 @@ github.com/duxlabs-dev/dux-go/trash
 github.com/duxlabs-dev/dux-go/wayland/client
 github.com/duxlabs-dev/dux-go/wayland/ext_data_control
 github.com/duxlabs-dev/dux-go/wlclipboard
+# github.com/ebitengine/purego v0.11.3
+## explicit; go 1.25.0
+github.com/ebitengine/purego
+github.com/ebitengine/purego/internal/cgo
+github.com/ebitengine/purego/internal/fakecgo
+github.com/ebitengine/purego/internal/strings
 # github.com/fsnotify/fsnotify v1.10.1
 ## explicit; go 1.23
 github.com/fsnotify/fsnotify

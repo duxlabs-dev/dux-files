@@ -1,6 +1,7 @@
 package devices
 
 import (
+	"github.com/duxlabs-dev/dux-files/core/internal/wire"
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/godbus/dbus/v5"
 )
@@ -52,13 +53,13 @@ func (s *Service) Unmount(id string, force bool) error {
 func (s *Service) Eject(id string) error {
 	device, found := s.find(id)
 	if !found {
-		return fail(files.CodeNotFound, "unknown device: %s", id)
+		return wire.Fail(files.CodeNotFound, "unknown device: %s", id)
 	}
 	if err := s.checkDetach(device, true); err != nil {
 		return err
 	}
 	if device.Drive == "" {
-		return fail(files.CodeNotSupported, "%s has no drive to eject", device.Name)
+		return wire.Fail(files.CodeNotSupported, "%s has no drive to eject", device.Name)
 	}
 	if device.Mounted {
 		if err := s.Unmount(id, false); err != nil {
@@ -78,13 +79,13 @@ func (s *Service) Eject(id string) error {
 func (s *Service) PowerOff(id string) error {
 	device, found := s.find(id)
 	if !found {
-		return fail(files.CodeNotFound, "unknown device: %s", id)
+		return wire.Fail(files.CodeNotFound, "unknown device: %s", id)
 	}
 	if err := s.checkDetach(device, true); err != nil {
 		return err
 	}
 	if device.Drive == "" || !device.CanPowerOff {
-		return fail(files.CodeNotSupported, "%s cannot be powered off", device.Name)
+		return wire.Fail(files.CodeNotSupported, "%s cannot be powered off", device.Name)
 	}
 	return wrapDBus(s.call(dbus.ObjectPath(device.Drive), DriveIface+".PowerOff", noOptions).Store())
 }
@@ -92,10 +93,10 @@ func (s *Service) PowerOff(id string) error {
 func (s *Service) Unlock(id, passphrase string) (string, error) {
 	device, found := s.find(id)
 	if !found {
-		return "", fail(files.CodeNotFound, "unknown device: %s", id)
+		return "", wire.Fail(files.CodeNotFound, "unknown device: %s", id)
 	}
 	if !device.Encrypted {
-		return "", fail(files.CodeInvalid, "%s is not encrypted", device.Name)
+		return "", wire.Fail(files.CodeInvalid, "%s is not encrypted", device.Name)
 	}
 	if device.Unlocked {
 		return device.Cleartext, nil
@@ -111,13 +112,13 @@ func (s *Service) Unlock(id, passphrase string) (string, error) {
 func (s *Service) Lock(id string) error {
 	device, found := s.find(id)
 	if !found {
-		return fail(files.CodeNotFound, "unknown device: %s", id)
+		return wire.Fail(files.CodeNotFound, "unknown device: %s", id)
 	}
 	if err := s.checkDetach(device, false); err != nil {
 		return err
 	}
 	if !device.Encrypted {
-		return fail(files.CodeInvalid, "%s is not encrypted", device.Name)
+		return wire.Fail(files.CodeInvalid, "%s is not encrypted", device.Name)
 	}
 	if !device.Unlocked {
 		return nil
@@ -150,16 +151,16 @@ func (s *Service) mountable(id string) (Device, error) {
 	device, found := s.find(id)
 	switch {
 	case !found:
-		return Device{}, fail(files.CodeNotFound, "unknown device: %s", id)
+		return Device{}, wire.Fail(files.CodeNotFound, "unknown device: %s", id)
 	case device.Encrypted && !device.Unlocked:
-		return Device{}, fail(files.CodeInvalid, "%s is locked", device.Name)
+		return Device{}, wire.Fail(files.CodeInvalid, "%s is locked", device.Name)
 	}
 	return device, nil
 }
 
 func (s *Service) checkDetach(device Device, wholeDrive bool) error {
 	if device.Protected {
-		return fail(CodePerm, "%s contains a protected system mount", device.Device)
+		return wire.Fail(CodePerm, "%s contains a protected system mount", device.Device)
 	}
 	if !wholeDrive || device.Drive == "" {
 		return nil
@@ -173,7 +174,7 @@ func (s *Service) checkDetach(device Device, wholeDrive bool) error {
 			continue
 		}
 		if build(s.objects, path, ifaces, cleartext[path]).Protected {
-			return fail(CodePerm, "%s contains a protected system mount", device.Drive)
+			return wire.Fail(CodePerm, "%s contains a protected system mount", device.Drive)
 		}
 	}
 	return nil

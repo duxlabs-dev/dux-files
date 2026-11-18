@@ -28,7 +28,6 @@ pkgs.testers.runNixOSTest {
     machine.wait_for_unit("multi-user.target")
 
     machine.succeed("command -v dfiles")
-    machine.succeed("command -v qs")
     machine.succeed("su -- duxlabs -c 'dfiles --help >/dev/null'")
     machine.succeed("test -f /run/current-system/sw/share/systemd/user/dfiles.service")
     machine.succeed("test -f /run/current-system/sw/share/dbus-1/services/dev.duxlabs.files.FileManager1.service")

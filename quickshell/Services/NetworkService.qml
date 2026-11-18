@@ -57,7 +57,7 @@ Singleton {
         };
         if (password)
             params.password = password;
-        _send("network.connect", params, result => {
+        transport.callReporting("network.connect", params, root.requestFailed, result => {
             root.connecting = false;
             if (!result.error && result.mount) {
                 if (!root.mounts.some(mount => mount.id === result.mount.id))
@@ -74,7 +74,7 @@ Singleton {
         const request = Object.assign({
             "id": id
         }, params || {});
-        _send("network.answer", request, null);
+        transport.callReporting("network.answer", request, root.requestFailed, null);
     }
 
     function abort(id) {
@@ -84,9 +84,9 @@ Singleton {
     }
 
     function disconnect(id, callback) {
-        _send("network.disconnect", {
+        transport.callReporting("network.disconnect", {
             "id": id
-        }, callback);
+        }, root.requestFailed, callback);
     }
 
     function forget(uri) {
@@ -100,10 +100,10 @@ Singleton {
     }
 
     function mountPortable(monitor, id, callback) {
-        _send("network.mountPortable", {
+        transport.callReporting("network.mountPortable", {
             "monitor": monitor,
             "id": id
-        }, callback);
+        }, root.requestFailed, callback);
     }
 
     function _onEvent(data) {
@@ -124,13 +124,5 @@ Singleton {
         mounts = data.mounts || [];
         if (data.portables !== undefined)
             portables = data.portables || [];
-    }
-
-    function _send(method, params, callback) {
-        transport.call(method, params, result => {
-            if (result.error)
-                root.requestFailed(result.error, result.code);
-            callback?.(result);
-        });
     }
 }

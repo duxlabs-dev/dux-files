@@ -163,8 +163,6 @@ Column {
         DButton {
             anchors.verticalCenter: parent.verticalCenter
             text: I18n.tr("Apply", "button applying the edited permissions")
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             onClicked: permissions.applyMode()
         }
     }
@@ -205,8 +203,7 @@ Column {
 
             anchors.verticalCenter: parent.verticalCenter
             text: I18n.tr("Apply", "button applying the edited permissions")
-            backgroundColor: Theme.secondaryContainer
-            textColor: Theme.onSecondaryContainer
+            variant: "tonal"
             onClicked: permissions.applyOwner()
         }
     }

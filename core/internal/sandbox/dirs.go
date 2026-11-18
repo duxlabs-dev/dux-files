@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/xdg"
 )
 
 type Dirs struct {
@@ -38,12 +40,12 @@ func hostDataDirs(dataHome string) []string {
 func nativeDirs(env func(string) string) Dirs {
 	home := env("HOME")
 	return Dirs{
-		ConfigHome: envOr(env, "XDG_CONFIG_HOME", filepath.Join(home, ".config")),
-		DataHome:   envOr(env, "XDG_DATA_HOME", filepath.Join(home, ".local", "share")),
-		CacheHome:  envOr(env, "XDG_CACHE_HOME", filepath.Join(home, ".cache")),
-		StateHome:  envOr(env, "XDG_STATE_HOME", filepath.Join(home, ".local", "state")),
-		ConfigDirs: splitPathList(envOr(env, "XDG_CONFIG_DIRS", "/etc/xdg")),
-		DataDirs:   splitPathList(envOr(env, "XDG_DATA_DIRS", "/usr/local/share:/usr/share")),
+		ConfigHome: xdg.EnvOr(env, "XDG_CONFIG_HOME", filepath.Join(home, ".config")),
+		DataHome:   xdg.EnvOr(env, "XDG_DATA_HOME", filepath.Join(home, ".local", "share")),
+		CacheHome:  xdg.EnvOr(env, "XDG_CACHE_HOME", filepath.Join(home, ".cache")),
+		StateHome:  xdg.EnvOr(env, "XDG_STATE_HOME", filepath.Join(home, ".local", "state")),
+		ConfigDirs: xdg.SplitPathList(xdg.EnvOr(env, "XDG_CONFIG_DIRS", "/etc/xdg")),
+		DataDirs:   xdg.SplitPathList(xdg.EnvOr(env, "XDG_DATA_DIRS", "/usr/local/share:/usr/share")),
 	}
 }
 
@@ -51,12 +53,12 @@ func nativeDirs(env func(string) string) Dirs {
 func hostDirs(env func(string) string, hostOS bool) Dirs {
 	home := env("HOME")
 	dirs := Dirs{
-		ConfigHome: envOr(env, "HOST_XDG_CONFIG_HOME", filepath.Join(home, ".config")),
-		DataHome:   envOr(env, "HOST_XDG_DATA_HOME", filepath.Join(home, ".local", "share")),
-		CacheHome:  envOr(env, "HOST_XDG_CACHE_HOME", filepath.Join(home, ".cache")),
-		StateHome:  envOr(env, "HOST_XDG_STATE_HOME", filepath.Join(home, ".local", "state")),
-		ConfigDirs: splitPathList(envOr(env, "XDG_CONFIG_DIRS", sandboxConfigDirs)),
-		DataDirs:   splitPathList(envOr(env, "XDG_DATA_DIRS", sandboxDataDirs)),
+		ConfigHome: xdg.EnvOr(env, "HOST_XDG_CONFIG_HOME", filepath.Join(home, ".config")),
+		DataHome:   xdg.EnvOr(env, "HOST_XDG_DATA_HOME", filepath.Join(home, ".local", "share")),
+		CacheHome:  xdg.EnvOr(env, "HOST_XDG_CACHE_HOME", filepath.Join(home, ".cache")),
+		StateHome:  xdg.EnvOr(env, "HOST_XDG_STATE_HOME", filepath.Join(home, ".local", "state")),
+		ConfigDirs: xdg.SplitPathList(xdg.EnvOr(env, "XDG_CONFIG_DIRS", sandboxConfigDirs)),
+		DataDirs:   xdg.SplitPathList(xdg.EnvOr(env, "XDG_DATA_DIRS", sandboxDataDirs)),
 	}
 	if !hostOS {
 		return dirs
@@ -82,23 +84,6 @@ func ExportHostDirs(caps Capabilities) {
 	for _, kv := range exports {
 		_ = os.Setenv(kv[0], kv[1])
 	}
-}
-
-func envOr(env func(string) string, key, fallback string) string {
-	if v := env(key); v != "" {
-		return v
-	}
-	return fallback
-}
-
-func splitPathList(raw string) []string {
-	var out []string
-	for _, dir := range strings.Split(raw, ":") {
-		if dir = strings.TrimSpace(dir); dir != "" {
-			out = append(out, dir)
-		}
-	}
-	return out
 }
 
 func appendMissing(list []string, extra ...string) []string {

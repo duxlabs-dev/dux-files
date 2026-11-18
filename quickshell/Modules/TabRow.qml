@@ -15,6 +15,13 @@ Item {
     property real dragX: 0
     property real pressOffset: 0
 
+    readonly property real plainRoom: width - addButton.width - FilesMetrics.tabSpacing
+    readonly property real minimumStrip: tabs.length * FilesMetrics.tabMinWidth + Math.max(0, tabs.length - 1) * FilesMetrics.tabSpacing
+    readonly property bool overflowing: minimumStrip > plainRoom
+    readonly property real stripRoom: Math.max(0, plainRoom - (overflowing ? scrollBack.width + scrollForward.width + FilesMetrics.tabSpacing * 2 : 0))
+    readonly property real tabWidth: tabs.length === 0 ? 0 : Math.floor(Math.max(FilesMetrics.tabMinWidth, Math.min(FilesMetrics.tabMaxWidth, (stripRoom - (tabs.length - 1) * FilesMetrics.tabSpacing) / tabs.length)))
+    readonly property real scrollRoom: Math.max(0, strip.contentWidth - strip.width)
+
     signal tabSelected(int index)
     signal tabClosed(int index)
     signal tabAdded
@@ -99,6 +106,28 @@ Item {
         layout();
     }
 
+    function revealCurrent() {
+        const item = tabRepeater.itemAt(currentIndex);
+        if (!item || draggingIndex >= 0)
+            return;
+        if (item.x < strip.contentX) {
+            strip.contentX = item.x;
+            return;
+        }
+        if (item.x + item.width > strip.contentX + strip.width)
+            strip.contentX = Math.min(scrollRoom, item.x + item.width - strip.width);
+    }
+
+    onCurrentIndexChanged: reveal.restart()
+    onTabWidthChanged: reveal.restart()
+
+    Timer {
+        id: reveal
+
+        interval: 0
+        onTriggered: row.revealCurrent()
+    }
+
     function finish() {
         const from = draggingIndex;
         if (from < 0)
@@ -113,31 +142,46 @@ Item {
         id: relayout
 
         interval: 0
-        onTriggered: row.reset()
+        onTriggered: {
+            row.reset();
+            row.revealCurrent();
+        }
+    }
+
+    component StripButton: DActionButton {
+        anchors.verticalCenter: parent.verticalCenter
+        focusPolicy: Qt.TabFocus
+        buttonSize: Theme.buttonHeightXS
+        iconSize: Theme.iconSizeMedium
+        iconColor: Theme.onSurfaceVariant
+    }
+
+    StripButton {
+        id: scrollBack
+
+        anchors.left: parent.left
+        visible: row.overflowing
+        enabled: row.currentIndex > 0
+        iconName: I18n.isRtl ? "chevron_right" : "chevron_left"
+        tooltipText: I18n.tr("Previous tab", "keyboard shortcut")
+        onClicked: row.tabSelected(row.currentIndex - 1)
     }
 
     DFlickable {
         id: strip
 
-        anchors.left: parent.left
-        anchors.right: addButton.left
-        anchors.rightMargin: FilesMetrics.tabSpacing
+        anchors.left: row.overflowing ? scrollBack.right : parent.left
+        anchors.leftMargin: row.overflowing ? FilesMetrics.tabSpacing : 0
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        wheelEnabled: false
+        width: Math.min(row.stripRoom, strapline.width)
+        horizontal: true
+        showScrollBar: false
+        fadeEdges: false
         interactive: false
         clip: true
-        flickableDirection: Flickable.HorizontalFlick
         contentWidth: strapline.width
         contentHeight: height
-
-        WheelHandler {
-            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-            onWheel: event => {
-                const delta = event.angleDelta.y !== 0 ? event.angleDelta.y : event.angleDelta.x;
-                strip.contentX = Math.max(0, Math.min(Math.max(0, strip.contentWidth - strip.width), strip.contentX - delta));
-            }
-        }
 
         Item {
             id: strapline
@@ -158,6 +202,7 @@ Item {
 
                     x: row.physicalX(dragging ? row.dragX : (row.positions[index] ?? 0), width)
                     z: dragging ? 1 : 0
+                    width: row.tabWidth
                     dragging: row.draggingIndex === index
                     label: row.tabs[index] ?? ""
                     current: index === row.currentIndex
@@ -210,25 +255,25 @@ Item {
         }
     }
 
-    DActionButton {
-        id: addButton
+    StripButton {
+        id: scrollForward
 
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        focusPolicy: Qt.TabFocus
-        buttonSize: Theme.buttonHeightXS
-        iconName: "add"
-        iconSize: Theme.iconSizeMedium
-        iconColor: Theme.onSurfaceVariant
-        tooltipText: I18n.tr("New tab", "tooltip on the button opening a new tab")
-        onClicked: row.tabAdded()
+        anchors.left: strip.right
+        anchors.leftMargin: FilesMetrics.tabSpacing
+        visible: row.overflowing
+        enabled: row.currentIndex < row.tabs.length - 1
+        iconName: I18n.isRtl ? "chevron_left" : "chevron_right"
+        tooltipText: I18n.tr("Next tab", "keyboard shortcut")
+        onClicked: row.tabSelected(row.currentIndex + 1)
     }
 
-    Rectangle {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        height: Theme.dividerWidth
-        color: Theme.outlineVariant
+    StripButton {
+        id: addButton
+
+        anchors.left: row.overflowing ? scrollForward.right : strip.right
+        anchors.leftMargin: FilesMetrics.tabSpacing
+        iconName: "add"
+        tooltipText: I18n.tr("New tab", "tooltip on the button opening a new tab")
+        onClicked: row.tabAdded()
     }
 }

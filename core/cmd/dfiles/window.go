@@ -8,7 +8,6 @@ import (
 	"github.com/duxlabs-dev/dux-files/core/internal/fileops"
 	"github.com/duxlabs-dev/dux-files/core/internal/location"
 	"github.com/duxlabs-dev/dux-files/core/internal/sandbox"
-	"github.com/duxlabs-dev/dux-go/paths"
 )
 
 var showCmd = &cobra.Command{
@@ -131,7 +130,7 @@ func callWindow(method string, params map[string]any, validate func(location.Env
 		return s.call(method, params, nil)
 	}
 	sandbox.ExportHostDirs(sandbox.Current())
-	if err := validate(location.HostEnv(paths.XDGDataHome(), fileops.IsArchive)); err != nil {
+	if err := validate(location.HomeEnv(fileops.IsArchive)); err != nil {
 		return err
 	}
 	delete(params, "newWindow")

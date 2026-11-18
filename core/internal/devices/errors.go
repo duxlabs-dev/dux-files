@@ -1,8 +1,6 @@
 package devices
 
 import (
-	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/duxlabs-dev/dux-files/core/internal/dbusutil"
@@ -12,19 +10,8 @@ import (
 
 const CodePerm files.Code = "EPERM"
 
-func fail(code files.Code, format string, args ...any) error {
-	return &files.Error{Code: code, Err: fmt.Errorf(format, args...)}
-}
-
 func wrapDBus(err error) error {
-	if err == nil {
-		return nil
-	}
-	call, ok := err.(dbus.Error)
-	if !ok {
-		return &files.Error{Code: files.CodeIO, Err: err}
-	}
-	return &files.Error{Code: codeForName(call.Name), Err: errors.New(dbusutil.ErrorMessage(call))}
+	return dbusutil.WrapDBus(err, func(call dbus.Error, _ string) files.Code { return codeForName(call.Name) })
 }
 
 func codeForName(name string) files.Code {

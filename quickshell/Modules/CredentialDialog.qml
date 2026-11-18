@@ -60,6 +60,7 @@ OverlayDialog {
             submit();
     }
     onRejected: abort()
+    cancelAction: () => root.abort()
 
     Column {
         width: parent.width
@@ -89,17 +90,12 @@ OverlayDialog {
             onAccepted: root.submit()
         }
 
-        DTextField {
+        PasswordField {
             id: passwordField
 
-            width: parent.width
             visible: root.ask !== null && root.ask.needPassword === true
             focus: visible && !userField.visible
-            outlined: true
             enabled: !anonymousToggle.checked
-            echoMode: TextInput.Password
-            showPasswordToggle: true
-            labelText: I18n.tr("Password", "label for a password input")
             onAccepted: root.submit()
         }
 
@@ -135,23 +131,16 @@ OverlayDialog {
                 required property var modelData
 
                 text: modelData
-                backgroundColor: index === 0 ? Theme.primary : Theme.secondaryContainer
-                textColor: index === 0 ? Theme.primaryText : Theme.onSecondaryContainer
+                variant: index === 0 ? "filled" : "tonal"
                 onClicked: root.choose(index)
             }
         }
     }
 
     actions: [
-        TextButton {
-            text: I18n.tr("Cancel", "dialog button to cancel")
-            onClicked: root.abort()
-        },
         DButton {
             visible: !root.isQuestion
             text: I18n.tr("Sign in", "credential dialog header")
-            backgroundColor: Theme.primary
-            textColor: Theme.primaryText
             onClicked: root.submit()
         }
     ]

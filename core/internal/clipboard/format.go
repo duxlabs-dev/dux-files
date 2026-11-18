@@ -1,8 +1,9 @@
 package clipboard
 
 import (
-	"net/url"
 	"strings"
+
+	"github.com/duxlabs-dev/dux-files/core/internal/fileuri"
 )
 
 // Only the GNOME flavour carries cut vs copy (nautilus src/nautilus-clipboard.c); KDE uses a separate one-byte flavour (kio src/widgets/paste.cpp).
@@ -43,7 +44,7 @@ func PlainText(paths []string) []byte {
 }
 
 func FileURI(path string) string {
-	return (&url.URL{Scheme: "file", Path: path}).String()
+	return fileuri.Build(path)
 }
 
 // Every flavour but GNOME reads as a copy.
@@ -99,9 +100,6 @@ func toPath(line string) string {
 	case !strings.HasPrefix(line, "file:"):
 		return ""
 	}
-	parsed, err := url.Parse(line)
-	if err != nil || (parsed.Host != "" && parsed.Host != "localhost") || !strings.HasPrefix(parsed.Path, "/") {
-		return ""
-	}
-	return parsed.Path
+	path, _ := fileuri.Parse(line)
+	return path
 }

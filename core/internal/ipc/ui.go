@@ -9,11 +9,10 @@ import (
 	"github.com/duxlabs-dev/dux-files/core/internal/location"
 	"github.com/duxlabs-dev/dux-files/core/internal/wire"
 	"github.com/duxlabs-dev/dux-go/ipc/params"
-	"github.com/duxlabs-dev/dux-go/paths"
 )
 
 func hostEnv() location.Env {
-	return location.HostEnv(paths.XDGDataHome(), fileops.IsArchive)
+	return location.HomeEnv(fileops.IsArchive)
 }
 
 func publishUI(deps Deps, payload map[string]any) {
@@ -67,13 +66,13 @@ func HandleUI(_ context.Context, w *ConnWriter, req Request, deps Deps) {
 			open = append([]string{path}, open...)
 		}
 		if err := OpenLocations(deps, open, wire.StringList(req.Params, "select"), params.BoolLoose(req.Params, "newWindow")); err != nil {
-			w.RespondError(req.ID, "ui.open: "+err.Error())
+			wire.RespondError(w, req.ID, err)
 			return
 		}
 		w.Respond(req.ID, map[string]any{"ok": true})
 	case "ui.properties":
 		if err := ShowProperties(deps, wire.StringList(req.Params, "paths")); err != nil {
-			w.RespondError(req.ID, "ui.properties: "+err.Error())
+			wire.RespondError(w, req.ID, err)
 			return
 		}
 		w.Respond(req.ID, map[string]any{"ok": true})

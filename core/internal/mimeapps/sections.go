@@ -3,7 +3,6 @@ package mimeapps
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"slices"
 	"strings"
 
@@ -54,10 +53,7 @@ func (s *Service) RecordUse(mimeType, desktopID string) error {
 	original, _ := os.ReadFile(path)
 	canonical := s.detector.db.Canonical(mimeType)
 	updated := setGroupLine(original, groupAdded, canonical, addedLine(original, canonical, desktopID))
-	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
-		return err
-	}
-	return atomicfile.WriteFile(path, updated, 0o644)
+	return atomicfile.WriteFileMkdir(path, updated, 0o644, 0o755)
 }
 
 // GLib's update_mimeapps_list also records a new default under Added Associations, as the spec wants a default to be associated.

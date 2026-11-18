@@ -12,7 +12,12 @@ Item {
 
     property int propertiesRequest: 0
 
-    readonly property bool anyOpen: conflictDialog.visible || errorDialog.visible || archivePasswordDialog.visible || confirmDialog.visible || openConfirmDialog.visible || openWithDialog.visible || executableDialog.visible || trustDialog.visible || unlockDialog.visible || connectDialog.visible || credentialDialog.visible || propertiesDialog.visible || appearanceDialog.visible || shortcutsOverlay.visible || compressDialog.visible || renameBookmarkDialog.visible || trashConfirmDialog.visible || emptyTrashDialog.visible || clearRecentDialog.visible || quitDialog.visible || (extractPickerLoader.item?.visible ?? false) || (transferPickerLoader.item?.visible ?? false)
+    readonly property bool anyOpen: conflictDialog.visible || errorDialog.visible || archivePasswordDialog.visible || mainWindow.paneActions.trashDialogOpen || confirmLoader.open || openConfirmLoader.open || openWithLoader.open || executableLoader.open || trustLoader.open || unlockLoader.open || connectLoader.open || credentialLoader.open || propertiesLoader.open || appearanceLoader.open || shortcutsLoader.open || compressLoader.open || renameBookmarkLoader.open || emptyTrashLoader.open || clearRecentLoader.open || quitLoader.open || (extractPickerLoader.item?.visible ?? false) || (transferPickerLoader.item?.visible ?? false) || (badgePickerLoader.item?.visible ?? false)
+
+    function dialog(loader) {
+        loader.asynchronous = false;
+        return loader.item;
+    }
 
     function openSettings() {
         settingsLoader.active = true;
@@ -20,99 +25,91 @@ Item {
     }
 
     function toggleShortcuts() {
-        if (shortcutsOverlay.visible) {
-            shortcutsOverlay.close();
+        const overlay = dialog(shortcutsLoader);
+        if (overlay.visible) {
+            overlay.close();
             return;
         }
-        shortcutsOverlay.open();
+        overlay.open();
     }
 
     function renameBookmark(path) {
-        renameBookmarkDialog.path = path;
-        renameBookmarkDialog.ask(BookmarksService.labelFor(path));
+        const nameDialog = dialog(renameBookmarkLoader);
+        nameDialog.path = path;
+        nameDialog.ask(BookmarksService.labelFor(path));
     }
 
     function showProperties(entries) {
-        propertiesDialog.show(entries);
+        dialog(propertiesLoader).show(entries);
     }
 
     function showAppearance(entries) {
         const folder = entries.find(entry => entry.isDir);
         if (folder)
-            appearanceDialog.show(folder);
+            dialog(appearanceLoader).show(folder);
     }
 
     function showPropertiesFor(paths) {
         const request = ++propertiesRequest;
-        const entries = [];
-        let pending = paths.length;
-        paths.forEach((path, index) => DuxFilesService.sendRequest("files.stat", {
-                "path": path
-            }, response => {
-                if (request !== dialogs.propertiesRequest)
-                    return;
-                pending--;
-                if (response.error)
-                    ToastService.info(FileFormat.operationError(response.code, response.error));
-                entries[index] = (response.result || {}).entry ?? null;
-                if (pending > 0)
-                    return;
-                const found = entries.filter(entry => entry);
-                if (found.length > 0)
-                    propertiesDialog.show(found);
-            }));
+        DirectoryService.statAll(paths, (entries, failures) => {
+            if (request !== dialogs.propertiesRequest)
+                return;
+            for (const failure of failures)
+                ToastService.info(FileFormat.operationError(failure.code, failure.error));
+            if (entries.length > 0)
+                dialog(propertiesLoader).show(entries);
+        });
     }
 
     function askOpenWith(mimes, paths) {
-        openWithDialog.ask(mimes, paths);
+        dialog(openWithLoader).ask(mimes, paths);
     }
 
     function askExecutable(path, name) {
-        executableDialog.ask(path, name);
+        dialog(executableLoader).ask(path, name);
     }
 
     function confirmTrust(subject, path) {
+        const trustDialog = dialog(trustLoader);
         trustDialog.subject = subject;
         trustDialog.pending = path;
         trustDialog.open();
     }
 
     function confirmOpen(plan, subject) {
-        openConfirmDialog.pending = plan;
-        openConfirmDialog.subject = subject;
-        openConfirmDialog.open();
-    }
-
-    function confirmTrash(paths, subject) {
-        trashConfirmDialog.pending = paths;
-        trashConfirmDialog.subject = subject;
-        trashConfirmDialog.open();
+        const confirm = dialog(openConfirmLoader);
+        confirm.pending = plan;
+        confirm.subject = subject;
+        confirm.open();
     }
 
     function confirmDelete(paths, subject) {
-        confirmDialog.pending = paths;
-        confirmDialog.subject = subject;
-        confirmDialog.open();
+        const confirm = dialog(confirmLoader);
+        confirm.pending = paths;
+        confirm.subject = subject;
+        confirm.open();
     }
 
     function confirmEmptyTrash() {
         if (TrashService.count === 0)
             return;
-        emptyTrashDialog.subject = FileFormat.count(TrashService.count);
-        emptyTrashDialog.open();
+        const confirm = dialog(emptyTrashLoader);
+        confirm.subject = FileFormat.count(TrashService.count);
+        confirm.open();
     }
 
     function confirmClearRecent() {
-        clearRecentDialog.open();
+        dialog(clearRecentLoader).open();
     }
 
     function confirmQuit() {
-        quitDialog.running = FileOpsService.activeCount;
-        quitDialog.open();
+        const confirm = dialog(quitLoader);
+        confirm.running = FileOpsService.activeCount;
+        confirm.open();
     }
 
     function askCompress(paths) {
-        compressDialog.ask(paths);
+        dialog(compressLoader).ask(paths);
     }
 
     function askExtractTo(paths) {
@@ -143,19 +140,20 @@ Item {
     }
 
     function askUnlock(device) {
-        unlockDialog.ask(device);
+        dialog(unlockLoader).ask(device);
     }
 
     function askServer() {
-        connectDialog.ask();
+        dialog(connectLoader).ask();
     }
 
     function presentServer(uri, result) {
-        connectDialog.present(uri, result);
+        dialog(connectLoader).present(uri, result);
     }
 
     function connectRemote(uri, password) {
         NetworkService.connectTo(uri, result => {
+            const connectDialog = dialog(connectLoader);
             const path = connectDialog.localPath(result);
             if (path === "") {
                 connectDialog.present(uri, result);
@@ -167,24 +165,29 @@ Item {
 
     Connections {
         target: NetworkService
+        enabled: dialogs.mainWindow.lastActive && ChooserService.count === 0
 
         function onAskRequested(ask) {
-            credentialDialog.present(ask);
+            dialogs.dialog(credentialLoader).present(ask);
         }
     }
 
-    PropertiesDialog {
-        id: propertiesDialog
+    DialogLoader {
+        id: propertiesLoader
 
-        onRenameRequested: (target, name) => FileOpsService.rename(target, name, dialogs.mainWindow.opScope)
+        PropertiesDialog {
+            onRenameRequested: (target, name) => FileOpsService.rename(target, name, dialogs.mainWindow.opScope)
+        }
     }
 
-    FolderAppearanceDialog {
-        id: appearanceDialog
+    DialogLoader {
+        id: appearanceLoader
 
-        onBrowseRequested: {
-            badgePickerLoader.active = true;
-            badgePickerLoader.item.open();
+        FolderAppearanceDialog {
+            onBrowseRequested: {
+                badgePickerLoader.active = true;
+                badgePickerLoader.item.open();
+            }
         }
     }
 
@@ -198,40 +201,48 @@ Item {
             browserTitle: I18n.tr("Choose a badge image", "file picker title for a folder badge image")
             bucket: "badge"
             filters: ["*.svg", "*.png", "*.jpg", "*.jpeg", "*.webp"]
-            onAccepted: paths => appearanceDialog.apply({
+            onAccepted: paths => dialogs.dialog(appearanceLoader).apply({
                     "emblem": paths[0],
                     "icon": ""
                 })
         }
     }
 
-    ShortcutsOverlay {
-        id: shortcutsOverlay
+    DialogLoader {
+        id: shortcutsLoader
+
+        ShortcutsOverlay {}
     }
 
-    OpenWithDialog {
-        id: openWithDialog
+    DialogLoader {
+        id: openWithLoader
+
+        OpenWithDialog {}
     }
 
-    ExecutableDialog {
-        id: executableDialog
+    DialogLoader {
+        id: executableLoader
 
-        onRunRequested: AppsService.run(path, response => dialogs.mainWindow.openFlow.reportError(response))
-        onEditRequested: openWithDialog.ask("text/plain", [path])
+        ExecutableDialog {
+            onRunRequested: AppsService.run(path, response => dialogs.mainWindow.openFlow.reportError(response))
+            onEditRequested: dialogs.dialog(openWithLoader).ask("text/plain", [path])
+        }
     }
 
-    ConfirmDialog {
-        id: trustDialog
+    DialogLoader {
+        id: trustLoader
 
-        property string pending: ""
+        ConfirmDialog {
+            property string pending: ""
 
-        title: I18n.tr("Run this desktop file?", "untrusted desktop file dialog header")
-        message: I18n.tr("%1 has not been marked as trusted. Running it allows it to start any program.", "untrusted desktop file dialog explanation").arg(subject)
-        confirmText: I18n.tr("Trust and run", "untrusted desktop file dialog action")
-        danger: false
-        onConfirmed: {
-            dialogs.mainWindow.openFlow.trustAndRun(pending);
-            pending = "";
+            title: I18n.tr("Run this desktop file?", "untrusted desktop file dialog header")
+            message: I18n.tr("%1 has not been marked as trusted. Running it allows it to start any program.", "untrusted desktop file dialog explanation").arg(subject)
+            confirmText: I18n.tr("Trust and run", "untrusted desktop file dialog action")
+            danger: false
+            onConfirmed: {
+                dialogs.mainWindow.openFlow.trustAndRun(pending);
+                pending = "";
+            }
         }
     }
 
@@ -256,46 +267,37 @@ Item {
         catchUnscoped: dialogs.mainWindow.lastActive
     }
 
-    NameDialog {
-        id: renameBookmarkDialog
+    DialogLoader {
+        id: renameBookmarkLoader
 
-        property string path: ""
+        NameDialog {
+            property string path: ""
 
-        title: I18n.tr("Rename", "rename dialog header")
-        acceptText: I18n.tr("Rename", "rename dialog header")
-        onSubmitted: name => BookmarksService.rename(path, name)
+            title: I18n.tr("Rename", "rename dialog header")
+            acceptText: I18n.tr("Rename", "rename dialog header")
+            onSubmitted: name => BookmarksService.rename(path, name)
+        }
     }
 
-    CompressDialog {
-        id: compressDialog
+    DialogLoader {
+        id: compressLoader
 
-        onSubmitted: (paths, name, format, password) => FileOpsService.compress(paths, dialogs.mainWindow.currentPath, name, format, password, dialogs.mainWindow.opScope)
+        CompressDialog {
+            onSubmitted: (paths, name, format, password) => FileOpsService.compress(paths, dialogs.mainWindow.currentPath, name, format, password, dialogs.mainWindow.opScope)
+        }
     }
 
-    ConfirmDialog {
-        id: openConfirmDialog
+    DialogLoader {
+        id: openConfirmLoader
 
-        property var pending: null
+        ConfirmDialog {
+            property var pending: null
 
-        title: I18n.tr("Open %1 items?", "confirmation before opening many selected items at once").arg(subject)
-        message: (pending?.archives?.length ?? 0) > 0 ? I18n.tr("Folders open in new tabs, archives are extracted and other files open in their applications.", "explanation in the confirmation before opening many items, some of them archives") : I18n.tr("Folders open in new tabs and files open in their applications.", "explanation in the confirmation before opening many items")
-        confirmText: I18n.tr("Open", "context menu entry opening a file")
-        danger: false
-        onConfirmed: dialogs.mainWindow.openFlow.runOpenPlan(pending)
-    }
-
-    ConfirmDialog {
-        id: trashConfirmDialog
-
-        property var pending: []
-
-        title: I18n.tr("Move to Trash", "context menu entry trashing the selection")
-        message: I18n.tr("%1 will be moved to the trash.", "trash confirmation explanation").arg(subject)
-        confirmText: I18n.tr("Move to Trash", "context menu entry trashing the selection")
-        danger: false
-        onConfirmed: {
-            FileOpsService.trash(pending, dialogs.mainWindow.opScope);
-            pending = [];
+            title: I18n.tr("Open %1 items?", "confirmation before opening many selected items at once").arg(subject)
+            message: (pending?.archives?.length ?? 0) > 0 ? I18n.tr("Folders open in new tabs, archives are extracted and other files open in their applications.", "explanation in the confirmation before opening many items, some of them archives") : I18n.tr("Folders open in new tabs and files open in their applications.", "explanation in the confirmation before opening many items")
+            confirmText: I18n.tr("Open", "context menu entry opening a file")
+            danger: false
+            onConfirmed: dialogs.mainWindow.openFlow.runOpenPlan(pending)
         }
     }
 
@@ -343,65 +345,79 @@ Item {
         }
     }
 
-    ConfirmDialog {
-        id: emptyTrashDialog
+    DialogLoader {
+        id: emptyTrashLoader
 
-        title: I18n.tr("Empty the trash?", "confirmation header before deleting everything in the trash")
-        message: I18n.tr("%1 will be deleted permanently. This cannot be undone.", "permanent delete confirmation explanation").arg(subject)
-        confirmText: I18n.tr("Empty Trash", "action deleting everything in the trash")
-        onConfirmed: FileOpsService.emptyTrash()
-    }
-
-    ConfirmDialog {
-        id: clearRecentDialog
-
-        title: I18n.tr("Clear the recent files list?", "confirmation header before emptying the recently used list")
-        message: I18n.tr("The files themselves stay where they are.", "explanation under the clear recent confirmation")
-        confirmText: I18n.tr("Clear Recent", "action emptying the recently used list without touching the files")
-        danger: false
-        onConfirmed: RecentService.clear()
-    }
-
-    ConfirmDialog {
-        id: quitDialog
-
-        property int running: 0
-
-        title: I18n.tr("Quit while file operations are running?", "confirmation header when closing the last window would stop running file operations")
-        message: running === 1 ? I18n.tr("The running operation will be stopped part way through.", "quit confirmation explanation for a single running file operation") : I18n.tr("%1 running operations will be stopped part way through.", "quit confirmation explanation for several running file operations").arg(running)
-        confirmText: I18n.tr("Quit", "close behavior button group option to quit the app")
-        onConfirmed: dialogs.mainWindow.closeRequested(true)
-    }
-
-    ConfirmDialog {
-        id: confirmDialog
-
-        property var pending: []
-
-        title: I18n.tr("Delete permanently?", "permanent delete confirmation header")
-        message: I18n.tr("%1 will be deleted permanently. This cannot be undone.", "permanent delete confirmation explanation").arg(subject)
-        onConfirmed: {
-            FileOpsService.deletePermanently(pending);
-            pending = [];
+        ConfirmDialog {
+            title: I18n.tr("Empty the trash?", "confirmation header before deleting everything in the trash")
+            message: I18n.tr("%1 will be deleted permanently. This cannot be undone.", "permanent delete confirmation explanation").arg(subject)
+            confirmText: I18n.tr("Empty Trash", "action deleting everything in the trash")
+            onConfirmed: FileOpsService.emptyTrash()
         }
     }
 
-    UnlockDialog {
-        id: unlockDialog
+    DialogLoader {
+        id: clearRecentLoader
 
-        onUnlocked: mountPoint => {
-            if (mountPoint !== "")
-                dialogs.mainWindow.openPath(mountPoint, false);
+        ConfirmDialog {
+            title: I18n.tr("Clear the recent files list?", "confirmation header before emptying the recently used list")
+            message: I18n.tr("The files themselves stay where they are.", "explanation under the clear recent confirmation")
+            confirmText: I18n.tr("Clear Recent", "action emptying the recently used list without touching the files")
+            danger: false
+            onConfirmed: RecentService.clear()
         }
     }
 
-    ConnectServerDialog {
-        id: connectDialog
+    DialogLoader {
+        id: quitLoader
 
-        onConnected: path => dialogs.mainWindow.openPath(path, false)
+        ConfirmDialog {
+            property int running: 0
+
+            title: I18n.tr("Quit while file operations are running?", "confirmation header when closing the last window would stop running file operations")
+            message: running === 1 ? I18n.tr("The running operation will be stopped part way through.", "quit confirmation explanation for a single running file operation") : I18n.tr("%1 running operations will be stopped part way through.", "quit confirmation explanation for several running file operations").arg(running)
+            confirmText: I18n.tr("Quit", "close behavior button group option to quit the app")
+            onConfirmed: dialogs.mainWindow.closeRequested(true)
+        }
     }
 
-    CredentialDialog {
-        id: credentialDialog
+    DialogLoader {
+        id: confirmLoader
+
+        ConfirmDialog {
+            property var pending: []
+
+            title: I18n.tr("Delete permanently?", "permanent delete confirmation header")
+            message: I18n.tr("%1 will be deleted permanently. This cannot be undone.", "permanent delete confirmation explanation").arg(subject)
+            onConfirmed: {
+                FileOpsService.deletePermanently(pending);
+                pending = [];
+            }
+        }
+    }
+
+    DialogLoader {
+        id: unlockLoader
+
+        UnlockDialog {
+            onUnlocked: mountPoint => {
+                if (mountPoint !== "")
+                    dialogs.mainWindow.openPath(mountPoint, false);
+            }
+        }
+    }
+
+    DialogLoader {
+        id: connectLoader
+
+        ConnectServerDialog {
+            onConnected: path => dialogs.mainWindow.openPath(path, false)
+        }
+    }
+
+    DialogLoader {
+        id: credentialLoader
+
+        CredentialDialog {}
     }
 }

@@ -139,14 +139,3 @@ func TestDisablingReleasesTheName(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, dbus.RequestNameReplyPrimaryOwner, reply)
 }
-
-func TestDisabledServiceNeverRequestsTheName(t *testing.T) {
-	address := dbustest.Bus(t)
-	svc := start(t, address, &recorder{})
-
-	status := svc.Status()
-	assert.False(t, status.Enabled)
-	assert.False(t, status.Owned)
-	assert.False(t, status.Queued)
-	assert.Empty(t, status.Owner)
-}

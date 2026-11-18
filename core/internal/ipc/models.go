@@ -1,6 +1,11 @@
 package ipc
 
-import dankipc "github.com/duxlabs-dev/dux-go/ipc"
+import (
+	"cmp"
+	"slices"
+
+	dankipc "github.com/duxlabs-dev/dux-go/ipc"
+)
 
 const APIVersion = 1
 
@@ -18,3 +23,11 @@ var (
 )
 
 func FindRunningSocket() (string, error) { return dankipc.FindRunningSocket("dfiles") }
+
+func newestFirst[T any](items []T, key func(T) (stamp int64, name string)) {
+	slices.SortStableFunc(items, func(a, b T) int {
+		aStamp, aName := key(a)
+		bStamp, bName := key(b)
+		return cmp.Or(cmp.Compare(bStamp, aStamp), cmp.Compare(aName, bName))
+	})
+}
