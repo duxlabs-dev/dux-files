@@ -15,6 +15,8 @@ ShellRoot {
     property var unwatched: []
     property bool holdPages: false
     property var heldPage: null
+    property var watchOptions: ({})
+    property var thumbnailSizes: []
 
     property int addedSeen: 0
 
@@ -73,6 +75,7 @@ ShellRoot {
         signal watchEvent(var data)
 
         function watch(path, options, callback) {
+            fixture.watchOptions = options;
             callback(fixture.watchResponse);
         }
 
@@ -89,6 +92,7 @@ ShellRoot {
         }
 
         function thumbnails(paths, size, watchId, callback) {
+            fixture.thumbnailSizes.push(size);
             callback({
                 "results": paths.map(path => ({
                             "path": path,
@@ -318,6 +322,27 @@ ShellRoot {
         model.thumbnailSizeLimit = -1;
         model.requestThumbnails(0, 0);
         check("thumbnails resume", model.entries.get(0).thumbnail, "/cache/shot.png.png");
+
+        model.thumbnailSize = "large";
+        thumbnailSizes = [];
+        fakeService.watchEvent({
+            "watchId": "w3",
+            "kind": "thumbnails",
+            "seq": 6,
+            "thumbnails": [entry("shot.png", {
+                    "thumbnailable": true,
+                    "mime": "image/png",
+                    "thumbnail": "/cache/thumbnails/normal/shot.png"
+                }), entry("clip.mp4", {
+                    "thumbnailable": true,
+                    "mime": "video/mp4",
+                    "thumbnail": "/cache/thumbnails/x-large/clip.png"
+                })]
+        });
+        model.requestThumbnails(0, 1);
+        check("a thumbnail smaller than the tile is replaced, a larger one is kept", [model.entries.get(0).thumbnail, model.entries.get(1).thumbnail, thumbnailSizes], ["/cache/shot.png.png", "/cache/thumbnails/x-large/clip.png", ["large"]]);
+        model.path = "/tmp/zoomed";
+        check("a new listing asks for the tile's thumbnail size", watchOptions.thumbnailSize, "large");
 
         watchResponse = {
             "error": "no such directory",

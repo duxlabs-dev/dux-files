@@ -22,6 +22,7 @@ ListingView {
     model: TrashModel {
         nameFilter: trashView.host.nameFilter
         thumbnailsEnabled: SettingsData.thumbnails
+        thumbnailSize: trashView.body.thumbnailSize
         thumbnailSizeLimit: trashView.host.thumbnailSizeLimit
     }
 

@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Services
+import "../DCommon/FileBrowser/FilePreview.js" as FilePreview
 import "../DCommon/FileBrowser/NameFilter.js" as NameFilter
 
 QtObject {
@@ -102,7 +103,7 @@ QtObject {
         if (first < 0 || last < first || !thumbnailsEnabled)
             return;
         const tooLarge = entry => thumbnailSizeLimit >= 0 && entry.size > thumbnailSizeLimit && entry.mime.startsWith("image/");
-        const paths = _shown.slice(first, last + 1).filter(entry => entry.thumbnailable && entry.thumbnail === "" && !tooLarge(entry)).map(entry => entry.path);
+        const paths = _shown.slice(first, last + 1).filter(entry => entry.thumbnailable && !FilePreview.thumbnailCovers(entry.thumbnail, thumbnailSize) && !tooLarge(entry)).map(entry => entry.path);
         if (paths.length === 0)
             return;
         const life = _life;
