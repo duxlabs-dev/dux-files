@@ -57,7 +57,7 @@
     "%1 not detected, using %2.": "%1 nicht erkannt, verwendet wird %2."
   },
   "%1 not detected, using the %2 preset.": {
-    "%1 not detected, using the %2 preset.": "%1 nicht erkannt, verwendet wird das %2 Preset. "
+    "%1 not detected, using the %2 preset.": "%1 nicht erkannt, verwendet wird das %2 Preset."
   },
   "%1 px": {
     "%1 px": "%1 px"
@@ -198,7 +198,7 @@
     "Audio": "Audio"
   },
   "Auto": {
-    "Auto": "Automatisch"
+    "Auto": "Auto"
   },
   "Automatic": {
     "Automatic": "Automatisch"
@@ -219,13 +219,13 @@
     "Backend": "Backend"
   },
   "Backend: not reachable, no activation file": {
-    "Backend: not reachable, no activation file": "Backend: nicht erreichbar, keine Aktivierungsdatei"
+    "Backend: not reachable, no activation file": "Backend: Nicht erreichbar, keine Aktivierungsdatei"
   },
   "Backend: served by this instance": {
-    "Backend: served by this instance": "Backend: bedient von dieser Instanz"
+    "Backend: served by this instance": "Backend: Bedient von dieser Instanz"
   },
   "Backend: started on demand through %1": {
-    "Backend: started on demand through %1": "Backend: gestartet bei Abruf über %1"
+    "Backend: started on demand through %1": "Backend: Gestartet bei Abruf über %1"
   },
   "Background blur": {
     "Background blur": "Hintergrundunschärfe"
@@ -429,7 +429,7 @@
     "Default": "Vorgabe"
   },
   "Default application": {
-    "Default application": "Standardanwendung"
+    "Default application": "Vorgegebene Anwendung"
   },
   "Default applications": {
     "Default applications": "Vorgegebene Anwendungen"
@@ -543,13 +543,13 @@
     "Emptying the trash": "Papierkorb wird geleert"
   },
   "Enter filename...": {
-    "Enter filename...": "Dateinamen eingeben ..."
+    "Enter filename...": "Dateiname eingeben ..."
   },
   "Estimating…": {
     "Estimating…": "Schätzung ..."
   },
   "Every folder goes back to the default sort and view.": {
-    "Every folder goes back to the default sort and view.": "Jeder Ordner kehrt zur Standardsortierung und -ansicht zurück."
+    "Every folder goes back to the default sort and view.": "Jeder Ordner kehrt zur vorgegebenen Sortierung und Ansicht zurück."
   },
   "Everyone": {
     "Everyone": "Jeder"
@@ -585,7 +585,7 @@
     "Family": "Familie"
   },
   "File name size": {
-    "File name size": ""
+    "File name size": "Größe des Dateinamens"
   },
   "File operations": {
     "File operations": "Dateioperationen"
@@ -624,13 +624,13 @@
     "Folders open in new tabs and files open in their applications.": "Ordner öffnen in neuen Tabs und Dateien öffnen in ihren Anwendungen."
   },
   "Folders open in new tabs, archives are extracted and other files open in their applications.": {
-    "Folders open in new tabs, archives are extracted and other files open in their applications.": "Ordner werden in neuen Tabs geöffnet, Archive werden entpackt und andere Dateien werden in ihren jeweiligen Anwendungen geöffnet."
+    "Folders open in new tabs, archives are extracted and other files open in their applications.": "Ordner werden in neuen Tabs geöffnet, Archive werden entpackt und andere Dateien werden in deren jeweiligen Anwendungen geöffnet."
   },
   "Folders to skip": {
-    "Folders to skip": "Ordner zum Überspringen"
+    "Folders to skip": "Zu überspringende Ordner"
   },
   "Follow %1 colors, falling back to a preset.": {
-    "Follow %1 colors, falling back to a preset.": "%1 Farben folgen, zurückfallend auf ein Preset"
+    "Follow %1 colors, falling back to a preset.": "%1 Farben folgen, andernfalls auf ein Preset zurückgreifend."
   },
   "Following the system color scheme (currently %1).": {
     "Following the system color scheme (currently %1).": "Dem Farbschema des Systems folgend (derzeit %1)."
@@ -741,7 +741,7 @@
     "Index is still building, results may be incomplete": "Index wird noch gebildet, Ergebnisse sind möglicherweise unvollständig"
   },
   "Interface density": {
-    "Interface density": "Interface density\n"
+    "Interface density": "Interface-Dichte"
   },
   "Invert the selection": {
     "Invert the selection": "Auswahl umkehren"
@@ -753,10 +753,10 @@
     "Jump to a folder you visited": "Zu einem von Ihnen besuchten Ordner springen"
   },
   "Jump to a name or filter the folder with what you type": {
-    "Jump to a name or filter the folder with what you type": "Zu einem Namen springen oder den Ordner mit Ihrer Eingabe filtern"
+    "Jump to a name or filter the folder with what you type": "Zu einem Namen springen oder den Ordner anhand Ihrer Eingabe filtern"
   },
   "Jump to name": {
-    "Jump to name": "Springe zum Namen"
+    "Jump to name": "Zum Name springen"
   },
   "Jump to the start, the end or the next screen": {
     "Jump to the start, the end or the next screen": "Zum Anfang, zum Ende oder zum nächsten Bildschirm springen"
@@ -780,7 +780,7 @@
     "Keyboard shortcuts": "Tastatur-Shortcuts"
   },
   "Language": {
-    "Language": "Sprache"
+    "Language": "Sprache (Language)"
   },
   "Larger icons": {
     "Larger icons": "Größere Icons"
@@ -807,13 +807,13 @@
     "Light": "Hell"
   },
   "Link": {
-    "Link": "Verknüpfung"
+    "Link": "Link"
   },
   "Linking": {
-    "Linking": "Verknüpfen"
+    "Linking": "Verlinkung"
   },
   "Links to": {
-    "Links to": "Verknüpft mit"
+    "Links to": "Links zu"
   },
   "List icon size": {
     "List icon size": "Größe des Listen-Icons"
@@ -830,8 +830,17 @@
   "Lock": {
     "Lock": "Sperren"
   },
+  "Long": {
+    "Long": ""
+  },
+  "Longer": {
+    "Longer": ""
+  },
   "MIT License": {
     "MIT License": "MIT Lizenz"
+  },
+  "Medium": {
+    "Medium": ""
   },
   "Menu": {
     "Menu": "Menü"
@@ -999,7 +1008,7 @@
     "Offline": "Offline"
   },
   "Only launchers with an installed game are listed.": {
-    "Only launchers with an installed game are listed.": "Nur Launcher mit einem installierten Spielwerden gelistet."
+    "Only launchers with an installed game are listed.": "Nur Launcher mit einem installierten Spiel werden gelistet."
   },
   "Only the window process serves the portal": {
     "Only the window process serves the portal": "Nur der Fensterprozess bedient das Portal"
@@ -1041,7 +1050,7 @@
     "Open in terminal": "In Terminal öffnen"
   },
   "Open in the other pane": {
-    "Open in the other pane": "Im anderen Fensterbereich öffnen"
+    "Open in the other pane": "In anderem Fensterbereich öffnen"
   },
   "Open items with": {
     "Open items with": "Elemente öffnen mit"
@@ -1128,16 +1137,16 @@
     "Portal file: %1": "Portal-Datei: %1"
   },
   "Portal file: not installed": {
-    "Portal file: not installed": "Portal-Datei: nicht installiert"
+    "Portal file: not installed": "Portal-Datei: Nicht installiert"
   },
   "Preference: %1 is used": {
-    "Preference: %1 is used": "Voreinstellung: %1 wird verwendet"
+    "Preference: %1 is used": "Präferenz: %1 wird verwendet"
   },
   "Preference: %2 names %1": {
     "Preference: %2 names %1": "Präferenz: %2 Namee %1"
   },
   "Preference: no file chooser backend configured": {
-    "Preference: no file chooser backend configured": "Einstellung: Kein Backend für Dateiauswahl konfiguriert"
+    "Preference: no file chooser backend configured": "Präferenz: Kein Dateiauswahl-Backend konfiguriert"
   },
   "Prefix · %1": {
     "Prefix · %1": "Präfix · %1"
@@ -1202,6 +1211,9 @@
   "Reduce motion": {
     "Reduce motion": "Bewegung reduzieren"
   },
+  "Regex": {
+    "Regex": ""
+  },
   "Register as the session file manager": {
     "Register as the session file manager": "Als Sitzungsdateimanager registrieren"
   },
@@ -1242,7 +1254,7 @@
     "Renaming": "Umbenennen"
   },
   "Reopen the closed tab": {
-    "Reopen the closed tab": "Geschlossenen Tab wieder öffnen"
+    "Reopen the closed tab": "Geschlossenen Tab erneut öffnen"
   },
   "Replace": {
     "Replace": "Ersetzen"
@@ -1254,7 +1266,7 @@
     "Reset this folder": "Diesen Ordner zurücksetzen"
   },
   "Reset to default": {
-    "Reset to default": ""
+    "Reset to default": "Auf Vorgabe zurücksetzen"
   },
   "Resize icons": {
     "Resize icons": "Icons in Größe ändern"
@@ -1356,7 +1368,7 @@
     "Search icons": "Icons suchen"
   },
   "Search in Files": {
-    "Search in Files": "Suche in Dateien"
+    "Search in Files": "In Dateien suchen"
   },
   "Search results": {
     "Search results": "Suchergebnisse"
@@ -1408,6 +1420,12 @@
   },
   "Shares on %1": {
     "Shares on %1": "Freigaben auf %1"
+  },
+  "Short": {
+    "Short": ""
+  },
+  "Shorter": {
+    "Shorter": ""
   },
   "Show": {
     "Show": "Zeigen"
@@ -1488,10 +1506,10 @@
     "Split view": "Geteilte Ansicht"
   },
   "Spring": {
-    "Spring": "Springen"
+    "Spring": "Federung"
   },
   "Square": {
-    "Square": "Quadrat"
+    "Square": "Quadratisch"
   },
   "Startup folder": {
     "Startup folder": "Startordner"
@@ -1515,13 +1533,13 @@
     "System": "System"
   },
   "System default": {
-    "System default": "Systemstandard"
+    "System default": "Systemvorgabe"
   },
   "System locale": {
     "System locale": "Systemgebietsschema"
   },
   "System preference unavailable, using dark.": {
-    "System preference unavailable, using dark.": "Systemvoreinstellung nicht verfügbar, verwendet wird dunkel."
+    "System preference unavailable, using dark.": "Systempräferenz nicht verfügbar, verwendet wird dunkel."
   },
   "Terminal": {
     "Terminal": "Terminal"
@@ -1533,7 +1551,7 @@
     "The %1 prefix of each game.": "Das %1-Präfix jedes Spiels."
   },
   "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": {
-    "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": "Die Änderung wird nach dem Neustart von %1 wirksam. Von anderen Apps geöffnete Dialoge zum Öffnen und Speichern werden geschlossen."
+    "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": "Die Änderung wird nach einem Neustart von %1 wirksam. Dialoge zum Öffnen und Speichern, die in anderen Anwendungen geöffnet sind, werden geschlossen."
   },
   "The files themselves stay where they are.": {
     "The files themselves stay where they are.": "Die Dateien selbst bleiben, wo sie sind."
@@ -1548,7 +1566,7 @@
     "The session bus refused it.": "Der Session-Bus hat dies abgelehnt."
   },
   "The system application chooser opens instead": {
-    "The system application chooser opens instead": "Stattdessen öffnet sich die System-App-Auswahl"
+    "The system application chooser opens instead": "Stattdessen öffnet sich die System-Anwendungsauswahl"
   },
   "Theme": {
     "Theme": "Theme"
@@ -1570,6 +1588,9 @@
   },
   "This instance cannot reach the session bus.": {
     "This instance cannot reach the session bus.": "Diese Instanz kann den Session-Bus nicht erreichen."
+  },
+  "This is not a valid regular expression": {
+    "This is not a valid regular expression": ""
   },
   "This item already exists": {
     "This item already exists": "Dieses Element existiert bereits"
@@ -1782,10 +1803,10 @@
     "decorations csd window header": "Dekorationen CSD Fenster Kopfzeile"
   },
   "default file manager dbus reveal": {
-    "default file manager dbus reveal": "Standard-Dateimanager D-Bus reveal"
+    "default file manager dbus reveal": "Vorgegebener Dateimanager D-Bus reveal"
   },
   "default folder directory start open home": {
-    "default folder directory start open home": "Standard Ordner Verzeichnis Start Öffnen Home"
+    "default folder directory start open home": "Vorgabe Ordner Verzeichnis Start Öffnen Home"
   },
   "delete confirmation prompt": {
     "delete confirmation prompt": "Bestätigungsaufforderung zum Löschen"
@@ -1806,7 +1827,7 @@
     "dotfiles sort last bottom": "Dotfiles-Sortierung zuletzt unten"
   },
   "drag drop copy move ask default action": {
-    "drag drop copy move ask default action": "Drag & Drop Kopieren Verschieben Fragen Standardaktion"
+    "drag drop copy move ask default action": "Drag & Drop Kopieren Verschieben Fragen Vorgabeaktion"
   },
   "drives usb volumes sidebar hide": {
     "drives usb volumes sidebar hide": "Laufwerke USB Volumes Seitenleiste ausblenden"
@@ -1830,7 +1851,7 @@
     "font size text zoom typography": "Schriftgröße Text Zoom Typografie"
   },
   "font text names icons tiles rows": {
-    "font text names icons tiles rows": ""
+    "font text names icons tiles rows": "Schriftart Text Namen Icons Kacheln Reihen"
   },
   "font typeface": {
     "font typeface": "Schriftart Typeface"
@@ -1884,7 +1905,7 @@
     "list grid columns icons tiles": "Liste Raster Spalten Icons Kacheln"
   },
   "locale translation interface": {
-    "locale translation interface": "Interface für lokale Übersetzung"
+    "locale translation interface": "Locale lokal Übersetzung Interface"
   },
   "lutris wine prefix": {
     "lutris wine prefix": "Lutris Wine-Prefix"
@@ -1902,10 +1923,10 @@
     "palette dms preset custom accent": "Palette DMS Preset benutzerdefiniert Akzent"
   },
   "portal file chooser picker xdg": {
-    "portal file chooser picker xdg": "Portal Dateiauswahl Picker xdg"
+    "portal file chooser picker xdg": "Portal Dateiauswahl Wähler xdg"
   },
   "preset palette swatch colors": {
-    "preset palette swatch colors": "Voreinstellung Palette Farbfelder"
+    "preset palette swatch colors": "Preset Palette Farbfelder"
   },
   "previews images video pdf": {
     "previews images video pdf": "Vorschauen Bilder Video PDF"
@@ -1932,7 +1953,7 @@
     "size column entries": "Größe Spalte Einträge"
   },
   "source code repository issues": {
-    "source code repository issues": "Quellcode-Repository-Fehler"
+    "source code repository issues": "Probleme mit Quellcode-Repository"
   },
   "steam heroic lutris proton games sidebar hide": {
     "steam heroic lutris proton games sidebar hide": "Steam Heroic Lutris Proton Spiele Seitenleiste ausblenden"
@@ -1944,10 +1965,10 @@
     "suffix type filename": "Suffix Typ Dateiname"
   },
   "tabs external open location": {
-    "tabs external open location": "Tabs extern Ort öffnen"
+    "tabs external open location": "Tabs extern öffnen Ort"
   },
   "thumbnail size limit cap megabytes": {
-    "thumbnail size limit cap megabytes": "Vorschaubild Größenbeschränkung Megabyte"
+    "thumbnail size limit cap megabytes": "Thumbnail Größe Limit Kappe Megabyte"
   },
   "time modified timestamp iso relative seconds": {
     "time modified timestamp iso relative seconds": "Zeit geändert Zeitstempel ISO relativ Sekunden"
@@ -1956,7 +1977,7 @@
     "transparency translucent glass see-through": "Transparenz durchscheinend Glas durchsichtig"
   },
   "type-ahead jump filter search keyboard": {
-    "type-ahead jump filter search keyboard": "Direkteingabe Sprung Filter Suche Tastatur"
+    "type-ahead jump filter search keyboard": "Tastaturpuffer springen Filter Suche Tastatur"
   },
   "wine prefix proton compatdata": {
     "wine prefix proton compatdata": "Wine-Präfix Proton Compatdata"
@@ -1965,7 +1986,7 @@
     "xdg-desktop-portal": "xdg-desktop-portal "
   },
   "xdg-open handlr mimeo opener default application launch": {
-    "xdg-open handlr mimeo opener default application launch": "xdg-open handlr mimeo Öffner Standardanwendung Start"
+    "xdg-open handlr mimeo opener default application launch": "xdg-open handlr mimeo Öffner vorgegebene Anwendung Start"
   },
   "zip tar unpack compressed": {
     "zip tar unpack compressed": "Zip Tar entpacken komprimiert"
@@ -1974,6 +1995,6 @@
     "zoom rows": "Zoom Zeilen"
   },
   "zoom thumbnails tiles": {
-    "zoom thumbnails tiles": "Zoom Vorschaubilder Kacheln"
+    "zoom thumbnails tiles": "Zoom Thumbnails Kacheln"
   }
 }

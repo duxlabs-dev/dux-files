@@ -1220,7 +1220,7 @@
   {
     "term": "Duration",
     "translation": "",
-    "context": "animation duration slider label",
+    "context": "animation duration setting label",
     "reference": "",
     "comment": ""
   },
@@ -1939,9 +1939,30 @@
     "comment": ""
   },
   {
+    "term": "Long",
+    "translation": "",
+    "context": "animation duration option",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Longer",
+    "translation": "",
+    "context": "animation duration option",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "MIT License",
     "translation": "",
     "context": "about page license footer link",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Medium",
+    "translation": "",
+    "context": "animation duration option",
     "reference": "",
     "comment": ""
   },
@@ -2305,7 +2326,7 @@
   {
     "term": "Off",
     "translation": "",
-    "context": "animation duration slider label at zero",
+    "context": "animation duration option",
     "reference": "",
     "comment": ""
   },
@@ -2807,6 +2828,13 @@
     "comment": ""
   },
   {
+    "term": "Regex",
+    "translation": "",
+    "context": "search chip treating the query as a regular expression",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Register as the session file manager",
     "translation": "",
     "context": "setting label for owning org.freedesktop.FileManager1",
@@ -3290,6 +3318,20 @@
     "comment": ""
   },
   {
+    "term": "Short",
+    "translation": "",
+    "context": "animation duration option",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Shorter",
+    "translation": "",
+    "context": "animation duration option",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Show",
     "translation": "",
     "context": "toast action revealing the extracted files",
@@ -3664,6 +3706,13 @@
     "term": "This instance cannot reach the session bus.",
     "translation": "",
     "context": "file manager registration setting description when the daemon has no session bus connection",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "This is not a valid regular expression",
+    "translation": "",
+    "context": "search results header when the regex chip is on and the query does not parse",
     "reference": "",
     "comment": ""
   },

@@ -830,8 +830,17 @@
   "Lock": {
     "Lock": "鎖定"
   },
+  "Long": {
+    "Long": ""
+  },
+  "Longer": {
+    "Longer": ""
+  },
   "MIT License": {
     "MIT License": "MIT 授權條款"
+  },
+  "Medium": {
+    "Medium": ""
   },
   "Menu": {
     "Menu": "選單"
@@ -1202,6 +1211,9 @@
   "Reduce motion": {
     "Reduce motion": "減少動態效果"
   },
+  "Regex": {
+    "Regex": ""
+  },
   "Register as the session file manager": {
     "Register as the session file manager": "註冊為工作階段檔案管理員"
   },
@@ -1409,6 +1421,12 @@
   "Shares on %1": {
     "Shares on %1": ""
   },
+  "Short": {
+    "Short": ""
+  },
+  "Shorter": {
+    "Shorter": ""
+  },
   "Show": {
     "Show": "顯示"
   },
@@ -1570,6 +1588,9 @@
   },
   "This instance cannot reach the session bus.": {
     "This instance cannot reach the session bus.": "此執行個體無法連線至工作階段匯流排。"
+  },
+  "This is not a valid regular expression": {
+    "This is not a valid regular expression": ""
   },
   "This item already exists": {
     "This item already exists": "此項目已存在"

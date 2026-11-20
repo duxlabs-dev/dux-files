@@ -15,7 +15,7 @@
     "%1 folders could not be read": "Не вдалося прочитати %1 теки"
   },
   "%1 follows the handler on your %2.": {
-    "%1 follows the handler on your %2.": ""
+    "%1 follows the handler on your %2.": "%1 слідує за обробником на вашому %2"
   },
   "%1 h %2 min left": {
     "%1 h %2 min left": "Залишилося %1 год %2 хв"
@@ -42,7 +42,7 @@
     "%1 items cut": "Вирізано %1 елементів"
   },
   "%1 keys": {
-    "%1 keys": ""
+    "%1 keys": "клавіші %1"
   },
   "%1 levels deep": {
     "%1 levels deep": "Глибина %1 рівнів"
@@ -54,10 +54,10 @@
     "%1 min left": "Залишилося %1 хв"
   },
   "%1 not detected, using %2.": {
-    "%1 not detected, using %2.": ""
+    "%1 not detected, using %2.": "%1 не виявлено, використовується %2"
   },
   "%1 not detected, using the %2 preset.": {
-    "%1 not detected, using the %2 preset.": ""
+    "%1 not detected, using the %2 preset.": "%1 не виявлено, використовується набір налаштувань %2"
   },
   "%1 px": {
     "%1 px": "%1 пкс"
@@ -69,7 +69,7 @@
     "%1 s left": "Залишилося %1 с"
   },
   "%1 selected": {
-    "%1 selected": ""
+    "%1 selected": "вибрано %1"
   },
   "%1 used · %2 free · %3 total": {
     "%1 used · %2 free · %3 total": "Використано %1 · вільно %2 · всього %3"
@@ -81,7 +81,7 @@
     "%1 will be moved to the trash.": "%1 буде переміщено до кошика"
   },
   "%1 with seconds": {
-    "%1 with seconds": ""
+    "%1 with seconds": "%1 із секундами"
   },
   "%1 · %2": {
     "%1 · %2": "%1 · %2"
@@ -105,7 +105,7 @@
     "1 item cut": "Вирізано 1 елемент"
   },
   "50 is the %1 default.": {
-    "50 is the %1 default.": ""
+    "50 is the %1 default.": "50 — це типове значення %1"
   },
   "? or F1 in the main window.": {
     "? or F1 in the main window.": "? або F1 у головному вікні"
@@ -135,10 +135,10 @@
     "Administrator access is not available": "Доступ адміністратора неможливий"
   },
   "Administrator access is not available because %1 is not installed": {
-    "Administrator access is not available because %1 is not installed": ""
+    "Administrator access is not available because %1 is not installed": "Доступ адміністратора недоступний, оскільки %1 не встановлено"
   },
   "Administrator access is not available because the %1 policy is not installed": {
-    "Administrator access is not available because the %1 policy is not installed": ""
+    "Administrator access is not available because the %1 policy is not installed": "Доступ адміністратора недоступний, оскільки політику %1 не встановлено"
   },
   "Administrator access is not available inside the sandbox": {
     "Administrator access is not available inside the sandbox": "Доступ адміністратора неможливий всередині пісочниці"
@@ -204,7 +204,7 @@
     "Automatic": "Автоматично"
   },
   "Automatic uses %1.": {
-    "Automatic uses %1.": ""
+    "Automatic uses %1.": "Автоматичний режим використовує %1"
   },
   "Available": {
     "Available": "Доступно"
@@ -351,7 +351,7 @@
     "Connected": "Підключено"
   },
   "Connected, but the share has no local folder. The %1 service may not be running.": {
-    "Connected, but the share has no local folder. The %1 service may not be running.": ""
+    "Connected, but the share has no local folder. The %1 service may not be running.": "Підключено, але спільний ресурс не має локальної теки. Можливо, служба %1 не працює"
   },
   "Contents": {
     "Contents": "Вміст"
@@ -498,13 +498,13 @@
     "Drives and mounting": "Диски та монтування"
   },
   "Drives are unavailable because %1 is not running": {
-    "Drives are unavailable because %1 is not running": ""
+    "Drives are unavailable because %1 is not running": "Диски недоступні, оскільки %1 не запущено"
   },
   "Drives are unavailable because the sandbox cannot reach %1": {
-    "Drives are unavailable because the sandbox cannot reach %1": ""
+    "Drives are unavailable because the sandbox cannot reach %1": "Диски недоступні, оскільки пісочниця не може отримати доступ до %1"
   },
   "Drop on a tab to move files there": {
-    "Drop on a tab to move files there": ""
+    "Drop on a tab to move files there": "Перетягніть на вкладку, щоб перемістити туди файли"
   },
   "Dropping without a modifier": {
     "Dropping without a modifier": "Перетягування без модифікатора"
@@ -585,7 +585,7 @@
     "Family": "Сімейство"
   },
   "File name size": {
-    "File name size": ""
+    "File name size": "Розмір імені файлу"
   },
   "File operations": {
     "File operations": "Операції з файлами"
@@ -630,7 +630,7 @@
     "Folders to skip": "Теки, які слід пропустити"
   },
   "Follow %1 colors, falling back to a preset.": {
-    "Follow %1 colors, falling back to a preset.": ""
+    "Follow %1 colors, falling back to a preset.": "Використовувати кольори %1, інакше — набір налаштувань"
   },
   "Following the system color scheme (currently %1).": {
     "Following the system color scheme (currently %1).": "Використовувати системну кольорову схему (зараз %1)"
@@ -663,7 +663,7 @@
     "Games": "Ігри"
   },
   "Games and prefixes %1 installed.": {
-    "Games and prefixes %1 installed.": ""
+    "Games and prefixes %1 installed.": "Встановлено ігор та префіксів: %1"
   },
   "Games folder": {
     "Games folder": "Тека ігор"
@@ -726,7 +726,7 @@
     "Import": "Імпортувати"
   },
   "Import your %1 bookmarks?": {
-    "Import your %1 bookmarks?": ""
+    "Import your %1 bookmarks?": "Імпортувати ваші закладки %1?"
   },
   "Include hidden files": {
     "Include hidden files": "Включати приховані файли"
@@ -795,10 +795,10 @@
     "Lets the desktop show through the window. Text and controls stay solid.": "Дозволяє робочому столу бути помітним крізь вікно. Текст і елементи керування залишаються суцільними"
   },
   "Libraries and %1 prefixes.": {
-    "Libraries and %1 prefixes.": ""
+    "Libraries and %1 prefixes.": "Бібліотеки та префікси %1"
   },
   "Library": {
-    "Library": ""
+    "Library": "Бібліотека"
   },
   "Library · %1": {
     "Library · %1": "Бібліотека · %1"
@@ -830,8 +830,17 @@
   "Lock": {
     "Lock": "Заблокувати"
   },
+  "Long": {
+    "Long": ""
+  },
+  "Longer": {
+    "Longer": ""
+  },
   "MIT License": {
     "MIT License": "Ліцензія MIT"
+  },
+  "Medium": {
+    "Medium": ""
   },
   "Menu": {
     "Menu": "Меню"
@@ -921,10 +930,10 @@
     "Network in the sidebar": "«Мережа» на бічній панелі"
   },
   "Network locations are unavailable because %1 is not running": {
-    "Network locations are unavailable because %1 is not running": ""
+    "Network locations are unavailable because %1 is not running": "Мережеві розташування недоступні, оскільки %1 не запущено"
   },
   "Network locations are unavailable because the sandbox cannot reach %1": {
-    "Network locations are unavailable because the sandbox cannot reach %1": ""
+    "Network locations are unavailable because the sandbox cannot reach %1": "Мережеві розташування недоступні, оскільки пісочниця не може отримати доступ до %1"
   },
   "Never": {
     "Never": "Ніколи"
@@ -1083,7 +1092,7 @@
     "Owner": "Власник"
   },
   "PDF preview is not available. Install %1 support to view this file.": {
-    "PDF preview is not available. Install %1 support to view this file.": ""
+    "PDF preview is not available. Install %1 support to view this file.": "Попередній перегляд PDF недоступний. Встановіть підтримку %1, щоб переглянути цей файл"
   },
   "Palette: %1": {
     "Palette: %1": "Палітра: %1"
@@ -1134,7 +1143,7 @@
     "Preference: %1 is used": "Налаштування: використовується %1"
   },
   "Preference: %2 names %1": {
-    "Preference: %2 names %1": ""
+    "Preference: %2 names %1": "Налаштування: %2 називає %1"
   },
   "Preference: no file chooser backend configured": {
     "Preference: no file chooser backend configured": "Налаштування: сервіс вибору файлів не налаштовано"
@@ -1202,6 +1211,9 @@
   "Reduce motion": {
     "Reduce motion": "Зменшити рух"
   },
+  "Regex": {
+    "Regex": ""
+  },
   "Register as the session file manager": {
     "Register as the session file manager": "Зареєструвати як сесійний менеджер файлів"
   },
@@ -1254,7 +1266,7 @@
     "Reset this folder": "Скинути налаштування цієї теки"
   },
   "Reset to default": {
-    "Reset to default": ""
+    "Reset to default": "Скинути до типового"
   },
   "Resize icons": {
     "Resize icons": "Змінити розмір іконок"
@@ -1296,7 +1308,7 @@
     "Reverse the sort order": "Змінити порядок сортування"
   },
   "Revision": {
-    "Revision": ""
+    "Revision": "Ревізія"
   },
   "Ripple effects": {
     "Ripple effects": "Ефекти розширення"
@@ -1320,7 +1332,7 @@
     "Run this file?": "Запустити цей файл?"
   },
   "Runtime": {
-    "Runtime": ""
+    "Runtime": "Середовище виконання"
   },
   "Sandbox": {
     "Sandbox": "Пісочниця"
@@ -1371,7 +1383,7 @@
     "Search the disk": "Шукати на диску"
   },
   "Search with the %1 index": {
-    "Search with the %1 index": ""
+    "Search with the %1 index": "Пошук за індексом %1"
   },
   "Search your home folder": {
     "Search your home folder": "Шукати у домашній теці"
@@ -1409,11 +1421,17 @@
   "Shares on %1": {
     "Shares on %1": "Ресурси на %1"
   },
+  "Short": {
+    "Short": ""
+  },
+  "Shorter": {
+    "Shorter": ""
+  },
   "Show": {
     "Show": "Показати"
   },
   "Show all tabs": {
-    "Show all tabs": ""
+    "Show all tabs": "Показати всі вкладки"
   },
   "Show devices": {
     "Show devices": "Показувати пристрої"
@@ -1503,10 +1521,10 @@
     "Stop measuring": "Припинити вимірювання"
   },
   "Such as a separate %1.": {
-    "Such as a separate %1.": ""
+    "Such as a separate %1.": "Наприклад, окремий %1"
   },
   "Support %1": {
-    "Support %1": ""
+    "Support %1": "Підтримка %1"
   },
   "Switch pane": {
     "Switch pane": "Переключити панель"
@@ -1530,10 +1548,10 @@
     "Terminal, drag and thumbnails": "Термінал, перетягування та мініатюри"
   },
   "The %1 prefix of each game.": {
-    "The %1 prefix of each game.": ""
+    "The %1 prefix of each game.": "Префікс %1 кожної гри"
   },
   "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": {
-    "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": ""
+    "The change takes effect after %1 restarts. Open and save dialogs other apps have open will close.": "Зміни наберуть чинності після перезапуску %1. Діалогові вікна відкриття та збереження в інших програмах будуть закриті"
   },
   "The files themselves stay where they are.": {
     "The files themselves stay where they are.": "Самі файли залишаються на своїх місцях"
@@ -1570,6 +1588,9 @@
   },
   "This instance cannot reach the session bus.": {
     "This instance cannot reach the session bus.": "Цей екземпляр не може отримати доступ до сесійної шини"
+  },
+  "This is not a valid regular expression": {
+    "This is not a valid regular expression": ""
   },
   "This item already exists": {
     "This item already exists": "Цей елемент уже існує"
@@ -1662,7 +1683,7 @@
     "Use": "Використовувати"
   },
   "Use %1 for open and save dialogs": {
-    "Use %1 for open and save dialogs": ""
+    "Use %1 for open and save dialogs": "Використовувати %1 для діалогових вікон відкриття та збереження"
   },
   "Use a bundled color palette.": {
     "Use a bundled color palette.": "Використовувати вбудовану кольорову палітру"
@@ -1683,7 +1704,7 @@
     "Username": "Ім'я користувача"
   },
   "Using %1 dynamic colors.": {
-    "Using %1 dynamic colors.": ""
+    "Using %1 dynamic colors.": "Використання динамічних кольорів %1"
   },
   "Version": {
     "Version": "Версія"
@@ -1830,7 +1851,7 @@
     "font size text zoom typography": "розмір шрифту масштаб тексту типографіка"
   },
   "font text names icons tiles rows": {
-    "font text names icons tiles rows": ""
+    "font text names icons tiles rows": "шрифт текст назви іконки плитки рядки"
   },
   "font typeface": {
     "font typeface": "гарнітура шрифту"
