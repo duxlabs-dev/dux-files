@@ -24,6 +24,12 @@ OverlayDialog {
     readonly property var names: tab === 0 ? FolderAppearances.badges : FolderAppearances.icons
     readonly property bool customColor: (look?.color ?? "") !== "" && !FolderAppearances.colors.includes(look.color)
     readonly property var shown: filter === "" ? names : names.filter(name => name.toLowerCase().includes(filter.toLowerCase()))
+    readonly property int iconThemeRevision: Paths.iconThemeRevision
+
+    onIconThemeRevisionChanged: {
+        if (visible)
+            FolderAppearances.refreshCatalog();
+    }
 
     maximumWidth: 520
     title: I18n.tr("Folder appearance", "folder appearance dialog title")

@@ -21,10 +21,11 @@ type Catalog struct {
 }
 
 const (
-	maxNames      = 1500
-	minFolderSize = 48
-	badgeDirs     = "emblems,apps"
-	iconDirs      = "places"
+	maxNames        = 1500
+	minFolderSize   = 48
+	maxInheritDepth = 8
+	badgeDirs       = "emblems,apps"
+	iconDirs        = "places"
 )
 
 // Roots lists the icon theme directories XDG points at.
@@ -61,6 +62,10 @@ func iniValue(path, section, key string) string {
 	if err != nil {
 		return ""
 	}
+	return iniKey(data, section, key)
+}
+
+func iniKey(data []byte, section, key string) string {
 	for line := range ini.Lines(data) {
 		if !line.Header && line.Group == section && line.Key == key {
 			return line.Value
@@ -69,14 +74,13 @@ func iniValue(path, section, key string) string {
 	return ""
 }
 
-// Scan collects badge and folder icon names, from every installed theme when
-// the configured one is unknown.
+// Scan collects badge and folder icon names from theme and its parents, or from every installed theme when theme is unknown.
 func Scan(roots []string, theme string) Catalog {
 	badges := map[string]bool{}
 	icons := map[string]bool{}
-	themes := []string{theme}
-	if theme == "" || !exists(roots, theme) {
-		themes = installed(roots)
+	themes := installed(roots)
+	if theme != "" && exists(roots, theme) {
+		themes = lineage(roots, theme)
 	}
 	for _, name := range themes {
 		for _, root := range roots {
@@ -89,6 +93,41 @@ func Scan(roots []string, theme string) Catalog {
 		}
 	}
 	return Catalog{Badges: sorted(badges), Icons: plainVariants(sorted(icons))}
+}
+
+func lineage(roots []string, theme string) []string {
+	names := []string{}
+	seen := map[string]bool{}
+	var visit func(name string, depth int)
+	visit = func(name string, depth int) {
+		if seen[name] || depth > maxInheritDepth {
+			return
+		}
+		seen[name] = true
+		names = append(names, name)
+		for _, parent := range inherits(roots, name) {
+			visit(parent, depth+1)
+		}
+	}
+	visit(theme, 0)
+	return names
+}
+
+func inherits(roots []string, theme string) []string {
+	for _, root := range roots {
+		data, err := os.ReadFile(filepath.Join(root, theme, "index.theme"))
+		if err != nil {
+			continue
+		}
+		parents := []string{}
+		for _, name := range strings.Split(iniKey(data, "Icon Theme", "Inherits"), ",") {
+			if name = strings.TrimSpace(name); name != "" {
+				parents = append(parents, name)
+			}
+		}
+		return parents
+	}
+	return nil
 }
 
 func installed(roots []string) []string {
@@ -218,8 +257,11 @@ func sorted(set map[string]bool) []string {
 	return names
 }
 
-// Default scans the icon theme this user has configured.
-func Default() Catalog {
+// Default scans the named icon theme, or the configured one when theme is empty.
+func Default(theme string) Catalog {
 	home, _ := os.UserHomeDir()
-	return Scan(Roots(home, xdg.DataHome(), xdg.DataDirs()), Theme(home))
+	if theme == "" {
+		theme = Theme(home)
+	}
+	return Scan(Roots(home, xdg.DataHome(), xdg.DataDirs()), theme)
 }
