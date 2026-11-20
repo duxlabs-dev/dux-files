@@ -68,6 +68,5 @@ func init() {
 	rootCmd.AddCommand(searchCmd)
 	rootCmd.AddCommand(portalCmd)
 	rootCmd.AddCommand(ipcCmd)
-	rootCmd.AddCommand(helperCmd)
 	rootCmd.AddCommand(blurCmd)
 }

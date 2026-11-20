@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/duxlabs-dev/dux-files/core/internal/helper"
+	dhelper "github.com/duxlabs-dev/dux-go/elevate/helper"
 
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/duxlabs-dev/dux-go/log"
@@ -32,7 +32,7 @@ func eachSource[T any](r *runner, items []T, step func(T) error) error {
 }
 
 func codeOf(err error) string {
-	return string(helper.CodeOf(err))
+	return string(dhelper.CodeOf(err))
 }
 
 type Stater interface {

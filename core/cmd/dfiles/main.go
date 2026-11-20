@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/helper"
 	"github.com/duxlabs-dev/dux-files/core/internal/qtbaseembed"
 	"github.com/duxlabs-dev/dux-go/log"
 	"github.com/duxlabs-dev/dux-go/qtbase"
@@ -15,6 +16,7 @@ var (
 )
 
 func main() {
+	helper.UnderPkexec()
 	log.SetEnvPrefix("DFILES")
 	qtbase.MaybeRunAndExit(qtbaseembed.Extract)
 	if err := rootCmd.Execute(); err != nil {

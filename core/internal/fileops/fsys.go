@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/duxlabs-dev/dux-go/elevate"
 )
 
 type FS interface {
@@ -36,11 +38,8 @@ type Elevator interface {
 	Available() error
 }
 
-type Unavailable struct {
-	Reason string
-}
-
-func (u *Unavailable) Error() string { return "elevation unavailable: " + u.Reason }
+// An alias, so a helper that cannot start matches it from any operation, not only from Available.
+type Unavailable = elevate.Unavailable
 
 type localFS struct{}
 
