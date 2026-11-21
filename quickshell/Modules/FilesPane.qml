@@ -384,6 +384,8 @@ FocusScope {
     }
 
     function dropOn(dest, drop) {
+        if (DragService.extractArkDrop(drop, dest))
+            return;
         const paths = DragService.pathsFrom(drop);
         if (paths.length === 0 || paths.includes(dest))
             return;
