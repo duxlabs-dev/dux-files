@@ -93,9 +93,6 @@ func HandleSystem(ctx context.Context, w *ConnWriter, req Request, deps Deps) {
 		}
 		path := params.StringOpt(req.Params, "path", "")
 		screen := params.StringOpt(req.Params, "screen", "")
-		if screen == "" {
-			screen = params.StringOpt(req.Params, "screenName", "")
-		}
 		if err := deps.Wallpaper.Set(ctx, path, screen); err != nil {
 			wire.RespondError(w, req.ID, err)
 			return
