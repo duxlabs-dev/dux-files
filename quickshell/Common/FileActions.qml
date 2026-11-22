@@ -30,6 +30,11 @@ Singleton {
                 "contexts": browsingAndRecent,
                 "submenu": true
             },
+            "setWallpaper": {
+                "icon": "wallpaper",
+                "label": I18n.tr("Set as wallpaper", "context menu entry setting the selected image as desktop wallpaper"),
+                "contexts": browsingAndRecent
+            },
             "openFolderWith": {
                 "icon": "apps",
                 "label": I18n.tr("Open with", "open with dialog header"),

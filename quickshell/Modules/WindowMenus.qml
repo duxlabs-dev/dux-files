@@ -16,6 +16,11 @@ Item {
         return entries.length > 0 && entries.every(entry => entry.isDir);
     }
 
+    function selectionIsImage() {
+        const entries = mainWindow.selectedEntries();
+        return entries.length === 1 && !entries[0].isDir && (entries[0].mime ?? "").startsWith("image/");
+    }
+
     function selectionIsExtractable() {
         const entries = mainWindow.selectedEntries();
         return entries.length > 0 && entries.every(entry => !entry.isDir && FilesFormat.extractable(entry.mime));
@@ -125,6 +130,7 @@ Item {
         anchorItem: menus.anchorItem
         selectionCount: live ? menus.mainWindow.selectedPaths().length : 0
         hasDirectory: live && menus.selectionIsDirectory()
+        singleImage: live && menus.selectionIsImage()
         hasClipboard: live && ClipboardService.hasFiles
         extractable: live && menus.selectionIsExtractable()
         inResults: live && menus.mainWindow.activePane.resultsActive

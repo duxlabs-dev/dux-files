@@ -39,6 +39,8 @@ Singleton {
             return I18n.tr("Only the window process serves the portal", "explanation when a daemon without a window answers a portal question");
         case "NOBUS":
             return I18n.tr("This instance cannot reach the session bus.", "file manager registration setting description when the daemon has no session bus connection");
+        case "NODMS":
+            return I18n.tr("DMS is not installed", "explanation when the dms command is not found");
         default:
             return I18n.tr("Not available", "explanation for a feature the environment does not permit");
         }

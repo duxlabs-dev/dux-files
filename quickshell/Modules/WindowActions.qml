@@ -80,6 +80,9 @@ QtObject {
         case "openTerminal":
             openTerminalHere();
             return;
+        case "setWallpaper":
+            setWallpaperSelection();
+            return;
         case "newTab":
             mainWindow.tabManager.newTab("", false);
             return;
@@ -458,6 +461,13 @@ QtObject {
 
     function openTerminalHere() {
         AppsService.openTerminal(currentPath, response => mainWindow.openFlow.reportError(response));
+    }
+
+    function setWallpaperSelection() {
+        const entry = mainWindow.firstSelected();
+        if (!entry || entry.isDir)
+            return;
+        AppsService.setWallpaper(entry.path, mainWindow.screen?.name ?? "", response => mainWindow.openFlow.reportError(response));
     }
 
     function trashSelection() {

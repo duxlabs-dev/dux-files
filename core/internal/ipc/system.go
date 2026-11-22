@@ -21,7 +21,7 @@ func HandleSystem(ctx context.Context, w *ConnWriter, req Request, deps Deps) {
 		}
 		w.Respond(req.ID, deps.ColorScheme.State())
 	case "system.capabilities":
-		w.Respond(req.ID, capabilities(deps))
+		w.Respond(req.ID, capabilities(ctx, deps))
 	case "system.elevation":
 		if deps.FileOps == nil {
 			w.Respond(req.ID, map[string]any{"available": false, "reason": "NOROUTE"})
@@ -86,6 +86,21 @@ func HandleSystem(ctx context.Context, w *ConnWriter, req Request, deps Deps) {
 			return
 		}
 		w.Respond(req.ID, map[string]any{"opened": true})
+	case "system.setWallpaper":
+		if deps.Wallpaper == nil {
+			wire.RespondError(w, req.ID, wire.Fail(files.CodeNotSupported, "wallpaper service unavailable"))
+			return
+		}
+		path := params.StringOpt(req.Params, "path", "")
+		screen := params.StringOpt(req.Params, "screen", "")
+		if screen == "" {
+			screen = params.StringOpt(req.Params, "screenName", "")
+		}
+		if err := deps.Wallpaper.Set(ctx, path, screen); err != nil {
+			wire.RespondError(w, req.ID, err)
+			return
+		}
+		w.Respond(req.ID, map[string]any{"set": true})
 	default:
 		w.RespondError(req.ID, "unknown system method: "+req.Method)
 	}
@@ -97,11 +112,14 @@ type capabilitiesResponse struct {
 	SearchTools  []string `json:"searchTools"`
 }
 
-func capabilities(deps Deps) capabilitiesResponse {
+func capabilities(ctx context.Context, deps Deps) capabilitiesResponse {
 	caps := deps.Sandbox
 	if deps.FileOps != nil {
 		e := deps.FileOps.Elevation()
 		caps = caps.WithFeature("elevation", sandbox.Feature{Available: e.Available, Reason: e.Reason})
+	}
+	if deps.Wallpaper != nil {
+		caps = caps.WithFeature("setWallpaper", deps.Wallpaper.Feature(ctx))
 	}
 	if caps.Portals == nil {
 		caps.Portals = map[string]uint32{}

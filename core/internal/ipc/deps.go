@@ -14,6 +14,7 @@ import (
 	"github.com/duxlabs-dev/dux-files/core/internal/sandbox"
 	"github.com/duxlabs-dev/dux-files/core/internal/search"
 	"github.com/duxlabs-dev/dux-files/core/internal/settings"
+	"github.com/duxlabs-dev/dux-files/core/internal/wallpaper"
 	"github.com/duxlabs-dev/dux-go/files"
 )
 
@@ -35,5 +36,6 @@ type Deps struct {
 	Sandbox     sandbox.Capabilities
 	FileManager *filemanager1.Service
 	Portal      *portal.Controller
+	Wallpaper   *wallpaper.Service
 	Quit        func()
 }

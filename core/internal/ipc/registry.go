@@ -137,6 +137,7 @@ var Methods = []MethodSpec{
 	{Name: "system.fileManager.get", Group: "system", Desc: "Whether this instance owns org.freedesktop.FileManager1, and who does otherwise"},
 	{Name: "system.fileManager.set", Group: "system", Desc: "Request or release org.freedesktop.FileManager1; another owner is never replaced", Params: []ParamSpec{req("enabled", "true to request the name, false to release it")}},
 	{Name: "system.openUri", Group: "system", Desc: "Open a URI with the default handler", Params: []ParamSpec{req("uri", "")}},
+	{Name: "system.setWallpaper", Group: "system", Desc: "Set the desktop wallpaper through DMS", Params: []ParamSpec{req("path", "absolute image file path"), opt("screen", "monitor name for per-monitor wallpaper mode")}},
 	{Name: "system.portal.get", Group: "system", Desc: "Whether Dux Files serves the desktop portal's open and save dialogs: the .portal file, the portals.conf preference, the backend name and whether the portal service needs a restart"},
 	{Name: "system.portal.install", Group: "system", Desc: "Install the per-user portal files and prefer dfiles for org.freedesktop.impl.portal.FileChooser; the portal service must be restarted afterwards"},
 	{Name: "system.portal.uninstall", Group: "system", Desc: "Undo what system.portal.install changed, leaving hand edits alone"},
