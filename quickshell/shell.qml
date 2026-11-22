@@ -158,14 +158,18 @@ ShellRoot {
         function onOpenRequested(locations, newWindow) {
             if (locations.length === 0 && !newWindow)
                 return;
+            const existing = newWindow ? 0 : WindowService.target();
             const windowId = WindowService.open(locations, newWindow);
-            root.focusWindow(windowId);
+            if (existing !== 0)
+                root.focusWindow(windowId);
         }
         function onPropertiesRequested(paths) {
             if (paths.length === 0)
                 return;
-            const windowId = WindowService.target() === 0 ? WindowService.create([]) : WindowService.target();
-            root.focusWindow(windowId);
+            const existing = WindowService.target();
+            const windowId = existing === 0 ? WindowService.create([]) : existing;
+            if (existing !== 0)
+                root.focusWindow(windowId);
             root.windowObject(windowId)?.showPropertiesFor(paths);
         }
         function onChooserRequested(request) {
@@ -183,7 +187,6 @@ ShellRoot {
         }
         function onWindowAdded() {
             DirectoryService.refreshUserDirs();
-            focusRetry.restart();
         }
     }
 
@@ -191,13 +194,6 @@ ShellRoot {
         interval: Timing.timeoutLong
         running: root.idle && !SettingsData.keepRunning && (root.dbusActivated || root.quitDeferred)
         onTriggered: root.quitWhenIdle()
-    }
-
-    Timer {
-        id: focusRetry
-        interval: Timing.settle
-        repeat: false
-        onTriggered: root.focusWindow(WindowService.lastActiveId)
     }
 
     Instantiator {
