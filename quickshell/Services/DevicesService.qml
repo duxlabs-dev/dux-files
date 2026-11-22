@@ -37,14 +37,7 @@ Singleton {
     }
 
     function refreshUsage(force) {
-        const paths = [];
-        for (const device of devices) {
-            const mounts = device.mountPoints?.length ? device.mountPoints : device.mounted ? [device.mountPoint] : [];
-            for (const path of mounts) {
-                if (!paths.includes(path))
-                    paths.push(path);
-            }
-        }
+        const paths = _mountPoints(devices);
         if (!paths.includes("/"))
             paths.unshift("/");
         transport.call("devices.usage", {
