@@ -70,6 +70,12 @@ ShellRoot {
         iconName: "folder"
     }
 
+    FileContextMenu {
+        id: contextMenu
+
+        selectionCount: 1
+    }
+
     Component.onCompleted: {
         DC.Style.theme = Theme;
         DC.I18n.backend = I18n;
@@ -130,6 +136,17 @@ ShellRoot {
         check("file names scale with the font scale", FileBrowserSettings.fileNamePixelSize, 18);
         SettingsData.fontScale = 1.0;
         SettingsData.setDensity("comfortable");
+
+        const menuRow = Array.from(contextMenu.rows).find(item => item.separator === false);
+        const comfortableHeight = menuRow.height;
+        SettingsData.setDensity("compact");
+        const compactHeight = menuRow.height;
+        SettingsData.setDensity("dense");
+        const denseHeight = menuRow.height;
+        SettingsData.setDensity("spacious");
+        const spaciousHeight = menuRow.height;
+        SettingsData.setDensity("comfortable");
+        check("context menu rows scale with interface density", [spaciousHeight > comfortableHeight, compactHeight < comfortableHeight, denseHeight < compactHeight], [true, true, true]);
 
         finish();
     }

@@ -140,13 +140,15 @@ FileMenu {
             readonly property bool separator: modelData.id === "separator"
 
             width: parent?.width ?? 0
-            height: separator ? FileBrowserMetrics.menuDividerHeight : Theme.menuItemHeight
+            height: separator ? FileBrowserMetrics.menuDividerHeight : menuItem.implicitHeight
 
             FileMenuDivider {
                 visible: slot.separator
             }
 
             FileMenuItem {
+                id: menuItem
+
                 anchors.fill: parent
                 visible: !slot.separator
                 text: slot.separator ? "" : slot.modelData.label
