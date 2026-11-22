@@ -178,7 +178,7 @@ QtObject {
         const state = tabState(index);
         const p0 = state?.panes?.[0]?.path ?? "";
         const p1 = state?.panes?.[1]?.path ?? "";
-        if (p1 !== "")
+        if (secondPane && p1 !== "")
             return inAnyMount(p0) && inAnyMount(p1);
         return inAnyMount(tabPath(index));
     }
