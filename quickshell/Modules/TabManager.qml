@@ -180,7 +180,7 @@ QtObject {
         const p1 = state?.panes?.[1]?.path ?? "";
         if (secondPane && p1 !== "")
             return inAnyMount(p0) && inAnyMount(p1);
-        return inAnyMount(tabPath(index));
+        return inAnyMount(p0);
     }
 
     function closeMounts(mountPoints) {
