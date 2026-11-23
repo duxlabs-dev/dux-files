@@ -10,6 +10,7 @@ FileMenu {
 
     property int selectionCount: 0
     property bool hasDirectory: false
+    property bool singleImage: false
     property bool hasClipboard: false
     property bool forFolder: false
     property bool forPicker: false
@@ -46,6 +47,8 @@ FileMenu {
             "enabled": selectionCount > 0
         }), FileActions.row("openWithMenu", {
             "enabled": selectionCount > 0
+        }), FileActions.row("setWallpaper", {
+            "visible": singleImage && SandboxService.available("setWallpaper")
         }), FileActions.row("openInNewTab", {
             "visible": singleFolder
         }), FileActions.row("openInNewWindow", {
