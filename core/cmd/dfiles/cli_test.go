@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
+	"net"
 	"os"
 	"path/filepath"
 	"testing"
@@ -179,4 +181,112 @@ func TestBareLocationsGoToTheRootCommand(t *testing.T) {
 	require.NoError(t, err)
 	assert.Same(t, rootCmd, cmd)
 	assert.Equal(t, []string{"/tmp/shots/", "smb://nas/"}, args)
+}
+
+func TestNewWindowFlagRoutesToUIOpen(t *testing.T) {
+	root := isolate(t)
+	shellDir := filepath.Join(root, "shell")
+	require.NoError(t, os.MkdirAll(shellDir, 0o755))
+	require.NoError(t, os.WriteFile(filepath.Join(shellDir, "shell.qml"), nil, 0o644))
+	t.Setenv("DFILES_SHELL_DIR", shellDir)
+
+	sockPath := filepath.Join(root, "runtime", "dfiles.sock")
+	ln, err := net.Listen("unix", sockPath)
+	require.NoError(t, err)
+	t.Cleanup(func() { _ = ln.Close() })
+	t.Setenv("DFILES_SOCKET", sockPath)
+
+	type recorded struct {
+		Method string         `json:"method"`
+		Params map[string]any `json:"params"`
+	}
+	requests := make(chan recorded, 8)
+	go func() {
+		for {
+			conn, err := ln.Accept()
+			if err != nil {
+				return
+			}
+			go func(c net.Conn) {
+				defer c.Close()
+				_, _ = c.Write([]byte(`{"apiVersion":1}` + "\n"))
+				line, err := bufio.NewReader(c).ReadBytes('\n')
+				if err != nil {
+					return
+				}
+				var req struct {
+					ID     int            `json:"id"`
+					Method string         `json:"method"`
+					Params map[string]any `json:"params"`
+				}
+				if err := json.Unmarshal(line, &req); err != nil {
+					return
+				}
+				requests <- recorded{Method: req.Method, Params: req.Params}
+				resp, _ := json.Marshal(map[string]any{"id": req.ID, "result": map[string]any{"ok": true}})
+				_, _ = c.Write(append(resp, '\n'))
+			}(conn)
+		}
+	}()
+
+	targetDir := filepath.Join(root, "home")
+	cases := []struct {
+		name   string
+		args   []string
+		method string
+		params map[string]any
+	}{
+		{
+			name:   "short new-window flag without paths",
+			args:   []string{"-n"},
+			method: "ui.open",
+			params: map[string]any{"newWindow": true},
+		},
+		{
+			name:   "long new-window flag without paths",
+			args:   []string{"--new-window"},
+			method: "ui.open",
+			params: map[string]any{"newWindow": true},
+		},
+		{
+			name:   "short new-window flag with path",
+			args:   []string{"-n", targetDir},
+			method: "ui.open",
+			params: map[string]any{"paths": []any{targetDir}, "newWindow": true},
+		},
+		{
+			name:   "long new-window flag with path",
+			args:   []string{"--new-window", targetDir},
+			method: "ui.open",
+			params: map[string]any{"paths": []any{targetDir}, "newWindow": true},
+		},
+		{
+			name:   "open subcommand without paths",
+			args:   []string{"open"},
+			method: "ui.open",
+			params: map[string]any{"newWindow": true},
+		},
+		{
+			name:   "open subcommand with new-window flag and path",
+			args:   []string{"open", "-n", targetDir},
+			method: "ui.open",
+			params: map[string]any{"paths": []any{targetDir}, "newWindow": true},
+		},
+	}
+
+	t.Cleanup(func() {
+		openNewWindow = false
+		rootCmd.SetArgs(nil)
+	})
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			openNewWindow = false
+			rootCmd.SetArgs(tc.args)
+			require.NoError(t, rootCmd.Execute())
+			got := <-requests
+			assert.Equal(t, tc.method, got.Method)
+			assert.Equal(t, tc.params, got.Params)
+		})
+	}
 }

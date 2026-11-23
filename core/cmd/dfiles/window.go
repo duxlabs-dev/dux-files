@@ -50,10 +50,14 @@ Accepted locations:
 	PreRunE: shellApp.ResolveConfig,
 	RunE: func(_ *cobra.Command, args []string) error {
 		if len(args) == 0 {
-			return callWindow("ui.open", map[string]any{"newWindow": true}, func(location.Env) error { return nil })
+			return openNewEmptyWindow()
 		}
 		return openLocations(args)
 	},
+}
+
+func openNewEmptyWindow() error {
+	return callWindow("ui.open", map[string]any{"newWindow": true}, func(location.Env) error { return nil })
 }
 
 func openLocations(args []string) error {
