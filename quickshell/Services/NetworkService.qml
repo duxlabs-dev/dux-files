@@ -24,6 +24,7 @@ Singleton {
     signal askRequested(var ask)
     signal requestFailed(string message, string code)
     signal connected(var mount)
+    signal mountsRemoved(var paths)
 
     readonly property DaemonTopic _network: DaemonTopic {
         transport: root.transport
@@ -118,11 +119,20 @@ Singleton {
     }
 
     function _applyMounts(data) {
-        available = data.available === true;
+        const isAvailable = data.available === true;
+        const previousPaths = mounts.map(mount => mount.path).filter(path => path);
+        const nextMounts = data.mounts || [];
+        available = isAvailable;
         reason = data.reason || "";
         schemes = data.schemes || [];
-        mounts = data.mounts || [];
+        mounts = nextMounts;
         if (data.portables !== undefined)
             portables = data.portables || [];
+        if (isAvailable) {
+            const currentPaths = nextMounts.map(mount => mount.path).filter(path => path);
+            const removed = previousPaths.filter(path => !currentPaths.includes(path));
+            if (removed.length > 0)
+                mountsRemoved(removed);
+        }
     }
 }

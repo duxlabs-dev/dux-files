@@ -16,6 +16,7 @@ ShellRoot {
     property var responses: ({})
     property var asks: []
     property var failedRequests: []
+    property var removedMounts: []
 
     function check(label, actual, expected) {
         const ok = JSON.stringify(actual) === JSON.stringify(expected);
@@ -117,6 +118,9 @@ ShellRoot {
         target: DevicesService
         function onRequestFailed(message, code) {
             fixture.failedRequests = fixture.failedRequests.concat([`${code}:${message}`]);
+        }
+        function onMountsRemoved(paths) {
+            fixture.removedMounts = fixture.removedMounts.concat([paths]);
         }
     }
 
@@ -305,6 +309,59 @@ ShellRoot {
             "portables": []
         });
         check("mount events carrying portables replace them", NetworkService.portables.length, 0);
+
+        removedMounts = [];
+        emit("devices", {
+            "available": true,
+            "devices": [device("/block/root", {
+                    "system": true,
+                    "kind": "system",
+                    "mounted": true,
+                    "mountPoint": "/"
+                }), device("/block/stick", {
+                    "mounted": true,
+                    "mountPoint": "/mnt/usb",
+                    "mountPoints": ["/mnt/usb"]
+                })]
+        });
+        check("mounting a device emits no mount removal", removedMounts, []);
+
+        emit("devices", {
+            "available": true,
+            "devices": [device("/block/root", {
+                    "system": true,
+                    "kind": "system",
+                    "mounted": true,
+                    "mountPoint": "/"
+                }), device("/block/stick", {
+                    "mounted": false
+                })]
+        });
+        check("unmounting a device emits mountsRemoved", removedMounts, [["/mnt/usb"]]);
+
+        emit("devices", {
+            "available": true,
+            "devices": [device("/block/root", {
+                    "system": true,
+                    "kind": "system",
+                    "mounted": true,
+                    "mountPoint": "/"
+                }), device("/block/stick2", {
+                    "mounted": true,
+                    "mountPoint": "/mnt/usb2"
+                })]
+        });
+        removedMounts = [];
+        emit("devices", {
+            "available": true,
+            "devices": [device("/block/root", {
+                    "system": true,
+                    "kind": "system",
+                    "mounted": true,
+                    "mountPoint": "/"
+                })]
+        });
+        check("removing an ejected device emits mountsRemoved", removedMounts, [["/mnt/usb2"]]);
 
         if (failures === 0)
             log.info("FIXTURE PASS");

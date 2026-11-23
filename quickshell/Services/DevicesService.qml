@@ -14,10 +14,12 @@ Singleton {
     property bool available: false
     property string reason: ""
     property var usage: ({})
+    property var _mountedPaths: []
 
     readonly property var systemDevice: devices.find(device => device.system) ?? null
 
     signal requestFailed(string message, string code)
+    signal mountsRemoved(var paths)
 
     readonly property DaemonTopic _devices: DaemonTopic {
         transport: root.transport
@@ -35,14 +37,7 @@ Singleton {
     }
 
     function refreshUsage(force) {
-        const paths = [];
-        for (const device of devices) {
-            const mounts = device.mountPoints?.length ? device.mountPoints : device.mounted ? [device.mountPoint] : [];
-            for (const path of mounts) {
-                if (!paths.includes(path))
-                    paths.push(path);
-            }
-        }
+        const paths = _mountPoints(devices);
         if (!paths.includes("/"))
             paths.unshift("/");
         transport.call("devices.usage", {
@@ -104,10 +99,33 @@ Singleton {
         }, root.requestFailed, callback);
     }
 
+    function _mountPoints(list) {
+        const paths = [];
+        for (const device of list || []) {
+            const mounts = device.mountPoints?.length ? device.mountPoints : device.mounted ? [device.mountPoint] : [];
+            for (const path of mounts) {
+                if (path && !paths.includes(path))
+                    paths.push(path);
+            }
+        }
+        return paths;
+    }
+
     function _onEvent(data) {
-        available = data.available === true;
+        const isAvailable = data.available === true;
+        const nextDevices = data.devices || [];
+        const previousMounts = _mountedPaths;
+        const currentMounts = isAvailable ? _mountPoints(nextDevices) : [];
+        available = isAvailable;
         reason = data.reason || "";
-        devices = data.devices || [];
+        devices = nextDevices;
+        if (isAvailable)
+            _mountedPaths = currentMounts;
         refreshUsage(false);
+        if (isAvailable) {
+            const removed = previousMounts.filter(path => !currentMounts.includes(path));
+            if (removed.length > 0)
+                mountsRemoved(removed);
+        }
     }
 }

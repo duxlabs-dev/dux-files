@@ -334,6 +334,22 @@ FloatingWindow {
         }
     }
 
+    Connections {
+        target: DevicesService
+
+        function onMountsRemoved(paths) {
+            tabManager.closeMounts(paths);
+        }
+    }
+
+    Connections {
+        target: NetworkService
+
+        function onMountsRemoved(paths) {
+            tabManager.closeMounts(paths);
+        }
+    }
+
     TabManager {
         id: tabManager
 
