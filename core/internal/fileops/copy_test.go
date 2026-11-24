@@ -3,6 +3,7 @@ package fileops
 import (
 	"os"
 	"path/filepath"
+	"slices"
 	"strconv"
 	"strings"
 	"testing"
@@ -148,6 +149,92 @@ func TestConflictMergeKeepsExistingChildren(t *testing.T) {
 	require.Equal(t, 1, asked)
 	require.Equal(t, "old", testfs.Read(t, filepath.Join(dest, "shared", "old.txt")))
 	require.Equal(t, "new", testfs.Read(t, filepath.Join(dest, "shared", "new.txt")))
+}
+
+func TestConflictMergeForTheRestStillAsksAboutFiles(t *testing.T) {
+	cases := []struct {
+		name        string
+		kind        Kind
+		otherDevice bool
+	}{
+		{"copy", KindCopy, false},
+		{"move", KindMove, false},
+		{"move across devices", KindMove, true},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			root := t.TempDir()
+			src := filepath.Join(root, "src", "shared")
+			testfs.Write(t, filepath.Join(src, "plugins", "a.txt"), "new")
+			testfs.Write(t, filepath.Join(src, "plugins", "b.txt"), "new")
+			dest := filepath.Join(root, "dest")
+			if tc.otherDevice {
+				dest = otherDevice(t, root)
+			}
+			plugins := filepath.Join(dest, "shared", "plugins")
+			testfs.Write(t, filepath.Join(plugins, "a.txt"), "old")
+			testfs.Write(t, filepath.Join(plugins, "b.txt"), "old")
+			testfs.Write(t, filepath.Join(plugins, "kept.txt"), "kept")
+
+			manager, bus := newHarness(t)
+			var folders, files int
+			bus.onConflict = func(c Conflict) Answer {
+				if slices.Contains(c.Actions, ActionMerge) {
+					folders++
+					return Answer{ID: c.ID, Action: ActionMerge, ApplyToAll: true}
+				}
+				files++
+				return Answer{ID: c.ID, Action: ActionReplace, ApplyToAll: true}
+			}
+			bus.onFailure = func(f Failure) Answer { return Answer{ID: f.ID, Action: ActionCancel} }
+			view := run(t, manager, bus, spec{kind: tc.kind, sources: []string{src}, dest: dest})
+
+			require.Equal(t, StateDone, view.State)
+			require.Empty(t, bus.kinds("error"))
+			require.Equal(t, 1, folders)
+			require.Equal(t, 1, files)
+			require.Equal(t, "new", testfs.Read(t, filepath.Join(plugins, "a.txt")))
+			require.Equal(t, "new", testfs.Read(t, filepath.Join(plugins, "b.txt")))
+			require.Equal(t, "kept", testfs.Read(t, filepath.Join(plugins, "kept.txt")))
+			require.Empty(t, tempsIn(t, plugins))
+
+			_, err := os.Lstat(src)
+			require.Equal(t, tc.kind == KindMove, os.IsNotExist(err))
+		})
+	}
+}
+
+func TestConflictReplaceFilesForTheRestStillAsksAboutFolders(t *testing.T) {
+	root := t.TempDir()
+	src := filepath.Join(root, "src")
+	testfs.Write(t, filepath.Join(src, "a.txt"), "new")
+	testfs.Write(t, filepath.Join(src, "shared", "b.txt"), "new")
+	dest := filepath.Join(root, "dest")
+	testfs.Write(t, filepath.Join(dest, "a.txt"), "old")
+	testfs.Write(t, filepath.Join(dest, "shared", "b.txt"), "old")
+	testfs.Write(t, filepath.Join(dest, "shared", "kept.txt"), "kept")
+
+	manager, bus := newHarness(t)
+	var folders int
+	bus.onConflict = func(c Conflict) Answer {
+		if slices.Contains(c.Actions, ActionMerge) {
+			folders++
+			return Answer{ID: c.ID, Action: ActionMerge}
+		}
+		return Answer{ID: c.ID, Action: ActionReplace, ApplyToAll: true}
+	}
+	view := run(t, manager, bus, spec{
+		kind:    KindCopy,
+		sources: []string{filepath.Join(src, "a.txt"), filepath.Join(src, "shared")},
+		dest:    dest,
+	})
+
+	require.Equal(t, StateDone, view.State)
+	require.Equal(t, 1, folders)
+	require.Equal(t, "new", testfs.Read(t, filepath.Join(dest, "a.txt")))
+	require.Equal(t, "new", testfs.Read(t, filepath.Join(dest, "shared", "b.txt")))
+	require.Equal(t, "kept", testfs.Read(t, filepath.Join(dest, "shared", "kept.txt")))
 }
 
 func TestConflictApplyToAllAsksOnce(t *testing.T) {

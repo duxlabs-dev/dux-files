@@ -32,12 +32,7 @@ func (r *runner) resolve(src, dst string, info os.FileInfo, move bool) resolutio
 		return resolution{dst: uniquePath(dst)}
 	}
 
-	action := r.conflictAll
-	if action == "" {
-		action = r.askConflict(src, dst, info.IsDir() && target.IsDir())
-	}
-
-	switch action {
+	switch r.conflictAction(src, dst, info.IsDir() && target.IsDir()) {
 	case ActionReplace:
 		return resolution{dst: dst, replaced: true}
 	case ActionMerge:
@@ -52,7 +47,23 @@ func (r *runner) resolve(src, dst string, info os.FileInfo, move bool) resolutio
 	}
 }
 
-func (r *runner) askConflict(src, dst string, bothDirs bool) Action {
+func (r *runner) conflictAction(src, dst string, bothDirs bool) Action {
+	forTheRest := &r.conflictAll
+	if bothDirs {
+		forTheRest = &r.folderConflictAll
+	}
+	if *forTheRest != "" {
+		return *forTheRest
+	}
+
+	answer := r.askConflict(src, dst, bothDirs)
+	if answer.ApplyToAll {
+		*forTheRest = answer.Action
+	}
+	return answer.Action
+}
+
+func (r *runner) askConflict(src, dst string, bothDirs bool) Answer {
 	conflict := &Conflict{
 		ID:      r.job.nextID("c"),
 		Source:  r.describe(src),
@@ -63,11 +74,7 @@ func (r *runner) askConflict(src, dst string, bothDirs bool) Action {
 		conflict.Actions = []Action{ActionMerge, ActionSkip, ActionReplace, ActionKeepBoth, ActionCancel}
 	}
 
-	answer := r.job.ask(event{Kind: "conflict", JobID: r.job.id, Conflict: conflict}, StatePausedConflict)
-	if answer.ApplyToAll {
-		r.conflictAll = answer.Action
-	}
-	return answer.Action
+	return r.job.ask(event{Kind: "conflict", JobID: r.job.id, Conflict: conflict}, StatePausedConflict)
 }
 
 func (r *runner) describe(path string) files.Entry {

@@ -42,17 +42,18 @@ type Stater interface {
 }
 
 type runner struct {
-	job         *job
-	stater      Stater
-	conflictAll Action
-	errorAll    Action
-	elevateRest bool
-	password    string
-	scanned     map[string]scanResult
-	estimating  bool
-	noClone     atomic.Bool
-	noRange     atomic.Bool
-	noUnnamed   atomic.Bool
+	job               *job
+	stater            Stater
+	conflictAll       Action
+	folderConflictAll Action
+	errorAll          Action
+	elevateRest       bool
+	password          string
+	scanned           map[string]scanResult
+	estimating        bool
+	noClone           atomic.Bool
+	noRange           atomic.Bool
+	noUnnamed         atomic.Bool
 }
 
 var chunks sync.Pool

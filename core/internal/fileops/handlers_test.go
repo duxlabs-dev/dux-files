@@ -204,6 +204,24 @@ func TestAnswerForAnotherJobIsRefused(t *testing.T) {
 	require.Equal(t, "old", testfs.Read(t, filepath.Join(dest, "a.txt")))
 }
 
+func TestAnswerThePromptDoesNotOfferIsRefused(t *testing.T) {
+	root := t.TempDir()
+	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "new")
+	dest := filepath.Join(root, "dest")
+	testfs.Write(t, filepath.Join(dest, "a.txt"), "old")
+
+	manager, bus := newHarness(t)
+	bus.onConflict = func(c Conflict) Answer {
+		require.Error(t, manager.Respond("j1", Answer{ID: c.ID, Action: ActionMerge}))
+		return Answer{ID: c.ID, Action: ActionReplace}
+	}
+	view := run(t, manager, bus, spec{kind: KindCopy, sources: []string{src}, dest: dest})
+
+	require.Equal(t, StateDone, view.State)
+	require.Empty(t, bus.kinds("error"))
+	require.Equal(t, "new", testfs.Read(t, filepath.Join(dest, "a.txt")))
+}
+
 func TestCancelAfterTheJobFinishedKeepsTheTerminalState(t *testing.T) {
 	root := t.TempDir()
 	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "a")

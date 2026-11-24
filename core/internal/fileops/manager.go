@@ -3,6 +3,7 @@ package fileops
 import (
 	"context"
 	"errors"
+	"slices"
 	"strconv"
 	"sync"
 	"time"
@@ -404,13 +405,17 @@ func (m *Manager) Respond(jobID string, answer Answer) error {
 	}
 
 	j.mu.Lock()
-	claimed := j.pendingID != "" && j.pendingID == answer.ID
-	if claimed {
+	waiting := j.pendingID != "" && j.pendingID == answer.ID
+	offered := waiting && slices.Contains(j.offeredLocked(), answer.Action)
+	if offered {
 		j.pendingID = ""
 	}
 	j.mu.Unlock()
-	if !claimed {
+	switch {
+	case !waiting:
 		return errors.New("job is not waiting for that answer: " + jobID)
+	case !offered:
+		return errors.New("action is not offered for that answer: " + string(answer.Action))
 	}
 
 	select {
@@ -470,6 +475,18 @@ func (j *job) ask(payload event, state State) Answer {
 			return Answer{Action: ActionCancel}
 		}
 	}
+}
+
+func (j *job) offeredLocked() []Action {
+	switch {
+	case j.conflict != nil:
+		return j.conflict.Actions
+	case j.failure != nil:
+		return j.failure.Actions
+	case j.password != nil:
+		return j.password.Actions
+	}
+	return nil
 }
 
 func (e event) answerID() string {
