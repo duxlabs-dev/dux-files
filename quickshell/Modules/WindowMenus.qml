@@ -280,6 +280,7 @@ Item {
                 required property var modelData
 
                 text: modelData.name
+                appIcon: modelData.icon ?? ""
                 checked: modelData.isDefault === true
                 onClicked: {
                     openWithMenu.close();
