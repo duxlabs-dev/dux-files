@@ -93,7 +93,7 @@
             pname = "dux-files";
             src = ./.;
             modRoot = "core";
-            vendorHash = "sha256-e3BYqd0nvIw3DH6HGkGgjXgTWR5l5n+xrZf0cWr9DDc=";
+            vendorHash = "sha256-xyJ7RIeWwW82M0He3NpZO8Yzt9lvkXper9xm64CQZOw=";
 
             subPackages = [ "cmd/dfiles" ];
 
