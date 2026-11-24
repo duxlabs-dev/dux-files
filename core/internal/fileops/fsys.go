@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
+	"golang.org/x/sys/unix"
+
 	"github.com/duxlabs-dev/dux-go/elevate"
 )
 
@@ -48,8 +50,10 @@ var local FS = localFS{}
 func (localFS) Lstat(path string) (os.FileInfo, error)     { return os.Lstat(path) }
 func (localFS) ReadDir(path string) ([]os.DirEntry, error) { return os.ReadDir(path) }
 func (localFS) Readlink(path string) (string, error)       { return os.Readlink(path) }
-func (localFS) Open(path string) (io.ReadCloser, error)    { return os.Open(path) }
-func (localFS) Mkdir(path string, perm os.FileMode) error  { return os.Mkdir(path, perm) }
+func (localFS) Open(path string) (io.ReadCloser, error) {
+	return openUnpolled(path, unix.O_RDONLY, 0)
+}
+func (localFS) Mkdir(path string, perm os.FileMode) error { return os.Mkdir(path, perm) }
 func (localFS) MkdirAll(path string, perm os.FileMode) error {
 	return os.MkdirAll(path, perm)
 }
@@ -69,11 +73,24 @@ func (localFS) Chtimes(path string, mtime time.Time) error {
 }
 
 func (localFS) Create(path string, perm os.FileMode) (Writer, error) {
-	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, perm)
+	file, err := openUnpolled(path, unix.O_WRONLY|unix.O_CREAT|unix.O_EXCL, perm)
 	if err != nil {
 		return nil, err
 	}
 	return &localWriter{File: file, path: path}, nil
+}
+
+func openUnpolled(path string, flags int, perm os.FileMode) (*os.File, error) {
+	for {
+		fd, err := unix.Open(path, flags|unix.O_CLOEXEC, uint32(perm.Perm()))
+		switch {
+		case err == unix.EINTR:
+			continue
+		case err != nil:
+			return nil, &os.PathError{Op: "open", Path: path, Err: err}
+		}
+		return os.NewFile(uintptr(fd), path), nil
+	}
 }
 
 func (localFS) Chmod(path string, mode os.FileMode, recursive bool) error {

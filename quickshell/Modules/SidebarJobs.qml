@@ -47,6 +47,10 @@ Item {
         radius: FileBrowserMetrics.sidebarRowRadius
         color: Theme.chipLayer
 
+        HoverHandler {
+            onHoveredChanged: FileOpsService.holdHistory(hovered)
+        }
+
         DFlickable {
             anchors.fill: parent
             anchors.margins: Theme.spacingM

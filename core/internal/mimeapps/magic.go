@@ -228,7 +228,8 @@ func (db *DB) sniffData(data []byte) (string, int) {
 }
 
 func matchAny(matchlets []matchlet, data []byte) bool {
-	for _, m := range matchlets {
+	for i := range matchlets {
+		m := &matchlets[i]
 		if !m.matches(data) {
 			continue
 		}
@@ -239,9 +240,13 @@ func matchAny(matchlets []matchlet, data []byte) bool {
 	return false
 }
 
-func (m matchlet) matches(data []byte) bool {
+func (m *matchlet) matches(data []byte) bool {
 	if m.offset >= len(data) {
 		return false
+	}
+	if m.rangeLen == 0 && m.mask == nil && len(m.value) > 0 {
+		end := m.offset + len(m.value)
+		return end <= len(data) && data[m.offset] == m.value[0] && bytes.Equal(data[m.offset:end], m.value)
 	}
 	window := data[m.offset:min(m.offset+m.rangeLen+len(m.value), len(data))]
 	if len(window) < len(m.value) {

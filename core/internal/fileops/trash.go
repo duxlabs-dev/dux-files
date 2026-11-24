@@ -17,16 +17,19 @@ import (
 	"github.com/duxlabs-dev/dux-go/trash"
 )
 
-const trashInfoExt = ".trashinfo"
+const (
+	trashInfoExt = ".trashinfo"
+	expungedName = "expunged"
+)
 
 var listTrash = trash.List
 
 func (r *runner) trash() error {
 	sources := r.job.spec.sources
-	count, bytes, complete := r.scan(sources)
-	r.setTotals(count, bytes, !complete)
+	r.setTotals(len(sources), 0, false)
 
-	return eachSource(r, sources, func(path string) error {
+	var dirs []trash.Entry
+	err := eachSource(r, sources, func(path string) error {
 		var entry trash.Entry
 		err := r.retryLocal(path, func() error {
 			var putErr error
@@ -36,14 +39,31 @@ func (r *runner) trash() error {
 		if err != nil {
 			return err
 		}
-		counted, measured := r.scanned[path]
-		if entry.IsDir && measured {
-			writeDirectorySize(entry, counted.bytes)
+		if entry.IsDir {
+			dirs = append(dirs, entry)
 		}
 		r.rememberPair(KindRestore, pair{src: entry.Name, dst: entry.TrashDir}, guard{})
-		r.advance(path, max(counted.files, 1), counted.bytes)
+		r.advance(path, 1, 0)
 		return nil
 	})
+	r.recordDirectorySizes(dirs)
+	return err
+}
+
+func (r *runner) recordDirectorySizes(dirs []trash.Entry) {
+	paths := make([]string, 0, len(dirs))
+	for _, entry := range dirs {
+		paths = append(paths, entry.FilesPath)
+	}
+	r.scan(paths)
+
+	for _, entry := range dirs {
+		measured, complete := r.scanned[entry.FilesPath]
+		if !complete {
+			continue
+		}
+		writeDirectorySize(entry, measured.bytes)
+	}
 }
 
 func (r *runner) restore() error {
@@ -64,7 +84,7 @@ func (r *runner) restore() error {
 		if err != nil {
 			return err
 		}
-		done, err := r.transfer(source, target, true)
+		done, err := r.transfer(source, target, true, false)
 		if err != nil {
 			return err
 		}
@@ -193,26 +213,86 @@ func (r *runner) emptyTrash() error {
 	if err != nil {
 		return err
 	}
-	r.setTotals(len(entries), 0, false)
 
 	dirs := map[string]bool{}
-	err = eachSource(r, entries, func(entry trash.Entry) error {
-		if err := r.retry(entry.FilesPath, func(fs FS) error { return fs.RemoveAll(entry.FilesPath) }); err != nil {
+	var doomed []condemned
+	for _, entry := range entries {
+		if !dirs[entry.TrashDir] {
+			dirs[entry.TrashDir] = true
+			doomed = append(doomed, strays(entry.TrashDir)...)
+		}
+		doomed = append(doomed, r.setAside(entry))
+	}
+	r.setTotals(len(doomed), 0, false)
+
+	err = eachSource(r, doomed, func(c condemned) error {
+		if _, err := r.remove(c.path, false); err != nil {
 			return err
 		}
-		os.Remove(entry.InfoPath)
-		dirs[entry.TrashDir] = true
-		r.advance(entry.FilesPath, 1, entry.Size)
+		os.Remove(c.info)
+		r.advance(c.path, 1, c.size)
 		return nil
 	})
+	spare(doomed)
 	if err != nil {
 		return err
 	}
 
 	for dir := range dirs {
 		os.Remove(filepath.Join(dir, "directorysizes"))
+		os.Remove(filepath.Join(dir, expungedName))
 	}
 	return nil
+}
+
+type condemned struct {
+	path, info     string
+	home, homeInfo string
+	size           int64
+}
+
+func (r *runner) setAside(entry trash.Entry) condemned {
+	spot := condemned{path: entry.FilesPath, info: entry.InfoPath, size: entry.Size}
+	dir := filepath.Join(entry.TrashDir, expungedName)
+	aside := filepath.Join(dir, r.job.id+r.job.nextID("-x"))
+	if os.MkdirAll(dir, 0o700) != nil || os.Rename(entry.FilesPath, aside) != nil {
+		return spot
+	}
+	spot.path, spot.home = aside, entry.FilesPath
+	if os.Rename(entry.InfoPath, aside+trashInfoExt) != nil {
+		return spot
+	}
+	spot.info, spot.homeInfo = aside+trashInfoExt, entry.InfoPath
+	return spot
+}
+
+func strays(trashDir string) []condemned {
+	dir := filepath.Join(trashDir, expungedName)
+	children, _ := os.ReadDir(dir)
+	left := make([]condemned, 0, len(children))
+	for _, child := range children {
+		path := filepath.Join(dir, child.Name())
+		if _, err := os.Lstat(strings.TrimSuffix(path, trashInfoExt)); err == nil && strings.HasSuffix(path, trashInfoExt) {
+			continue
+		}
+		left = append(left, condemned{path: path, info: path + trashInfoExt})
+	}
+	return left
+}
+
+func spare(doomed []condemned) {
+	for _, c := range doomed {
+		if c.home == "" {
+			continue
+		}
+		if _, err := os.Lstat(c.path); err != nil {
+			continue
+		}
+		if os.Rename(c.path, c.home) != nil || c.homeInfo == "" {
+			continue
+		}
+		os.Rename(c.info, c.homeInfo)
+	}
 }
 
 func directorySizesPath(trashDir string) string {

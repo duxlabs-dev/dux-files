@@ -142,7 +142,7 @@ func (r *runner) dissolveFolder() error {
 		if !r.guarded(p.src) {
 			return errors.New("changed since the operation it would replay: " + p.src)
 		}
-		_, err := r.transfer(p.src, p.dst, true)
+		_, err := r.transfer(p.src, p.dst, true, false)
 		return err
 	})
 	if err != nil {
@@ -256,21 +256,33 @@ func (r *runner) setOwner() error {
 
 func (r *runner) deleteAll() error {
 	sources := r.job.spec.sources
-	count, bytes, complete := r.scan(sources)
-	r.setTotals(count, bytes, !complete)
+	count, complete := r.count(sources)
+	r.setTotals(count, 0, !complete)
 
 	return eachSource(r, sources, func(path string) error {
 		if !r.guarded(path) {
 			return errors.New("changed since the operation it would replay: " + path)
 		}
-		if err := r.retry(path, func(fs FS) error { return fs.RemoveAll(path) }); err != nil {
+		removed, err := r.remove(path, true)
+		if err != nil {
 			return err
 		}
 		forgetTrashed(path)
-		counted := r.scanned[path]
-		r.advance(path, max(counted.files, 1), counted.bytes)
+		expected := max(r.scanned[path].files, 1)
+		r.advance(path, max(expected-removed, 0), 0)
 		return nil
 	})
+}
+
+func (r *runner) remove(path string, counted bool) (int, error) {
+	removal := r.newSweep(counted)
+	err := r.retry(path, func(fs FS) error {
+		if fs != local {
+			return fs.RemoveAll(path)
+		}
+		return removal.tree(path)
+	})
+	return int(removal.removed.Load()), err
 }
 
 func (r *runner) guarded(path string) bool {

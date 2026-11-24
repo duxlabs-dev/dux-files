@@ -3,6 +3,7 @@ package fileops
 import (
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -225,9 +226,7 @@ func TestDeniedErrorIsEscalatable(t *testing.T) {
 }
 
 func TestCancelMidCopyLeavesNoTempFile(t *testing.T) {
-	previous := copyChunk
-	copyChunk = 1
-	t.Cleanup(func() { copyChunk = previous })
+	slowCopies(t)
 
 	root := t.TempDir()
 	src := testfs.Write(t, filepath.Join(root, "big.bin"), string(make([]byte, 512<<10)))
@@ -247,9 +246,7 @@ func TestCancelMidCopyLeavesNoTempFile(t *testing.T) {
 }
 
 func TestCancelledCrossDeviceMoveReportsTheSplit(t *testing.T) {
-	previous := copyChunk
-	copyChunk = 1
-	t.Cleanup(func() { copyChunk = previous })
+	slowCopies(t)
 
 	root := t.TempDir()
 	src := filepath.Join(root, "src")
@@ -377,4 +374,40 @@ func TestCopyDropsSpecialModeBits(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, os.FileMode(0o750), info.Mode().Perm())
 	require.Zero(t, info.Mode()&(os.ModeSetuid|os.ModeSetgid|os.ModeSticky))
+}
+
+func TestCopyFolderOfManyFilesKeepsEachOne(t *testing.T) {
+	previous := rangeChunk
+	rangeChunk = 64 << 10
+	t.Cleanup(func() { rangeChunk = previous })
+
+	root := t.TempDir()
+	src := filepath.Join(root, "src")
+	stamp := time.Now().Add(-48 * time.Hour).Truncate(time.Second)
+	bodies := map[string]string{"above-one-range.bin": strings.Repeat("x", 200<<10)}
+	for i := range 24 {
+		bodies["f"+strconv.Itoa(i)+".bin"] = strings.Repeat(strconv.Itoa(i), 1+i*1000)
+	}
+	for name, body := range bodies {
+		path := testfs.Write(t, filepath.Join(src, name), body)
+		require.NoError(t, os.Chmod(path, 0o640))
+		require.NoError(t, os.Chtimes(path, stamp, stamp))
+	}
+	dest := filepath.Join(root, "dest")
+	require.NoError(t, os.Mkdir(dest, 0o755))
+
+	manager, bus := newHarness(t)
+	view := run(t, manager, bus, spec{kind: KindCopy, sources: []string{src}, dest: dest})
+
+	require.Equal(t, StateDone, view.State)
+	require.Equal(t, len(bodies)+1, view.Progress.FilesDone)
+	for name, body := range bodies {
+		copied := filepath.Join(dest, "src", name)
+		require.Equal(t, body, testfs.Read(t, copied), name)
+		info, err := os.Lstat(copied)
+		require.NoError(t, err)
+		require.Equal(t, os.FileMode(0o640), info.Mode().Perm(), name)
+		require.Equal(t, stamp.Unix(), info.ModTime().Unix(), name)
+	}
+	require.Empty(t, tempsIn(t, filepath.Join(dest, "src")))
 }

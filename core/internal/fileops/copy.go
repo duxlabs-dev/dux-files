@@ -8,13 +8,18 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
+	"sync/atomic"
 	"syscall"
 	"unicode/utf8"
 )
 
 var copyChunk = 256 << 10
 
-const tempNameTail = 64
+const (
+	tempNameTail = 64
+	workers      = 2
+)
 
 type outcome struct {
 	dst      string
@@ -43,11 +48,14 @@ func (r *runner) transferPairs(pairs []pair, move bool) error {
 		r.setTotals(count+len(pairs)-len(needScan), bytes, !complete)
 	}
 
+	if !move && r.job.spec.replay == replayNone {
+		pairs = r.copyPairsTogether(pairs)
+	}
 	return eachSource(r, pairs, func(p pair) error {
 		if !r.guarded(p.src) {
 			return errors.New("changed since the operation it would replay: " + p.src)
 		}
-		done, err := r.transfer(p.src, p.dst, move)
+		done, err := r.transfer(p.src, p.dst, move, false)
 		if err != nil {
 			return err
 		}
@@ -61,7 +69,7 @@ func (r *runner) transferPairs(pairs []pair, move bool) error {
 	})
 }
 
-func (r *runner) transfer(src, dst string, move bool) (outcome, error) {
+func (r *runner) transfer(src, dst string, move, intoFresh bool) (outcome, error) {
 	var info os.FileInfo
 	if err := r.retry(src, func(fs FS) error {
 		var statErr error
@@ -71,7 +79,10 @@ func (r *runner) transfer(src, dst string, move bool) (outcome, error) {
 		return outcome{}, err
 	}
 
-	res := r.resolve(src, dst, info, move)
+	res := resolution{dst: dst}
+	if !intoFresh {
+		res = r.resolve(src, dst, info, move)
+	}
 	switch {
 	case res.abort:
 		return outcome{}, context.Canceled
@@ -90,7 +101,7 @@ func (r *runner) transfer(src, dst string, move bool) (outcome, error) {
 
 	switch {
 	case info.IsDir():
-		return outcome{dst: dst, undoable: undoable, dir: true}, r.transferDir(src, dst, move, res.merge)
+		return outcome{dst: dst, undoable: undoable, dir: true}, r.transferDir(src, dst, info, move, res.merge)
 	case info.Mode()&fs.ModeSymlink != 0:
 		return outcome{dst: dst, undoable: undoable}, r.transferLink(src, dst, move, !res.replaced)
 	case info.Mode().IsRegular():
@@ -139,7 +150,7 @@ func (r *runner) scanLate(src string) {
 }
 
 func (r *runner) clearTarget(dst string, res resolution, srcIsDir bool) error {
-	if res.merge {
+	if !res.replaced {
 		return nil
 	}
 	target, err := os.Lstat(dst)
@@ -152,20 +163,14 @@ func (r *runner) clearTarget(dst string, res resolution, srcIsDir bool) error {
 	return r.retry(dst, func(fs FS) error { return fs.RemoveAll(dst) })
 }
 
-func (r *runner) transferDir(src, dst string, move, merge bool) error {
-	var info os.FileInfo
-	if err := r.retry(src, func(fs FS) error {
-		var statErr error
-		info, statErr = fs.Lstat(src)
-		return statErr
-	}); err != nil {
-		return err
-	}
-
+func (r *runner) transferDir(src, dst string, info os.FileInfo, move, merge bool) error {
 	dstFS := local
+	fresh := false
 	if err := r.retry(dst, func(fs FS) error {
 		dstFS = fs
-		return fs.MkdirAll(dst, info.Mode().Perm()|0o700)
+		var mkErr error
+		fresh, mkErr = makeDir(fs, dst, info.Mode().Perm()|0o700)
+		return mkErr
 	}); err != nil {
 		return err
 	}
@@ -184,11 +189,14 @@ func (r *runner) transferDir(src, dst string, move, merge bool) error {
 		r.growTotals(len(children))
 	}
 
+	if fresh && !merge && !move && srcFS == local && dstFS == local {
+		children = r.copyFilesTogether(src, dst, children)
+	}
 	for _, child := range children {
 		if r.job.closed() {
 			return context.Canceled
 		}
-		_, err := r.transfer(filepath.Join(src, child.Name()), filepath.Join(dst, child.Name()), move)
+		_, err := r.transfer(filepath.Join(src, child.Name()), filepath.Join(dst, child.Name()), move, fresh && !merge)
 		switch {
 		case err == nil, errors.Is(err, errSkipped):
 			continue
@@ -208,6 +216,86 @@ func (r *runner) transferDir(src, dst string, move, merge bool) error {
 	return nil
 }
 
+func (r *runner) copyPairsTogether(pairs []pair) []pair {
+	if len(pairs) < workers || r.noUnnamed.Load() {
+		return pairs
+	}
+	group, ok := r.openBatch(filepath.Dir(pairs[0].src), filepath.Dir(pairs[0].dst))
+	if !ok {
+		return pairs
+	}
+	defer group.close()
+
+	placed := r.together(len(pairs), func(i int) bool {
+		p := pairs[i]
+		if filepath.Dir(p.src) != group.src || filepath.Dir(p.dst) != group.dst {
+			return false
+		}
+		if !group.place(filepath.Base(p.src), filepath.Base(p.dst)) {
+			return false
+		}
+		r.remember(KindDelete, p.dst, p.src)
+		if r.job.spec.kind == KindDuplicate {
+			r.noteCreated(p.dst, false)
+		}
+		return true
+	})
+	return unplaced(pairs, placed)
+}
+
+func (r *runner) copyFilesTogether(src, dst string, children []os.DirEntry) []os.DirEntry {
+	if len(children) < workers || r.noUnnamed.Load() {
+		return children
+	}
+	group, ok := r.openBatch(src, dst)
+	if !ok {
+		return children
+	}
+	defer group.close()
+
+	placed := r.together(len(children), func(i int) bool {
+		name := children[i].Name()
+		return children[i].Type().IsRegular() && group.place(name, name)
+	})
+	return unplaced(children, placed)
+}
+
+func (r *runner) together(count int, place func(int) bool) []bool {
+	placed := make([]bool, count)
+	var next atomic.Int64
+	var crew sync.WaitGroup
+	for range workers {
+		crew.Go(func() {
+			for {
+				i := int(next.Add(1)) - 1
+				if i >= count || r.job.closed() {
+					return
+				}
+				placed[i] = place(i)
+			}
+		})
+	}
+	crew.Wait()
+	return placed
+}
+
+func unplaced[T any](items []T, placed []bool) []T {
+	rest := make([]T, 0, len(items))
+	for i, item := range items {
+		if !placed[i] {
+			rest = append(rest, item)
+		}
+	}
+	return rest
+}
+
+func makeDir(fs FS, dst string, perm os.FileMode) (bool, error) {
+	if fs.Mkdir(dst, perm) == nil {
+		return true, nil
+	}
+	return false, fs.MkdirAll(dst, perm)
+}
+
 func (r *runner) transferLink(src, dst string, move, noReplace bool) error {
 	var target string
 	if err := r.retry(src, func(fs FS) error {
@@ -216,6 +304,19 @@ func (r *runner) transferLink(src, dst string, move, noReplace bool) error {
 		return readErr
 	}); err != nil {
 		return err
+	}
+
+	if err := r.placeLink(target, dst, noReplace); err != nil {
+		return err
+	}
+
+	r.advance(dst, 1, 0)
+	return r.dropSource(src, move)
+}
+
+func (r *runner) placeLink(target, dst string, noReplace bool) error {
+	if noReplace {
+		return r.retry(dst, func(fs FS) error { return fs.Symlink(target, dst) })
 	}
 
 	tmp := r.tempPath(dst)
@@ -230,7 +331,11 @@ func (r *runner) transferLink(src, dst string, move, noReplace bool) error {
 	}); err != nil {
 		return err
 	}
-	if err := r.commit(tmp, dst, made, noReplace); err != nil {
+	return r.commit(tmp, dst, made, false)
+}
+
+func (r *runner) transferFile(src, dst string, info os.FileInfo, move, noReplace bool) error {
+	if err := r.place(src, dst, info, noReplace); err != nil {
 		return err
 	}
 
@@ -238,7 +343,28 @@ func (r *runner) transferLink(src, dst string, move, noReplace bool) error {
 	return r.dropSource(src, move)
 }
 
-func (r *runner) transferFile(src, dst string, info os.FileInfo, move, noReplace bool) error {
+func (r *runner) place(src, dst string, info os.FileInfo, noReplace bool) error {
+	placed, err := r.placeUnnamed(src, dst, info, noReplace)
+	if placed || err != nil {
+		return err
+	}
+	return r.placeNamed(src, dst, info, noReplace)
+}
+
+func (r *runner) placeUnnamed(src, dst string, info os.FileInfo, noReplace bool) (bool, error) {
+	if !noReplace || r.noUnnamed.Load() {
+		return false, nil
+	}
+	placed := false
+	err := r.retryLocal(src, func() error {
+		var copyErr error
+		placed, copyErr = r.copyUnnamed(src, dst, info)
+		return copyErr
+	})
+	return placed, err
+}
+
+func (r *runner) placeNamed(src, dst string, info os.FileInfo, noReplace bool) error {
 	tmp := r.tempPath(dst)
 	made := &creation{path: tmp}
 	if err := r.retryLocal(src, func() error {
@@ -250,12 +376,7 @@ func (r *runner) transferFile(src, dst string, info os.FileInfo, move, noReplace
 	}
 
 	r.preserve(src, tmp, info, made.fs)
-	if err := r.commit(tmp, dst, made, noReplace); err != nil {
-		return err
-	}
-
-	r.advance(dst, 1, 0)
-	return r.dropSource(src, move)
+	return r.commit(tmp, dst, made, noReplace)
 }
 
 func (r *runner) commit(tmp, dst string, made *creation, noReplace bool) error {
@@ -297,7 +418,7 @@ func (r *runner) copyBytes(src, tmp string, info os.FileInfo, made *creation) er
 		return err
 	}
 
-	if err := r.stream(src, in, out); err != nil {
+	if err := r.pump(src, in, out, info.Size()); err != nil {
 		made.abort(out)
 		return err
 	}

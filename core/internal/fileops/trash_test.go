@@ -276,3 +276,46 @@ func TestDirectorySizeIsLeftOutWhenTheScanDidNotFinish(t *testing.T) {
 	require.DirExists(t, filepath.Join(trashDir, "files", "docs"))
 	require.NoFileExists(t, filepath.Join(trashDir, "directorysizes"), "a guessed size is worse than none")
 }
+
+func TestEmptyTrashPutsBackWhatItCouldNotDelete(t *testing.T) {
+	if os.Getuid() == 0 {
+		t.Skip("root ignores mode bits")
+	}
+	trashDir := trashHome(t)
+	root := t.TempDir()
+	testfs.Write(t, filepath.Join(root, "gone.txt"), "gone")
+	locked := filepath.Join(root, "kept", "locked")
+	testfs.Write(t, filepath.Join(locked, "stuck.txt"), "stuck")
+
+	manager, bus := newHarness(t)
+	run(t, manager, bus, spec{kind: KindTrash, sources: []string{filepath.Join(root, "gone.txt"), filepath.Join(root, "kept")}})
+	trashedLock := filepath.Join(trashDir, "files", "kept", "locked")
+	require.NoError(t, os.Chmod(trashedLock, 0o500))
+	t.Cleanup(func() { os.Chmod(trashedLock, 0o700) })
+
+	bus.onFailure = func(f Failure) Answer { return Answer{ID: f.ID, Action: ActionSkip} }
+	view := run(t, manager, bus, spec{kind: KindEmptyTrash})
+
+	require.Equal(t, StateDone, view.State)
+	require.Equal(t, 1, view.Skipped)
+	require.Equal(t, []string{"kept.trashinfo"}, infoNames(t, trashDir))
+	require.FileExists(t, filepath.Join(trashedLock, "stuck.txt"))
+	require.NoDirExists(t, filepath.Join(trashDir, expungedName))
+}
+
+func TestEmptyTrashSweepsWhatAnInterruptedRunSetAside(t *testing.T) {
+	trashDir := trashHome(t)
+	root := t.TempDir()
+	testfs.Write(t, filepath.Join(root, "a.txt"), "a")
+	stray := testfs.Write(t, filepath.Join(trashDir, expungedName, "j9-x1", "old.txt"), "old")
+	testfs.Write(t, filepath.Join(trashDir, expungedName, "j9-x1"+trashInfoExt), "[Trash Info]")
+
+	manager, bus := newHarness(t)
+	run(t, manager, bus, spec{kind: KindTrash, sources: []string{filepath.Join(root, "a.txt")}})
+	view := run(t, manager, bus, spec{kind: KindEmptyTrash})
+
+	require.Equal(t, StateDone, view.State)
+	require.NoFileExists(t, stray)
+	require.NoDirExists(t, filepath.Join(trashDir, expungedName))
+	require.Empty(t, infoNames(t, trashDir))
+}

@@ -201,7 +201,7 @@ ShellRoot {
                 "startedMs": 2000
             })
         });
-        check("ordered by start", states(), ["j1:done", "j2:running"]);
+        check("running before finished", states(), ["j2:running", "j1:done"]);
 
         nextError = "not connected to dfiles socket";
         FileOpsService.trash(["/tmp/a.txt"], "w1");

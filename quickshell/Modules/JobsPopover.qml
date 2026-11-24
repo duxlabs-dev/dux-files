@@ -35,6 +35,12 @@ Popup {
         sourceComponent: Column {
             spacing: Theme.spacingM
 
+            Component.onDestruction: FileOpsService.holdHistory(false)
+
+            HoverHandler {
+                onHoveredChanged: FileOpsService.holdHistory(hovered)
+            }
+
             StyledText {
                 text: I18n.tr("File operations", "jobs popover header")
                 color: Theme.primary

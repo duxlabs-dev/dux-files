@@ -1,8 +1,10 @@
 package fileops
 
 import (
+	"context"
 	"os"
 	"path/filepath"
+	"strconv"
 	"testing"
 	"time"
 
@@ -265,4 +267,91 @@ func TestUndoIsNotOfferedAfterReplacing(t *testing.T) {
 
 	_, err := manager.Undo("w1")
 	require.Error(t, err, "undoing would delete the copy and the replaced file is already gone")
+}
+
+func TestUndoRemovesEveryCopyOfALargeSelection(t *testing.T) {
+	root := t.TempDir()
+	dest := filepath.Join(root, "dest")
+	var sources []string
+	for i := range 12 {
+		sources = append(sources, testfs.Write(t, filepath.Join(root, "src", "f"+strconv.Itoa(i)+".txt"), "new"))
+	}
+	taken := testfs.Write(t, filepath.Join(dest, "f3.txt"), "old")
+
+	manager, bus := newHarness(t)
+	bus.onConflict = func(c Conflict) Answer { return Answer{ID: c.ID, Action: ActionSkip} }
+	view := run(t, manager, bus, spec{kind: KindCopy, scope: "w1", sources: sources, dest: dest})
+
+	require.Equal(t, StateDone, view.State)
+	require.Equal(t, 1, view.Skipped)
+	require.True(t, view.Undoable)
+	require.Equal(t, "new", testfs.Read(t, filepath.Join(dest, "f11.txt")))
+
+	require.Equal(t, StateDone, undo(t, manager, bus, "w1").State)
+
+	left, err := os.ReadDir(dest)
+	require.NoError(t, err)
+	require.Len(t, left, 1)
+	require.Equal(t, "old", testfs.Read(t, taken))
+}
+
+func TestDeleteCountsEveryEntryAndLeavesLinkTargetsAlone(t *testing.T) {
+	root := t.TempDir()
+	kept := testfs.Write(t, filepath.Join(root, "outside", "kept.txt"), "kept")
+	tree := filepath.Join(root, "tree")
+	testfs.Write(t, filepath.Join(tree, "a.txt"), "a")
+	testfs.Write(t, filepath.Join(tree, "deep", "er", "b.txt"), "b")
+	require.NoError(t, os.Symlink(filepath.Dir(kept), filepath.Join(tree, "deep", "link")))
+
+	manager, bus := newHarness(t)
+	view := run(t, manager, bus, spec{kind: KindDelete, sources: []string{tree}})
+
+	require.Equal(t, StateDone, view.State)
+	require.Equal(t, 6, view.Progress.FilesTotal)
+	require.Equal(t, 6, view.Progress.FilesDone)
+	require.NoDirExists(t, tree)
+	require.Equal(t, "kept", testfs.Read(t, kept))
+}
+
+func TestDeleteGoesOnPastALockedFolder(t *testing.T) {
+	if os.Getuid() == 0 {
+		t.Skip("root ignores mode bits")
+	}
+	root := t.TempDir()
+	tree := filepath.Join(root, "tree")
+	stuck := testfs.Write(t, filepath.Join(tree, "locked", "stuck.txt"), "stuck")
+	testfs.Write(t, filepath.Join(tree, "open", "free.txt"), "free")
+	require.NoError(t, os.Chmod(filepath.Dir(stuck), 0o500))
+	t.Cleanup(func() { os.Chmod(filepath.Dir(stuck), 0o700) })
+
+	manager, bus := newHarness(t)
+	var seen Failure
+	bus.onFailure = func(f Failure) Answer {
+		seen = f
+		return Answer{ID: f.ID, Action: ActionSkip}
+	}
+	view := run(t, manager, bus, spec{kind: KindDelete, sources: []string{tree}})
+
+	require.Equal(t, StateDone, view.State)
+	require.Equal(t, "EACCES", seen.Code)
+	require.Equal(t, 1, view.Skipped)
+	require.FileExists(t, stuck)
+	require.NoDirExists(t, filepath.Join(tree, "open"))
+}
+
+func TestCancelStopsADeleteBetweenBatches(t *testing.T) {
+	dir := filepath.Join(t.TempDir(), "tree")
+	for i := range removeBatch * 2 {
+		testfs.Write(t, filepath.Join(dir, strconv.Itoa(i)), "")
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	manager, _ := newHarness(t)
+	removal := (&runner{job: &job{mgr: manager, ctx: ctx}}).newSweep(false)
+
+	require.ErrorIs(t, removal.tree(dir), context.Canceled)
+
+	left, err := os.ReadDir(dir)
+	require.NoError(t, err)
+	require.Len(t, left, removeBatch)
 }

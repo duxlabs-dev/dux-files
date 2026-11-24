@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/duxlabs-dev/dux-go/log"
 )
 
 const (
@@ -234,6 +236,16 @@ func (j *job) finish(err error) {
 	j.mu.Unlock()
 	j.mgr.retire(view)
 	j.mgr.publishJob(view)
+	logFinished(view)
+}
+
+func logFinished(view View) {
+	took := time.Duration(view.EndedMs-view.StartedMs) * time.Millisecond
+	if view.StartedMs == 0 {
+		took = 0
+	}
+	log.Debugf("fileops %s: %s %s in %s, %d/%d files, %d bytes, %d skipped, %d warnings",
+		view.ID, view.Kind, view.State, took, view.Progress.FilesDone, view.Progress.FilesTotal, view.Progress.BytesDone, view.Skipped, view.Warnings)
 }
 
 func (j *job) outcome() (*undoEntry, *spec) {

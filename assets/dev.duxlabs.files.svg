@@ -11,7 +11,7 @@
       <path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h207q16 0 30.5 6t25.5 17l57 57h320q33 0 56.5 23.5T880-640v400q0 33-23.5 56.5T800-160H160Z" fill="#fff"/>
     </mask>
   </defs>
-  <g transform="translate(-5.333 69.333) scale(0.077778)">
-    <path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h207q16 0 30.5 6t25.5 17l57 57h320q33 0 56.5 23.5T880-640v400q0 33-23.5 56.5T800-160H160Z" fill="url(#body)" stroke="#9F7AEA" stroke-width="77.2" stroke-linejoin="round" mask="url(#inside)"/>
+  <g transform="translate(0 64) scale(0.0666667)">
+    <path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h207q16 0 30.5 6t25.5 17l57 57h320q33 0 56.5 23.5T880-640v400q0 33-23.5 56.5T800-160H160Z" fill="url(#body)" stroke="#9F7AEA" stroke-width="90" stroke-linejoin="round" mask="url(#inside)"/>
   </g>
 </svg>
