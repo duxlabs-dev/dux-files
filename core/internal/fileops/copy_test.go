@@ -14,6 +14,26 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestReadDirByNameKeepsEntriesItCannotStat(t *testing.T) {
+	if os.Geteuid() == 0 {
+		t.Skip("root bypasses permission bits")
+	}
+	dir := t.TempDir()
+	testfs.Write(t, filepath.Join(dir, "b.sock"), "")
+	testfs.Write(t, filepath.Join(dir, "a.txt"), "")
+	require.NoError(t, os.Chmod(dir, 0o444))
+	t.Cleanup(func() { _ = os.Chmod(dir, 0o755) })
+
+	entries, err := readDirByName(dir)
+	require.NoError(t, err)
+	require.Len(t, entries, 2)
+	require.Equal(t, "a.txt", entries[0].Name())
+	require.Equal(t, "b.sock", entries[1].Name())
+	require.False(t, entries[1].Type().IsRegular(), "an entry of unknown type must not join a batched copy")
+	_, err = entries[1].Info()
+	require.ErrorIs(t, err, os.ErrPermission)
+}
+
 func TestCopyPreservesModeAndTime(t *testing.T) {
 	root := t.TempDir()
 	src := testfs.Write(t, filepath.Join(root, "src", "note.txt"), "hello")

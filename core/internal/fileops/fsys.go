@@ -1,10 +1,12 @@
 package fileops
 
 import (
+	"errors"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
+	"slices"
 	"time"
 
 	"golang.org/x/sys/unix"
@@ -48,7 +50,7 @@ type localFS struct{}
 var local FS = localFS{}
 
 func (localFS) Lstat(path string) (os.FileInfo, error)     { return os.Lstat(path) }
-func (localFS) ReadDir(path string) ([]os.DirEntry, error) { return os.ReadDir(path) }
+func (localFS) ReadDir(path string) ([]os.DirEntry, error) { return readDirKeepingUnstattable(path) }
 func (localFS) Readlink(path string) (string, error)       { return os.Readlink(path) }
 func (localFS) Open(path string) (io.ReadCloser, error) {
 	return openUnpolled(path, unix.O_RDONLY, 0)
@@ -119,6 +121,49 @@ func (localFS) Lchown(path string, uid, gid int, recursive bool) error {
 		return os.Lchown(child, uid, gid)
 	})
 }
+
+// os.ReadDir stats entries of unknown type and fails the whole read on the first error.
+func readDirKeepingUnstattable(path string) ([]os.DirEntry, error) {
+	if entries, err := os.ReadDir(path); err == nil {
+		return entries, nil
+	}
+	return readDirByName(path)
+}
+
+func readDirByName(path string) ([]os.DirEntry, error) {
+	dir, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer dir.Close()
+
+	names, err := dir.Readdirnames(-1)
+	if err != nil {
+		return nil, err
+	}
+	slices.Sort(names)
+
+	entries := make([]os.DirEntry, 0, len(names))
+	for _, name := range names {
+		info, err := os.Lstat(filepath.Join(path, name))
+		switch {
+		case errors.Is(err, fs.ErrNotExist):
+			continue
+		case err != nil:
+			entries = append(entries, unstattable{dir: path, name: name})
+			continue
+		}
+		entries = append(entries, fs.FileInfoToDirEntry(info))
+	}
+	return entries, nil
+}
+
+type unstattable struct{ dir, name string }
+
+func (e unstattable) Name() string               { return e.name }
+func (e unstattable) IsDir() bool                { return false }
+func (e unstattable) Type() fs.FileMode          { return fs.ModeIrregular }
+func (e unstattable) Info() (fs.FileInfo, error) { return os.Lstat(filepath.Join(e.dir, e.name)) }
 
 type localWriter struct {
 	*os.File
