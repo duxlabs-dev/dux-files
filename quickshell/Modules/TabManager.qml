@@ -268,8 +268,12 @@ QtObject {
 
     function dropOnTab(index, drop) {
         const dest = tabPath(index);
+        if (dest === "")
+            return;
+        if (DragService.extractArkDrop(drop, dest))
+            return;
         const paths = DragService.pathsFrom(drop);
-        if (dest === "" || dest === RecentService.path || paths.length === 0 || paths.includes(dest))
+        if (dest === RecentService.path || paths.length === 0 || paths.includes(dest))
             return;
         dropRequested(paths, dest, DragService.overrideFor(drop.proposedAction));
     }
