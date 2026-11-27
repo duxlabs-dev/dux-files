@@ -66,6 +66,7 @@ func trackedService(t *testing.T, tracker *fakeTracker) *Service {
 	t.Cleanup(func() { _ = conn.Close() })
 	svc.conn = conn
 	svc.mountables = mountables
+	svc.kernelMounts = func() []Mount { return nil }
 	return svc
 }
 
@@ -168,6 +169,7 @@ func TestDaemonRestartDropsStaleMountsAndReloads(t *testing.T) {
 	address, daemon := trackedBus(t, &fakeTracker{mounts: []wireMount{fuselessMount("ftp://example/", true)}})
 	published := make(snapshots, 8)
 	svc := NewService(published, t.TempDir())
+	svc.kernelMounts = func() []Mount { return nil }
 	conn, err := dbus.Connect(address, dbus.WithIncomingInterceptor(svc.intercept))
 	require.NoError(t, err)
 	svc.run(conn)

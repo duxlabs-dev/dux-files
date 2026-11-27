@@ -48,13 +48,16 @@ type wireSource struct {
 }
 
 type Mount struct {
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	URI      string `json:"uri"`
-	Path     string `json:"path,omitempty"`
-	Scheme   string `json:"scheme"`
-	Kind     string `json:"kind"`
-	IconName string `json:"iconName"`
+	ID         string `json:"id"`
+	Name       string `json:"name"`
+	URI        string `json:"uri"`
+	Path       string `json:"path,omitempty"`
+	Scheme     string `json:"scheme"`
+	Kind       string `json:"kind"`
+	IconName   string `json:"iconName"`
+	Kernel     bool   `json:"kernel,omitempty"`
+	Configured bool   `json:"configured,omitempty"`
+	Mounted    bool   `json:"mounted"`
 
 	dbusID string
 	object dbus.ObjectPath
@@ -71,6 +74,7 @@ func decodeMount(raw wireMount, mountables []Mountable) Mount {
 		Scheme:   scheme,
 		Kind:     kindOf(spec.Type()),
 		IconName: themedIcon(raw.Icon),
+		Mounted:  true,
 		dbusID:   raw.DBusID,
 		object:   raw.ObjectPath,
 	}

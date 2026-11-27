@@ -15,6 +15,8 @@ DFlickable {
     signal tabRequested(string path)
     signal unlockRequested(var device)
     signal connectRequested
+    signal refreshRequested
+    signal networkMountMenuRequested(string id, string path, real pointX, real pointY)
     signal dropRequested(string path, var drop)
     signal bookmarkMenuRequested(string path, real pointX, real pointY)
     signal bookmarkRenameRequested(string path)
@@ -188,10 +190,16 @@ DFlickable {
         }
 
         NetworkSection {
+            id: networkSection
             width: sections.width
             onNavigateRequested: path => sidebar.navigateRequested(path)
             onTabRequested: path => sidebar.tabRequested(path)
             onConnectRequested: sidebar.connectRequested()
+            onRefreshRequested: sidebar.refreshRequested()
+            onMenuRequested: (id, path, pointX, pointY) => {
+                const point = networkSection.mapToItem(sidebar, pointX, pointY);
+                sidebar.networkMountMenuRequested(id, path, point.x, point.y);
+            }
             onDropRequested: (path, drop) => sidebar.dropRequested(path, drop)
         }
 

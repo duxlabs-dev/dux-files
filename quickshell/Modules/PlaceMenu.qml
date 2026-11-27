@@ -8,11 +8,14 @@ FileMenu {
 
     property string path: ""
     property string place: "folder"
+    property string networkMountId: ""
+    property bool networkMountMounted: false
 
     readonly property bool bookmark: place === "bookmark"
     readonly property bool trash: place === "trash"
     readonly property bool recent: place === "recent"
     readonly property bool folder: place === "folder"
+    readonly property bool network: place === "network"
 
     signal tabRequested(string path)
     signal windowRequested(string path)
@@ -20,12 +23,15 @@ FileMenu {
     signal removeRequested(string path)
     signal copyPathRequested(string path)
     signal propertiesRequested(string path)
+    signal unmountRequested(string id)
     signal emptyTrashRequested
     signal clearRecentRequested
 
-    function present(kind, target, source, pointX, pointY) {
+    function present(kind, target, source, pointX, pointY, mountId, mountMounted) {
         place = kind;
         path = target;
+        networkMountId = mountId || "";
+        networkMountMounted = mountMounted === true;
         const point = source.mapToItem(anchorItem, pointX, pointY);
         openAt(point.x, point.y);
     }
@@ -70,6 +76,16 @@ FileMenu {
 
     FileMenuDivider {
         visible: !menu.bookmark
+    }
+
+    FileMenuItem {
+        visible: menu.network && menu.networkMountMounted
+        text: I18n.tr("Unmount", "context menu action for a mounted network folder")
+        iconName: "eject"
+        onClicked: {
+            menu.close();
+            menu.unmountRequested(menu.networkMountId);
+        }
     }
 
     FileMenuItem {

@@ -21,6 +21,7 @@ func mountedService(t *testing.T) *Service {
 	svc.available = true
 	svc.reason = ""
 	svc.mountables = mountables
+	svc.kernelMounts = func() []Mount { return nil }
 	svc.mounts = []Mount{{ID: "ftp:host=example", Name: "probe on example", URI: "ftp://example/", Path: "/run/user/1000/gvfs/ftp:host=example", Scheme: "ftp", Kind: KindNetwork}}
 	return svc
 }
@@ -62,7 +63,7 @@ func TestHandleDisconnectRejectsUnknownMounts(t *testing.T) {
 	svc.conn = nil
 
 	out := call(t, svc, ipc.Request{ID: 5, Method: "network.disconnect", Params: map[string]any{"id": "sftp://nope/"}})
-	assert.Equal(t, "NOTSUPPORTED", out["code"])
+	assert.Equal(t, "ENOENT", out["code"])
 
 	out = call(t, svc, ipc.Request{ID: 6, Method: "network.disconnect"})
 	assert.Equal(t, "EINVAL", out["code"])
