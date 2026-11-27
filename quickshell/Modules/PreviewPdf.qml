@@ -14,6 +14,14 @@ Item {
     readonly property int status: document.status
     readonly property bool ready: document.status === PdfDocument.Ready
     readonly property bool failed: document.status === PdfDocument.Error
+    readonly property int pageCount: document.pageCount
+    readonly property int currentPage: view.currentPage
+
+    function goToPage(page) {
+        if (!ready)
+            return;
+        view.goToPage(Math.max(0, Math.min(pageCount - 1, page)));
+    }
 
     function applyView() {
         if (document.status !== PdfDocument.Ready || width < 2 || height < 2)

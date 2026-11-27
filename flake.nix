@@ -77,6 +77,8 @@
         pkgs.lib.makeOverridable (
           {
             withPdfPreview ? true,
+            withMediaPreview ? true,
+            withSyntaxHighlighting ? true,
             duxQtBase ? duxQtBaseFor pkgs,
           }:
           let
@@ -91,7 +93,9 @@
                 qtdeclarative
                 qtsvg
               ])
-              ++ pkgs.lib.optional withPdfPreview pkgs.qt6.qtwebengine;
+              ++ pkgs.lib.optional withPdfPreview pkgs.qt6.qtwebengine
+              ++ pkgs.lib.optional withMediaPreview pkgs.kdePackages.qtmultimedia
+              ++ pkgs.lib.optional withSyntaxHighlighting pkgs.kdePackages.syntax-highlighting;
           in
           (pkgs.buildGoModule.override { go = goForPkgs pkgs; }) {
             inherit version;
