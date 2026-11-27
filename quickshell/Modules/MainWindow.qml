@@ -57,7 +57,7 @@ FloatingWindow {
     readonly property bool lastActive: WindowService.lastActiveId === windowId
     readonly property var previewTarget: {
         const entries = selectedEntries();
-        return entries.length === 1 ? entries[0] : null;
+        return entries.length === 1 && !activePane.archiveActive ? entries[0] : null;
     }
     readonly property bool previewExpandable: preview.supports(previewTarget)
 
@@ -188,8 +188,13 @@ FloatingWindow {
     }
 
     function openArchive(path, inNewTab) {
+        if (SettingsData.archiveOpen === "browse" && ArchiveService.rootByName(path) === path) {
+            ArchiveService.adopt(path);
+            openPath(path, inNewTab);
+            return;
+        }
         openPath(FilePaths.parentOf(path), inNewTab);
-        if (!SettingsData.extractOnOpen) {
+        if (SettingsData.archiveOpen === "app") {
             activePane.reveal([path]);
             return;
         }
@@ -403,6 +408,8 @@ FloatingWindow {
         onEmptyTrashRequested: window.actions.runAction("emptyTrash")
         onRemoveFromRecentRequested: window.actions.runAction("removeFromRecent")
         onClearRecentRequested: window.actions.runAction("clearRecent")
+        onExtractRequested: everything => window.actions.runAction(everything ? "extractAll" : "extractTo")
+        onArchivePasswordRequested: archive => FileOpsService.unlockArchive(archive)
         onFilterRequested: text => topbar.openFilter(text)
         onFilterFocusRequested: topbar.focusFilter()
         onPathChanged: {
@@ -600,7 +607,7 @@ FloatingWindow {
                     placeTitle: window.splitView ? window.title : window.activePane.placeTitle
                     selectionCount: window.activePane.editingPath ? 0 : window.selectedPaths().length
                     selectionBytes: window.activePane.body.selectedBytes()
-                    selectionActions: !window.activePane.virtualActive
+                    selectionActions: !window.activePane.virtualActive && !window.activePane.archiveActive
                     showTabOverview: true
                     overviewOpen: window.overviewOpen
                     tabCount: window.tabManager.tabs.length
@@ -612,6 +619,7 @@ FloatingWindow {
                     previewExpandable: window.previewExpandable
                     trashActive: window.activePane.trashActive
                     recentActive: window.activePane.recentActive
+                    readOnly: window.activePane.archiveActive
                     filterText: window.activePane.nameFilter
                     currentPath: window.currentPath
                     onFilterChanged: text => window.activePane.nameFilter = text
@@ -784,7 +792,7 @@ FloatingWindow {
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 body: window.activePane.body
-                open: window.previewOpen && !window.activePane.body.columnsMode
+                open: window.previewOpen && !window.activePane.body.columnsMode && !window.activePane.archiveActive
                 available: content.width
                 preferredWidth: CacheData.previewWidth
                 onResized: width => window.activePane.setPreviewWidth(width)
@@ -810,6 +818,7 @@ FloatingWindow {
             anchorItem: surface
             opScope: window.opScope
             currentPath: window.currentPath
+            internalOnly: window.activePane.archiveActive
             onTrashRequested: (paths, subject) => window.paneActions.trashPaths(paths, subject)
         }
 

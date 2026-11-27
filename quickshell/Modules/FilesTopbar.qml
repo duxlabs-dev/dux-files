@@ -22,6 +22,7 @@ Item {
     property bool sortDescending: false
     property bool trashActive: false
     property bool recentActive: false
+    property bool readOnly: false
     property string filterText: ""
     property string currentPath: ""
     property bool searchFocused: false
@@ -58,6 +59,7 @@ Item {
     }
 
     readonly property bool virtualActive: trashActive || recentActive
+    readonly property bool creationBlocked: virtualActive || readOnly
     readonly property bool sidebarToggleOnly: showSidebarToggle && compact
     readonly property color restingColor: hostsPath ? "transparent" : Theme.chipLayer
     readonly property var viewModes: allViewModes.filter(mode => allowColumns || mode.value !== "columns")
@@ -312,7 +314,7 @@ Item {
         FlatButton {
             anchors.verticalCenter: parent.verticalCenter
             visible: topbar.showNewFolder
-            enabled: topbar.currentPath !== "" && !topbar.virtualActive
+            enabled: topbar.currentPath !== "" && !topbar.creationBlocked
             iconName: FileActions.icon("newFolder")
             backgroundColor: topbar.restingColor
             tooltipText: I18n.tr("New folder", "file browser toolbar button creating a folder")
@@ -588,7 +590,7 @@ Item {
             }
 
             FileMenuItem {
-                visible: menu.moreRows && !topbar.virtualActive
+                visible: menu.moreRows && !topbar.creationBlocked
                 text: FileActions.label("newFolder")
                 iconName: FileActions.icon("newFolder")
                 onClicked: menu.pick(() => topbar.newFolderRequested())
@@ -597,7 +599,7 @@ Item {
             FileMenuItem {
                 id: newDocumentRow
 
-                visible: menu.moreRows && !topbar.virtualActive
+                visible: menu.moreRows && !topbar.creationBlocked
                 text: FileActions.label("newDocument")
                 iconName: FileActions.icon("newDocument")
                 submenu: true
@@ -605,7 +607,7 @@ Item {
             }
 
             FileMenuDivider {
-                visible: menu.moreRows && !topbar.virtualActive
+                visible: menu.moreRows && !topbar.creationBlocked
             }
 
             FileMenuItem {
@@ -616,7 +618,7 @@ Item {
             }
 
             FileMenuItem {
-                visible: menu.moreRows && !topbar.virtualActive
+                visible: menu.moreRows && !topbar.creationBlocked
                 text: FileActions.label("properties")
                 iconName: FileActions.icon("properties")
                 onClicked: menu.pick(() => topbar.propertiesRequested())
@@ -639,7 +641,7 @@ Item {
 
             FileMenuItem {
                 visible: menu.moreRows && SandboxService.available("terminal")
-                enabled: !topbar.virtualActive
+                enabled: !topbar.creationBlocked
                 text: FileActions.label("openTerminal")
                 iconName: FileActions.icon("openTerminal")
                 onClicked: menu.pick(() => topbar.terminalRequested())

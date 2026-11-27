@@ -44,6 +44,7 @@ type Env struct {
 	Stat       func(path string) (fs.FileInfo, error)
 	Lstat      func(path string) (fs.FileInfo, error)
 	IsArchive  func(path string) bool
+	InArchive  func(path string) bool
 }
 
 var remoteSchemes = []string{"sftp", "ssh", "smb", "ftp", "ftps", "dav", "davs", "nfs", "afp"}
@@ -165,6 +166,9 @@ func Typed(text, cwd, home string, env Env) (Location, error) {
 		return loc, err
 	}
 	if isFolder(loc.Path, env) {
+		return loc, nil
+	}
+	if env.InArchive != nil && env.InArchive(loc.Path) {
 		return loc, nil
 	}
 	if _, err := env.Lstat(loc.Path); err != nil {

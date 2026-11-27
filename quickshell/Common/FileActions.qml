@@ -7,17 +7,19 @@ import Quickshell
 Singleton {
     id: root
 
-    readonly property var everywhere: ["folder", "results", "recent", "trash", "picker"]
+    readonly property var everywhere: ["folder", "results", "recent", "trash", "picker", "archive"]
     readonly property var browsing: ["folder", "results"]
     readonly property var browsingAndRecent: ["folder", "results", "recent"]
     readonly property var browsingAndPicker: ["folder", "results", "picker"]
     readonly property var browsingRecentPicker: ["folder", "results", "recent", "picker"]
+    readonly property var browsingRecentArchive: ["folder", "results", "recent", "archive"]
+    readonly property var readable: ["folder", "results", "recent", "picker", "archive"]
 
     readonly property var catalog: ({
             "open": {
                 "icon": "open_in_new",
                 "label": I18n.tr("Open", "context menu entry opening a file"),
-                "contexts": browsingRecentPicker
+                "contexts": readable
             },
             "openWith": {
                 "icon": "apps",
@@ -44,17 +46,17 @@ Singleton {
             "openInNewTab": {
                 "icon": "tab",
                 "label": I18n.tr("Open in new tab", "context menu entry opening a folder in a new tab"),
-                "contexts": browsingAndRecent
+                "contexts": browsingRecentArchive
             },
             "openInNewWindow": {
                 "icon": "open_in_new",
                 "label": I18n.tr("Open in new window", "context menu entry opening a folder in another window"),
-                "contexts": browsingAndRecent
+                "contexts": browsingRecentArchive
             },
             "openInPane": {
                 "icon": "splitscreen_vertical_add",
                 "label": I18n.tr("Open in the other pane", "context menu entry opening a folder beside the current one"),
-                "contexts": browsingAndRecent
+                "contexts": browsingRecentArchive
             },
             "openContainingFolder": {
                 "icon": "folder_open",
@@ -89,7 +91,7 @@ Singleton {
             "copy": {
                 "icon": "content_copy",
                 "label": I18n.tr("Copy", "context menu entry copying the selection"),
-                "contexts": browsingRecentPicker
+                "contexts": readable
             },
             "moveTo": {
                 "icon": "drive_file_move",
@@ -99,7 +101,7 @@ Singleton {
             "copyTo": {
                 "icon": "file_copy",
                 "label": I18n.tr("Copy to…", "context menu entry copying the selection into a chosen folder"),
-                "contexts": browsingAndRecent
+                "contexts": browsingRecentArchive
             },
             "paste": {
                 "icon": "content_paste",
@@ -154,13 +156,18 @@ Singleton {
             },
             "extractTo": {
                 "icon": "drive_file_move",
-                "label": I18n.tr("Extract to…", "context menu entry unpacking the selected archives into a chosen folder"),
-                "contexts": browsingAndRecent
+                "label": I18n.tr("Extract…", "context menu entry unpacking the selection with a choice of folder and options"),
+                "contexts": browsingRecentArchive
+            },
+            "extractAll": {
+                "icon": "unarchive",
+                "label": I18n.tr("Extract all…", "action unpacking the whole archive being browsed"),
+                "contexts": ["archive"]
             },
             "trash": {
                 "icon": "delete",
                 "label": I18n.tr("Move to Trash", "context menu entry trashing the selection"),
-                "contexts": everywhere
+                "contexts": ["folder", "results", "recent", "trash", "picker"]
             },
             "deletePermanently": {
                 "icon": "delete_forever",
@@ -192,12 +199,12 @@ Singleton {
             "selectAll": {
                 "icon": "select_all",
                 "label": I18n.tr("Select all", "menu entry selecting every item in the folder"),
-                "contexts": ["folder", "results", "recent", "trash"]
+                "contexts": ["folder", "results", "recent", "trash", "archive"]
             },
             "showHidden": {
                 "icon": "visibility",
                 "label": I18n.tr("Show hidden files", "menu entry listing dot files"),
-                "contexts": browsingAndPicker
+                "contexts": ["folder", "results", "picker", "archive"]
             },
             "reload": {
                 "icon": "refresh",
@@ -207,12 +214,12 @@ Singleton {
             "copyPath": {
                 "icon": "link",
                 "label": I18n.tr("Copy location path", "menu entry copying the current path to the clipboard"),
-                "contexts": browsingRecentPicker
+                "contexts": readable
             },
             "copyName": {
                 "icon": "text_fields",
                 "label": I18n.tr("Copy name", "context menu entry copying the selected item names to the clipboard"),
-                "contexts": browsingAndRecent
+                "contexts": browsingRecentArchive
             },
             "customizeFolder": {
                 "icon": "palette",

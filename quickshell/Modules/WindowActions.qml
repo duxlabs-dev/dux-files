@@ -24,6 +24,8 @@ QtObject {
             return trashScoped(id);
         if (activePane.recentActive)
             return recentScoped(id);
+        if (activePane.archiveActive)
+            return FileActions.available(id, "archive") ? id : "";
         return id;
     }
 
@@ -186,7 +188,10 @@ QtObject {
             mainWindow.openFlow.extractTo(mainWindow.selectedPaths(), currentPath, "reveal");
             return;
         case "extractTo":
-            mainWindow.dialogs.askExtractTo(mainWindow.selectedPaths());
+            extractSelection();
+            return;
+        case "extractAll":
+            mainWindow.dialogs.askExtract([activePane.archiveRoot], []);
             return;
         case "newDocument":
             mainWindow.menus.showNewDocumentMenu();
@@ -291,6 +296,17 @@ QtObject {
             mainWindow.menus.showContextMenuAtCursor();
             return;
         }
+    }
+
+    function extractSelection() {
+        const paths = mainWindow.selectedPaths();
+        if (!activePane.archiveActive) {
+            mainWindow.dialogs.askExtract(paths, []);
+            return;
+        }
+        const archive = activePane.archiveRoot;
+        if (paths.length > 0)
+            mainWindow.dialogs.askExtract([archive], paths.map(path => ArchiveService.member(archive, path)));
     }
 
     function openSelectionInNewTab() {

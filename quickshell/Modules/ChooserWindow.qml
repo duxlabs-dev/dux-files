@@ -586,6 +586,7 @@ FloatingWindow {
                     typeAhead: true
                     dragEnabled: false
                     dropEnabled: false
+                    archiveBanner: false
                     onActivateRequested: entry => window.activate(entry)
                     onOpenRequested: entries => window.openEntries(entries)
                     onItemMenuRequested: (index, pointX, pointY, modifiers) => menus.showItemMenu(pointX, pointY)

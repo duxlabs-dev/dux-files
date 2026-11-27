@@ -9,6 +9,7 @@ Item {
     required property Item anchorItem
     required property string opScope
     required property string currentPath
+    property bool internalOnly: false
 
     signal trashRequested(var paths, string subject)
 
@@ -40,7 +41,7 @@ Item {
     function beginDrag(paths, entry) {
         if (paths.length === 0)
             return;
-        DragService.begin(paths, currentPath);
+        DragService.begin(paths, internalOnly);
         const drag = DragService.generation;
         dragGhost.count = paths.length;
         dragGhost.iconName = entry?.iconName ?? "";
@@ -70,6 +71,11 @@ Item {
             grabDone = true;
             launch();
         });
+        if (internalOnly) {
+            portalDone = true;
+            launch();
+            return;
+        }
         DragService.exportPortal(paths, key => {
             portalKey = key;
             portalDone = true;

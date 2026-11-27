@@ -12,22 +12,28 @@ OverlayDialog {
 
     readonly property bool canProtect: format === "zip"
 
+    readonly property string formatHint: formats.find(entry => entry.value === format)?.hint ?? ""
+
     readonly property var formats: [
         {
             "value": "zip",
-            "label": ".zip"
+            "label": ".zip",
+            "hint": I18n.tr("Opens on any system. Can be protected with a password.", "compress dialog note under the zip format")
         },
         {
             "value": "tar.gz",
-            "label": ".tar.gz"
+            "label": ".tar.gz",
+            "hint": I18n.tr("The usual choice on Linux. Keeps permissions and links.", "compress dialog note under the tar.gz format")
         },
         {
             "value": "tar.xz",
-            "label": ".tar.xz"
+            "label": ".tar.xz",
+            "hint": I18n.tr("Small files, slow to make. Keeps permissions and links.", "compress dialog note under the tar.xz format")
         },
         {
             "value": "tar.zst",
-            "label": ".tar.zst"
+            "label": ".tar.zst",
+            "hint": I18n.tr("Quick to make and to open. Keeps permissions and links.", "compress dialog note under the tar.zst format")
         }
     ]
 
@@ -74,6 +80,15 @@ OverlayDialog {
         currentIndex: Math.max(0, root.formats.findIndex(entry => entry.value === root.format))
         showCounts: false
         onSelectionChanged: index => root.format = root.formats[index].value
+    }
+
+    StyledText {
+        width: parent.width
+        text: root.formatHint
+        color: Theme.surfaceVariantText
+        font.pixelSize: Theme.fontSizeSmall
+        horizontalAlignment: Text.AlignLeft
+        wrapMode: Text.WordWrap
     }
 
     DToggle {

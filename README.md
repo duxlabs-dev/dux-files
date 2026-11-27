@@ -26,7 +26,7 @@ Recursive search by name or file contents, with filters and regular expressions.
 Copy, move, rename, trash and delete run as jobs with progress and conflict handling, and most of them can be undone. Denied operations offer Retry as administrator through polkit.
 
 **Archives**
-Opening an archive extracts it next to itself, like Nautilus. Compress to zip, tar.gz, tar.xz and tar.zst. All pure Go, no external tools.
+Open an archive to browse it like a folder, nothing is unpacked until you ask. Copy or drag entries out, or extract the selection or the whole archive into a folder you pick. Extracting beside the archive on open, like Nautilus, is a setting. Reads zip (deflate, zstd, bzip2, lzma), tar (gz, bz2, xz, zst, lzma, lz), 7z, rar and cpio. Compress to zip, tar.gz, tar.xz and tar.zst. All pure Go, no external tools.
 
 **Devices and network**
 Mount, unmount and eject drives through udisks2. Connect to sftp, smb, ftp, WebDAV, nfs and afp shares through gvfs.

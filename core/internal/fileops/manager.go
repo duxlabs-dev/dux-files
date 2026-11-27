@@ -87,6 +87,9 @@ type Manager struct {
 	redo      map[string][]spec
 	epoch     map[string]uint64
 	portalKey string
+
+	archives    *archiveCache
+	memberCache string
 }
 
 func NewManager(bus Publisher, stater Stater) *Manager {
@@ -98,6 +101,8 @@ func NewManager(bus Publisher, stater Stater) *Manager {
 		undo:   map[string][]undoEntry{},
 		redo:   map[string][]spec{},
 		epoch:  map[string]uint64{},
+
+		archives: newArchiveCache(),
 	}
 }
 

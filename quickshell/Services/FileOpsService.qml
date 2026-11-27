@@ -34,6 +34,7 @@ Singleton {
     signal jobFinished(var job)
 
     property var _byId: ({})
+    property var _memberJobs: ({})
 
     readonly property DaemonTopic _jobs: DaemonTopic {
         transport: root.transport
@@ -123,11 +124,46 @@ Singleton {
         }, scope);
     }
 
-    function extract(paths, dest, scope) {
+    function extract(paths, dest, scope, entries, layout) {
         _scoped("files.op.extract", {
             "paths": paths,
-            "dest": dest
+            "dest": dest,
+            "entries": entries ?? [],
+            "layout": layout ?? ""
         }, scope);
+    }
+
+    function extractMember(archive, member, ready) {
+        transport.call("files.op.extract", {
+            "paths": [archive],
+            "entries": [member],
+            "toCache": true
+        }, result => {
+            if (result.error) {
+                root.requestFailed(result.error);
+                return;
+            }
+            const known = root._byId[result.job.id];
+            if (known && root._finished(known)) {
+                root._deliverMember(known, ready);
+                return;
+            }
+            root._memberJobs[result.job.id] = ready;
+            if (!known)
+                root._store(result.job);
+        });
+    }
+
+    function unlockArchive(archive) {
+        _start("files.op.unlockArchive", {
+            "path": archive
+        });
+    }
+
+    function _deliverMember(job, ready) {
+        const created = job.created?.[0]?.path ?? "";
+        if (job.state === "done" && !job.cancelled && created !== "")
+            ready(created);
     }
 
     function setPermissions(paths, mode, recursive) {
@@ -266,6 +302,10 @@ Singleton {
         _store(job);
         if (!finished)
             return;
+        const ready = _memberJobs[job.id];
+        delete _memberJobs[job.id];
+        if (ready)
+            _deliverMember(job, ready);
         jobFinished(job);
         _expire([job]);
     }

@@ -136,6 +136,7 @@ Item {
         inResults: live && menus.mainWindow.activePane.resultsActive
         inTrash: live && menus.mainWindow.activePane.trashActive
         inRecent: live && menus.mainWindow.activePane.recentActive
+        inArchive: live && menus.mainWindow.activePane.archiveActive
         selectedBookmarked: live && menus.selectionIsDirectory() && BookmarksService.has(menus.mainWindow.selectedPaths()[0] ?? "")
         onActionTriggered: id => menus.mainWindow.actions.runAction(id)
         onClosed: live = false
@@ -257,6 +258,7 @@ Item {
         hasClipboard: ClipboardService.hasFiles
         inTrash: menus.mainWindow.activePane.trashActive
         inRecent: menus.mainWindow.activePane.recentActive
+        inArchive: menus.mainWindow.activePane.archiveActive
         trashCount: TrashService.count
         recentCount: menus.mainWindow.activePane.recentView?.model.total ?? 0
         onActionTriggered: id => menus.mainWindow.actions.runAction(id)

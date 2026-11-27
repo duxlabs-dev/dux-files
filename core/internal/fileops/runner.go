@@ -105,6 +105,8 @@ func execute(j *job) error {
 		return r.newFolderWith()
 	case KindPasteImage:
 		return r.pasteImage()
+	case KindUnlockArchive:
+		return r.unlockArchive()
 	}
 	return errors.New("unknown operation: " + string(j.spec.kind))
 }

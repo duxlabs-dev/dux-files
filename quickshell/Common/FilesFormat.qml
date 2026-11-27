@@ -95,6 +95,32 @@ Singleton {
         return false;
     }
 
+    function browsable(mime) {
+        switch (mime) {
+        case "application/zip":
+        case "application/x-tar":
+        case "application/x-compressed-tar":
+        case "application/x-bzip-compressed-tar":
+        case "application/x-bzip2-compressed-tar":
+        case "application/x-xz-compressed-tar":
+        case "application/x-zstd-compressed-tar":
+        case "application/x-lzma-compressed-tar":
+        case "application/x-lzip-compressed-tar":
+        case "application/x-7z-compressed":
+        case "application/vnd.rar":
+        case "application/x-rar":
+        case "application/x-cpio":
+            return true;
+        }
+        return false;
+    }
+
+    function archiveAction(entry, archiveOpen) {
+        if (entry.isDir || archiveOpen === "app" || !extractable(entry.mime))
+            return "";
+        return archiveOpen === "browse" && browsable(entry.mime) ? "browse" : "extract";
+    }
+
     function isRunnable(mime, executable) {
         if (!executable)
             return false;

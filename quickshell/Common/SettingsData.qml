@@ -54,7 +54,7 @@ Singleton {
     property alias newWindowFolder: adapter.newWindowFolder
     property alias newTabFolder: adapter.newTabFolder
     property alias openLocationIn: adapter.openLocationIn
-    property alias extractOnOpen: adapter.extractOnOpen
+    property alias archiveOpen: adapter.archiveOpen
     property alias registerFileManager: adapter.registerFileManager
     property alias recentFiles: adapter.recentFiles
     property alias sidebarCollapsed: adapter.sidebarCollapsed
@@ -121,6 +121,17 @@ Singleton {
         motionDuration = Defaults.motionStep(saved.animationDuration);
     }
 
+    function adoptLegacyArchiveOpen(saved) {
+        if (saved?.extractOnOpen !== false || "archiveOpen" in saved)
+            return;
+        archiveOpen = "app";
+    }
+
+    function adoptLegacy(saved) {
+        adoptLegacyAnimationDuration(saved);
+        adoptLegacyArchiveOpen(saved);
+    }
+
     function folderFor(setting, fallback) {
         if (setting === "home")
             return Paths.strip(Paths.home);
@@ -140,7 +151,7 @@ Singleton {
         name: "settings"
         path: Paths.configDir + "/ui-settings.json"
         watchChanges: true
-        parse: text => root.adoptLegacyAnimationDuration(store.objectFrom(text))
+        parse: text => root.adoptLegacy(store.objectFrom(text))
 
         adapter: JsonAdapter {
             id: adapter
@@ -176,7 +187,7 @@ Singleton {
             property string newWindowFolder: "current"
             property string newTabFolder: "current"
             property string openLocationIn: "current"
-            property bool extractOnOpen: true
+            property string archiveOpen: "browse"
             property bool registerFileManager: true
             property bool recentFiles: true
             property bool sidebarCollapsed: false

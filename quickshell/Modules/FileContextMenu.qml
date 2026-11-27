@@ -19,6 +19,7 @@ FileMenu {
     property bool inResults: false
     property bool inTrash: false
     property bool inRecent: false
+    property bool inArchive: false
     property int trashCount: 0
     property int recentCount: 0
 
@@ -33,6 +34,8 @@ FileMenu {
             return "trash";
         if (inRecent)
             return "recent";
+        if (inArchive)
+            return "archive";
         return inResults ? "results" : "folder";
     }
     readonly property var entries: collapse((forFolder ? backgroundRows : itemRows).filter(row => row.visible !== false && (row.id === "separator" || FileActions.available(row.id, context))))
@@ -86,7 +89,7 @@ FileMenu {
             "visible": extractable && !crossFolder
         }), FileActions.row("extractTo", {
             "enabled": selectionCount > 0,
-            "visible": extractable
+            "visible": extractable || inArchive
         }), FileActions.row("openContainingFolder", {
             "enabled": selectionCount === 1,
             "visible": crossFolder
@@ -105,7 +108,7 @@ FileMenu {
             "visible": singleFolder && !crossFolder
         }), FileActions.row("properties")]
 
-    readonly property var backgroundRows: [FileActions.row("newFolder"), FileActions.row("newDocument"), FileActions.row("paste", {
+    readonly property var backgroundRows: [FileActions.row("extractAll"), separator, FileActions.row("newFolder"), FileActions.row("newDocument"), FileActions.row("paste", {
             "enabled": hasClipboard
         }), FileActions.row("pasteLink", {
             "enabled": hasClipboard

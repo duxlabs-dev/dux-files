@@ -28,6 +28,7 @@ FocusScope {
     property bool dragEnabled: true
     property bool dropEnabled: true
     property bool menusEnabled: true
+    property bool archiveBanner: true
     property bool framed: true
     property bool internalPreview: true
     property Item pathBarHost: null
@@ -42,6 +43,14 @@ FocusScope {
     readonly property bool trashActive: !resultsActive && TrashService.filesPath !== "" && browser.path === TrashService.filesPath
     readonly property bool recentActive: !resultsActive && browser.path === RecentService.path
     readonly property bool virtualActive: trashActive || recentActive
+    readonly property string archiveRoot: {
+        if (resultsActive || virtualActive)
+            return "";
+        const watchId = browser.directory.watchId;
+        return watchId === "" ? ArchiveService.rootByName(browser.path) : ArchiveService.rootFromWatch(watchId);
+    }
+    readonly property bool archiveActive: archiveRoot !== ""
+    readonly property bool archiveLocked: archiveActive && browser.directory.errorCode === "PASSWORD"
     readonly property bool browserShown: !resultsActive && (!virtualActive || editingPath)
     readonly property var trashView: trashActive ? trashLoader.item : null
     readonly property var recentView: recentActive ? recentLoader.item : null
@@ -56,7 +65,7 @@ FocusScope {
     readonly property var selectedEntries: overlay ? overlay.body.selectedEntries() : browser.selectedEntries
     readonly property bool filtering: nameFilter !== "" && !resultsActive
     readonly property string browsingView: viewMode === "columns" ? viewMode : ""
-    readonly property bool folderRemembered: SettingsData.rememberFolderViews && path !== "" && !virtualActive && !resultsActive
+    readonly property bool folderRemembered: SettingsData.rememberFolderViews && path !== "" && !virtualActive && !resultsActive && !archiveActive
     readonly property bool singleClickActivates: SettingsData.clickToOpen === "single"
     readonly property color surfaceColor: framed ? Theme.foregroundColor(Theme.cardSurface, true) : "transparent"
     readonly property int itemTotal: resultsActive ? searchModel.count : snapshotView?.model.total ?? browser.directory.total
@@ -102,6 +111,8 @@ FocusScope {
     signal clearRecentRequested
     signal filterRequested(string text)
     signal filterFocusRequested
+    signal extractRequested(bool everything)
+    signal archivePasswordRequested(string archive)
 
     function navigate(target) {
         closeSearch();
@@ -222,6 +233,10 @@ FocusScope {
         browser.up();
     }
 
+    function reloadListing() {
+        browser.directory.reload();
+    }
+
     function refreshOnActivate() {
         if (recentActive)
             return;
@@ -283,7 +298,7 @@ FocusScope {
     }
 
     function beginRename(target) {
-        if (virtualActive)
+        if (virtualActive || archiveActive)
             return;
         if (resultsActive) {
             results.body.beginRename(target);
@@ -325,7 +340,7 @@ FocusScope {
     }
 
     function startSearch(query, filterState) {
-        if (path === "" || virtualActive)
+        if (path === "" || virtualActive || archiveActive)
             return;
         const state = filterState ?? results.chips.filterState;
         searchModel.rootPath = state.scope === "folder" ? path : Paths.strip(Paths.home);
@@ -440,6 +455,14 @@ FocusScope {
     Keys.onPressed: event => handleKey(event)
 
     onVirtualActiveChanged: refocus.restart()
+    onArchiveLockedChanged: {
+        if (archiveLocked)
+            archivePasswordRequested(archiveRoot);
+    }
+    onArchiveRootChanged: {
+        if (archiveActive && browser.directory.watchId !== "")
+            Qt.callLater(ArchiveService.adopt, archiveRoot);
+    }
     onEditingPathChanged: {
         if (!editingPath && virtualActive)
             refocus.restart();
@@ -556,9 +579,9 @@ FocusScope {
         listColumns: SessionData.listColumns
         columnWidths: SessionData.columnWidths
         dragEnabled: pane.dragEnabled
-        dropEnabled: pane.dropEnabled
+        dropEnabled: pane.dropEnabled && !pane.archiveActive
         showSelectionFooter: pane.framed
-        previewDrawer: pane.internalPreview
+        previewDrawer: pane.internalPreview && !pane.archiveActive
         previewOpen: pane.previewOpen
         previewWidth: CacheData.previewWidth
         previewKeys: true
@@ -578,7 +601,11 @@ FocusScope {
         networkThumbnails: SettingsData.networkThumbnails
         folderJump: FolderHistory
         unlistedPaths: [TrashService.filesPath, RecentService.path]
-        header: pane.filtering ? filterHeader : null
+        header: {
+            if (pane.filtering)
+                return filterHeader;
+            return pane.archiveActive && pane.archiveBanner ? archiveHeader : null;
+        }
         pathBarTrailing: pane.framed ? paneStatus : null
         pathBarHost: pane.pathBarHost
         pathBarColor: Theme.surfaceContainerLowest
@@ -671,6 +698,72 @@ FocusScope {
     }
 
     Component {
+        id: archiveHeader
+
+        Item {
+            width: browser.body.width
+            implicitHeight: archiveRow.implicitHeight + Theme.spacingS * 2
+
+            Row {
+                id: archiveRow
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: Theme.spacingS
+
+                DIcon {
+                    id: archiveGlyph
+
+                    anchors.verticalCenter: parent.verticalCenter
+                    name: "folder_zip"
+                    size: Theme.iconSizeMedium
+                    color: Theme.surfaceVariantText
+                }
+
+                StyledText {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width - archiveGlyph.width - archiveActions.width - parent.spacing * 2
+                    text: I18n.tr("Browsing %1 without extracting it", "banner above the listing while browsing inside an archive, %1 is the archive file name").arg(FilePaths.baseName(pane.archiveRoot))
+                    color: Theme.surfaceVariantText
+                    font.pixelSize: Theme.fontSizeSmall
+                    elide: Text.ElideMiddle
+                }
+
+                Row {
+                    id: archiveActions
+
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: Theme.spacingS
+
+                    HeaderAction {
+                        compact: pane.width < Theme.smallBreakpoint
+                        visible: pane.selection.count > 0
+                        label: I18n.tr("Extract selected", "button unpacking the selected entries of the archive being browsed")
+                        iconName: FileActions.icon("extractTo")
+                        onTriggered: {
+                            pane.focusRequested();
+                            pane.extractRequested(false);
+                        }
+                    }
+
+                    HeaderAction {
+                        compact: pane.width < Theme.smallBreakpoint
+                        label: I18n.tr("Extract all", "button unpacking the whole archive being browsed")
+                        iconName: FileActions.icon("extractAll")
+                        containerColor: Theme.primaryContainer
+                        contentColor: Theme.onPrimaryContainer
+                        onTriggered: {
+                            pane.focusRequested();
+                            pane.extractRequested(true);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Component {
         id: filterHeader
 
         Item {
@@ -698,7 +791,8 @@ FocusScope {
                     id: subfolderChip
 
                     anchors.verticalCenter: parent.verticalCenter
-                    width: implicitWidth
+                    visible: !pane.archiveActive
+                    width: visible ? implicitWidth : 0
                     model: [
                         {
                             "value": "subfolders",

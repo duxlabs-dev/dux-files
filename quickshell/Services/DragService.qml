@@ -13,6 +13,7 @@ Singleton {
     property var transport: DuxFilesService
     property var paths: []
     property bool active: false
+    property bool internalOnly: false
     property int generation: 0
     property var plainDrops: ({})
 
@@ -70,7 +71,8 @@ Singleton {
         });
     }
 
-    function begin(selection) {
+    function begin(selection, keepInside) {
+        internalOnly = keepInside === true;
         paths = selection.slice();
         plainDrops = ({});
         generation++;
@@ -78,6 +80,7 @@ Singleton {
     }
 
     function end() {
+        internalOnly = false;
         paths = [];
         plainDrops = ({});
         generation++;
@@ -85,6 +88,10 @@ Singleton {
     }
 
     function mimeData(portalKey) {
+        if (internalOnly)
+            return {
+                "application/x-dfiles-archive-entries": paths.join("\n")
+            };
         const data = {
             "text/uri-list": paths.map(path => FilePaths.toFileUrl(path)).join("\r\n") + "\r\n",
             "x-special/gnome-copied-files": "copy\n" + paths.map(path => FilePaths.toFileUrl(path)).join("\n") + "\n"
@@ -134,6 +141,8 @@ Singleton {
     }
 
     function resolve(forced, plain) {
+        if (internalOnly)
+            return "copy";
         if (forced !== "")
             return forced;
         if (SettingsData.dragAction !== "auto")

@@ -65,6 +65,9 @@ func Route(ctx context.Context, w *ConnWriter, req Request, deps Deps) {
 			wire.RespondError(w, req.ID, wire.Fail(files.CodeNotSupported, "file service unavailable"))
 			return
 		}
+		if handleArchiveFiles(w, req, deps) {
+			return
+		}
 		deps.Files.Handle(ctx, w, req)
 	default:
 		w.RespondError(req.ID, "unknown method: "+req.Method)

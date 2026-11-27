@@ -3,6 +3,7 @@ package fileops
 import (
 	"context"
 	"errors"
+	"slices"
 )
 
 var errPasswordNeeded = errors.New("archive needs a password")
@@ -18,24 +19,37 @@ func isBadPassword(err error) bool {
 	return errors.As(err, &bad)
 }
 
+func (r *runner) knownPasswords(archive string) []string {
+	var known []string
+	for _, candidate := range []string{r.job.spec.password, r.password, r.job.mgr.archives.password(archive)} {
+		if candidate != "" && !slices.Contains(known, candidate) {
+			known = append(known, candidate)
+		}
+	}
+	return known
+}
+
 func (r *runner) unlock(archive string, attempt func(password string) error) error {
+	known := r.knownPasswords(archive)
 	password := ""
 	typed := false
 	for {
 		err := attempt(password)
 		switch {
 		case err == nil:
-			if typed {
+			if password != "" {
 				r.password = password
+				r.job.mgr.archives.keepPassword(archive, password)
 			}
 			return nil
 		case errors.Is(err, context.Canceled):
 			return err
-		case errors.Is(err, errPasswordNeeded) && r.password != "" && password == "":
-			password = r.password
-			continue
 		case !errors.Is(err, errPasswordNeeded) && !isBadPassword(err):
 			return err
+		}
+		if len(known) > 0 {
+			password, known = known[0], known[1:]
+			continue
 		}
 		wrong := typed && isBadPassword(err)
 		password, err = r.askPassword(archive, wrong)

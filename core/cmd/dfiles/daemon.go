@@ -114,6 +114,7 @@ func bootDaemonServices(ctx context.Context, ownsWindow bool) (*daemonServices, 
 	fileService := files.NewService(bus, cacheHome(), appService.Detector())
 	opsManager := fileops.NewManager(bus, fileService)
 	opsManager.SetElevator(elevate.NewClient())
+	opsManager.SetMemberCache(filepath.Join(cacheHome(), "dfiles", "archive-entries"))
 
 	deviceService := startDevices(bus, log.Warnf)
 

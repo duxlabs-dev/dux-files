@@ -3,6 +3,7 @@ package fileops
 import (
 	"archive/zip"
 	"bytes"
+	"compress/bzip2"
 	"compress/flate"
 	"crypto/aes"
 	"crypto/cipher"
@@ -12,15 +13,24 @@ import (
 	"crypto/sha1"
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"hash"
 	"hash/crc32"
 	"io"
+
+	"github.com/klauspost/compress/zstd"
+	"github.com/ulikunitz/xz"
+	"github.com/ulikunitz/xz/lzma"
 )
 
 const (
 	zipFlagEncrypted      = 0x1
 	zipFlagDataDescriptor = 0x8
+	zipMethodBzip2        = 12
+	zipMethodLZMA         = 14
+	zipMethodXz           = 95
 	zipMethodAES          = 99
+	zipLZMAPropsLen       = 5
 	winZipAESExtraID      = 0x9901
 	winZipAESVendor       = 0x4541
 	winZipAESIterations   = 1000
@@ -121,6 +131,72 @@ func (c *winZipCTR) refill() {
 	c.used = 0
 }
 
+var zstdZipDecoder = zstd.ZipDecompressor()
+
+func openZipEntry(f *zip.File, password string) (io.ReadCloser, error) {
+	encrypted := f.Flags&zipFlagEncrypted != 0
+	switch {
+	case encrypted && password == "":
+		return nil, errPasswordNeeded
+	case encrypted:
+		return openEncryptedZipEntry(f, password)
+	case f.Method == zip.Store, f.Method == zip.Deflate:
+		return f.Open()
+	}
+	raw, err := f.OpenRaw()
+	if err != nil {
+		return nil, err
+	}
+	plain, err := zipDecoder(f.Method, raw, f.UncompressedSize64)
+	if err != nil {
+		return nil, err
+	}
+	return &crcReader{inner: plain, want: f.CRC32, hash: crc32.NewIEEE()}, nil
+}
+
+func zipDecoder(method uint16, body io.Reader, size uint64) (io.ReadCloser, error) {
+	switch method {
+	case zip.Store:
+		return io.NopCloser(body), nil
+	case zip.Deflate:
+		return flate.NewReader(body), nil
+	case zipMethodBzip2:
+		return io.NopCloser(bzip2.NewReader(body)), nil
+	case zipMethodLZMA:
+		return zipLZMADecoder(body, size)
+	case zstd.ZipMethodWinZip, zstd.ZipMethodPKWare:
+		return zstdZipDecoder(body), nil
+	case zipMethodXz:
+		reader, err := xz.NewReader(body)
+		if err != nil {
+			return nil, err
+		}
+		return io.NopCloser(reader), nil
+	}
+	return nil, fmt.Errorf("%w (method %d)", zip.ErrAlgorithm, method)
+}
+
+// zip stores a 4 byte version and length before the LZMA properties and no size, the reader wants properties then size
+func zipLZMADecoder(body io.Reader, size uint64) (io.ReadCloser, error) {
+	var prefix [4]byte
+	if _, err := io.ReadFull(body, prefix[:]); err != nil {
+		return nil, errDamagedEntry
+	}
+	if binary.LittleEndian.Uint16(prefix[2:]) != zipLZMAPropsLen {
+		return nil, errDamagedEntry
+	}
+	header := make([]byte, zipLZMAPropsLen+8)
+	if _, err := io.ReadFull(body, header[:zipLZMAPropsLen]); err != nil {
+		return nil, errDamagedEntry
+	}
+	binary.LittleEndian.PutUint64(header[zipLZMAPropsLen:], size)
+	reader, err := lzma.NewReader(io.MultiReader(bytes.NewReader(header), body))
+	if err != nil {
+		return nil, err
+	}
+	return io.NopCloser(reader), nil
+}
+
 func openEncryptedZipEntry(f *zip.File, password string) (io.ReadCloser, error) {
 	raw, err := f.OpenRaw()
 	if err != nil {
@@ -148,14 +224,9 @@ func openEncryptedZipEntry(f *zip.File, password string) (io.ReadCloser, error) 
 		}
 	}
 
-	var plain io.ReadCloser
-	switch method {
-	case zip.Store:
-		plain = io.NopCloser(body)
-	case zip.Deflate:
-		plain = flate.NewReader(body)
-	default:
-		return nil, zip.ErrAlgorithm
+	plain, err := zipDecoder(method, body, f.UncompressedSize64)
+	if err != nil {
+		return nil, err
 	}
 	if expectCRC {
 		plain = &crcReader{inner: plain, want: f.CRC32, hash: crc32.NewIEEE()}

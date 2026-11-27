@@ -745,11 +745,26 @@ Item {
                     onToggled: checked => SettingsData.openLocationIn = checked ? "tab" : "current"
                 }
 
-                SettingsToggleRow {
-                    text: I18n.tr("Extract archives on open", "setting label for opening archives")
-                    keywords: I18n.tr("zip tar unpack compressed", "settings search keywords, space separated, add synonyms in your language")
-                    description: I18n.tr("Unpacks into a folder beside it.", "setting description for opening archives")
-                    settingKey: "extractOnOpen"
+                OptionDropdownRow {
+                    text: I18n.tr("Opening an archive", "setting label for what happens when an archive is opened")
+                    keywords: I18n.tr("zip tar unpack compressed extract browse", "settings search keywords, space separated, add synonyms in your language")
+                    description: I18n.tr("Browsing shows the contents like a folder without unpacking.", "setting description for opening archives")
+                    optionList: [
+                        {
+                            "value": "browse",
+                            "label": I18n.tr("Browse it", "archive open setting option showing the archive contents like a folder")
+                        },
+                        {
+                            "value": "extract",
+                            "label": I18n.tr("Extract beside it", "archive open setting option unpacking the archive next to itself")
+                        },
+                        {
+                            "value": "app",
+                            "label": I18n.tr("Open in its application", "archive open setting option handing the archive to the default application")
+                        }
+                    ]
+                    current: SettingsData.archiveOpen
+                    onPicked: value => SettingsData.archiveOpen = value
                 }
 
                 OptionDropdownRow {
