@@ -5,6 +5,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import QtCore
+import qs.DCommon.Common as DC
 import qs.Services
 
 Singleton {
@@ -39,18 +40,38 @@ Singleton {
         return path;
     }
 
-    property var _iconPaths: ({})
+    // False on a dux-qt-base without iconThemeRevision, whose icon provider fails on "?rev=".
+    readonly property bool iconThemeLive: "iconThemeRevision" in Quickshell
+    readonly property int iconThemeRevision: iconThemeLive ? Quickshell.iconThemeRevision : 0
+    // Emptied in place: reassigning it in the resolver would loop every binding that resolves an icon.
+    readonly property var _iconMemo: ({
+            "revision": 0,
+            "paths": {}
+        })
 
     function resolveIconPath(iconName: string): string {
         if (!iconName)
             return "";
-        const cached = _iconPaths[iconName];
+        const revision = iconThemeRevision;
+        if (_iconMemo.revision !== revision) {
+            _iconMemo.revision = revision;
+            _iconMemo.paths = {};
+        }
+        const cached = _iconMemo.paths[iconName];
         if (cached !== undefined)
             return cached;
-        const resolved = literalIconSource(iconName) || Quickshell.iconPath(iconName, true) || bundledIconPath(iconName);
+        const resolved = literalIconSource(iconName) || themeIconUrl(iconName) || bundledIconPath(iconName);
         if (resolved !== "")
-            _iconPaths[iconName] = resolved;
+            _iconMemo.paths[iconName] = resolved;
         return resolved;
+    }
+
+    // The inline half serves a DCommon that predates themeIconUrl.
+    function themeIconUrl(iconName: string): string {
+        if (typeof DC.Paths.themeIconUrl === "function")
+            return DC.Paths.themeIconUrl(iconName);
+        const url = Quickshell.iconPath(iconName, true);
+        return url && iconThemeLive ? url + "?rev=" + iconThemeRevision : url;
     }
 
     function literalIconSource(source: string): string {
@@ -76,6 +97,7 @@ Singleton {
         case "folder-templates":
         case "folder-videos":
             return Qt.resolvedUrl(`../assets/icons/${iconName}.svg`).toString();
+        case "folder-projects":
         case "user-home":
         case "user-desktop":
         case "inode-directory":

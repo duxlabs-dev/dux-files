@@ -3,9 +3,12 @@ package fileops
 import (
 	"context"
 	"errors"
+	"slices"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/duxlabs-dev/dux-go/log"
 )
 
 const (
@@ -73,16 +76,20 @@ type Manager struct {
 	stater Stater
 	slots  chan struct{}
 
-	mu       sync.Mutex
-	elevator Elevator
-	images   ImageSource
-	nextID   int
-	active   map[string]*job
-	order    []string
-	finished []View
-	undo     map[string][]undoEntry
-	redo     map[string][]spec
-	epoch    map[string]uint64
+	mu        sync.Mutex
+	elevator  Elevator
+	images    ImageSource
+	nextID    int
+	active    map[string]*job
+	order     []string
+	finished  []View
+	undo      map[string][]undoEntry
+	redo      map[string][]spec
+	epoch     map[string]uint64
+	portalKey string
+
+	archives    *archiveCache
+	memberCache string
 }
 
 func NewManager(bus Publisher, stater Stater) *Manager {
@@ -94,6 +101,8 @@ func NewManager(bus Publisher, stater Stater) *Manager {
 		undo:   map[string][]undoEntry{},
 		redo:   map[string][]spec{},
 		epoch:  map[string]uint64{},
+
+		archives: newArchiveCache(),
 	}
 }
 
@@ -233,6 +242,16 @@ func (j *job) finish(err error) {
 	j.mu.Unlock()
 	j.mgr.retire(view)
 	j.mgr.publishJob(view)
+	logFinished(view)
+}
+
+func logFinished(view View) {
+	took := time.Duration(view.EndedMs-view.StartedMs) * time.Millisecond
+	if view.StartedMs == 0 {
+		took = 0
+	}
+	log.Debugf("fileops %s: %s %s in %s, %d/%d files, %d bytes, %d skipped, %d warnings",
+		view.ID, view.Kind, view.State, took, view.Progress.FilesDone, view.Progress.FilesTotal, view.Progress.BytesDone, view.Skipped, view.Warnings)
 }
 
 func (j *job) outcome() (*undoEntry, *spec) {
@@ -391,13 +410,17 @@ func (m *Manager) Respond(jobID string, answer Answer) error {
 	}
 
 	j.mu.Lock()
-	claimed := j.pendingID != "" && j.pendingID == answer.ID
-	if claimed {
+	waiting := j.pendingID != "" && j.pendingID == answer.ID
+	offered := waiting && slices.Contains(j.offeredLocked(), answer.Action)
+	if offered {
 		j.pendingID = ""
 	}
 	j.mu.Unlock()
-	if !claimed {
+	switch {
+	case !waiting:
 		return errors.New("job is not waiting for that answer: " + jobID)
+	case !offered:
+		return errors.New("action is not offered for that answer: " + string(answer.Action))
 	}
 
 	select {
@@ -457,6 +480,18 @@ func (j *job) ask(payload event, state State) Answer {
 			return Answer{Action: ActionCancel}
 		}
 	}
+}
+
+func (j *job) offeredLocked() []Action {
+	switch {
+	case j.conflict != nil:
+		return j.conflict.Actions
+	case j.failure != nil:
+		return j.failure.Actions
+	case j.password != nil:
+		return j.password.Actions
+	}
+	return nil
 }
 
 func (e event) answerID() string {

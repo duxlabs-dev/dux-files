@@ -13,7 +13,14 @@ PausedJobDialog {
     promptKey: "conflict"
     acceptEnabled: offers("keepBoth")
     title: I18n.tr("This item already exists", "file conflict dialog header")
-    supportingText: conflict ? I18n.tr("%1 already exists in this folder.", "file conflict dialog explanation").arg(conflict.target.name) : ""
+    supportingText: {
+        if (!conflict)
+            return "";
+        const exists = I18n.tr("%1 already exists in this folder.", "file conflict dialog explanation").arg(conflict.target.name);
+        if (!offers("merge"))
+            return exists;
+        return exists + "\n\n" + I18n.tr("Merge keeps what is already in the folder. Replace deletes the folder and everything in it first.", "file conflict dialog explanation when both items are folders");
+    }
     onAccepted: {
         if (offers("keepBoth"))
             answer("keepBoth");

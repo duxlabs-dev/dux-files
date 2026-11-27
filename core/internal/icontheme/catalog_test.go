@@ -1,6 +1,7 @@
 package icontheme
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -15,6 +16,13 @@ func icon(t *testing.T, root, theme, dir, name string) {
 	target := filepath.Join(root, theme, dir)
 	require.NoError(t, os.MkdirAll(target, 0o755))
 	require.NoError(t, os.WriteFile(filepath.Join(target, name), nil, 0o644))
+}
+
+func inherit(t *testing.T, root, theme, parents string) {
+	t.Helper()
+	require.NoError(t, os.MkdirAll(filepath.Join(root, theme), 0o755))
+	body := "[Icon Theme]\nName=" + theme + "\nInherits=" + parents + "\n"
+	require.NoError(t, os.WriteFile(filepath.Join(root, theme, "index.theme"), []byte(body), 0o644))
 }
 
 func TestScanSplitsLogosFromFolderArt(t *testing.T) {
@@ -147,4 +155,55 @@ func TestInstalledListsAThemeOnceAcrossRoots(t *testing.T) {
 	require.NoError(t, os.MkdirAll(filepath.Join(second, "Paper"), 0o755))
 
 	assert.Equal(t, []string{"Adwaita", "hicolor", "Paper"}, installed([]string{first, second}))
+}
+
+func TestScanFollowsTheThemesAnOverlayInherits(t *testing.T) {
+	user, system := t.TempDir(), t.TempDir()
+	inherit(t, user, "Paper-dms-1a2b3c4d", "Paper,hicolor")
+	icon(t, user, "Paper-dms-1a2b3c4d", "scalable/places", "folder.svg")
+	inherit(t, system, "Paper", "Base, hicolor")
+	icon(t, system, "Paper", "scalable/places", "folder-blue.svg")
+	icon(t, system, "Paper", "scalable/emblems", "emblem-favorite.svg")
+	icon(t, system, "Base", "apps/48", "kate.svg")
+	icon(t, system, "hicolor", "48x48/apps", "steam.png")
+	icon(t, system, "Adwaita", "scalable/apps", "firefox.svg")
+
+	catalog := Scan([]string{user, system}, "Paper-dms-1a2b3c4d")
+
+	assert.Equal(t, []string{"emblem-favorite", "kate", "steam"}, catalog.Badges)
+	assert.Equal(t, []string{"folder", "folder-blue"}, catalog.Icons)
+}
+
+func TestScanStopsWhenThemesInheritEachOther(t *testing.T) {
+	root := t.TempDir()
+	inherit(t, root, "Paper", "Base")
+	inherit(t, root, "Base", "Paper,Base")
+	icon(t, root, "Paper", "apps", "steam.svg")
+	icon(t, root, "Base", "apps", "kate.svg")
+
+	assert.Equal(t, []string{"kate", "steam"}, Scan([]string{root}, "Paper").Badges)
+}
+
+func TestScanStopsFollowingAVeryLongLineOfThemes(t *testing.T) {
+	root := t.TempDir()
+	for level := range maxInheritDepth + 2 {
+		name := fmt.Sprintf("level%02d", level)
+		inherit(t, root, name, fmt.Sprintf("level%02d", level+1))
+		icon(t, root, name, "apps", name+".svg")
+	}
+
+	badges := Scan([]string{root}, "level00").Badges
+
+	assert.Len(t, badges, maxInheritDepth+1)
+	assert.Equal(t, fmt.Sprintf("level%02d", maxInheritDepth), badges[len(badges)-1])
+}
+
+func TestScanTakesInheritsFromTheFirstRootThatDescribesTheTheme(t *testing.T) {
+	user, system := t.TempDir(), t.TempDir()
+	inherit(t, user, "Paper", "Base")
+	inherit(t, system, "Paper", "Adwaita")
+	icon(t, system, "Base", "apps", "kate.svg")
+	icon(t, system, "Adwaita", "apps", "firefox.svg")
+
+	assert.Equal(t, []string{"kate"}, Scan([]string{user, system}, "Paper").Badges)
 }

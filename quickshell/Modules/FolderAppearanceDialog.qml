@@ -24,6 +24,12 @@ OverlayDialog {
     readonly property var names: tab === 0 ? FolderAppearances.badges : FolderAppearances.icons
     readonly property bool customColor: (look?.color ?? "") !== "" && !FolderAppearances.colors.includes(look.color)
     readonly property var shown: filter === "" ? names : names.filter(name => name.toLowerCase().includes(filter.toLowerCase()))
+    readonly property int iconThemeRevision: Paths.iconThemeRevision
+
+    onIconThemeRevisionChanged: {
+        if (visible)
+            FolderAppearances.refreshCatalog();
+    }
 
     maximumWidth: 520
     title: I18n.tr("Folder appearance", "folder appearance dialog title")
@@ -106,7 +112,7 @@ OverlayDialog {
                     width: 32
                     height: 32
                     radius: width / 2
-                    color: modelData === "" ? Theme.surfaceContainerHigh : modelData
+                    color: modelData === "" ? Theme.chipSurface : modelData
                     border.width: (root.look?.color ?? "") === modelData ? Theme.focusRingWidth : 1
                     border.color: Theme.outlineVariant
 
@@ -125,7 +131,7 @@ OverlayDialog {
                 width: 32
                 height: 32
                 radius: width / 2
-                color: root.customColor ? root.look.color : Theme.surfaceContainerHigh
+                color: root.customColor ? root.look.color : Theme.chipSurface
                 border.width: root.customColor || root.pickingColor ? Theme.focusRingWidth : 1
                 border.color: Theme.outlineVariant
 

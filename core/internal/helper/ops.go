@@ -1,52 +1,22 @@
 package helper
 
 import (
-	"encoding/binary"
 	"encoding/json"
 	"errors"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"syscall"
 
-	"github.com/duxlabs-dev/dux-go/files"
 	"golang.org/x/sys/unix"
+
+	dhelper "github.com/duxlabs-dev/dux-go/elevate/helper"
 )
 
-var errSymlink = &files.Error{Code: files.CodeInvalid, Err: errors.New("path goes through a symlink")}
-
-func validPath(path string) bool {
-	return filepath.IsAbs(path) && filepath.Clean(path) == path && path != "/" && !strings.ContainsRune(path, 0)
-}
-
-func openParent(path string) (int, string, error) {
-	if !validPath(path) {
-		return -1, "", invalid("not an absolute, clean path: " + path)
-	}
-	fd, err := openNoSymlinks(unix.AT_FDCWD, filepath.Dir(path), unix.O_PATH|unix.O_DIRECTORY, 0)
-	if err != nil {
-		return -1, "", err
-	}
-	return fd, filepath.Base(path), nil
-}
-
-func openNoSymlinks(dirfd int, path string, flags int, mode uint32) (int, error) {
-	how := unix.OpenHow{Flags: uint64(flags | unix.O_CLOEXEC), Mode: uint64(mode), Resolve: unix.RESOLVE_NO_SYMLINKS}
-	fd, err := unix.Openat2(dirfd, path, &how)
-	switch {
-	case errors.Is(err, unix.ELOOP):
-		return -1, errSymlink
-	case err != nil:
-		return -1, &os.PathError{Op: "open", Path: path, Err: err}
-	}
-	return fd, nil
-}
-
 func lstat(path string, out io.Writer) error {
-	parent, name, err := openParent(path)
+	parent, name, err := dhelper.OpenParent(path)
 	if err != nil {
 		return err
 	}
@@ -117,13 +87,13 @@ func readDir(path string, out io.Writer) error {
 }
 
 func openDir(path string) (*os.File, error) {
-	parent, name, err := openParent(path)
+	parent, name, err := dhelper.OpenParent(path)
 	if err != nil {
 		return nil, err
 	}
 	defer unix.Close(parent)
 
-	fd, err := openNoSymlinks(parent, name, unix.O_RDONLY|unix.O_DIRECTORY, 0)
+	fd, err := dhelper.OpenNoSymlinks(parent, name, unix.O_RDONLY|unix.O_DIRECTORY, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +101,7 @@ func openDir(path string) (*os.File, error) {
 }
 
 func readlink(path string, out io.Writer) error {
-	parent, name, err := openParent(path)
+	parent, name, err := dhelper.OpenParent(path)
 	if err != nil {
 		return err
 	}
@@ -150,84 +120,17 @@ func readlink(path string, out io.Writer) error {
 }
 
 func read(path string, out io.Writer) error {
-	parent, name, err := openParent(path)
-	if err != nil {
-		return err
-	}
-	defer unix.Close(parent)
-
-	handle, err := openNoSymlinks(parent, name, unix.O_PATH, 0)
-	if err != nil {
-		return err
-	}
-	defer unix.Close(handle)
-
-	var st unix.Stat_t
-	if err := unix.Fstat(handle, &st); err != nil {
-		return &os.PathError{Op: "stat", Path: path, Err: err}
-	}
-	if st.Mode&syscall.S_IFMT != syscall.S_IFREG {
-		return invalid("not a regular file: " + path)
-	}
-
-	fd, err := unix.Open("/proc/self/fd/"+strconv.Itoa(handle), unix.O_RDONLY|unix.O_CLOEXEC|unix.O_NOCTTY, 0)
-	if err != nil {
-		return &os.PathError{Op: "open", Path: path, Err: err}
-	}
-	file := os.NewFile(uintptr(fd), path)
-	defer file.Close()
-	_, err = io.Copy(out, file)
+	_, err := dhelper.Read(path, out)
 	return err
 }
 
 func write(path string, mode uint32, in io.Reader, ready io.Writer) error {
-	parent, name, err := openParent(path)
-	if err != nil {
-		return err
-	}
-	defer unix.Close(parent)
-
-	fd, err := openNoSymlinks(parent, name, unix.O_WRONLY|unix.O_CREAT|unix.O_EXCL, mode)
-	if err != nil {
-		return err
-	}
-	file := os.NewFile(uintptr(fd), path)
-	if _, err := io.WriteString(ready, Ready+"\n"); err != nil {
-		file.Close()
-		_ = unix.Unlinkat(parent, name, 0)
-		return err
-	}
-
-	if err := copyFrames(file, in); err != nil {
-		file.Close()
-		_ = unix.Unlinkat(parent, name, 0)
-		return err
-	}
-	if err := file.Close(); err != nil {
-		_ = unix.Unlinkat(parent, name, 0)
-		return err
-	}
-	return nil
-}
-
-func copyFrames(dst io.Writer, src io.Reader) error {
-	var header [4]byte
-	for {
-		if _, err := io.ReadFull(src, header[:]); err != nil {
-			return errors.New("write aborted before it was committed")
-		}
-		length := binary.BigEndian.Uint32(header[:])
-		if length == 0 {
-			return nil
-		}
-		if _, err := io.CopyN(dst, src, int64(length)); err != nil {
-			return err
-		}
-	}
+	_, err := dhelper.Create(path, mode, false, in, ready)
+	return err
 }
 
 func mkdir(path string, mode uint32) error {
-	parent, name, err := openParent(path)
+	parent, name, err := dhelper.OpenParent(path)
 	if err != nil {
 		return err
 	}
@@ -240,8 +143,8 @@ func mkdir(path string, mode uint32) error {
 }
 
 func mkdirAll(path string, mode uint32) error {
-	if !validPath(path) {
-		return invalid("not an absolute, clean path: " + path)
+	if !dhelper.ValidPath(path) {
+		return dhelper.Invalid("not an absolute, clean path: " + path)
 	}
 	parts := strings.Split(strings.TrimPrefix(path, "/"), "/")
 	for i := range parts {
@@ -258,7 +161,7 @@ func mkdirAll(path string, mode uint32) error {
 }
 
 func symlink(target, path string) error {
-	parent, name, err := openParent(path)
+	parent, name, err := dhelper.OpenParent(path)
 	if err != nil {
 		return err
 	}
@@ -271,13 +174,13 @@ func symlink(target, path string) error {
 }
 
 func rename(from, to string, noReplace bool) error {
-	fromParent, fromName, err := openParent(from)
+	fromParent, fromName, err := dhelper.OpenParent(from)
 	if err != nil {
 		return err
 	}
 	defer unix.Close(fromParent)
 
-	toParent, toName, err := openParent(to)
+	toParent, toName, err := dhelper.OpenParent(to)
 	if err != nil {
 		return err
 	}
@@ -310,7 +213,7 @@ func renameatIfAbsent(fromParent int, fromName string, toParent int, toName stri
 }
 
 func utimes(path string, mtimeNs int64) error {
-	parent, name, err := openParent(path)
+	parent, name, err := dhelper.OpenParent(path)
 	if err != nil {
 		return err
 	}
@@ -324,7 +227,7 @@ func utimes(path string, mtimeNs int64) error {
 }
 
 func remove(path string) error {
-	parent, name, err := openParent(path)
+	parent, name, err := dhelper.OpenParent(path)
 	if err != nil {
 		return err
 	}
@@ -344,7 +247,7 @@ func unlink(parent int, name, path string) error {
 }
 
 func removeAll(path string) error {
-	parent, name, err := openParent(path)
+	parent, name, err := dhelper.OpenParent(path)
 	if err != nil {
 		return err
 	}
@@ -361,7 +264,7 @@ func removeAll(path string) error {
 		return unlink(parent, name, path)
 	}
 
-	fd, err := openNoSymlinks(parent, name, unix.O_RDONLY|unix.O_DIRECTORY, 0)
+	fd, err := dhelper.OpenNoSymlinks(parent, name, unix.O_RDONLY|unix.O_DIRECTORY, 0)
 	if err != nil {
 		return err
 	}
@@ -404,7 +307,7 @@ func walk(dir *os.File, visit, after func(dirfd int, child os.DirEntry) error) e
 		if !child.IsDir() {
 			continue
 		}
-		fd, err := openNoSymlinks(dirfd, child.Name(), unix.O_RDONLY|unix.O_DIRECTORY, 0)
+		fd, err := dhelper.OpenNoSymlinks(dirfd, child.Name(), unix.O_RDONLY|unix.O_DIRECTORY, 0)
 		if err != nil {
 			return err
 		}
@@ -425,7 +328,7 @@ func walk(dir *os.File, visit, after func(dirfd int, child os.DirEntry) error) e
 }
 
 func chmod(path string, mode uint32, recursive bool) error {
-	parent, name, err := openParent(path)
+	parent, name, err := dhelper.OpenParent(path)
 	if err != nil {
 		return err
 	}
@@ -458,24 +361,17 @@ func chmod(path string, mode uint32, recursive bool) error {
 
 // fchmodat has no AT_SYMLINK_NOFOLLOW on Linux, hence the O_PATH fd and /proc
 func chmodAt(dirfd int, name string, mode uint32) error {
-	fd, err := openNoSymlinks(dirfd, name, unix.O_PATH, 0)
+	fd, err := dhelper.OpenNoSymlinks(dirfd, name, unix.O_PATH, 0)
 	if err != nil {
 		return err
 	}
 	defer unix.Close(fd)
 
-	var st unix.Stat_t
-	if err := unix.Fstat(fd, &st); err != nil {
-		return err
-	}
-	if st.Mode&syscall.S_IFMT == syscall.S_IFLNK {
-		return nil
-	}
-	return unix.Chmod("/proc/self/fd/"+strconv.Itoa(fd), mode)
+	return unix.Chmod(dhelper.ProcPath(fd), mode)
 }
 
 func chown(path string, uid, gid int, recursive bool) error {
-	parent, name, err := openParent(path)
+	parent, name, err := dhelper.OpenParent(path)
 	if err != nil {
 		return err
 	}

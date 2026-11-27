@@ -110,6 +110,7 @@ ShellRoot {
             "count": 2
         });
         check("results append", names(), ["report.txt", "Reports"]);
+        check("rows carry the match roles from the first one on", [model.entries.get(0).line, model.entries.get(0).snippet], [0, ""]);
         check("count follows the daemon", model.total, 2);
 
         fakeBackend.searchEvent({
@@ -173,10 +174,10 @@ ShellRoot {
         });
         check("backend event is exposed", [model.servedBy, model.indexPhase, model.depthLimit], ["index", "syncing", 4]);
         const scored = (name, score, size, mtimeMs) => Object.assign(entry(name), {
-            "score": score,
-            "size": size,
-            "mtimeMs": mtimeMs
-        });
+                "score": score,
+                "size": size,
+                "mtimeMs": mtimeMs
+            });
         fakeBackend.searchEvent({
             "searchId": "s3",
             "kind": "results",
@@ -223,6 +224,47 @@ ShellRoot {
         };
         model.start();
         check("a failed start reports the code", [model.errorCode, model.loading], ["ENOTDIR", false]);
+
+        startResponse = ({});
+        model.start();
+        check("contents are not offered before a backend says so", model.contentsAvailable, false);
+        fakeBackend.searchEvent({
+            "searchId": "s5",
+            "kind": "backend",
+            "backend": "rg",
+            "contents": true
+        });
+        fakeBackend.searchEvent({
+            "searchId": "s5",
+            "kind": "results",
+            "entries": [Object.assign(entry("hit.txt"), {
+                    "line": 12,
+                    "snippet": "the needle"
+                })],
+            "count": 1
+        });
+        check("content hits keep their line", [model.servedBy, model.entries.get(0).line, model.entries.get(0).snippet], ["rg", 12, "the needle"]);
+        fakeBackend.searchEvent({
+            "searchId": "s5",
+            "kind": "done",
+            "count": 1
+        });
+        model.start();
+        check("contents stay offered while the next search starts", [model.contentsAvailable, model.servedBy], [true, ""]);
+        fakeBackend.searchEvent({
+            "searchId": "s6",
+            "kind": "backend",
+            "backend": "walk"
+        });
+        check("a backend without contents withdraws the offer", model.contentsAvailable, false);
+        fakeBackend.searchEvent({
+            "searchId": "s6",
+            "kind": "done",
+            "count": 0,
+            "code": "EINVAL",
+            "error": "regex parse error"
+        });
+        check("a search that ends in an error reports it", [model.errorCode, model.error, model.loading], ["EINVAL", "regex parse error", false]);
 
         log.info(failures === 0 ? "FIXTURE PASS" : `FIXTURE FAIL (${failures})`);
         Qt.callLater(Qt.quit);

@@ -34,6 +34,10 @@ QtObject {
             activePane.navigate(entry.path);
             return;
         }
+        if (activePane.archiveActive) {
+            openMember(activePane.archiveRoot, entry);
+            return;
+        }
         const canRun = SandboxService.available("run");
         if (entry.untrusted && canRun) {
             dialogs.confirmTrust(entry.name, entry.path);
@@ -43,11 +47,30 @@ QtObject {
             dialogs.askExecutable(entry.path, entry.name);
             return;
         }
-        if (SettingsData.extractOnOpen && FilesFormat.extractable(entry.mime)) {
+        switch (FilesFormat.archiveAction(entry, SettingsData.archiveOpen)) {
+        case "browse":
+            browseArchive(entry.path);
+            return;
+        case "extract":
             extractBeside(entry.path, "enter");
             return;
         }
         AppsService.open([entry.path], response => flow.reportError(response));
+    }
+
+    function browseArchive(path) {
+        ArchiveService.adopt(path);
+        activePane.navigate(path);
+    }
+
+    function openMember(archive, entry) {
+        FileOpsService.extractMember(archive, ArchiveService.member(archive, entry.path), path => {
+            if (FilesFormat.browsable(entry.mime) && SettingsData.archiveOpen === "browse") {
+                flow.browseArchive(path);
+                return;
+            }
+            AppsService.open([path], response => flow.reportError(response));
+        });
     }
 
     function trustAndRun(path) {
@@ -66,7 +89,7 @@ QtObject {
             activate(entries[0]);
             return;
         }
-        const plan = openPlan(entries, SettingsData.extractOnOpen);
+        const plan = openPlan(entries, SettingsData.archiveOpen, activePane.archiveActive ? activePane.archiveRoot : "");
         if (openCount(plan) <= FilesMetrics.openConfirmLimit) {
             runOpenPlan(plan);
             return;
@@ -74,20 +97,22 @@ QtObject {
         dialogs.confirmOpen(plan, String(entries.length));
     }
 
-    function openPlan(entries, extractArchives) {
-        const folders = entries.filter(entry => entry.isDir).map(entry => entry.path);
-        const files = entries.filter(entry => !entry.isDir);
-        const unpacks = entry => extractArchives && FilesFormat.extractable(entry.mime);
+    function openPlan(entries, archiveOpen, insideArchive) {
+        const action = entry => insideArchive === "" ? FilesFormat.archiveAction(entry, archiveOpen) : "";
+        const folders = entries.filter(entry => entry.isDir || action(entry) === "browse").map(entry => entry.path);
+        const files = entries.filter(entry => !entry.isDir && action(entry) === "");
         return {
             "folder": folders[0] ?? "",
             "tabs": folders.slice(1),
-            "files": files.filter(entry => !unpacks(entry)).map(entry => entry.path),
-            "archives": files.filter(entry => unpacks(entry)).map(entry => entry.path)
+            "files": insideArchive === "" ? files.map(entry => entry.path) : [],
+            "archives": entries.filter(entry => action(entry) === "extract").map(entry => entry.path),
+            "insideArchive": insideArchive,
+            "members": insideArchive === "" ? [] : files
         };
     }
 
     function openCount(plan) {
-        return plan.tabs.length + plan.files.length + plan.archives.length;
+        return plan.tabs.length + plan.files.length + plan.archives.length + plan.members.length;
     }
 
     function restoreEntries(entries) {
@@ -108,6 +133,8 @@ QtObject {
             AppsService.open(plan.files, response => flow.reportError(response));
         for (const path of plan.archives)
             extractBeside(path, "reveal");
+        for (const entry of plan.members)
+            openMember(plan.insideArchive, entry);
         if (plan.folder !== "")
             activePane.navigate(plan.folder);
     }
@@ -116,12 +143,12 @@ QtObject {
         extractTo([path], FilePaths.parentOf(path), follow);
     }
 
-    function extractTo(paths, dest, follow) {
+    function extractTo(paths, dest, follow, entries, layout) {
         const pending = pendingExtracts;
         for (const path of paths)
             pending[path] = follow;
         pendingExtracts = pending;
-        FileOpsService.extract(paths, dest, opScope);
+        FileOpsService.extract(paths, dest, opScope, entries, layout);
     }
 
     function takeExtractFollow(sources) {
@@ -158,6 +185,19 @@ QtObject {
             "actionLabel": I18n.tr("Show", "toast action revealing the extracted files"),
             "action": () => flow.activePane.reveal(paths)
         });
+    }
+
+    function settleUnlock(job) {
+        const archive = job.sources?.[0] ?? "";
+        const unlocked = job.state === "done" && !job.cancelled && (job.skipped ?? 0) === 0;
+        for (const pane of mainWindow.panes) {
+            if (!pane?.archiveLocked || pane.archiveRoot !== archive)
+                continue;
+            if (unlocked)
+                pane.reloadListing();
+            else
+                pane.navigate(FilePaths.parentOf(archive));
+        }
     }
 
     function undoToast(message) {
@@ -210,6 +250,8 @@ QtObject {
         target: FileOpsService
 
         function onJobFinished(job) {
+            if (job.kind === "unlockArchive")
+                flow.settleUnlock(job);
             if (job.kind === "setPermissions" && flow.pendingTrust !== "" && (job.sources ?? []).includes(flow.pendingTrust)) {
                 const target = flow.pendingTrust;
                 flow.pendingTrust = "";

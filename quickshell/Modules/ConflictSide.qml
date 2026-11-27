@@ -12,7 +12,7 @@ Rectangle {
 
     implicitHeight: content.implicitHeight + Theme.spacingM * 2
     radius: Theme.cornerRadiusM
-    color: Theme.surfaceContainerHigh
+    color: Theme.chipSurface
 
     RowLayout {
         id: content

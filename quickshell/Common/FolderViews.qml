@@ -189,7 +189,7 @@ Singleton {
     Timer {
         id: touchDebounce
 
-        interval: 60000
+        interval: Timing.minute
         onTriggered: store.write()
     }
 

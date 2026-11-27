@@ -16,6 +16,11 @@ Item {
         return entries.length > 0 && entries.every(entry => entry.isDir);
     }
 
+    function selectionIsImage() {
+        const entries = mainWindow.selectedEntries();
+        return entries.length === 1 && !entries[0].isDir && (entries[0].mime ?? "").startsWith("image/");
+    }
+
     function selectionIsExtractable() {
         const entries = mainWindow.selectedEntries();
         return entries.length > 0 && entries.every(entry => !entry.isDir && FilesFormat.extractable(entry.mime));
@@ -129,11 +134,13 @@ Item {
         anchorItem: menus.anchorItem
         selectionCount: live ? menus.mainWindow.selectedPaths().length : 0
         hasDirectory: live && menus.selectionIsDirectory()
+        singleImage: live && menus.selectionIsImage()
         hasClipboard: live && ClipboardService.hasFiles
         extractable: live && menus.selectionIsExtractable()
         inResults: live && menus.mainWindow.activePane.resultsActive
         inTrash: live && menus.mainWindow.activePane.trashActive
         inRecent: live && menus.mainWindow.activePane.recentActive
+        inArchive: live && menus.mainWindow.activePane.archiveActive
         selectedBookmarked: live && menus.selectionIsDirectory() && BookmarksService.has(menus.mainWindow.selectedPaths()[0] ?? "")
         onActionTriggered: id => menus.mainWindow.actions.runAction(id)
         onClosed: live = false
@@ -259,6 +266,7 @@ Item {
         hasClipboard: ClipboardService.hasFiles
         inTrash: menus.mainWindow.activePane.trashActive
         inRecent: menus.mainWindow.activePane.recentActive
+        inArchive: menus.mainWindow.activePane.archiveActive
         trashCount: TrashService.count
         recentCount: menus.mainWindow.activePane.recentView?.model.total ?? 0
         onActionTriggered: id => menus.mainWindow.actions.runAction(id)
@@ -282,6 +290,7 @@ Item {
                 required property var modelData
 
                 text: modelData.name
+                appIcon: modelData.icon ?? ""
                 checked: modelData.isDefault === true
                 onClicked: {
                     openWithMenu.close();

@@ -164,6 +164,91 @@ QtObject {
         closeTabsAt(tabs.map((_, other) => other).filter(other => other > index), index);
     }
 
+    function pathInMount(path, mountPoint) {
+        const cleanPath = FilePaths.normalize(path);
+        const cleanMount = FilePaths.normalize(mountPoint);
+        if (cleanPath === "" || cleanMount === "")
+            return false;
+        if (cleanMount === "/")
+            return cleanPath.startsWith("/");
+        return cleanPath === cleanMount || cleanPath.startsWith(cleanMount + "/");
+    }
+
+    function tabFullyInMount(index, inAnyMount) {
+        const state = tabState(index);
+        const p0 = state?.panes?.[0]?.path ?? "";
+        const p1 = state?.panes?.[1]?.path ?? "";
+        if (secondPane && p1 !== "")
+            return inAnyMount(p0) && inAnyMount(p1);
+        return inAnyMount(p0);
+    }
+
+    function closeMounts(mountPoints) {
+        if (!Array.isArray(mountPoints) || mountPoints.length === 0 || tabs.length === 0)
+            return;
+        captureTabs();
+        const inAnyMount = path => mountPoints.some(mount => pathInMount(path, mount));
+        const matching = [];
+        for (let i = 0; i < tabs.length; i++) {
+            if (tabFullyInMount(i, inAnyMount))
+                matching.push(i);
+        }
+        if (matching.length > 0) {
+            if (matching.length < tabs.length) {
+                closeTabsAt(matching, currentTab);
+            } else {
+                const keep = currentTab >= 0 && currentTab < tabs.length ? currentTab : 0;
+                const toClose = matching.filter(index => index !== keep);
+                if (toClose.length > 0)
+                    closeTabsAt(toClose, keep);
+            }
+        }
+        const fallback = Paths.strip(Paths.home);
+        let changed = false;
+        const next = tabs.slice();
+        for (let i = 0; i < next.length; i++) {
+            if (i === currentTab) {
+                if (inAnyMount(primaryPane.path)) {
+                    primaryPane.restoreState({
+                        "path": fallback
+                    });
+                    changed = true;
+                }
+                if (secondPane && inAnyMount(secondPane.path)) {
+                    secondPane.restoreState({
+                        "path": fallback
+                    });
+                    changed = true;
+                }
+            }
+            const state = next[i];
+            const paneList = state?.panes;
+            if (!paneList)
+                continue;
+            const p0 = paneList[0];
+            const p1 = paneList[1];
+            const reset0 = p0?.path && inAnyMount(p0.path);
+            const reset1 = p1?.path && inAnyMount(p1.path);
+            if (reset0 || reset1) {
+                next[i] = Object.assign({}, state, {
+                    "panes": [
+                        reset0 ? {
+                            "path": fallback
+                        } : p0,
+                        reset1 ? {
+                            "path": fallback
+                        } : p1]
+                });
+                changed = true;
+            }
+        }
+        if (changed) {
+            tabs = next;
+            captureTabs();
+            persistTabs();
+        }
+    }
+
     function duplicateTab(index) {
         if (!tabState(index))
             return;
@@ -183,8 +268,12 @@ QtObject {
 
     function dropOnTab(index, drop) {
         const dest = tabPath(index);
+        if (dest === "")
+            return;
+        if (DragService.extractArkDrop(drop, dest))
+            return;
         const paths = DragService.pathsFrom(drop);
-        if (dest === "" || dest === RecentService.path || paths.length === 0 || paths.includes(dest))
+        if (dest === RecentService.path || paths.length === 0 || paths.includes(dest))
             return;
         dropRequested(paths, dest, DragService.overrideFor(drop.proposedAction));
     }

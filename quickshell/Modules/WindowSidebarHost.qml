@@ -13,6 +13,7 @@ Item {
     property bool overlayOpen: false
     property bool focusPending: false
     property real contentMinWidth: FilesMetrics.windowMinWidth
+    property real dockedTop: 0
 
     readonly property bool compact: width < FilesMetrics.sidebarOverlayBreakpoint
     readonly property bool docked: !compact
@@ -91,18 +92,22 @@ Item {
         onRecentMenuRequested: (pointX, pointY) => host.mainWindow.menus.presentPlaceMenu("recent", RecentService.path, sidebar, pointX, pointY)
         onBookmarkRenameRequested: path => host.mainWindow.dialogs.renameBookmark(path)
         onLeaveRequested: host.leave()
-        onDropRequested: (path, drop) => host.mainWindow.drag.applyDrop(DragService.pathsFrom(drop), path, DragService.overrideFor(drop.proposedAction))
+        onDropRequested: (path, drop) => {
+            if (DragService.extractArkDrop(drop, path))
+                return;
+            host.mainWindow.drag.applyDrop(DragService.pathsFrom(drop), path, DragService.overrideFor(drop.proposedAction));
+        }
     }
 
     Item {
         id: sidebarSlot
 
         readonly property real maximumWidth: Math.max(FilesMetrics.sidebarMinWidth, host.width - host.contentMinWidth)
-        readonly property real expandedWidth: Math.max(FilesMetrics.sidebarMinWidth, Math.min(maximumWidth, preferredWidth))
+        readonly property real expandedWidth: Math.max(FilesMetrics.sidebarMinWidth, Math.min(maximumWidth, FilesMetrics.sidebarWidth))
         readonly property real layoutWidth: width > FilesMetrics.sidebarRailWidth ? expandedWidth : width
-        property real preferredWidth: CacheData.sidebarWidth
 
         anchors.top: parent.top
+        anchors.topMargin: host.dockedTop
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         width: {
@@ -112,21 +117,12 @@ Item {
         }
         clip: true
 
-        Connections {
-            target: CacheData
-
-            function onSidebarWidthChanged() {
-                if (!sidebarResizeArea.pressed)
-                    sidebarSlot.preferredWidth = CacheData.sidebarWidth;
-            }
-        }
-
         Behavior on width {
-            enabled: Theme.animationsEnabled && !sidebarResizeArea.pressed
+            enabled: Theme.animationsEnabled
             NumberAnimation {
-                duration: Theme.expressiveDurations.expressiveFastSpatial
+                duration: Theme.expressiveDurations.expressiveSlowEffects
                 easing.type: Easing.BezierSpline
-                easing.bezierCurve: Theme.expressiveCurves.standard
+                easing.bezierCurve: Theme.expressiveCurves.expressiveSlowEffects
             }
         }
 
@@ -134,60 +130,21 @@ Item {
             id: dockedSidebar
 
             anchors.top: parent.top
-            anchors.bottom: parent.bottom
+            anchors.bottom: dockedJobs.top
             anchors.left: parent.left
+            anchors.bottomMargin: dockedJobs.visible ? FilesMetrics.sidebarSectionSpacing : 0
             width: Math.max(0, parent.layoutWidth - FilesMetrics.sidebarPadding * 2)
             visible: parent.width > 0
         }
-    }
 
-    Item {
-        id: sidebarResizer
+        SidebarJobs {
+            id: dockedJobs
 
-        anchors.left: sidebarSlot.right
-        anchors.leftMargin: -width / 2
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        width: FilesMetrics.splitterWidth
-        visible: host.docked && !host.rail
-        z: 1
-
-        Rectangle {
-            anchors.centerIn: parent
-            width: Theme.outlineWidthFocused
-            height: FilesMetrics.splitterHandleHeight
-            radius: Theme.cornerRadiusFull
-            color: Theme.primary
-            visible: sidebarResizeArea.containsMouse || sidebarResizeArea.pressed
-        }
-
-        MouseArea {
-            id: sidebarResizeArea
-
-            property real pressX: 0
-            property real startWidth: 0
-
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.SplitHCursor
-            acceptedButtons: Qt.LeftButton
-            onPressed: mouse => {
-                pressX = mapToItem(host, mouse.x, 0).x;
-                startWidth = sidebarSlot.width;
-            }
-            onPositionChanged: mouse => {
-                if (!pressed)
-                    return;
-                const delta = mapToItem(host, mouse.x, 0).x - pressX;
-                const width = startWidth + (I18n.isRtl ? -delta : delta);
-                sidebarSlot.preferredWidth = Math.max(FilesMetrics.sidebarMinWidth, Math.min(sidebarSlot.maximumWidth, width));
-            }
-            onReleased: CacheData.sidebarWidth = Math.round(sidebarSlot.preferredWidth)
-            onCanceled: sidebarSlot.preferredWidth = CacheData.sidebarWidth
-            onDoubleClicked: {
-                sidebarSlot.preferredWidth = FilesMetrics.sidebarWidth;
-                CacheData.sidebarWidth = Math.round(FilesMetrics.sidebarWidth);
-            }
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.margins: FilesMetrics.sidebarPadding
+            width: dockedSidebar.width
+            maximumHeight: parent.height * FilesMetrics.sidebarJobsShare
         }
     }
 
@@ -200,8 +157,9 @@ Item {
         Behavior on opacity {
             enabled: Theme.animationsEnabled
             NumberAnimation {
-                duration: Theme.shortDuration
-                easing.type: Theme.standardEasing
+                duration: Theme.expressiveDurations.expressiveFastEffects
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Theme.expressiveCurves.expressiveFastEffects
             }
         }
 
@@ -216,7 +174,7 @@ Item {
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        width: Math.max(FilesMetrics.sidebarMinWidth, Math.min(host.width - FilesMetrics.contentMarginH * 2, CacheData.sidebarWidth))
+        width: Math.max(FilesMetrics.sidebarMinWidth, Math.min(host.width - FilesMetrics.contentMarginH * 2, FilesMetrics.sidebarWidth))
         visible: x > -width
         x: host.overlayOpen ? 0 : -width
         color: Theme.foregroundColor(Theme.surfaceContainerLow, true)
@@ -245,6 +203,7 @@ Item {
             id: overlaySidebar
 
             anchors.fill: parent
+            anchors.topMargin: FilesMetrics.sidebarPadding
         }
     }
 }

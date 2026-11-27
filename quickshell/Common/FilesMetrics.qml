@@ -12,6 +12,7 @@ Singleton {
     readonly property real windowMinHeight: Theme.smallBreakpoint * 2 / 3
     readonly property real sidebarWidth: FileBrowserMetrics.sidebarWidth
     readonly property real sidebarMinWidth: sidebarWidth * 0.75
+    readonly property real sidebarJobsShare: 0.4
     readonly property real sidebarPadding: FileBrowserMetrics.sidebarPadding
     readonly property real sidebarSectionSpacing: Theme.spacingL
     readonly property int sidebarOverlayBreakpoint: FileBrowserMetrics.sidebarBreakpoint
@@ -30,8 +31,10 @@ Singleton {
     readonly property real statusBarHeight: topbarControlSize
     readonly property real cardPadding: Theme.spacingS
     readonly property real sidebarRailWidth: FileBrowserMetrics.sidebarRailWidth
-    readonly property real overviewCardWidth: Theme.sidebarWidth * 0.9
-    readonly property real overviewCardHeight: overviewCardWidth * 1.3
+    readonly property real overviewCardMinWidth: Theme.sidebarWidth * 0.75
+    readonly property real overviewCardMaxWidth: Theme.sidebarWidth * 1.5
+    readonly property real overviewCardAspect: 1.3
+    readonly property real overviewIconShare: 0.4
     readonly property int overviewColumns: 3
     readonly property int overviewEntries: overviewColumns * overviewColumns
     readonly property int tabCountCap: 99

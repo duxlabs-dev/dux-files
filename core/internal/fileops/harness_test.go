@@ -104,6 +104,13 @@ func run(t *testing.T, m *Manager, bus *testBus, s spec) View {
 	return bus.wait(t, m.enqueue(s).id)
 }
 
+func slowCopies(t *testing.T) {
+	t.Helper()
+	chunk, span := copyChunk, rangeChunk
+	copyChunk, rangeChunk = 1, 1
+	t.Cleanup(func() { copyChunk, rangeChunk = chunk, span })
+}
+
 func tempsIn(t *testing.T, dir string) []string {
 	t.Helper()
 	entries, err := os.ReadDir(dir)

@@ -22,6 +22,9 @@ Without arguments it shows the file manager window. With locations it behaves li
 	PreRunE: shellApp.ResolveConfig,
 	RunE: func(_ *cobra.Command, args []string) error {
 		if len(args) == 0 {
+			if openNewWindow {
+				return openNewEmptyWindow()
+			}
 			return shellApp.CallOrLaunch("ui.show", nil)
 		}
 		return openLocations(args)
@@ -68,6 +71,5 @@ func init() {
 	rootCmd.AddCommand(searchCmd)
 	rootCmd.AddCommand(portalCmd)
 	rootCmd.AddCommand(ipcCmd)
-	rootCmd.AddCommand(helperCmd)
 	rootCmd.AddCommand(blurCmd)
 }

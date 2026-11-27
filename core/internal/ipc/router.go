@@ -52,6 +52,8 @@ func Route(ctx context.Context, w *ConnWriter, req Request, deps Deps) {
 		HandleRecent(ctx, w, req, deps)
 	case strings.HasPrefix(req.Method, "location."):
 		HandleLocation(ctx, w, req)
+	case req.Method == "files.dndExtract":
+		HandleDndExtract(ctx, w, req)
 	case req.Method == "files.preview":
 		HandlePreview(ctx, w, req)
 	case req.Method == "files.imageSize":
@@ -61,6 +63,9 @@ func Route(ctx context.Context, w *ConnWriter, req Request, deps Deps) {
 	case strings.HasPrefix(req.Method, "files."):
 		if deps.Files == nil {
 			wire.RespondError(w, req.ID, wire.Fail(files.CodeNotSupported, "file service unavailable"))
+			return
+		}
+		if handleArchiveFiles(w, req, deps) {
 			return
 		}
 		deps.Files.Handle(ctx, w, req)

@@ -10,20 +10,29 @@ Column {
 
     property string mime: ""
     property string path: ""
+    property string resolvedMime: ""
     property var apps: []
+    property int requestSerial: 0
 
     readonly property bool canSetDefault: SandboxService.available("setDefault")
 
-    onMimeChanged: reload()
+    onMimeChanged: Qt.callLater(reload)
+    onPathChanged: {
+        if (mime === "")
+            Qt.callLater(reload);
+    }
     Component.onCompleted: reload()
 
     function reload() {
+        const token = ++requestSerial;
         apps = [];
-        if (mime === "")
+        resolvedMime = mime;
+        if (mime === "" && path === "")
             return;
         AppsService.appsForMime(mime, path, response => {
-            if (response.error)
+            if (response.error || token !== openWith.requestSerial)
                 return;
+            openWith.resolvedMime = response.mimeType || "";
             openWith.apps = response.apps || [];
         });
     }
@@ -32,7 +41,8 @@ Column {
 
     StyledText {
         width: parent.width
-        text: openWith.mime === "" ? I18n.tr("Not available", "explanation for a feature the environment does not permit") : openWith.mime
+        visible: text !== ""
+        text: openWith.resolvedMime
         color: Theme.surfaceVariantText
         font.pixelSize: Theme.fontSizeSmall
         elide: Text.ElideRight
@@ -58,7 +68,7 @@ Column {
             onClicked: {
                 if (!openWith.canSetDefault)
                     return;
-                AppsService.setDefault(openWith.mime, modelData.id, () => openWith.reload());
+                AppsService.setDefault(openWith.resolvedMime, modelData.id, () => openWith.reload());
             }
         }
     }

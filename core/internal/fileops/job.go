@@ -42,6 +42,7 @@ const (
 	KindDuplicate      Kind = "duplicate"
 	KindNewFolderWith  Kind = "newFolderWith"
 	KindPasteImage     Kind = "pasteImage"
+	KindUnlockArchive  Kind = "unlockArchive"
 )
 
 type replay string
@@ -155,6 +156,9 @@ type spec struct {
 	template  string
 	format    string
 	password  string
+	entries   []string
+	layout    string
+	toCache   bool
 	mode      uint32
 	uid       int
 	gid       int
@@ -182,6 +186,8 @@ func (s spec) replayable() bool {
 	case s.kind == KindPasteImage:
 		return false
 	case s.kind == KindCompress && s.password != "":
+		return false
+	case s.toCache:
 		return false
 	}
 	return true

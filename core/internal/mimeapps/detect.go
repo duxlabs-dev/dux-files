@@ -1,6 +1,9 @@
 package mimeapps
 
 import (
+	"cmp"
+	"errors"
+	"io"
 	"os"
 	"sync"
 	"unicode/utf8"
@@ -33,7 +36,7 @@ func (d *Detector) Sniff(path string) string {
 	defer d.release(buf)
 
 	head, ok := d.head(path, *buf)
-	if !ok {
+	if !ok || len(head) == 0 {
 		return ""
 	}
 	if mimeType, _ := d.db.sniffData(head); mimeType != "" {
@@ -58,7 +61,7 @@ func (d *Detector) Detect(path string, isDir bool) string {
 
 	head, ok := d.head(path, *buf)
 	if !ok {
-		return globbed
+		return cmp.Or(globbed, TypeBinary)
 	}
 
 	sniffed, priority := d.db.sniffData(head)
@@ -86,8 +89,8 @@ func (d *Detector) head(path string, buf []byte) ([]byte, bool) {
 	}
 	defer f.Close()
 
-	n, _ := f.Read(buf)
-	if n == 0 {
+	n, err := f.Read(buf)
+	if err != nil && !errors.Is(err, io.EOF) {
 		return nil, false
 	}
 	return buf[:n], true

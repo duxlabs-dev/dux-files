@@ -31,7 +31,7 @@ func copyXattrs(src, dst string) error {
 		if _, err := unix.Lgetxattr(src, name, value); err != nil {
 			continue
 		}
-		if err := unix.Lsetxattr(dst, name, value, 0); err != nil {
+		if err := unix.Setxattr(dst, name, value, 0); err != nil {
 			failed = err
 		}
 	}

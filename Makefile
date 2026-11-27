@@ -194,7 +194,7 @@ help:
 	@echo "  dev                - Fast development build"
 	@echo "  run                - Build and run against the in-repo quickshell config"
 	@echo "  clean / test / fmt / vet"
-	@echo "  lint-qml           - qmllint shell.qml through the Quickshell tooling VFS (needs quickshell/.qmlls.ini)"
+	@echo "  lint-qml           - qmllint shell.qml through the Quickshell tooling VFS (writes quickshell/.qmlls.ini with `dfiles qs tooling`)"
 	@echo "  test-qml           - Run the shell logic tests and the offscreen QML fixtures"
 	@echo "  update-common      - Bump the dux-qml-common submodule + flake input"
 	@echo "  update-qtbase      - Bump the dux-qt-base submodule + flake input"

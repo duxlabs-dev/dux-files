@@ -28,15 +28,17 @@ Item {
         Behavior on opacity {
             enabled: Theme.animationsEnabled
             NumberAnimation {
-                duration: Theme.shortDuration
-                easing.type: Theme.standardEasing
+                duration: Theme.expressiveDurations.expressiveFastEffects
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Theme.expressiveCurves.expressiveFastEffects
             }
         }
         Behavior on anchors.bottomMargin {
             enabled: Theme.animationsEnabled
             NumberAnimation {
-                duration: Theme.shortDuration
-                easing.type: Theme.standardEasing
+                duration: Theme.expressiveDurations.expressiveFastSpatial
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Theme.expressiveCurves.expressiveFastSpatial
             }
         }
 

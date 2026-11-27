@@ -23,7 +23,7 @@ Popup {
             level: Theme.elevationLevel2
             fallbackOffset: Theme.spacingXS
             targetRadius: Theme.cornerRadiusL
-            targetColor: Theme.surfaceContainer
+            targetColor: Theme.cardSurface
             borderColor: Theme.outlineMedium
             borderWidth: Theme.layerOutlineWidth
             shadowEnabled: Theme.elevationEnabled && SettingsData.popoutElevationEnabled
@@ -34,6 +34,12 @@ Popup {
         active: root.visible
         sourceComponent: Column {
             spacing: Theme.spacingM
+
+            Component.onDestruction: FileOpsService.holdHistory(false)
+
+            HoverHandler {
+                onHoveredChanged: FileOpsService.holdHistory(hovered)
+            }
 
             StyledText {
                 text: I18n.tr("File operations", "jobs popover header")

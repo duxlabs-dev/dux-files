@@ -70,6 +70,12 @@ ShellRoot {
         iconName: "folder"
     }
 
+    FileContextMenu {
+        id: contextMenu
+
+        selectionCount: 1
+    }
+
     Component.onCompleted: {
         DC.Style.theme = Theme;
         DC.I18n.backend = I18n;
@@ -112,6 +118,35 @@ ShellRoot {
 
         iconGrid.contentY = iconGrid.maximumContentY;
         check("the icon grid can scroll past its first rows", [iconGrid.contentHeight > iconGrid.height, iconGrid.contentY > 0], [true, true]);
+
+        SettingsData.motionDuration = 4;
+        SettingsData.setDensity("dense");
+        check("a density switch moves settings on the old default and keeps user-set ones", [SettingsData.fileNameSize, SettingsData.motionDuration, SettingsData.isDefault("fileNameSize"), SettingsData.isDefault("motionDuration")], [12, 4, true, false]);
+
+        SettingsData.fileNameSize = 18;
+        SettingsData.setDensity("spacious");
+        check("a user-set file name size survives a density switch", SettingsData.fileNameSize, 18);
+
+        SettingsData.resetToDefault("fileNameSize");
+        SettingsData.resetToDefault("motionDuration");
+        check("reset writes the current density's default", [SettingsData.fileNameSize, SettingsData.motionDuration], [15, 2]);
+
+        DC.Style.settings = SettingsData;
+        SettingsData.fontScale = 1.2;
+        check("file names scale with the font scale", FileBrowserSettings.fileNamePixelSize, 18);
+        SettingsData.fontScale = 1.0;
+        SettingsData.setDensity("comfortable");
+
+        const menuRow = Array.from(contextMenu.rows).find(item => item.separator === false);
+        const comfortableHeight = menuRow.height;
+        SettingsData.setDensity("compact");
+        const compactHeight = menuRow.height;
+        SettingsData.setDensity("dense");
+        const denseHeight = menuRow.height;
+        SettingsData.setDensity("spacious");
+        const spaciousHeight = menuRow.height;
+        SettingsData.setDensity("comfortable");
+        check("context menu rows scale with interface density", [spaciousHeight > comfortableHeight, compactHeight < comfortableHeight, denseHeight < compactHeight], [true, true, true]);
 
         finish();
     }

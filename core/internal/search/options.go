@@ -21,6 +21,7 @@ type Options struct {
 	CrossDevice     bool
 	Fuzzy           bool
 	Contents        bool
+	Regex           bool
 	Direct          bool
 	Types           []string
 	ModifiedAfterMs int64

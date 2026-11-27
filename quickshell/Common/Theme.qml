@@ -184,15 +184,22 @@ Singleton {
     property color primary: currentThemeData.primary
     property color primaryText: currentThemeData.primaryText
     readonly property real containerTint: currentThemeData.containerTint ?? Tonal.defaultTint(surfaceContainer)
-    property color primaryContainer: currentThemeData.softPrimaryContainer || Tonal.softContainer(primary, surfaceContainer, containerTint)
+    // softContainer steps below its base on light surfaces, and the dim host is the lowest role there
+    readonly property color softContainerBase: lightSurfaces ? surfaceLadder.host : surfaceContainer
+    property color primaryContainer: currentThemeData.softPrimaryContainer || Tonal.softContainer(primary, softContainerBase, containerTint)
     property color secondary: currentThemeData.secondary
-    property color secondaryContainer: currentThemeData.secondaryContainer || blend(surfaceContainerHigh, secondary, 0.35)
+    readonly property color themeSecondaryContainer: currentThemeData.secondaryContainer || blend(surfaceContainerHigh, secondary, 0.35)
+    property color secondaryContainer: Tonal.standApart(themeSecondaryContainer, selectionNeighbors, selectedContainerDistinction)
     property color tertiary: currentThemeData.tertiary || currentThemeData.secondary
-    property color tertiaryContainer: currentThemeData.tertiaryContainer || blend(surfaceContainerHigh, tertiary, 0.35)
+    readonly property color themeTertiaryContainer: currentThemeData.tertiaryContainer || blend(surfaceContainerHigh, tertiary, 0.35)
+    property color tertiaryContainer: Tonal.standApart(themeTertiaryContainer, selectionNeighbors, selectedContainerDistinction)
     readonly property real selectedContainerTint: currentThemeData.selectedContainerTint ?? 0.2
     // DMS exports surfaceContainerHigh as secondary_container when the theme sets none
-    readonly property bool themedSelectedContainer: !!currentThemeData.secondaryContainer && !Qt.colorEqual(secondaryContainer, surfaceContainerHigh) && Contrast.isTonal(secondaryContainer, onSecondaryContainer) && Contrast.isTonal(secondaryContainer, surfaceText)
-    readonly property color selectedContainer: currentThemeData.selectedContainer || (themedSelectedContainer ? secondaryContainer : Contrast.subtleTint(surfaceContainerHigh, primary, surfaceText, selectedContainerTint))
+    // A selected row has to read against the rows beside it and the surface behind them
+    readonly property var selectionNeighbors: [hostSurface, cardSurface, chipSurface, hostRecessSurface]
+    readonly property real selectedContainerDistinction: 1.15
+    readonly property bool themedSelectedContainer: !!currentThemeData.secondaryContainer && !Qt.colorEqual(themeSecondaryContainer, surfaceContainerHigh) && Contrast.isTonal(secondaryContainer, onSecondaryContainer) && Contrast.isTonal(secondaryContainer, surfaceText) && Contrast.worstRatio(secondaryContainer, selectionNeighbors) >= selectedContainerDistinction
+    readonly property color selectedContainer: currentThemeData.selectedContainer || (themedSelectedContainer ? secondaryContainer : Contrast.distinctTint(chipSurface, primary, surfaceText, selectedContainerTint, selectionNeighbors, selectedContainerDistinction))
     readonly property color accentOnSelectedContainer: currentThemeData.accentOnSelectedContainer || (Contrast.ratio(primary, selectedContainer) >= 3 ? primary : onSelectedContainer)
     readonly property color accentOnPrimaryContainer: currentThemeData.accentOnPrimaryContainer || (Contrast.ratio(primary, primaryContainer) >= 3 ? primary : onPrimaryContainer)
     readonly property var accents: Accents.derive(primary, isLightMode, currentThemeData.accents ?? null)
@@ -212,10 +219,17 @@ Singleton {
     property color surfaceContainer: currentThemeData.surfaceContainer
     property color surfaceContainerHigh: currentThemeData.surfaceContainerHigh
     property color surfaceContainerHighest: currentThemeData.surfaceContainerHighest || surfaceContainerHigh
-    readonly property color hostSurface: surface
-    readonly property color cardSurface: surfaceContainer
-    readonly property color chipSurface: surfaceContainerHigh
-    readonly property color chipSurfaceNested: surfaceContainerHighest
+    // Keyed on the surface tone, not isLightMode: a dark-only theme keeps its dark ladder in light mode
+    readonly property bool lightSurfaces: Tonal.isLight(surface)
+    readonly property var surfaceLadder: Tonal.surfaceLadder(surface, surfaceContainerLow, surfaceContainer, surfaceContainerHigh, surfaceContainerHighest)
+    readonly property color hostSurface: surfaceLadder.host
+    readonly property color cardSurface: surfaceLadder.card
+    readonly property color chipSurface: surfaceLadder.chip
+    readonly property color chipSurfaceNested: surfaceLadder.nested
+    // A hovered light chip lands on the dim host tone, so a chip straight on the host takes the card tone there
+    readonly property color hostChipSurface: lightSurfaces ? cardSurface : chipSurface
+    // A region of the host set back from the rest, like a sidebar. Dark lifts the neighboring pane instead; a light pane cannot rise under white cards.
+    readonly property color hostRecessSurface: lightSurfaces ? Tonal.dropTone(hostSurface, Tonal.LIGHT_RECESS_DROP) : hostSurface
     readonly property color tooltipSurface: inverseSurface
     readonly property color tooltipText: Contrast.readableOn(tooltipSurface, [inverseOnSurface].concat(onContainerCandidates))
     property color inverseSurface: currentThemeData.inverseSurface || surfaceText
@@ -267,12 +281,12 @@ Singleton {
         Binding {
             target: root
             property: "onSecondaryContainer"
-            value: root.currentThemeData.onSecondaryContainer || Contrast.readableOn(root.secondaryContainer, root.onContainerCandidates)
+            value: root.readableOnContainer(root.secondaryContainer, root.currentThemeData.onSecondaryContainer)
         },
         Binding {
             target: root
             property: "onTertiaryContainer"
-            value: root.currentThemeData.onTertiaryContainer || Contrast.readableOn(root.tertiaryContainer, root.onContainerCandidates)
+            value: root.readableOnContainer(root.tertiaryContainer, root.currentThemeData.onTertiaryContainer)
         },
         Binding {
             target: root
@@ -282,7 +296,7 @@ Singleton {
         Binding {
             target: root
             property: "onErrorContainer"
-            value: root.currentThemeData.errorContainerText || root.onSurface
+            value: root.currentThemeData.errorContainerText || root.blend(root.surfaceText, root.error, 0.5)
         },
         Binding {
             target: root
@@ -291,10 +305,17 @@ Singleton {
         }
     ]
     readonly property var onContainerCandidates: [surfaceText, surface, contrastLight, contrastDark]
+
+    // The theme's own on-color wins while it still reads on the container
+    function readableOnContainer(container, explicit) {
+        if (!explicit)
+            return Contrast.readableOn(container, onContainerCandidates);
+        return Contrast.readableOn(container, [Qt.color(explicit)].concat(onContainerCandidates));
+    }
     readonly property real tonalTintAlpha: 0.16
 
     property color error: currentThemeData.error
-    property color errorContainer: currentThemeData.errorContainer || surfaceContainerHigh
+    property color errorContainer: currentThemeData.errorContainer || blend(surfaceContainerHigh, error, 0.35)
     property color warning: currentThemeData.warning
     property color info: currentThemeData.info
     property color success: currentThemeData.success
@@ -304,10 +325,11 @@ Singleton {
     property color primaryPressed: Qt.rgba(primary.r, primary.g, primary.b, 0.16)
     property color primarySelected: Qt.rgba(primary.r, primary.g, primary.b, 0.3)
 
-    property color surfaceHover: Qt.rgba(surfaceVariant.r, surfaceVariant.g, surfaceVariant.b, 0.08)
-    property color surfacePressed: Qt.rgba(surfaceVariant.r, surfaceVariant.g, surfaceVariant.b, 0.12)
-    property color surfaceLight: Qt.rgba(surfaceVariant.r, surfaceVariant.g, surfaceVariant.b, 0.1)
-    property color surfaceVariantAlpha: Qt.rgba(surfaceVariant.r, surfaceVariant.g, surfaceVariant.b, 0.2)
+    // Alpha of the text color reads on every role in both modes; alpha of a surface tone vanishes on light surfaces
+    property color surfaceHover: withAlpha(surfaceText, stateLayerHover)
+    property color surfacePressed: withAlpha(surfaceText, stateLayerPressed)
+    property color surfaceLight: withAlpha(surfaceText, 0.03)
+    property color surfaceVariantAlpha: withAlpha(surfaceText, 0.06)
 
     property color surfaceTextHover: Qt.rgba(surfaceText.r, surfaceText.g, surfaceText.b, 0.08)
     property color surfaceTextMedium: Qt.rgba(surfaceText.r, surfaceText.g, surfaceText.b, 0.7)
@@ -349,6 +371,7 @@ Singleton {
         scale: SettingsData.fontScale
     }
     readonly property real fontScale: typography.fontScale
+    property real fontSizeXSmall: Math.round(fontScale * 10)
     property real fontSizeSmall: Math.round(fontScale * 12)
     property real fontSizeMedium: Math.round(fontScale * 14)
     property real fontSizeLarge: Math.round(fontScale * 16)
@@ -424,9 +447,9 @@ Singleton {
     readonly property real sliderHandleHeight: 44
     readonly property real sliderHandleGap: 6
     readonly property real sliderTrackHeightS: 24
-    readonly property real sliderHandleHeightS: 44
+    readonly property real sliderHandleHeightS: 36
     readonly property real sliderTrackHeightM: 40
-    readonly property real sliderHandleHeightM: 44
+    readonly property real sliderHandleHeightM: 52
     readonly property real sliderTrackHeightL: 56
     readonly property real sliderHandleHeightL: 68
     readonly property real sliderTrackHeightXL: 96
@@ -439,6 +462,7 @@ Singleton {
     readonly property real switchThumbPressed: 28
     readonly property real sliderStopSize: 4
     readonly property real sliderTrackMinAlpha: 0.4
+    readonly property real selectedLayerMinAlpha: 0.4
     readonly property real sliderTickSize: 3
     readonly property real menuItemHeight: 40
     readonly property real outlineWidth: 1
@@ -460,6 +484,8 @@ Singleton {
     }
     readonly property real scrimAlpha: 0.55
     readonly property color scrimColor: currentThemeData.scrim || "#000000"
+    // A light scrim has to end up below the dim host, so it starts one host step under it
+    readonly property color backdropColor: lightSurfaces ? Tonal.dropTone(surfaceLadder.host, Tonal.LIGHT_HOST_DROP) : scrimColor
     readonly property real buttonHeightXXS: 28
     readonly property real buttonHeightXS: 32
     readonly property real buttonHeightS: 40
@@ -502,22 +528,18 @@ Singleton {
     readonly property real lockScreenBlur: 0.8
     readonly property int lockScreenBlurMax: 32
     readonly property color screenOffColor: "#000000"
-    readonly property real textFieldSpatialStiffness: 800
-    readonly property real textFieldSpatialDampingRatio: 1
-    readonly property real textFieldFastEffectsStiffness: 3800
-    readonly property real textFieldSlowEffectsStiffness: 800
     readonly property real textEditHeight: Math.round(fontSizeMedium * 8)
-    readonly property real tooltipMaxWidth: 500
+    readonly property real tooltipMaxWidth: 300
     readonly property int tooltipDelay: 400
     readonly property real scrollbarThickness: 6
     readonly property real scrollbarGap: spacingXS
     readonly property int scrollbarHideDelay: 1200
     readonly property real menuMaxHeight: 400
-    readonly property real clockFaceSize: 250
-    readonly property real clockOuterRingRatio: 0.34
-    readonly property real clockInnerRingRatio: 0.2
+    readonly property real clockFaceSize: 256
+    readonly property real clockOuterRingRatio: 101 / clockFaceSize
+    readonly property real clockInnerRingRatio: 69 / clockFaceSize
     readonly property real clockHandWidth: 2
-    readonly property real clockHandleSize: 40
+    readonly property real clockHandleSize: 48
     readonly property real clockCenterSize: 8
     readonly property int clockSwitchDelay: 100
     readonly property real chipIconSize: 18
@@ -545,16 +567,18 @@ Singleton {
     readonly property bool blurLayersActive: BlurService.enabled
     readonly property bool connectedSurfaceBlurEnabled: true
 
-    readonly property color windowSurface: withAlpha(surface, floatingWindowTransparency)
-    readonly property color floatingWindowPaneSurface: withAlpha(surfaceContainer, floatingWindowForegroundAlpha)
-    readonly property color floatingSurface: withAlpha(surfaceContainer, popupTransparency)
-    readonly property color nestedSurface: withAlpha(surfaceContainerHigh, foregroundAlpha)
-    readonly property color floatingWindowSurface: withAlpha(surfaceContainer, floatingWindowTransparency)
-    readonly property color floatingWindowNestedSurface: withAlpha(surfaceContainerHigh, floatingWindowForegroundAlpha)
-    readonly property color floatingWindowFieldColor: floatingWindowNestedSurface
+    readonly property color windowSurface: withAlpha(hostSurface, floatingWindowTransparency)
+    readonly property color floatingWindowPaneSurface: withAlpha(cardSurface, floatingWindowForegroundAlpha)
+    readonly property color floatingSurface: withAlpha(hostSurface, popupTransparency)
+    readonly property color nestedSurface: foregroundColor(cardSurface)
+    readonly property color floatingWindowSurface: withAlpha(hostSurface, floatingWindowTransparency)
+    readonly property color floatingWindowNestedSurface: foregroundColor(cardSurface, true)
+    readonly property color chipLayer: foregroundColor(chipSurface, true)
+    readonly property color selectedLayer: blendAlpha(selectedContainer, Math.max(selectedLayerMinAlpha, floatingWindowForegroundAlpha))
+    readonly property color floatingWindowFieldColor: chipLayer
     readonly property color floatingWindowFieldBorderColor: withAlpha(outline, 0.16)
     readonly property color floatingWindowFieldFocusedBorderColor: primary
-    readonly property color popupFieldColor: nestedSurface
+    readonly property color popupFieldColor: foregroundColor(chipSurface)
     readonly property color popupFieldBorderColor: withAlpha(outline, 0.16)
     readonly property color popupFieldFocusedBorderColor: primary
 
@@ -577,38 +601,44 @@ Singleton {
         return withAlpha(blended, Math.max(0.3, blended.a));
     }
 
-    readonly property int currentAnimationBaseDuration: SettingsData.animationDuration
-    readonly property int currentAnimationSpeed: currentAnimationBaseDuration > 0 ? Style.AnimationSpeed.Custom : Style.AnimationSpeed.None
-    readonly property int shorterDuration: Math.round(currentAnimationBaseDuration * 0.2)
-    readonly property int shortDuration: Math.round(currentAnimationBaseDuration * 0.3)
-    readonly property int mediumDuration: Math.round(currentAnimationBaseDuration * 0.6)
-    readonly property int standardEasing: Easing.OutCubic
-    readonly property int emphasizedEasing: Easing.OutQuart
+    readonly property var motionDurationScales: [0.5, 0.75, 1, 1.5, 2]
+    readonly property bool motionOff: SettingsData.motionDuration < 0
+    readonly property bool reduceMotion: motionOff || SettingsData.reduceMotion
+    readonly property bool animationsEnabled: !reduceMotion
+    readonly property real motionScale: motionOff ? 0 : (motionDurationScales[SettingsData.motionDuration] ?? 1)
+    readonly property real springScale: motionOff ? 1 : motionScale
+
+    function motionMs(specMs) {
+        return Math.round(specMs * motionScale);
+    }
+
+    readonly property int shorterDuration: motionMs(100)
+    readonly property int shortDuration: motionMs(150)
+    readonly property int mediumDuration: motionMs(300)
     readonly property bool elevationEnabled: true
     readonly property string elevationLightDirection: "top"
 
     readonly property real stateLayerHover: 0.08
-    readonly property real stateLayerFocus: 0.12
-    readonly property real stateLayerPressed: 0.12
+    readonly property real stateLayerFocus: 0.1
+    readonly property real stateLayerPressed: 0.1
     readonly property real stateLayerDrag: 0.16
 
     readonly property var springSpecs: ({
-            "expressive": [560, 37],
-            "fast": [220, 23],
-            "default": [300, 24]
+            "fastSpatial": [800, 2 * 0.6 * Math.sqrt(800)],
+            "defaultSpatial": [380, 2 * 0.8 * Math.sqrt(380)],
+            "slowSpatial": [200, 2 * 0.8 * Math.sqrt(200)],
+            "fastEffects": [3800, 2 * Math.sqrt(3800)],
+            "defaultEffects": [1600, 2 * Math.sqrt(1600)],
+            "slowEffects": [800, 2 * Math.sqrt(800)]
         })
     readonly property var springDampingScales: [1.22, 1.0, 0.82]
-    readonly property bool springMotionDisabled: currentAnimationBaseDuration <= 0
-    readonly property bool reduceMotion: SettingsData.reduceMotion
-    readonly property bool animationsEnabled: !reduceMotion && currentAnimationBaseDuration > 0
 
-    function springPreset(name, baseDuration) {
-        const spec = springSpecs[name] ?? springSpecs["default"];
-        const f = Math.max(0.05, baseDuration / 500);
-        const bounce = springDampingScales[Math.round(SettingsData.springBounce)] ?? 1;
+    function springPreset(name) {
+        const spec = springSpecs[name];
+        const dampingScale = name.endsWith("Spatial") ? (springDampingScales[SettingsData.springBounce] ?? 1) : 1;
         return {
-            "stiffness": spec[0] / (f * f),
-            "damping": spec[1] / f * bounce,
+            "stiffness": spec[0] / (springScale * springScale),
+            "damping": spec[1] / springScale * dampingScale,
             "mass": 1
         };
     }
@@ -638,25 +668,21 @@ Singleton {
         })
 
     readonly property var expressiveCurves: ({
-            "emphasized": [0.05, 0, 2 / 15, 0.06, 1 / 6, 0.4, 5 / 24, 0.82, 0.25, 1, 1, 1],
-            "emphasizedAccel": [0.3, 0, 0.8, 0.15, 1, 1],
-            "emphasizedDecel": [0.05, 0.7, 0.1, 1, 1, 1],
-            "standard": [0.2, 0, 0, 1, 1, 1],
-            "standardAccel": [0.3, 0, 1, 1, 1, 1],
-            "standardDecel": [0, 0, 0, 1, 1, 1],
             "expressiveFastSpatial": [0.42, 1.67, 0.21, 0.9, 1, 1],
             "expressiveDefaultSpatial": [0.38, 1.21, 0.22, 1, 1, 1],
-            "expressiveEffects": [0.34, 0.8, 0.34, 1, 1, 1]
+            "expressiveSlowSpatial": [0.39, 1.29, 0.35, 0.98, 1, 1],
+            "expressiveFastEffects": [0.31, 0.94, 0.34, 1, 1, 1],
+            "expressiveEffects": [0.34, 0.8, 0.34, 1, 1, 1],
+            "expressiveSlowEffects": [0.34, 0.88, 0.34, 1, 1, 1]
         })
 
     readonly property var expressiveDurations: ({
-            "fast": currentAnimationBaseDuration * 0.4,
-            "normal": currentAnimationBaseDuration * 0.8,
-            "large": currentAnimationBaseDuration * 1.2,
-            "extraLarge": currentAnimationBaseDuration * 2.0,
-            "expressiveFastSpatial": currentAnimationBaseDuration * 0.7,
-            "expressiveDefaultSpatial": currentAnimationBaseDuration,
-            "expressiveEffects": currentAnimationBaseDuration * 0.4
+            "expressiveFastSpatial": motionMs(350),
+            "expressiveDefaultSpatial": motionMs(500),
+            "expressiveSlowSpatial": motionMs(650),
+            "expressiveFastEffects": motionMs(150),
+            "expressiveEffects": motionMs(200),
+            "expressiveSlowEffects": motionMs(300)
         })
 
     function elevationOffsetXFor(level, direction, fallback) {

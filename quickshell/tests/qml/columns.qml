@@ -229,6 +229,17 @@ ShellRoot {
         browser.body.handleKey(stray);
         check("a key handed to the body moves the cursor", [stray.accepted, browser.selection.cursorPath], [true, "/home/me/docs/sub"]);
 
+        const type = letter => browser.body.handleKey({
+                "key": 0,
+                "modifiers": Qt.NoModifier,
+                "text": letter,
+                "accepted": false
+            });
+        type("r");
+        check("a typed letter jumps to the name starting with it", browser.selection.cursorPath, "/home/me/docs/readme.txt");
+        type("l");
+        check("a prefix no name starts with leaves the cursor where it was", browser.selection.cursorPath, "/home/me/docs/readme.txt");
+
         browser.navigate("/");
         check("the root chain is empty at /", columns().ancestors, []);
         browser.navigate("/home");

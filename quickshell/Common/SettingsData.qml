@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.DCommon.Common as DC
+import "SettingsDefaults.js" as Defaults
 
 Singleton {
     id: root
@@ -26,7 +27,7 @@ Singleton {
     property alias customThemeFile: adapter.customThemeFile
     property alias radiusStrength: adapter.radiusStrength
     property alias density: adapter.density
-    property alias animationDuration: adapter.animationDuration
+    property alias motionDuration: adapter.motionDuration
     property alias reduceMotion: adapter.reduceMotion
     property alias springBounce: adapter.springBounce
     property alias enableRippleEffects: adapter.enableRippleEffects
@@ -53,7 +54,7 @@ Singleton {
     property alias newWindowFolder: adapter.newWindowFolder
     property alias newTabFolder: adapter.newTabFolder
     property alias openLocationIn: adapter.openLocationIn
-    property alias extractOnOpen: adapter.extractOnOpen
+    property alias archiveOpen: adapter.archiveOpen
     property alias registerFileManager: adapter.registerFileManager
     property alias recentFiles: adapter.recentFiles
     property alias sidebarCollapsed: adapter.sidebarCollapsed
@@ -63,6 +64,7 @@ Singleton {
     property alias showHidden: adapter.showHidden
     property alias showExtensions: adapter.showExtensions
     property alias dateFormat: adapter.dateFormat
+    property alias fileNameSize: adapter.fileNameSize
     property alias foldersFirst: adapter.foldersFirst
     property alias hiddenLast: adapter.hiddenLast
     property alias rememberFolderViews: adapter.rememberFolderViews
@@ -91,6 +93,46 @@ Singleton {
     property alias listTyping: adapter.listTyping
     property alias gtkBookmarksOffered: adapter.gtkBookmarksOffered
 
+    function hasDefault(key) {
+        return Defaults.has(key);
+    }
+
+    function defaultFor(key) {
+        return Defaults.value(key, density);
+    }
+
+    function isDefault(key) {
+        return root[key] === defaultFor(key);
+    }
+
+    function resetToDefault(key) {
+        root[key] = defaultFor(key);
+    }
+
+    function setDensity(next) {
+        const moved = Defaults.transition(root, density, next);
+        density = next;
+        for (const key in moved)
+            root[key] = moved[key];
+    }
+
+    function adoptLegacyAnimationDuration(saved) {
+        if (typeof saved?.animationDuration !== "number" || "motionDuration" in saved)
+            return;
+        motionDuration = Defaults.motionStep(saved.animationDuration);
+    }
+
+    function adoptLegacyArchiveOpen(saved) {
+        if (saved?.extractOnOpen !== false || "archiveOpen" in saved)
+            return;
+        archiveOpen = "app";
+    }
+
+    function adoptLegacy(saved) {
+        adoptLegacyAnimationDuration(saved);
+        adoptLegacyArchiveOpen(saved);
+    }
+
     function folderFor(setting, fallback) {
         if (setting === "home")
             return Paths.strip(Paths.home);
@@ -110,6 +152,7 @@ Singleton {
         name: "settings"
         path: Paths.configDir + "/ui-settings.json"
         watchChanges: true
+        parse: text => root.adoptLegacy(store.objectFrom(text))
 
         adapter: JsonAdapter {
             id: adapter
@@ -119,7 +162,7 @@ Singleton {
             property string customThemeFile: ""
             property int radiusStrength: 50
             property string density: "comfortable"
-            property int animationDuration: 250
+            property int motionDuration: 2
             property bool reduceMotion: false
             property int springBounce: 1
             property bool enableRippleEffects: true
@@ -145,7 +188,7 @@ Singleton {
             property string newWindowFolder: "current"
             property string newTabFolder: "current"
             property string openLocationIn: "current"
-            property bool extractOnOpen: true
+            property string archiveOpen: "browse"
             property bool registerFileManager: true
             property bool recentFiles: true
             property bool sidebarCollapsed: false
@@ -155,6 +198,7 @@ Singleton {
             property bool showHidden: false
             property bool showExtensions: true
             property string dateFormat: "locale"
+            property int fileNameSize: 14
             property bool foldersFirst: true
             property bool hiddenLast: true
             property bool rememberFolderViews: true

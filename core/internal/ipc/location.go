@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"slices"
 
+	"github.com/duxlabs-dev/dux-files/core/internal/fileops"
 	"github.com/duxlabs-dev/dux-files/core/internal/location"
 	"github.com/duxlabs-dev/dux-files/core/internal/netmount"
 	"github.com/duxlabs-dev/dux-files/core/internal/pathutil"
@@ -20,6 +21,7 @@ func HandleLocation(_ context.Context, w *ConnWriter, req Request) {
 	case "location.resolve":
 		home, _ := os.UserHomeDir()
 		env := location.HomeEnv(nil)
+		env.InArchive = insideArchive
 		loc, err := location.Typed(params.StringOpt(req.Params, "text", ""), params.StringOpt(req.Params, "cwd", ""), home, env)
 		if err != nil {
 			wire.RespondError(w, req.ID, err)
@@ -32,6 +34,11 @@ func HandleLocation(_ context.Context, w *ConnWriter, req Request) {
 	default:
 		w.RespondError(req.ID, "unknown location method: "+req.Method)
 	}
+}
+
+func insideArchive(path string) bool {
+	_, inner, ok := fileops.LocateArchive(path)
+	return ok && inner != ""
 }
 
 func parentExists(path string) bool {
@@ -60,7 +67,7 @@ func missingFolders(candidates, networks []string) []string {
 		}
 		info, err := os.Stat(path)
 		switch {
-		case err == nil && !info.IsDir():
+		case err == nil && !info.IsDir() && !fileops.IsArchive(path):
 			missing = append(missing, path)
 		case os.IsNotExist(err) && parentExists(path):
 			missing = append(missing, path)

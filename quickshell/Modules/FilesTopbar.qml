@@ -22,6 +22,7 @@ Item {
     property bool sortDescending: false
     property bool trashActive: false
     property bool recentActive: false
+    property bool readOnly: false
     property string filterText: ""
     property string currentPath: ""
     property bool searchFocused: false
@@ -58,8 +59,9 @@ Item {
     }
 
     readonly property bool virtualActive: trashActive || recentActive
+    readonly property bool creationBlocked: virtualActive || readOnly
     readonly property bool sidebarToggleOnly: showSidebarToggle && compact
-    readonly property color restingColor: hostsPath ? "transparent" : Theme.chipSurface
+    readonly property color restingColor: hostsPath ? "transparent" : Theme.chipLayer
     readonly property var viewModes: allViewModes.filter(mode => allowColumns || mode.value !== "columns")
     readonly property var allViewModes: [
         {
@@ -312,7 +314,7 @@ Item {
         FlatButton {
             anchors.verticalCenter: parent.verticalCenter
             visible: topbar.showNewFolder
-            enabled: topbar.currentPath !== "" && !topbar.virtualActive
+            enabled: topbar.currentPath !== "" && !topbar.creationBlocked
             iconName: FileActions.icon("newFolder")
             backgroundColor: topbar.restingColor
             tooltipText: I18n.tr("New folder", "file browser toolbar button creating a folder")
@@ -332,7 +334,7 @@ Item {
             visible: topbar.showHiddenToggle
             iconName: topbar.hiddenShown ? "visibility" : "visibility_off"
             iconColor: topbar.hiddenShown ? Theme.onSelectedContainer : Theme.surfaceText
-            backgroundColor: topbar.hiddenShown ? Theme.selectedContainer : topbar.restingColor
+            backgroundColor: topbar.hiddenShown ? Theme.selectedLayer : topbar.restingColor
             tooltipText: FileActions.label("showHidden")
             onClicked: topbar.hiddenToggled()
         }
@@ -343,7 +345,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             visible: topbar.showViewControls && !topbar.compact
             iconName: topbar.currentViewMode.icon
-            backgroundColor: Theme.chipSurface
+            backgroundColor: Theme.chipLayer
             tooltipText: I18n.tr("View", "keyboard shortcut group")
             onClicked: menu.toggle(viewButton, "view")
         }
@@ -353,7 +355,7 @@ Item {
             visible: topbar.showViewControls && !topbar.compact
             iconName: "view_sidebar"
             iconColor: topbar.previewOpen ? Theme.onPrimary : Theme.surfaceText
-            backgroundColor: topbar.previewOpen ? Theme.primary : Theme.chipSurface
+            backgroundColor: topbar.previewOpen ? Theme.primary : Theme.chipLayer
             tooltipText: topbar.previewLabel
             onClicked: topbar.previewToggled()
         }
@@ -362,7 +364,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             visible: topbar.showViewControls && !topbar.compact && topbar.previewExpandable
             iconName: "open_in_full"
-            backgroundColor: Theme.chipSurface
+            backgroundColor: Theme.chipLayer
             tooltipText: topbar.previewExpandLabel
             onClicked: topbar.previewExpandRequested()
         }
@@ -372,7 +374,7 @@ Item {
             visible: topbar.showViewControls && !topbar.compact && topbar.showSplit
             iconName: "splitscreen_vertical_add"
             iconColor: topbar.splitView ? Theme.onPrimary : Theme.surfaceText
-            backgroundColor: topbar.splitView ? Theme.primary : Theme.chipSurface
+            backgroundColor: topbar.splitView ? Theme.primary : Theme.chipLayer
             tooltipText: I18n.tr("Split view", "tooltip on the button showing a second pane")
             onClicked: topbar.splitToggled()
         }
@@ -396,7 +398,7 @@ Item {
             focusPolicy: Qt.TabFocus
             buttonSize: FilesMetrics.topbarControlSize
             iconSize: Theme.iconSizeMedium
-            backgroundColor: Theme.chipSurface
+            backgroundColor: Theme.chipLayer
         }
 
         FlatButton {
@@ -414,7 +416,7 @@ Item {
             readonly property color contentColor: overviewDrop.containsDrag ? Theme.onPrimaryContainer : topbar.overviewOpen ? Theme.onSelectedContainer : Theme.surfaceText
 
             visible: topbar.showTabOverview
-            backgroundColor: overviewDrop.containsDrag ? Theme.primaryContainer : topbar.overviewOpen ? Theme.selectedContainer : "transparent"
+            backgroundColor: overviewDrop.containsDrag ? Theme.primaryContainer : topbar.overviewOpen ? Theme.selectedLayer : "transparent"
             tooltipText: I18n.tr("Show all tabs", "tooltip on the button opening the tab overview")
             onClicked: topbar.overviewToggled()
 
@@ -588,7 +590,7 @@ Item {
             }
 
             FileMenuItem {
-                visible: menu.moreRows && !topbar.virtualActive
+                visible: menu.moreRows && !topbar.creationBlocked
                 text: FileActions.label("newFolder")
                 iconName: FileActions.icon("newFolder")
                 onClicked: menu.pick(() => topbar.newFolderRequested())
@@ -597,7 +599,7 @@ Item {
             FileMenuItem {
                 id: newDocumentRow
 
-                visible: menu.moreRows && !topbar.virtualActive
+                visible: menu.moreRows && !topbar.creationBlocked
                 text: FileActions.label("newDocument")
                 iconName: FileActions.icon("newDocument")
                 submenu: true
@@ -605,7 +607,7 @@ Item {
             }
 
             FileMenuDivider {
-                visible: menu.moreRows && !topbar.virtualActive
+                visible: menu.moreRows && !topbar.creationBlocked
             }
 
             FileMenuItem {
@@ -616,7 +618,7 @@ Item {
             }
 
             FileMenuItem {
-                visible: menu.moreRows && !topbar.virtualActive
+                visible: menu.moreRows && !topbar.creationBlocked
                 text: FileActions.label("properties")
                 iconName: FileActions.icon("properties")
                 onClicked: menu.pick(() => topbar.propertiesRequested())
@@ -639,7 +641,7 @@ Item {
 
             FileMenuItem {
                 visible: menu.moreRows && SandboxService.available("terminal")
-                enabled: !topbar.virtualActive
+                enabled: !topbar.creationBlocked
                 text: FileActions.label("openTerminal")
                 iconName: FileActions.icon("openTerminal")
                 onClicked: menu.pick(() => topbar.terminalRequested())
@@ -672,7 +674,11 @@ Item {
         fieldHeight: FilesMetrics.topbarControlSize
         leftIconSize: Theme.iconSizeMedium
         backgroundColor: Theme.surfaceContainerLowest
+        bottomLeftRadius: radius * (1 - recentPopup.attachment)
+        bottomRightRadius: bottomLeftRadius
+        color: Theme.blend(Theme.foregroundColor(backgroundColor, !usePopupTransparency), recentPopup.containerColor, recentPopup.attachment)
         borderWidth: 0
+        border.pixelAligned: false
         focusedBorderWidth: Math.max(Theme.outlineWidthFocused, Theme.focusRingWidth)
         placeholderText: I18n.tr("Search in Files", "placeholder in the search field")
         keyForwardTargets: [topbar]
@@ -774,7 +780,7 @@ Item {
 
                         iconName: FileActions.icon(modelData)
                         iconColor: modelData === "trash" ? Theme.error : Theme.surfaceText
-                        backgroundColor: Theme.chipSurface
+                        backgroundColor: Theme.chipLayer
                         tooltipText: FileActions.label(modelData)
                         onClicked: topbar.selectionActionRequested(modelData)
                     }

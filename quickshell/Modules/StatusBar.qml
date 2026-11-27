@@ -37,8 +37,8 @@ Item {
         total: bar.total
         hidden: bar.hidden
         hint: bar.hint
-        textRoom: bar.width - controls.width - Theme.spacingS * 2
-        compact: bar.width - controls.width < FilesMetrics.searchMinWidth
+        room: bar.width - controls.width - Theme.spacingS * 2
+        compact: room < FilesMetrics.searchMinWidth
     }
 
     Row {
@@ -75,7 +75,7 @@ Item {
 
                     joinStart: !active && index > 0
                     joinEnd: !active && index < bar.viewModes.length - 1
-                    color: active ? Theme.selectedContainer : Theme.chipSurface
+                    color: active ? Theme.selectedLayer : Theme.chipLayer
                     iconName: modelData.icon
                     iconColor: active ? Theme.onSelectedContainer : Theme.surfaceText
                     tooltipText: modelData.label
@@ -90,7 +90,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             visible: bar.showPreview
             width: FilesMetrics.topbarControlSize
-            color: bar.previewOpen ? Theme.selectedContainer : Theme.chipSurface
+            color: bar.previewOpen ? Theme.selectedLayer : Theme.chipLayer
             iconName: bar.previewOpen ? "preview_off" : "preview"
             iconColor: bar.previewOpen ? Theme.onSelectedContainer : Theme.surfaceText
             tooltipText: bar.previewLabel

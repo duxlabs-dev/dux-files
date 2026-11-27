@@ -3,6 +3,8 @@ package fileops
 import (
 	"os"
 	"path/filepath"
+	"slices"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -11,6 +13,26 @@ import (
 
 	"github.com/stretchr/testify/require"
 )
+
+func TestReadDirByNameKeepsEntriesItCannotStat(t *testing.T) {
+	if os.Geteuid() == 0 {
+		t.Skip("root bypasses permission bits")
+	}
+	dir := t.TempDir()
+	testfs.Write(t, filepath.Join(dir, "b.sock"), "")
+	testfs.Write(t, filepath.Join(dir, "a.txt"), "")
+	require.NoError(t, os.Chmod(dir, 0o444))
+	t.Cleanup(func() { _ = os.Chmod(dir, 0o755) })
+
+	entries, err := readDirByName(dir)
+	require.NoError(t, err)
+	require.Len(t, entries, 2)
+	require.Equal(t, "a.txt", entries[0].Name())
+	require.Equal(t, "b.sock", entries[1].Name())
+	require.False(t, entries[1].Type().IsRegular(), "an entry of unknown type must not join a batched copy")
+	_, err = entries[1].Info()
+	require.ErrorIs(t, err, os.ErrPermission)
+}
 
 func TestCopyPreservesModeAndTime(t *testing.T) {
 	root := t.TempDir()
@@ -149,6 +171,92 @@ func TestConflictMergeKeepsExistingChildren(t *testing.T) {
 	require.Equal(t, "new", testfs.Read(t, filepath.Join(dest, "shared", "new.txt")))
 }
 
+func TestConflictMergeForTheRestStillAsksAboutFiles(t *testing.T) {
+	cases := []struct {
+		name        string
+		kind        Kind
+		otherDevice bool
+	}{
+		{"copy", KindCopy, false},
+		{"move", KindMove, false},
+		{"move across devices", KindMove, true},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			root := t.TempDir()
+			src := filepath.Join(root, "src", "shared")
+			testfs.Write(t, filepath.Join(src, "plugins", "a.txt"), "new")
+			testfs.Write(t, filepath.Join(src, "plugins", "b.txt"), "new")
+			dest := filepath.Join(root, "dest")
+			if tc.otherDevice {
+				dest = otherDevice(t, root)
+			}
+			plugins := filepath.Join(dest, "shared", "plugins")
+			testfs.Write(t, filepath.Join(plugins, "a.txt"), "old")
+			testfs.Write(t, filepath.Join(plugins, "b.txt"), "old")
+			testfs.Write(t, filepath.Join(plugins, "kept.txt"), "kept")
+
+			manager, bus := newHarness(t)
+			var folders, files int
+			bus.onConflict = func(c Conflict) Answer {
+				if slices.Contains(c.Actions, ActionMerge) {
+					folders++
+					return Answer{ID: c.ID, Action: ActionMerge, ApplyToAll: true}
+				}
+				files++
+				return Answer{ID: c.ID, Action: ActionReplace, ApplyToAll: true}
+			}
+			bus.onFailure = func(f Failure) Answer { return Answer{ID: f.ID, Action: ActionCancel} }
+			view := run(t, manager, bus, spec{kind: tc.kind, sources: []string{src}, dest: dest})
+
+			require.Equal(t, StateDone, view.State)
+			require.Empty(t, bus.kinds("error"))
+			require.Equal(t, 1, folders)
+			require.Equal(t, 1, files)
+			require.Equal(t, "new", testfs.Read(t, filepath.Join(plugins, "a.txt")))
+			require.Equal(t, "new", testfs.Read(t, filepath.Join(plugins, "b.txt")))
+			require.Equal(t, "kept", testfs.Read(t, filepath.Join(plugins, "kept.txt")))
+			require.Empty(t, tempsIn(t, plugins))
+
+			_, err := os.Lstat(src)
+			require.Equal(t, tc.kind == KindMove, os.IsNotExist(err))
+		})
+	}
+}
+
+func TestConflictReplaceFilesForTheRestStillAsksAboutFolders(t *testing.T) {
+	root := t.TempDir()
+	src := filepath.Join(root, "src")
+	testfs.Write(t, filepath.Join(src, "a.txt"), "new")
+	testfs.Write(t, filepath.Join(src, "shared", "b.txt"), "new")
+	dest := filepath.Join(root, "dest")
+	testfs.Write(t, filepath.Join(dest, "a.txt"), "old")
+	testfs.Write(t, filepath.Join(dest, "shared", "b.txt"), "old")
+	testfs.Write(t, filepath.Join(dest, "shared", "kept.txt"), "kept")
+
+	manager, bus := newHarness(t)
+	var folders int
+	bus.onConflict = func(c Conflict) Answer {
+		if slices.Contains(c.Actions, ActionMerge) {
+			folders++
+			return Answer{ID: c.ID, Action: ActionMerge}
+		}
+		return Answer{ID: c.ID, Action: ActionReplace, ApplyToAll: true}
+	}
+	view := run(t, manager, bus, spec{
+		kind:    KindCopy,
+		sources: []string{filepath.Join(src, "a.txt"), filepath.Join(src, "shared")},
+		dest:    dest,
+	})
+
+	require.Equal(t, StateDone, view.State)
+	require.Equal(t, 1, folders)
+	require.Equal(t, "new", testfs.Read(t, filepath.Join(dest, "a.txt")))
+	require.Equal(t, "new", testfs.Read(t, filepath.Join(dest, "shared", "b.txt")))
+	require.Equal(t, "kept", testfs.Read(t, filepath.Join(dest, "shared", "kept.txt")))
+}
+
 func TestConflictApplyToAllAsksOnce(t *testing.T) {
 	root := t.TempDir()
 	src := filepath.Join(root, "src")
@@ -225,9 +333,7 @@ func TestDeniedErrorIsEscalatable(t *testing.T) {
 }
 
 func TestCancelMidCopyLeavesNoTempFile(t *testing.T) {
-	previous := copyChunk
-	copyChunk = 1
-	t.Cleanup(func() { copyChunk = previous })
+	slowCopies(t)
 
 	root := t.TempDir()
 	src := testfs.Write(t, filepath.Join(root, "big.bin"), string(make([]byte, 512<<10)))
@@ -247,9 +353,7 @@ func TestCancelMidCopyLeavesNoTempFile(t *testing.T) {
 }
 
 func TestCancelledCrossDeviceMoveReportsTheSplit(t *testing.T) {
-	previous := copyChunk
-	copyChunk = 1
-	t.Cleanup(func() { copyChunk = previous })
+	slowCopies(t)
 
 	root := t.TempDir()
 	src := filepath.Join(root, "src")
@@ -377,4 +481,40 @@ func TestCopyDropsSpecialModeBits(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, os.FileMode(0o750), info.Mode().Perm())
 	require.Zero(t, info.Mode()&(os.ModeSetuid|os.ModeSetgid|os.ModeSticky))
+}
+
+func TestCopyFolderOfManyFilesKeepsEachOne(t *testing.T) {
+	previous := rangeChunk
+	rangeChunk = 64 << 10
+	t.Cleanup(func() { rangeChunk = previous })
+
+	root := t.TempDir()
+	src := filepath.Join(root, "src")
+	stamp := time.Now().Add(-48 * time.Hour).Truncate(time.Second)
+	bodies := map[string]string{"above-one-range.bin": strings.Repeat("x", 200<<10)}
+	for i := range 24 {
+		bodies["f"+strconv.Itoa(i)+".bin"] = strings.Repeat(strconv.Itoa(i), 1+i*1000)
+	}
+	for name, body := range bodies {
+		path := testfs.Write(t, filepath.Join(src, name), body)
+		require.NoError(t, os.Chmod(path, 0o640))
+		require.NoError(t, os.Chtimes(path, stamp, stamp))
+	}
+	dest := filepath.Join(root, "dest")
+	require.NoError(t, os.Mkdir(dest, 0o755))
+
+	manager, bus := newHarness(t)
+	view := run(t, manager, bus, spec{kind: KindCopy, sources: []string{src}, dest: dest})
+
+	require.Equal(t, StateDone, view.State)
+	require.Equal(t, len(bodies)+1, view.Progress.FilesDone)
+	for name, body := range bodies {
+		copied := filepath.Join(dest, "src", name)
+		require.Equal(t, body, testfs.Read(t, copied), name)
+		info, err := os.Lstat(copied)
+		require.NoError(t, err)
+		require.Equal(t, os.FileMode(0o640), info.Mode().Perm(), name)
+		require.Equal(t, stamp.Unix(), info.ModTime().Unix(), name)
+	}
+	require.Empty(t, tempsIn(t, filepath.Join(dest, "src")))
 }

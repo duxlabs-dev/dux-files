@@ -11,6 +11,7 @@ import (
 
 	"github.com/duxlabs-dev/dux-files/core/internal/testfs"
 
+	dhelper "github.com/duxlabs-dev/dux-go/elevate/helper"
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -92,7 +93,7 @@ func TestSymlinkComponentsAreRefused(t *testing.T) {
 	} {
 		t.Run(name, func(t *testing.T) {
 			_, err := runOp(t, committed("data"), args...)
-			require.ErrorIs(t, err, errSymlink)
+			require.ErrorIs(t, err, dhelper.ErrSymlink)
 		})
 	}
 
@@ -148,25 +149,6 @@ func TestLstatReadDirReadlinkDescribeTheTree(t *testing.T) {
 	assert.Equal(t, files.CodeNotFound, files.CodeFromOS(err))
 }
 
-func TestReadStreamsRegularFilesOnly(t *testing.T) {
-	root := t.TempDir()
-	path := filepath.Join(root, "f")
-	require.NoError(t, os.WriteFile(path, bytes.Repeat([]byte("z"), 70000), 0o600))
-
-	out, err := runOp(t, nil, OpRead, path)
-	require.NoError(t, err)
-	assert.Len(t, out, 70000)
-
-	fifo := filepath.Join(root, "fifo")
-	require.NoError(t, unix.Mkfifo(fifo, 0o600))
-	_, err = runOp(t, nil, OpRead, fifo)
-	require.Error(t, err)
-	assert.Equal(t, files.CodeInvalid, files.CodeOf(err))
-
-	_, err = runOp(t, nil, OpRead, root)
-	require.Error(t, err)
-}
-
 func TestWriteCommitsFramesAndDropsAbortedFiles(t *testing.T) {
 	root := t.TempDir()
 	path := filepath.Join(root, "out")
@@ -176,7 +158,7 @@ func TestWriteCommitsFramesAndDropsAbortedFiles(t *testing.T) {
 	assert.Equal(t, "hello world", string(testfs.ReadBytes(t, path)))
 	info, err := os.Lstat(path)
 	require.NoError(t, err)
-	assert.Equal(t, fs.FileMode(0o640), info.Mode().Perm()&^fs.FileMode(umask(t)))
+	assert.Equal(t, fs.FileMode(0o640)&^fs.FileMode(umask(t)), info.Mode().Perm())
 
 	_, err = runOp(t, committed("again"), OpWrite, path, "644")
 	require.Error(t, err)
@@ -281,17 +263,6 @@ func TestUtimesSetsTheModificationTime(t *testing.T) {
 	assert.Equal(t, files.CodeInvalid, files.CodeOf(err))
 }
 
-func TestWriteAnnouncesTheCreatedFile(t *testing.T) {
-	root := t.TempDir()
-	out, err := runOp(t, committed("x"), OpWrite, filepath.Join(root, "f"), "644")
-	require.NoError(t, err)
-	assert.Equal(t, Ready+"\n", out)
-
-	out, err = runOp(t, committed("x"), OpWrite, filepath.Join(root, "f"), "644")
-	require.Error(t, err)
-	assert.Empty(t, out, "nothing is announced when the create fails")
-}
-
 func TestChmodAndChownWalkWithoutFollowingLinks(t *testing.T) {
 	root := t.TempDir()
 	dir := filepath.Join(root, "tree")
@@ -323,21 +294,6 @@ func TestChmodAndChownWalkWithoutFollowingLinks(t *testing.T) {
 	require.NoError(t, err, "chown to the current owner walks the tree")
 	_, err = runOp(t, nil, OpChown, inner, "-1", "-1")
 	require.NoError(t, err)
-}
-
-func TestMainRefusesOutsidePkexec(t *testing.T) {
-	t.Setenv("PKEXEC_UID", "")
-	var stderr bytes.Buffer
-	assert.Equal(t, ExitRefused, Main([]string{OpLstat, "/"}, nil, nil, &stderr))
-	assert.Contains(t, stderr.String(), "pkexec")
-
-	if os.Getuid() == 0 {
-		t.Skip("running as root")
-	}
-	t.Setenv("PKEXEC_UID", "1000")
-	stderr.Reset()
-	assert.Equal(t, ExitRefused, Main([]string{OpLstat, "/"}, nil, nil, &stderr))
-	assert.Contains(t, stderr.String(), "root")
 }
 
 func umask(t *testing.T) int {

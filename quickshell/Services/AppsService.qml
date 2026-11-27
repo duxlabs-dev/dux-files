@@ -39,6 +39,15 @@ Singleton {
         }), callback);
     }
 
+    function setWallpaper(path, screen, callback) {
+        const params = {
+            "path": path
+        };
+        if (screen)
+            params.screen = screen;
+        _send("system.setWallpaper", params, callback);
+    }
+
     function appsForMime(mime, path, callback) {
         const params = {};
         if (mime)

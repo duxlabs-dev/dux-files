@@ -20,6 +20,7 @@ ListingView {
     model: RecentModel {
         nameFilter: recentView.host.nameFilter
         thumbnailsEnabled: SettingsData.thumbnails
+        thumbnailSize: recentView.body.thumbnailSize
         thumbnailSizeLimit: recentView.host.thumbnailSizeLimit
     }
 

@@ -16,6 +16,7 @@ Singleton {
 
     property var entries: ({})
     property var _catalog: ({})
+    property int _catalogRevision: 0
 
     signal changed(string key)
 
@@ -60,11 +61,17 @@ Singleton {
     }
 
     function refreshCatalog() {
-        if (_catalog.badges)
+        const revision = Paths.iconThemeRevision;
+        if (_catalog.badges && _catalogRevision === revision)
             return;
-        DuxFilesService.call("files.iconCatalog", null, result => {
+        // Upstream quickshell has no iconTheme; the core then reads the desktop's settings files.
+        const theme = "iconTheme" in Quickshell ? Quickshell.iconTheme : "";
+        DuxFilesService.call("files.iconCatalog", {
+            "theme": theme
+        }, result => {
             if (result.error)
                 return;
+            _catalogRevision = revision;
             _catalog = result;
         });
     }

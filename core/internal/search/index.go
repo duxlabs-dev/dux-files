@@ -39,6 +39,7 @@ const (
 	reasonExcluded   = "EXCLUDED"
 	reasonIgnored    = "IGNORED"
 	reasonDirect     = "DIRECT"
+	reasonRegex      = "REGEX"
 )
 
 type indexInfo struct {
@@ -110,9 +111,13 @@ func (b *indexBackend) fallback(err error) string {
 	return reasonError
 }
 
-func (b *indexBackend) serve(sc *search, em *emitter, targets []string, query string, terms []term, opts Options) string {
+func (b *indexBackend) serve(sc *search, out *sink, targets []string, query string) string {
+	opts, em := out.opts, out.em
 	if opts.Direct {
 		return reasonDirect
+	}
+	if opts.Regex {
+		return reasonRegex
 	}
 	if !b.enabled.Load() {
 		return reasonNoIndex
@@ -135,25 +140,18 @@ func (b *indexBackend) serve(sc *search, em *emitter, targets []string, query st
 	if reason != "" {
 		return reason
 	}
+	terms := parseTerms(query)
 	result, err := b.search(sc.ctx, socket, indexParams(targets, query, terms, opts, info))
 	if err != nil {
 		return b.failed(sc, em, err)
 	}
-	sc.publish(event{Kind: "backend", Backend: "index", Phase: info.Phase, DepthLimit: depthLeft})
-	var excludes []string
-	if sc.svc.excludes != nil {
-		excludes = sc.svc.excludes()
-	}
-	ranked := rankHits(result, targets, terms, opts, newSkipRules(excludes))
+	sc.publish(event{Kind: "backend", Backend: "index", Phase: info.Phase, DepthLimit: depthLeft, Contents: true})
+	ranked := rankHits(result, targets, matcher{terms: terms, fuzzy: opts.Fuzzy}, opts.Contents, newSkipRules(sc.excludes()))
 	for _, c := range ranked {
 		if sc.ctx.Err() != nil {
 			break
 		}
-		entry, err := sc.svc.stater.Stat(c.path)
-		if err != nil || !opts.accepts(entry) {
-			continue
-		}
-		if !em.emit(hit{Entry: entry, Score: c.score}) {
+		if !out.emit(c.path, hit{Score: c.score}) {
 			break
 		}
 	}
@@ -271,7 +269,7 @@ type candidate struct {
 	bleve float64
 }
 
-func rankHits(result indexResult, targets []string, terms []term, opts Options, rules ignoreRules) []candidate {
+func rankHits(result indexResult, targets []string, m matcher, contents bool, rules ignoreRules) []candidate {
 	seen := make(map[string]bool, len(result.Hits)+len(result.DirectoryHits))
 	var out []candidate
 	consider := func(h indexHit) {
@@ -284,13 +282,10 @@ func rankHits(result indexResult, targets []string, terms []term, opts Options, 
 		if !ok || rules.skipsPath(path, root) {
 			return
 		}
-		rel := strings.ToLower(path[len(root)+1:])
-		name := rel[strings.LastIndexByte(rel, '/')+1:]
-		depth := strings.Count(rel, "/")
 		points := 0
-		if !opts.Contents {
+		if !contents {
 			var tier int
-			points, tier = score(name, rel, depth, terms, opts.Fuzzy)
+			points, tier = m.scorePath(root, path)
 			if tier == tierNone {
 				return
 			}

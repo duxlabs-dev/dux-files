@@ -126,11 +126,17 @@ func (x *entryIndex) parse(path, id string) *Entry {
 func dirStamp(dirs []string) string {
 	var b strings.Builder
 	for _, dir := range dirs {
-		info, err := os.Stat(dir)
+		real, err := filepath.EvalSymlinks(dir)
+		if err != nil {
+			continue
+		}
+		info, err := os.Stat(real)
 		if err != nil {
 			continue
 		}
 		b.WriteString(dir)
+		b.WriteByte('=')
+		b.WriteString(real)
 		b.WriteByte('@')
 		b.WriteString(info.ModTime().UTC().Format(time.RFC3339Nano))
 		b.WriteByte(';')
@@ -139,17 +145,46 @@ func dirStamp(dirs []string) string {
 }
 
 func desktopFiles(dir string) []string {
-	var out []string
-	_ = filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
-		if err != nil {
-			return nil
-		}
-		if !d.IsDir() && strings.HasSuffix(path, ".desktop") {
-			out = append(out, path)
-		}
+	info, err := os.Stat(dir)
+	if err != nil || !info.IsDir() {
 		return nil
-	})
+	}
+	var out []string
+	walkDesktopFiles(dir, map[string]bool{}, &out)
 	return out
+}
+
+func walkDesktopFiles(dir string, visited map[string]bool, out *[]string) {
+	real, err := filepath.EvalSymlinks(dir)
+	if err != nil || visited[real] {
+		return
+	}
+	visited[real] = true
+
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return
+	}
+	for _, d := range entries {
+		path := filepath.Join(dir, d.Name())
+		if d.IsDir() {
+			walkDesktopFiles(path, visited, out)
+			continue
+		}
+		if d.Type()&os.ModeSymlink != 0 {
+			info, err := os.Stat(path)
+			if err != nil {
+				continue
+			}
+			if info.IsDir() {
+				walkDesktopFiles(path, visited, out)
+				continue
+			}
+		}
+		if strings.HasSuffix(d.Name(), ".desktop") {
+			*out = append(*out, path)
+		}
+	}
 }
 
 func entryID(root, path string) string {

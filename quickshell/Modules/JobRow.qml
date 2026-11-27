@@ -11,6 +11,13 @@ Item {
     required property var job
 
     readonly property bool finished: job.state === "done" || job.state === "failed"
+    readonly property bool succeeded: job.state === "done" && !job.cancelled
+    readonly property string title: (succeeded && JobLabels.done(job.kind)) || JobLabels.active(job.kind)
+    readonly property string outcomeIcon: {
+        if (job.state === "failed")
+            return "error";
+        return job.cancelled ? "cancel" : "check_circle";
+    }
     readonly property real fraction: {
         const total = job.progress.bytesTotal > 0 ? job.progress.bytesTotal : job.progress.filesTotal;
         const done = job.progress.bytesTotal > 0 ? job.progress.bytesDone : job.progress.filesDone;
@@ -46,8 +53,15 @@ Item {
             Layout.fillWidth: true
             spacing: Theme.spacingS
 
+            DIcon {
+                visible: row.finished
+                name: row.outcomeIcon
+                size: Theme.iconSizeSmall
+                color: row.job.state === "failed" ? Theme.error : Theme.primary
+            }
+
             StyledText {
-                text: JobLabels.active(row.job.kind)
+                text: row.title
                 color: Theme.surfaceText
                 font.pixelSize: Theme.fontSizeMedium
             }
@@ -63,12 +77,39 @@ Item {
             }
 
             DActionButton {
-                visible: !row.finished
                 iconName: "close"
                 buttonSize: Theme.buttonHeightXS
                 iconSize: Theme.iconSizeSmall
-                tooltipText: I18n.tr("Cancel", "dialog button to cancel")
-                onClicked: FileOpsService.cancel(row.job.id)
+                tooltipText: row.finished ? I18n.tr("Clear", "file operations list: remove a finished operation") : I18n.tr("Cancel", "dialog button to cancel")
+                onClicked: row.finished ? FileOpsService.dismiss(row.job.id) : FileOpsService.cancel(row.job.id)
+            }
+        }
+
+        Rectangle {
+            id: expiry
+
+            property real remaining: FileOpsService.historyRemaining(row.job.id)
+
+            Layout.fillWidth: true
+            Layout.preferredHeight: Theme.spacingXS
+            visible: row.finished
+            radius: Theme.cornerRadiusFull
+            color: Theme.chipSurface
+
+            Rectangle {
+                width: parent.width * expiry.remaining
+                height: parent.height
+                radius: parent.radius
+                color: Theme.primary
+            }
+
+            NumberAnimation {
+                target: expiry
+                property: "remaining"
+                from: FileOpsService.historyRemaining(row.job.id)
+                to: 0
+                duration: from * FileOpsService.historyDuration
+                running: row.finished && from > 0 && !FileOpsService.historyHeld
             }
         }
 
@@ -77,7 +118,7 @@ Item {
             visible: !row.finished
             Layout.preferredHeight: Theme.spacingXS
             radius: Theme.cornerRadiusFull
-            color: Theme.surfaceContainerHigh
+            color: Theme.chipSurface
 
             Rectangle {
                 width: parent.width * row.fraction
@@ -88,8 +129,9 @@ Item {
                 Behavior on width {
                     enabled: Theme.animationsEnabled
                     NumberAnimation {
-                        duration: Theme.shortDuration
-                        easing.type: Theme.standardEasing
+                        duration: Theme.expressiveDurations.expressiveSlowEffects
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Theme.expressiveCurves.expressiveSlowEffects
                     }
                 }
             }

@@ -24,6 +24,8 @@ QtObject {
             return trashScoped(id);
         if (activePane.recentActive)
             return recentScoped(id);
+        if (activePane.archiveActive)
+            return FileActions.available(id, "archive") ? id : "";
         return id;
     }
 
@@ -79,6 +81,9 @@ QtObject {
             return;
         case "openTerminal":
             openTerminalHere();
+            return;
+        case "setWallpaper":
+            setWallpaperSelection();
             return;
         case "newTab":
             mainWindow.tabManager.newTab("", false);
@@ -183,7 +188,10 @@ QtObject {
             mainWindow.openFlow.extractTo(mainWindow.selectedPaths(), currentPath, "reveal");
             return;
         case "extractTo":
-            mainWindow.dialogs.askExtractTo(mainWindow.selectedPaths());
+            extractSelection();
+            return;
+        case "extractAll":
+            mainWindow.dialogs.askExtract([activePane.archiveRoot], []);
             return;
         case "newDocument":
             mainWindow.menus.showNewDocumentMenu();
@@ -288,6 +296,17 @@ QtObject {
             mainWindow.menus.showContextMenuAtCursor();
             return;
         }
+    }
+
+    function extractSelection() {
+        const paths = mainWindow.selectedPaths();
+        if (!activePane.archiveActive) {
+            mainWindow.dialogs.askExtract(paths, []);
+            return;
+        }
+        const archive = activePane.archiveRoot;
+        if (paths.length > 0)
+            mainWindow.dialogs.askExtract([archive], paths.map(path => ArchiveService.member(archive, path)));
     }
 
     function openSelectionInNewTab() {
@@ -458,6 +477,13 @@ QtObject {
 
     function openTerminalHere() {
         AppsService.openTerminal(currentPath, response => mainWindow.openFlow.reportError(response));
+    }
+
+    function setWallpaperSelection() {
+        const entry = mainWindow.firstSelected();
+        if (!entry || entry.isDir)
+            return;
+        AppsService.setWallpaper(entry.path, mainWindow.screen?.name ?? "", response => mainWindow.openFlow.reportError(response));
     }
 
     function trashSelection() {

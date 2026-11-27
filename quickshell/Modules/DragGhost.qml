@@ -18,7 +18,7 @@ Rectangle {
     implicitWidth: body.implicitWidth + Theme.spacingS * 2
     implicitHeight: FilesMetrics.dragGhostSize + Theme.spacingS * 2
     radius: Theme.cornerRadiusL
-    color: Theme.surfaceContainerHigh
+    color: Theme.chipSurface
     border.width: Theme.outlineWidth
     border.color: Theme.primary
 

@@ -18,7 +18,7 @@ import (
 	"github.com/duxlabs-dev/dux-go/ipc/params"
 )
 
-func (m *Manager) Handle(_ context.Context, w *ipc.ConnWriter, req ipc.Request) {
+func (m *Manager) Handle(ctx context.Context, w *ipc.ConnWriter, req ipc.Request) {
 	switch req.Method {
 	case "files.op.jobs":
 		w.Respond(req.ID, map[string]any{"jobs": m.Jobs()})
@@ -45,9 +45,15 @@ func (m *Manager) Handle(_ context.Context, w *ipc.ConnWriter, req ipc.Request) 
 	case "files.op.dropAction":
 		handleDropAction(w, req)
 		return
+	case "files.op.portalTransfer":
+		m.handlePortalTransfer(ctx, w, req)
+		return
 	}
 
 	s, err := specOf(req)
+	if err == nil && s.toCache {
+		s.dest, err = m.memberDir(s.sources[0], s.entries[0])
+	}
 	if err != nil {
 		wire.RespondError(w, req.ID, err)
 		return
@@ -99,6 +105,16 @@ func specOf(req ipc.Request) (spec, error) {
 		}
 		if nested := nestedSource(s.sources, s.dest); nested != "" {
 			return spec{}, wire.Invalid("cannot put " + nested + " inside itself")
+		}
+		archive, members, err := archiveMembers(s.sources)
+		switch {
+		case err != nil:
+			return spec{}, err
+		case archive == "":
+		case s.kind == KindLink:
+			return spec{}, wire.Invalid("cannot link to entries inside an archive")
+		default:
+			s.kind, s.sources, s.entries, s.layout = KindExtract, []string{archive}, members, LayoutFlat
 		}
 	case "files.op.rename":
 		s.kind = KindRename
@@ -204,9 +220,20 @@ func specOf(req ipc.Request) (spec, error) {
 		}
 		s.sources = sources
 		s.dest = params.StringOpt(req.Params, "dest", "")
-		if len(s.sources) == 0 || !filepath.IsAbs(s.dest) {
-			return spec{}, wire.Invalid("files.op.extract requires paths and an absolute dest")
+		s.entries = wire.StringList(req.Params, "entries")
+		s.layout = params.StringOpt(req.Params, "layout", "")
+		s.password = params.StringOpt(req.Params, "password", "")
+		s.toCache = params.BoolLoose(req.Params, "toCache")
+		if err := checkExtract(s); err != nil {
+			return spec{}, err
 		}
+	case "files.op.unlockArchive":
+		s.kind = KindUnlockArchive
+		archive, _, ok := LocateArchive(params.StringOpt(req.Params, "path", ""))
+		if !ok {
+			return spec{}, wire.Invalid("files.op.unlockArchive requires a path to or inside an archive")
+		}
+		s.sources = []string{archive}
 	case "files.op.setOwner":
 		s.kind = KindSetOwner
 		sources, err := absPaths(req, "paths")
@@ -243,6 +270,27 @@ func specOf(req ipc.Request) (spec, error) {
 		return spec{}, &files.Error{Code: files.CodeNotSupported, Err: errors.New("unknown files.op method: " + req.Method)}
 	}
 	return s, nil
+}
+
+func checkExtract(s spec) error {
+	switch {
+	case len(s.sources) == 0:
+		return wire.Invalid("files.op.extract requires paths and an absolute dest")
+	case s.toCache && (len(s.sources) != 1 || len(s.entries) != 1):
+		return wire.Invalid("files.op.extract toCache takes one archive and one entry")
+	case !s.toCache && !filepath.IsAbs(s.dest):
+		return wire.Invalid("files.op.extract requires paths and an absolute dest")
+	case len(s.entries) > 0 && len(s.sources) != 1:
+		return wire.Invalid("files.op.extract entries need a single archive")
+	case s.layout != "" && !slices.Contains(extractLayouts, s.layout):
+		return wire.Invalid("files.op.extract layout must be one of " + strings.Join(extractLayouts, ", "))
+	}
+	for _, entry := range s.entries {
+		if !filepath.IsLocal(entry) {
+			return wire.Invalid("not an archive entry: " + entry)
+		}
+	}
+	return nil
 }
 
 func (m *Manager) handleCancel(w *ipc.ConnWriter, req ipc.Request) {

@@ -10,6 +10,7 @@ FileMenu {
 
     property int selectionCount: 0
     property bool hasDirectory: false
+    property bool singleImage: false
     property bool hasClipboard: false
     property bool forFolder: false
     property bool forPicker: false
@@ -18,6 +19,7 @@ FileMenu {
     property bool inResults: false
     property bool inTrash: false
     property bool inRecent: false
+    property bool inArchive: false
     property int trashCount: 0
     property int recentCount: 0
 
@@ -32,6 +34,8 @@ FileMenu {
             return "trash";
         if (inRecent)
             return "recent";
+        if (inArchive)
+            return "archive";
         return inResults ? "results" : "folder";
     }
     readonly property var entries: collapse((forFolder ? backgroundRows : itemRows).filter(row => row.visible !== false && (row.id === "separator" || FileActions.available(row.id, context))))
@@ -46,6 +50,8 @@ FileMenu {
             "enabled": selectionCount > 0
         }), FileActions.row("openWithMenu", {
             "enabled": selectionCount > 0
+        }), FileActions.row("setWallpaper", {
+            "visible": singleImage && SandboxService.available("setWallpaper")
         }), FileActions.row("openInNewTab", {
             "visible": singleFolder
         }), FileActions.row("openInNewWindow", {
@@ -83,7 +89,7 @@ FileMenu {
             "visible": extractable && !crossFolder
         }), FileActions.row("extractTo", {
             "enabled": selectionCount > 0,
-            "visible": extractable
+            "visible": extractable || inArchive
         }), FileActions.row("openContainingFolder", {
             "enabled": selectionCount === 1,
             "visible": crossFolder
@@ -102,7 +108,7 @@ FileMenu {
             "visible": singleFolder && !crossFolder
         }), FileActions.row("properties")]
 
-    readonly property var backgroundRows: [FileActions.row("newFolder"), FileActions.row("newDocument"), FileActions.row("paste", {
+    readonly property var backgroundRows: [FileActions.row("extractAll"), separator, FileActions.row("newFolder"), FileActions.row("newDocument"), FileActions.row("paste", {
             "enabled": hasClipboard
         }), FileActions.row("pasteLink", {
             "enabled": hasClipboard
@@ -140,13 +146,15 @@ FileMenu {
             readonly property bool separator: modelData.id === "separator"
 
             width: parent?.width ?? 0
-            height: separator ? FileBrowserMetrics.menuDividerHeight : Theme.menuItemHeight
+            height: separator ? FileBrowserMetrics.menuDividerHeight : menuItem.implicitHeight
 
             FileMenuDivider {
                 visible: slot.separator
             }
 
             FileMenuItem {
+                id: menuItem
+
                 anchors.fill: parent
                 visible: !slot.separator
                 text: slot.separator ? "" : slot.modelData.label

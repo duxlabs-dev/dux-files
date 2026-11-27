@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Shapes
 import qs.Common
 import qs.Services
 import qs.DCommon.Widgets
@@ -15,6 +16,11 @@ Item {
     property var pathFor: (state, index) => ""
     property bool showHidden: false
     property var listings: ({})
+
+    readonly property int cardCount: tabs.length + 1
+    readonly property real cardGap: Theme.spacingM
+    readonly property var grid: fitGrid(sheet.width, flick.height)
+    readonly property real cardWidth: grid.width
 
     signal tabSelected(int index)
     signal tabClosed(int index)
@@ -39,19 +45,44 @@ Item {
         });
     }
 
+    function cardWidthFor(columns, room) {
+        return Math.min(FilesMetrics.overviewCardMaxWidth, Math.floor((room - (columns - 1) * cardGap) / columns));
+    }
+
+    function fitGrid(room, viewHeight) {
+        for (let columns = 1; columns <= cardCount; columns++) {
+            const width = cardWidthFor(columns, room);
+            if (width < FilesMetrics.overviewCardMinWidth)
+                break;
+            const rows = Math.ceil(cardCount / columns);
+            if (rows * width * FilesMetrics.overviewCardAspect + (rows - 1) * cardGap <= viewHeight)
+                return {
+                    "columns": columns,
+                    "width": width
+                };
+        }
+        const columns = Math.max(1, Math.floor((room + cardGap) / (FilesMetrics.overviewCardMinWidth + cardGap)));
+        return {
+            "columns": columns,
+            "width": cardWidthFor(columns, room)
+        };
+    }
+
     component Card: StyledButton {
         id: card
 
         property bool current: false
         property bool hot: false
 
+        property color fillColor: hot ? Theme.primaryContainer : current ? Theme.selectedLayer : Theme.chipLayer
+
         readonly property color contentColor: current ? Theme.onSelectedContainer : Theme.surfaceText
 
         focusPolicy: Qt.TabFocus
-        width: FilesMetrics.overviewCardWidth
-        height: FilesMetrics.overviewCardHeight
+        width: overview.cardWidth
+        height: Math.round(width * FilesMetrics.overviewCardAspect)
         radius: Theme.cornerRadiusL
-        color: hot ? Theme.primaryContainer : current ? Theme.selectedContainer : Theme.chipSurface
+        color: fillColor
         border.width: hot || current ? Theme.outlineWidthFocused : Theme.outlineWidth
         border.color: hot ? Theme.primary : current ? Theme.outline : Theme.outlineVariant
 
@@ -66,6 +97,8 @@ Item {
     }
 
     DFlickable {
+        id: flick
+
         anchors.fill: parent
         anchors.margins: Theme.spacingM
         contentHeight: sheet.height
@@ -75,7 +108,7 @@ Item {
             id: sheet
 
             width: parent.width
-            spacing: Theme.spacingM
+            spacing: overview.cardGap
 
             StyledText {
                 width: parent.width
@@ -87,8 +120,9 @@ Item {
             }
 
             Flow {
-                width: parent.width
-                spacing: Theme.spacingM
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: overview.grid.columns * (overview.cardWidth + overview.cardGap) - overview.cardGap
+                spacing: overview.cardGap
 
                 Repeater {
                     model: overview.tabs.length
@@ -103,6 +137,7 @@ Item {
 
                         current: index === overview.currentIndex
                         hot: tabDrop.containsDrag
+                        color: "transparent"
                         Accessible.name: title.text
                         onPathChanged: overview.load(path)
                         Component.onCompleted: {
@@ -117,6 +152,34 @@ Item {
                             onTapped: {
                                 if (overview.tabs.length > 1)
                                     overview.tabClosed(tabCard.index);
+                            }
+                        }
+
+                        Shape {
+                            id: chrome
+
+                            anchors.fill: parent
+                            anchors.margins: tabCard.border.width
+                            preferredRendererType: Shape.CurveRenderer
+
+                            ShapePath {
+                                strokeColor: "transparent"
+                                fillColor: tabCard.fillColor
+                                fillRule: ShapePath.OddEvenFill
+
+                                PathRectangle {
+                                    width: chrome.width
+                                    height: chrome.height
+                                    radius: Math.max(0, tabCard.radius - tabCard.border.width)
+                                }
+
+                                PathRectangle {
+                                    x: preview.x - chrome.x
+                                    y: preview.y - chrome.y
+                                    width: preview.width
+                                    height: preview.height
+                                    radius: Math.max(0, tabCard.radius - Theme.spacingXS)
+                                }
                             }
                         }
 
@@ -171,14 +234,14 @@ Item {
                             onClicked: overview.tabClosed(tabCard.index)
                         }
 
-                        Rectangle {
+                        Item {
+                            id: preview
+
                             anchors.top: closeButton.bottom
                             anchors.bottom: parent.bottom
                             anchors.left: parent.left
                             anchors.right: parent.right
                             anchors.margins: Theme.spacingXS
-                            radius: Math.max(0, tabCard.radius - Theme.spacingXS)
-                            color: Theme.foregroundColor(Theme.cardSurface, true)
                             clip: true
 
                             Grid {
@@ -207,7 +270,7 @@ Item {
                                         FileIcon {
                                             anchors.horizontalCenter: parent.horizontalCenter
                                             iconName: thumb.modelData.iconName ?? (thumb.modelData.isDir ? "folder" : "")
-                                            size: Theme.iconSize
+                                            size: Math.round(thumbs.cell * FilesMetrics.overviewIconShare)
                                         }
 
                                         StyledText {
@@ -217,6 +280,7 @@ Item {
                                             color: Theme.surfaceVariantText
                                             font.pixelSize: Theme.fontSizeSmall
                                             horizontalAlignment: Text.AlignHCenter
+                                            wrapMode: Text.NoWrap
                                             elide: Text.ElideMiddle
                                         }
                                     }
@@ -238,7 +302,7 @@ Item {
                     id: newCard
 
                     hot: newDrop.containsDrag
-                    color: hot ? Theme.primaryContainer : "transparent"
+                    fillColor: hot ? Theme.primaryContainer : "transparent"
                     Accessible.name: newLabel.text
                     onClicked: overview.tabAdded()
 

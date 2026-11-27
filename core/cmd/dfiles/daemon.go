@@ -26,6 +26,7 @@ import (
 	"github.com/duxlabs-dev/dux-files/core/internal/sandbox"
 	"github.com/duxlabs-dev/dux-files/core/internal/search"
 	"github.com/duxlabs-dev/dux-files/core/internal/settings"
+	"github.com/duxlabs-dev/dux-files/core/internal/wallpaper"
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/duxlabs-dev/dux-go/log"
 	dankpaths "github.com/duxlabs-dev/dux-go/paths"
@@ -113,6 +114,7 @@ func bootDaemonServices(ctx context.Context, ownsWindow bool) (*daemonServices, 
 	fileService := files.NewService(bus, cacheHome(), appService.Detector())
 	opsManager := fileops.NewManager(bus, fileService)
 	opsManager.SetElevator(elevate.NewClient())
+	opsManager.SetMemberCache(filepath.Join(cacheHome(), "dfiles", "archive-entries"))
 
 	deviceService := startDevices(bus, log.Warnf)
 
@@ -154,6 +156,7 @@ func bootDaemonServices(ctx context.Context, ownsWindow bool) (*daemonServices, 
 		Recent:      recentStore,
 		Settings:    func() settings.UISettings { return settings.Load(config) },
 		Sandbox:     caps,
+		Wallpaper:   wallpaper.New(caps),
 		Quit:        requestQuit,
 	}
 

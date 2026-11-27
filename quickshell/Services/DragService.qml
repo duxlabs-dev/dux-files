@@ -13,8 +13,37 @@ Singleton {
     property var transport: DuxFilesService
     property var paths: []
     property bool active: false
+    property bool internalOnly: false
     property int generation: 0
     property var plainDrops: ({})
+
+    readonly property string arkServiceMime: "application/x-kde-ark-dndextract-service"
+    readonly property string arkPathMime: "application/x-kde-ark-dndextract-path"
+
+    function hasArkDrop(drop) {
+        const formats = drop.formats || [];
+        let service = false;
+        let path = false;
+        for (let i = 0; i < formats.length; i++) {
+            service = service || formats[i] === arkServiceMime;
+            path = path || formats[i] === arkPathMime;
+        }
+        return service && path;
+    }
+
+    function extractArkDrop(drop, dest) {
+        if (!hasArkDrop(drop) || dest === "" || dest === TrashService.filesPath || dest === RecentService.path)
+            return false;
+        transport.call("files.dndExtract", {
+            "service": drop.getDataAsString(arkServiceMime),
+            "path": drop.getDataAsString(arkPathMime),
+            "dest": dest
+        }, result => {
+            if (result.error)
+                ToastService.info(FileFormat.operationError(result.code, result.error));
+        });
+        return true;
+    }
 
     readonly property string hoverDest: active ? FileDragHover.dest : ""
     readonly property string action: {
@@ -42,7 +71,8 @@ Singleton {
         });
     }
 
-    function begin(selection) {
+    function begin(selection, keepInside) {
+        internalOnly = keepInside === true;
         paths = selection.slice();
         plainDrops = ({});
         generation++;
@@ -50,18 +80,31 @@ Singleton {
     }
 
     function end() {
+        internalOnly = false;
         paths = [];
         plainDrops = ({});
         generation++;
         active = false;
     }
 
-    function mimeData() {
-        return {
+    function mimeData(portalKey) {
+        if (internalOnly)
+            return {
+                "application/x-dfiles-archive-entries": paths.join("\n")
+            };
+        const data = {
             "text/uri-list": paths.map(path => FilePaths.toFileUrl(path)).join("\r\n") + "\r\n",
-            "x-special/gnome-copied-files": "copy\n" + paths.map(path => FilePaths.toFileUrl(path)).join("\n") + "\n",
-            "text/plain;charset=utf-8": paths.join("\n")
+            "x-special/gnome-copied-files": "copy\n" + paths.map(path => FilePaths.toFileUrl(path)).join("\n") + "\n"
         };
+        if (portalKey)
+            data["application/vnd.portal.filetransfer"] = portalKey;
+        return data;
+    }
+
+    function exportPortal(sources, callback) {
+        transport.call("files.op.portalTransfer", {
+            "paths": sources
+        }, result => callback(result.key ?? ""));
     }
 
     function pathsFrom(drop) {
@@ -98,6 +141,8 @@ Singleton {
     }
 
     function resolve(forced, plain) {
+        if (internalOnly)
+            return "copy";
         if (forced !== "")
             return forced;
         if (SettingsData.dragAction !== "auto")

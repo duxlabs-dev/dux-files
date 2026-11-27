@@ -16,6 +16,7 @@ Flow {
     property bool fuzzy: false
     property bool contents: false
     property bool contentsAvailable: false
+    property bool regex: false
     property bool direct: false
 
     readonly property var filterState: ({
@@ -26,7 +27,8 @@ Flow {
             "includeHidden": includeHidden,
             "includeIgnored": includeIgnored,
             "fuzzy": fuzzy,
-            "contents": contents && contentsAvailable && !direct,
+            "contents": contents && contentsAvailable,
+            "regex": regex,
             "direct": direct
         })
 
@@ -153,6 +155,10 @@ Flow {
                 "label": I18n.tr("Fuzzy", "search chip also matching names whose letters appear in order")
             },
             {
+                "value": "regex",
+                "label": I18n.tr("Regex", "search chip treating the query as a regular expression")
+            },
+            {
                 "value": "hidden",
                 "label": I18n.tr("Show hidden files", "menu entry listing dot files")
             },
@@ -167,19 +173,22 @@ Flow {
         ]
 
         width: chips.rowWidth(toggleChips)
-        model: chips.contentsAvailable && !chips.direct ? options.concat([
+        model: chips.contentsAvailable ? options.concat([
             {
                 "value": "contents",
                 "label": I18n.tr("Contents", "search chip matching the text inside indexed files")
             }
         ]) : options
         multiSelect: true
-        selectedValues: [chips.fuzzy ? "fuzzy" : "", chips.includeHidden ? "hidden" : "", chips.includeIgnored ? "ignored" : "", chips.direct ? "direct" : "", chips.contents ? "contents" : ""].filter(value => value !== "")
+        selectedValues: [chips.fuzzy ? "fuzzy" : "", chips.regex ? "regex" : "", chips.includeHidden ? "hidden" : "", chips.includeIgnored ? "ignored" : "", chips.direct ? "direct" : "", chips.contents ? "contents" : ""].filter(value => value !== "")
         showCounts: false
         onSelectionToggled: (index, selected) => {
             switch (toggleChips.model[index].value) {
             case "fuzzy":
                 chips.fuzzy = selected;
+                break;
+            case "regex":
+                chips.regex = selected;
                 break;
             case "hidden":
                 SettingsData.searchHidden = selected;

@@ -1,6 +1,11 @@
 {
   description = "Dux Files";
 
+  nixConfig = {
+    extra-substituters = [ "https://nix-cache.duxlabs.dev" ];
+    extra-trusted-public-keys = [ "dux-1:lrBykuzHKu9F6WsCbK83C9/uOrfqUY1kflRZtrUcMF0=" ];
+  };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     dank-qml-common = {
@@ -93,7 +98,7 @@
             pname = "dux-files";
             src = ./.;
             modRoot = "core";
-            vendorHash = "sha256-SpAsdVhDcASiVa8iotFwWI1nVk5zUcE32qIvydFMddM=";
+            vendorHash = "sha256-FX4xgJwX3x6BD0jyKjWYtMfguxfaV39TGdz0nK4l9bM=";
 
             subPackages = [ "cmd/dfiles" ];
 

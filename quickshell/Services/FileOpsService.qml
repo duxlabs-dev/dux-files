@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import qs.Common
 import qs.Services
 
 Singleton {
@@ -17,6 +18,11 @@ Singleton {
 
     readonly property int activeCount: jobs.filter(job => job.state !== "done" && job.state !== "failed").length
 
+    readonly property int historyDuration: Timing.timeout
+    property var historyDeadlines: ({})
+    property bool historyHeld: false
+    property real _heldAt: 0
+
     property var elevation: ({
             "available": false,
             "route": "",
@@ -28,6 +34,7 @@ Singleton {
     signal jobFinished(var job)
 
     property var _byId: ({})
+    property var _memberJobs: ({})
 
     readonly property DaemonTopic _jobs: DaemonTopic {
         transport: root.transport
@@ -117,11 +124,46 @@ Singleton {
         }, scope);
     }
 
-    function extract(paths, dest, scope) {
+    function extract(paths, dest, scope, entries, layout) {
         _scoped("files.op.extract", {
             "paths": paths,
-            "dest": dest
+            "dest": dest,
+            "entries": entries ?? [],
+            "layout": layout ?? ""
         }, scope);
+    }
+
+    function extractMember(archive, member, ready) {
+        transport.call("files.op.extract", {
+            "paths": [archive],
+            "entries": [member],
+            "toCache": true
+        }, result => {
+            if (result.error) {
+                root.requestFailed(result.error);
+                return;
+            }
+            const known = root._byId[result.job.id];
+            if (known && root._finished(known)) {
+                root._deliverMember(known, ready);
+                return;
+            }
+            root._memberJobs[result.job.id] = ready;
+            if (!known)
+                root._store(result.job);
+        });
+    }
+
+    function unlockArchive(archive) {
+        _start("files.op.unlockArchive", {
+            "path": archive
+        });
+    }
+
+    function _deliverMember(job, ready) {
+        const created = job.created?.[0]?.path ?? "";
+        if (job.state === "done" && !job.cancelled && created !== "")
+            ready(created);
     }
 
     function setPermissions(paths, mode, recursive) {
@@ -206,9 +248,11 @@ Singleton {
             if (result.error)
                 return;
             _byId = ({});
+            historyDeadlines = ({});
             for (const job of result.jobs || [])
                 _byId[job.id] = job;
             _rebuild();
+            _expire(jobs.filter(job => _finished(job)));
         });
     }
 
@@ -235,7 +279,7 @@ Singleton {
                 root.requestFailed(result.error);
                 return;
             }
-            if (result.job)
+            if (result.job && !root._byId[result.job.id])
                 root._store(result.job);
         });
     }
@@ -258,25 +302,90 @@ Singleton {
         _store(job);
         if (!finished)
             return;
+        const ready = _memberJobs[job.id];
+        delete _memberJobs[job.id];
+        if (ready)
+            _deliverMember(job, ready);
         jobFinished(job);
-        _historyTimeout.restart();
+        _expire([job]);
     }
 
     readonly property Timer _historyTimeout: Timer {
-        interval: 30000
-        onTriggered: root._dropFinished()
+        onTriggered: root._dropExpired()
     }
 
-    function _dropFinished() {
-        const live = ({});
-        for (const id in _byId) {
-            const job = _byId[id];
-            if (job.state === "done" || job.state === "failed")
-                continue;
-            live[id] = job;
+    function _finished(job) {
+        return job.state === "done" || job.state === "failed";
+    }
+
+    function historyRemaining(jobId) {
+        const deadline = historyDeadlines[jobId];
+        if (deadline === undefined)
+            return 0;
+        const now = historyHeld ? _heldAt : Date.now();
+        return Math.min(1, Math.max(0, deadline - now) / historyDuration);
+    }
+
+    function dismiss(jobId) {
+        const job = _byId[jobId];
+        if (!job || !_finished(job))
+            return;
+        _drop([jobId]);
+    }
+
+    function holdHistory(held) {
+        if (held === historyHeld)
+            return;
+        const now = Date.now();
+        if (held) {
+            _heldAt = now;
+            historyHeld = true;
+            _historyTimeout.stop();
+            return;
         }
-        _byId = live;
+        const resumed = ({});
+        for (const id in historyDeadlines)
+            resumed[id] = historyDeadlines[id] + now - _heldAt;
+        historyDeadlines = resumed;
+        historyHeld = false;
+        _scheduleExpiry();
+    }
+
+    function _expire(finished) {
+        if (finished.length === 0)
+            return;
+        const start = historyHeld ? _heldAt : Date.now();
+        const deadlines = Object.assign({}, historyDeadlines);
+        for (const job of finished)
+            deadlines[job.id] = start + historyDuration;
+        historyDeadlines = deadlines;
+        _scheduleExpiry();
+    }
+
+    function _scheduleExpiry() {
+        const pending = Object.values(historyDeadlines);
+        if (historyHeld || pending.length === 0) {
+            _historyTimeout.stop();
+            return;
+        }
+        _historyTimeout.interval = Math.max(1, Math.min(...pending) - Date.now());
+        _historyTimeout.restart();
+    }
+
+    function _dropExpired() {
+        const now = Date.now();
+        _drop(Object.keys(historyDeadlines).filter(id => historyDeadlines[id] <= now));
+    }
+
+    function _drop(ids) {
+        const deadlines = Object.assign({}, historyDeadlines);
+        for (const id of ids) {
+            delete deadlines[id];
+            delete _byId[id];
+        }
+        historyDeadlines = deadlines;
         _rebuild();
+        _scheduleExpiry();
     }
 
     function _onProgress(jobId, progress) {
@@ -296,7 +405,13 @@ Singleton {
         const list = [];
         for (const id in _byId)
             list.push(_byId[id]);
-        list.sort((a, b) => a.startedMs - b.startedMs);
+        list.sort((a, b) => {
+            if (_finished(a) !== _finished(b))
+                return _finished(a) ? 1 : -1;
+            if (_finished(a))
+                return (b.endedMs || 0) - (a.endedMs || 0);
+            return b.startedMs - a.startedMs;
+        });
         jobs = list;
     }
 }

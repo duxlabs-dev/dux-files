@@ -1,17 +1,10 @@
 package helper
 
 import (
-	"encoding/json"
-	"errors"
-	"fmt"
 	"io"
-	"log/syslog"
-	"os"
 	"strconv"
-	"strings"
 
-	"github.com/duxlabs-dev/dux-go/files"
-	"golang.org/x/sys/unix"
+	dhelper "github.com/duxlabs-dev/dux-go/elevate/helper"
 )
 
 const (
@@ -34,7 +27,6 @@ const (
 const (
 	FlagRecursive = "recursive"
 	FlagNoReplace = "noreplace"
-	Ready         = "ready"
 )
 
 type Info struct {
@@ -51,47 +43,19 @@ type Entry struct {
 	Mode uint32 `json:"mode"`
 }
 
-type Failure struct {
-	Code  string `json:"code"`
-	Error string `json:"error"`
-}
-
-const (
-	ExitFailed  = 1
-	ExitRefused = 2
-)
-
 // (uid_t)-1 is the kernel's keep-unchanged sentinel; -1 is the only way to say keep
 const MaxID = 1<<32 - 1
 
-func Main(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
-	callerUID, err := strconv.Atoi(os.Getenv("PKEXEC_UID"))
-	if err != nil {
-		report(stderr, invalid("dfiles helper only runs under pkexec"))
-		return ExitRefused
-	}
-	if os.Getuid() != 0 || os.Geteuid() != 0 {
-		report(stderr, invalid("dfiles helper must be started as root"))
-		return ExitRefused
-	}
-	if err := confine(callerUID); err != nil {
-		report(stderr, err)
-		return ExitRefused
-	}
-	unix.Umask(0)
-
-	err = Run(args, stdin, stdout)
-	journal(callerUID, args, err)
-	if err != nil {
-		report(stderr, err)
-		return ExitFailed
-	}
-	return 0
+// UnderPkexec runs "dfiles helper <op> ..." and exits when pkexec started this process.
+func UnderPkexec() {
+	dhelper.UnderPkexec("dfiles", func(args []string, stdin io.Reader, stdout io.Writer) (any, error) {
+		return nil, Run(args, stdin, stdout)
+	})
 }
 
 func Run(args []string, stdin io.Reader, stdout io.Writer) error {
 	if len(args) == 0 {
-		return invalid("missing operation")
+		return dhelper.Invalid("missing operation")
 	}
 	op, rest := args[0], args[1:]
 
@@ -112,12 +76,12 @@ func Run(args []string, stdin io.Reader, stdout io.Writer) error {
 		return withMode(rest, mkdirAll)
 	case OpSymlink:
 		if len(rest) != 2 {
-			return invalid("symlink takes a target and a path")
+			return dhelper.Invalid("symlink takes a target and a path")
 		}
 		return symlink(rest[0], rest[1])
 	case OpRename:
 		if len(rest) < 2 || len(rest) > 3 {
-			return invalid("rename takes two paths and optionally noreplace")
+			return dhelper.Invalid("rename takes two paths and optionally noreplace")
 		}
 		noReplace, err := parseFlag(rest[2:], FlagNoReplace)
 		if err != nil {
@@ -134,28 +98,28 @@ func Run(args []string, stdin io.Reader, stdout io.Writer) error {
 		return chownArgs(rest)
 	case OpUtimes:
 		if len(rest) != 2 {
-			return invalid("utimes takes a path and a time in nanoseconds")
+			return dhelper.Invalid("utimes takes a path and a time in nanoseconds")
 		}
 		mtimeNs, err := strconv.ParseInt(rest[1], 10, 64)
 		if err != nil {
-			return invalid("not a time: " + rest[1])
+			return dhelper.Invalid("not a time: " + rest[1])
 		}
 		return utimes(rest[0], mtimeNs)
 	default:
-		return invalid("unknown operation: " + op)
+		return dhelper.Invalid("unknown operation: " + op)
 	}
 }
 
 func one(args []string, fn func(path string) error) error {
 	if len(args) != 1 {
-		return invalid("expected exactly one path")
+		return dhelper.Invalid("expected exactly one path")
 	}
 	return fn(args[0])
 }
 
 func withMode(args []string, fn func(path string, mode uint32) error) error {
 	if len(args) != 2 {
-		return invalid("expected a path and an octal mode")
+		return dhelper.Invalid("expected a path and an octal mode")
 	}
 	mode, err := parseMode(args[1])
 	if err != nil {
@@ -166,7 +130,7 @@ func withMode(args []string, fn func(path string, mode uint32) error) error {
 
 func withModeRecursive(args []string, fn func(path string, mode uint32, recursive bool) error) error {
 	if len(args) < 2 || len(args) > 3 {
-		return invalid("expected a path, an octal mode and optionally recursive")
+		return dhelper.Invalid("expected a path, an octal mode and optionally recursive")
 	}
 	mode, err := parseMode(args[1])
 	if err != nil {
@@ -181,7 +145,7 @@ func withModeRecursive(args []string, fn func(path string, mode uint32, recursiv
 
 func chownArgs(args []string) error {
 	if len(args) < 3 || len(args) > 4 {
-		return invalid("expected a path, a uid, a gid and optionally recursive")
+		return dhelper.Invalid("expected a path, a uid, a gid and optionally recursive")
 	}
 	uid, err := parseID(args[1])
 	if err != nil {
@@ -201,7 +165,7 @@ func chownArgs(args []string) error {
 func parseMode(raw string) (uint32, error) {
 	mode, err := strconv.ParseUint(raw, 8, 32)
 	if err != nil || mode&^0o777 != 0 {
-		return 0, invalid("not an octal mode: " + raw)
+		return 0, dhelper.Invalid("not an octal mode: " + raw)
 	}
 	return uint32(mode), nil
 }
@@ -209,7 +173,7 @@ func parseMode(raw string) (uint32, error) {
 func parseID(raw string) (int, error) {
 	id, err := strconv.Atoi(raw)
 	if err != nil || id < -1 || id >= MaxID {
-		return 0, invalid("not a uid or gid: " + raw)
+		return 0, dhelper.Invalid("not a uid or gid: " + raw)
 	}
 	return id, nil
 }
@@ -221,36 +185,6 @@ func parseFlag(args []string, name string) (bool, error) {
 	case args[0] == name:
 		return true, nil
 	default:
-		return false, invalid("unexpected argument: " + args[0])
+		return false, dhelper.Invalid("unexpected argument: " + args[0])
 	}
-}
-
-func invalid(msg string) error {
-	return &files.Error{Code: files.CodeInvalid, Err: errors.New(msg)}
-}
-
-func report(stderr io.Writer, err error) {
-	line, _ := json.Marshal(Failure{Code: string(CodeOf(err)), Error: err.Error()})
-	fmt.Fprintln(stderr, string(line))
-}
-
-func CodeOf(err error) files.Code {
-	var coded *files.Error
-	if errors.As(err, &coded) {
-		return coded.Code
-	}
-	return files.CodeFromOS(err)
-}
-
-func journal(uid int, args []string, err error) {
-	writer, openErr := syslog.New(syslog.LOG_AUTHPRIV|syslog.LOG_INFO, "dfiles-helper")
-	if openErr != nil {
-		return
-	}
-	defer writer.Close()
-	outcome := "ok"
-	if err != nil {
-		outcome = "failed: " + err.Error()
-	}
-	_ = writer.Info(fmt.Sprintf("uid=%d %s %s", uid, strings.Join(args, " "), outcome))
 }

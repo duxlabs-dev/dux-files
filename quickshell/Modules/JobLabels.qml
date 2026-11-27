@@ -42,6 +42,10 @@ Singleton {
                 "active": I18n.tr("Extracting", "file operation in progress"),
                 "done": ""
             },
+            "unlockArchive": {
+                "active": I18n.tr("Unlocking", "file operation in progress"),
+                "done": ""
+            },
             "duplicate": {
                 "active": I18n.tr("Duplicating", "file operation in progress"),
                 "done": I18n.tr("Duplicated", "toast after copying files beside themselves")

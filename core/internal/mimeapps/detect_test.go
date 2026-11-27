@@ -85,6 +85,10 @@ func TestDetectCombinesGlobAndMagic(t *testing.T) {
 	nameless := testfs.WriteBytes(t, filepath.Join(root, "files", "nameless"), []byte("%PDF-1.4"))
 	assert.Equal(t, "application/pdf", d.Detect(nameless, false), "with no glob match the magic type stands")
 
+	blank := testfs.WriteBytes(t, filepath.Join(root, "files", "blank.unknownext"), nil)
+	assert.Equal(t, TypeText, d.Detect(blank, false), "an empty file no glob knows is text")
+	assert.Equal(t, TypeBinary, d.Detect(filepath.Join(root, "files", "gone.unknownext"), false), "an unreadable file no glob knows still gets a type")
+
 	assert.Equal(t, TypeDirectory, d.Detect(root, true), "directories never read content")
 }
 

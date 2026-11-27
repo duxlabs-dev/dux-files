@@ -226,6 +226,8 @@ Singleton {
             params.limit = opts.limit;
         if (opts.cursor)
             params.cursor = opts.cursor;
+        if (opts.thumbnailSize)
+            params.thumbnailSize = opts.thumbnailSize;
         return params;
     }
 

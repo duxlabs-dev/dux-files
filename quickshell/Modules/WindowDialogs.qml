@@ -12,7 +12,7 @@ Item {
 
     property int propertiesRequest: 0
 
-    readonly property bool anyOpen: conflictDialog.visible || errorDialog.visible || archivePasswordDialog.visible || mainWindow.paneActions.trashDialogOpen || confirmLoader.open || openConfirmLoader.open || openWithLoader.open || executableLoader.open || trustLoader.open || unlockLoader.open || connectLoader.open || credentialLoader.open || propertiesLoader.open || appearanceLoader.open || shortcutsLoader.open || compressLoader.open || renameBookmarkLoader.open || emptyTrashLoader.open || clearRecentLoader.open || quitLoader.open || (extractPickerLoader.item?.visible ?? false) || (transferPickerLoader.item?.visible ?? false) || (badgePickerLoader.item?.visible ?? false)
+    readonly property bool anyOpen: conflictDialog.visible || errorDialog.visible || archivePasswordDialog.visible || mainWindow.paneActions.trashDialogOpen || confirmLoader.open || openConfirmLoader.open || openWithLoader.open || executableLoader.open || trustLoader.open || unlockLoader.open || connectLoader.open || credentialLoader.open || propertiesLoader.open || appearanceLoader.open || shortcutsLoader.open || compressLoader.open || extractLoader.open || renameBookmarkLoader.open || emptyTrashLoader.open || clearRecentLoader.open || quitLoader.open || (extractPickerLoader.item?.visible ?? false) || (transferPickerLoader.item?.visible ?? false) || (badgePickerLoader.item?.visible ?? false)
 
     function dialog(loader) {
         loader.asynchronous = false;
@@ -112,11 +112,15 @@ Item {
         dialog(compressLoader).ask(paths);
     }
 
-    function askExtractTo(paths) {
-        if (paths.length === 0)
+    function askExtract(archives, entries) {
+        if (archives.length === 0)
             return;
+        dialog(extractLoader).ask(archives, entries, FilePaths.parentOf(archives[0]));
+    }
+
+    function pickExtractFolder(start) {
         extractPickerLoader.active = true;
-        extractPickerLoader.item.archives = paths;
+        extractPickerLoader.item.revealPath = start !== "" ? start : mainWindow.currentPath;
         extractPickerLoader.item.open();
     }
 
@@ -307,14 +311,20 @@ Item {
         active: false
 
         FileBrowserModal {
-            property var archives: []
-
             parentModal: dialogs.mainWindow
             browserTitle: I18n.tr("Extract to", "folder picker title for unpacking archives")
             bucket: "extract"
             mode: "openFolder"
-            revealPath: dialogs.mainWindow.currentPath
-            onAccepted: paths => dialogs.mainWindow.openFlow.extractTo(archives, paths[0], "reveal")
+            onAccepted: paths => dialogs.dialog(extractLoader).setDestination(paths[0])
+        }
+    }
+
+    DialogLoader {
+        id: extractLoader
+
+        ExtractDialog {
+            onSubmitted: (archives, entries, dest, layout) => dialogs.mainWindow.openFlow.extractTo(archives, dest, "reveal", entries, layout)
+            onBrowseRequested: start => dialogs.pickExtractFolder(start)
         }
     }
 

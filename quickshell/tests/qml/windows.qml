@@ -72,10 +72,11 @@ ShellRoot {
         WindowService.close(2);
         check("closing the last window leaves nothing to target", [WindowService.count, WindowService.target(), WindowService.primaryId], [0, 0, 0]);
         check("a window opened after that is primary again", [WindowService.open([], true), WindowService.primaryId], [3, 3]);
+        check("newWindow without locations creates another window", [WindowService.open([], true), WindowService.count], [4, 2]);
 
         WindowService.create([docs]);
         WindowService.closeAll();
-        check("closeAll drops every window and its pending locations", [WindowService.count, WindowService.lastActiveId, WindowService.takePendingLocations(4)], [0, 0, []]);
+        check("closeAll drops every window and its pending locations", [WindowService.count, WindowService.lastActiveId, WindowService.takePendingLocations(5)], [0, 0, []]);
 
         if (failures === 0)
             log.info("FIXTURE PASS");

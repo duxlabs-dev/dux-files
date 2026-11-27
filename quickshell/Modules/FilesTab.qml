@@ -104,6 +104,7 @@ StyledButton {
         font.pixelSize: Theme.fontSizeSmall
         font.weight: tab.current ? Theme.fontWeightMedium : Theme.fontWeight
         horizontalAlignment: Text.AlignLeft
+        wrapMode: Text.NoWrap
         elide: Text.ElideRight
     }
 

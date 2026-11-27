@@ -14,14 +14,24 @@ Row {
     property bool compact: false
     property bool showClipboard: true
     property string hint: ""
-    property real textRoom: Number.POSITIVE_INFINITY
+    property real room: Number.POSITIVE_INFINITY
 
     readonly property int clipboardCount: ClipboardService.paths.length
+    readonly property real textRoom: room - (chip.visible ? chip.width + spacing : 0)
+    readonly property string itemsText: FileFormat.count(total)
     readonly property string countText: {
-        const items = FileFormat.count(total);
         if (hidden <= 0)
-            return items;
-        return I18n.tr("%1 · %2", "folder status: item count then hidden count").arg(items).arg(I18n.tr("%1 hidden", "count of hidden items left out of a folder listing").arg(hidden));
+            return itemsText;
+        return I18n.tr("%1 · %2", "folder status: item count then hidden count").arg(itemsText).arg(I18n.tr("%1 hidden", "count of hidden items left out of a folder listing").arg(hidden));
+    }
+    readonly property string shownText: {
+        if (hint !== "")
+            return hint;
+        if (total <= 0 && hidden <= 0)
+            return "";
+        if (Math.ceil(countMetrics.advanceWidth) <= textRoom)
+            return countText;
+        return Math.ceil(itemsMetrics.advanceWidth) <= textRoom ? itemsText : "";
     }
     readonly property string clipboardText: {
         switch (true) {
@@ -38,30 +48,48 @@ Row {
 
     spacing: Theme.spacingS
 
+    component Measure: StyledTextMetrics {
+        font.pixelSize: Theme.fontSizeSmall
+    }
+
+    Measure {
+        id: countMetrics
+
+        text: status.countText
+    }
+
+    Measure {
+        id: itemsMetrics
+
+        text: status.itemsText
+    }
+
     StyledText {
         anchors.verticalCenter: parent.verticalCenter
-        visible: !status.compact && (status.hint !== "" || status.total > 0 || status.hidden > 0)
+        visible: text !== "" && status.textRoom > 0
         width: Math.min(implicitWidth, Math.max(0, status.textRoom))
-        text: status.hint !== "" ? status.hint : status.countText
+        text: status.shownText
         color: Theme.surfaceVariantText
         font.pixelSize: Theme.fontSizeSmall
-        elide: Text.ElideMiddle
+        wrapMode: Text.NoWrap
     }
 
     Rectangle {
+        id: chip
+
         anchors.verticalCenter: parent.verticalCenter
         visible: status.showClipboard && status.clipboardCount > 0
-        width: chip.implicitWidth + FileBrowserMetrics.pathPillPadding + Theme.spacingXXS
+        width: chipRow.implicitWidth + FileBrowserMetrics.pathPillPadding + Theme.spacingXXS
         height: FileBrowserMetrics.pathPillHeight
         radius: FileBrowserMetrics.pathPillRadius
-        color: Theme.chipSurface
+        color: Theme.chipLayer
         border.width: Theme.outlineWidth
         border.color: Theme.outlineVariant
         Accessible.role: Accessible.StaticText
         Accessible.name: status.clipboardText
 
         Row {
-            id: chip
+            id: chipRow
 
             anchors.left: parent.left
             anchors.leftMargin: FileBrowserMetrics.pathPillPadding

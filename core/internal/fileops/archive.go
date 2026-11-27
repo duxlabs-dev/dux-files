@@ -171,7 +171,9 @@ func (r *runner) pack(w archiveWriter, src string) error {
 }
 
 func (r *runner) stream(path string, in io.Reader, out io.Writer) error {
-	buf := make([]byte, copyChunk)
+	chunk := borrowChunk()
+	defer chunks.Put(chunk)
+	buf := *chunk
 	for {
 		if r.job.closed() {
 			return context.Canceled

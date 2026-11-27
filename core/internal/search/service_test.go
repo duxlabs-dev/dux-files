@@ -3,6 +3,7 @@ package search
 import (
 	"context"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sync"
 	"testing"
@@ -77,8 +78,13 @@ func (b *testBus) names(topic string) []string {
 
 func newTestService(t *testing.T, bus Publisher) *Service {
 	t.Helper()
-	svc := NewService(bus, files.NewService(nil, t.TempDir(), nil))
+	svc := walkOnly(NewService(bus, files.NewService(nil, t.TempDir(), nil)))
 	svc.AttachOnOpen()
+	return svc
+}
+
+func walkOnly(svc *Service) *Service {
+	svc.tools.lookPath = func(string) (string, error) { return "", exec.ErrNotFound }
 	return svc
 }
 
@@ -216,7 +222,7 @@ func TestCancelStopsTheWalk(t *testing.T) {
 		require.NoError(t, os.WriteFile(filepath.Join(dir, "match.txt"), []byte("x"), 0o644))
 	}
 	bus := newBus()
-	svc := NewService(bus, slowStater{files.NewService(nil, t.TempDir(), nil)})
+	svc := walkOnly(NewService(bus, slowStater{files.NewService(nil, t.TempDir(), nil)}))
 	svc.AttachOnOpen()
 	svc.workers = 1
 
@@ -241,7 +247,7 @@ func (s slowStater) Stat(path string) (files.Entry, error) {
 func TestClientDisconnectCancels(t *testing.T) {
 	root := tree(t)
 	bus := newBus()
-	svc := NewService(bus, slowStater{files.NewService(nil, t.TempDir(), nil)})
+	svc := walkOnly(NewService(bus, slowStater{files.NewService(nil, t.TempDir(), nil)}))
 	svc.AttachOnOpen()
 	ctx, disconnect := context.WithCancel(context.Background())
 	disconnect()
@@ -255,7 +261,7 @@ func TestClientDisconnectCancels(t *testing.T) {
 func TestEventsBufferUntilTheTopicIsSubscribed(t *testing.T) {
 	root := tree(t)
 	bus := newBus()
-	svc := NewService(bus, files.NewService(nil, t.TempDir(), nil))
+	svc := walkOnly(NewService(bus, files.NewService(nil, t.TempDir(), nil)))
 
 	id, topic, err := svc.Start(context.Background(), root, "report", Options{})
 	require.NoError(t, err)
@@ -296,7 +302,7 @@ func TestValidation(t *testing.T) {
 func TestCloseWaitsForEverySearch(t *testing.T) {
 	root := tree(t)
 	bus := newBus()
-	svc := NewService(bus, slowStater{files.NewService(nil, t.TempDir(), nil)})
+	svc := walkOnly(NewService(bus, slowStater{files.NewService(nil, t.TempDir(), nil)}))
 	svc.AttachOnOpen()
 	for range 3 {
 		_, _, err := svc.Start(context.Background(), root, "report", Options{})
@@ -323,7 +329,7 @@ func TestCloseWaitsForEverySearch(t *testing.T) {
 
 func TestUnattachedFinishedSearchIsDroppedByCancelOrDisconnect(t *testing.T) {
 	root := tree(t)
-	svc := NewService(newBus(), files.NewService(nil, t.TempDir(), nil))
+	svc := walkOnly(NewService(newBus(), files.NewService(nil, t.TempDir(), nil)))
 
 	id, _, err := svc.Start(context.Background(), root, "report", Options{})
 	require.NoError(t, err)
@@ -353,7 +359,7 @@ func TestUnattachedFinishedSearchIsDroppedByCancelOrDisconnect(t *testing.T) {
 
 func TestConcurrentSearchesAreCapped(t *testing.T) {
 	root := tree(t)
-	svc := NewService(newBus(), files.NewService(nil, t.TempDir(), nil))
+	svc := walkOnly(NewService(newBus(), files.NewService(nil, t.TempDir(), nil)))
 	for range MaxConcurrent {
 		_, _, err := svc.Start(context.Background(), root, "report", Options{})
 		require.NoError(t, err)
@@ -365,7 +371,7 @@ func TestConcurrentSearchesAreCapped(t *testing.T) {
 }
 
 func TestStartAfterCloseIsRefused(t *testing.T) {
-	svc := NewService(newBus(), files.NewService(nil, t.TempDir(), nil))
+	svc := walkOnly(NewService(newBus(), files.NewService(nil, t.TempDir(), nil)))
 	svc.Close()
 	_, _, err := svc.Start(context.Background(), tree(t), "report", Options{})
 	require.Error(t, err)

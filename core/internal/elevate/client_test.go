@@ -2,37 +2,29 @@ package elevate
 
 import (
 	"bytes"
-	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"strconv"
 	"testing"
 	"time"
 
-	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/duxlabs-dev/dux-go/elevate"
+	dhelper "github.com/duxlabs-dev/dux-go/elevate/helper"
+	"github.com/duxlabs-dev/dux-go/files"
 
 	"github.com/duxlabs-dev/dux-files/core/internal/fileops"
 	"github.com/duxlabs-dev/dux-files/core/internal/helper"
 )
 
-const (
-	fakeEnv     = "DFILES_ELEVATE_FAKE_HELPER"
-	fakeExitEnv = "DFILES_ELEVATE_FAKE_EXIT"
-)
+const fakeEnv = "DFILES_ELEVATE_FAKE_HELPER"
 
 // TestMain lets the test binary stand in for pkexec: invoked as
 // "<binary> <exe> helper <op> ..." it runs the helper operation unprivileged.
 func TestMain(m *testing.M) {
-	if code := os.Getenv(fakeExitEnv); code != "" {
-		n, _ := strconv.Atoi(code)
-		os.Exit(n)
-	}
 	if os.Getenv(fakeEnv) == "" {
 		os.Exit(m.Run())
 	}
@@ -41,69 +33,14 @@ func TestMain(m *testing.M) {
 		fmt.Fprintln(os.Stderr, "bad fake invocation")
 		os.Exit(127)
 	}
-	if err := helper.Run(args[2:], os.Stdin, os.Stdout); err != nil {
-		line, _ := json.Marshal(helper.Failure{Code: string(helper.CodeOf(err)), Error: err.Error()})
-		fmt.Fprintln(os.Stderr, string(line))
-		os.Exit(helper.ExitFailed)
-	}
-	os.Exit(0)
+	os.Exit(dhelper.Finish(os.Stderr, nil, helper.Run(args[2:], os.Stdin, os.Stdout)))
 }
 
 func fakeClient(t *testing.T) *Client {
 	t.Helper()
 	self, err := os.Executable()
 	require.NoError(t, err)
-	return &Client{pkexec: self, exe: "dfiles", env: []string{fakeEnv + "=1"}}
-}
-
-func TestPolicyCoversOnlyThisBinary(t *testing.T) {
-	dir := t.TempDir()
-	exe := filepath.Join(dir, "bin", "dfiles")
-	require.NoError(t, os.MkdirAll(filepath.Dir(exe), 0o755))
-	require.NoError(t, os.WriteFile(exe, []byte("#!/bin/sh\n"), 0o755))
-	link := filepath.Join(dir, "dfiles-link")
-	require.NoError(t, os.Symlink(exe, link))
-
-	actions := filepath.Join(dir, "actions")
-	require.NoError(t, os.Mkdir(actions, 0o755))
-	policy := `<policyconfig><action id="` + ActionID + `"><annotate key="org.freedesktop.policykit.exec.path">` + link + `</annotate></action></policyconfig>`
-	require.NoError(t, os.WriteFile(filepath.Join(actions, PolicyName), []byte(policy), 0o644))
-
-	assert.True(t, policyCovers(exe, []string{"/nonexistent", actions}), "the annotation is resolved through symlinks")
-	assert.False(t, policyCovers(filepath.Join(dir, "other"), []string{actions}))
-	assert.False(t, policyCovers(exe, []string{"/nonexistent"}))
-	assert.Equal(t, "", annotatedPath("<policyconfig/>"))
-}
-
-func TestFailureMapsExitCodesAndHelperReports(t *testing.T) {
-	self, err := os.Executable()
-	require.NoError(t, err)
-	exitWith := func(code int) error {
-		cmd := exec.Command(self)
-		cmd.Env = append(os.Environ(), fakeExitEnv+"="+strconv.Itoa(code))
-		return cmd.Run()
-	}
-
-	err = failure(exitWith(126), nil)
-	assert.Equal(t, files.CodeAccess, files.CodeOf(err))
-	assert.Contains(t, err.Error(), "not granted")
-
-	err = failure(exitWith(127), []byte("Error executing command as another user: No authentication agent\n"))
-	assert.Equal(t, files.CodeNotSupported, files.CodeOf(err))
-	assert.Contains(t, err.Error(), "No authentication agent")
-
-	err = failure(exitWith(127), []byte("Error executing command as another user: Not authorized\n"))
-	assert.Equal(t, files.CodeAccess, files.CodeOf(err))
-
-	err = failure(exitWith(1), []byte("noise\n{\"code\":\"ENOENT\",\"error\":\"lstat /x: no such file\"}\n"))
-	assert.Equal(t, files.CodeNotFound, files.CodeOf(err))
-	assert.Equal(t, "ENOENT: lstat /x: no such file", err.Error())
-
-	err = failure(exitWith(3), []byte("garbage"))
-	assert.Equal(t, files.CodeIO, files.CodeOf(err))
-
-	err = failure(errors.New("fork failed"), nil)
-	assert.Equal(t, files.CodeIO, files.CodeOf(err))
+	return &Client{helper: &elevate.Client{Pkexec: self, Exe: "dfiles", Env: []string{fakeEnv + "=1"}}}
 }
 
 func TestClientSendsPermissionBitsOnly(t *testing.T) {
@@ -245,17 +182,17 @@ func TestClientCanonicalisesSymlinkedParents(t *testing.T) {
 func TestAvailableExplainsWhatIsMissing(t *testing.T) {
 	t.Setenv("XDG_DATA_DIRS", t.TempDir())
 	t.Setenv("FLATPAK_ID", "com.example.Sandbox")
-	client := &Client{pkexec: "/bin/true", exe: "/bin/true"}
-	assert.Equal(t, ReasonSandboxed, reason(t, client.Available()))
+	client := &Client{helper: &elevate.Client{Policy: PolicyName, Pkexec: "/bin/true", Exe: "/bin/true"}}
+	assert.Equal(t, elevate.ReasonSandboxed, reason(t, client.Available()))
 
 	t.Setenv("FLATPAK_ID", "")
 	if _, err := os.Stat("/.flatpak-info"); err == nil {
 		t.Skip("running inside flatpak")
 	}
-	assert.Equal(t, ReasonNoPolicy, reason(t, client.Available()))
+	assert.Equal(t, elevate.ReasonNoPolicy, reason(t, client.Available()))
 
-	missing := &Client{pkexec: "/nonexistent/pkexec", exe: "/bin/true"}
-	assert.Equal(t, ReasonNoPkexec, reason(t, missing.Available()))
+	missing := &Client{helper: &elevate.Client{Policy: PolicyName, Pkexec: "/nonexistent/pkexec", Exe: "/bin/true"}}
+	assert.Equal(t, elevate.ReasonNoPkexec, reason(t, missing.Available()))
 }
 
 func reason(t *testing.T, err error) string {

@@ -1,72 +1,108 @@
 package fileops
 
 import (
-	"archive/tar"
-	"archive/zip"
 	"bufio"
 	"compress/bzip2"
 	"compress/gzip"
 	"context"
 	"errors"
-	"hash"
-	"hash/crc32"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
-	"strings"
 
-	"github.com/bodgit/sevenzip"
-	"github.com/cavaliergopher/cpio"
+	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/klauspost/compress/zstd"
-	"github.com/nwaples/rardecode/v2"
 	"github.com/sorairolake/lzip-go"
 	"github.com/ulikunitz/xz"
 	"github.com/ulikunitz/xz/lzma"
 )
 
-const unixSymlinkAttribute = 0xA000
+const (
+	LayoutAuto   = "auto"
+	LayoutFolder = "folder"
+	LayoutFlat   = "flat"
+)
+
+var extractLayouts = []string{LayoutAuto, LayoutFolder, LayoutFlat}
+
+type placed struct {
+	Created
+	undoable bool
+}
 
 func (r *runner) extract() error {
 	r.setTotals(0, 0, true)
-
-	return eachSource(r, r.job.spec.sources, func(archive string) error {
-		created, dir, err := r.unpack(archive)
-		if err != nil {
-			return err
-		}
-		r.remember(KindDelete, created, "")
-		r.noteCreated(created, dir)
-		return nil
-	})
-}
-
-func (r *runner) unpack(archive string) (created string, dir bool, err error) {
-	format, err := detectFormat(archive)
-	if err != nil {
-		return "", false, err
+	if r.job.spec.toCache {
+		return r.extractToCache()
 	}
-	err = r.unlock(archive, func(password string) error {
-		created, dir, err = r.unpackWith(archive, format, password)
+
+	pick := newPicker(r.job.spec.entries, false)
+	return eachSource(r, r.job.spec.sources, func(archive string) error {
+		items, err := r.unpack(archive, pick)
+		for _, item := range items {
+			if item.undoable {
+				r.remember(KindDelete, item.Path, "")
+			}
+			r.noteCreated(item.Path, item.Dir)
+		}
 		return err
 	})
-	return created, dir, err
 }
 
-func (r *runner) unpackWith(archive string, format archiveFormat, password string) (string, bool, error) {
+func (r *runner) extractToCache() error {
+	spec := r.job.spec
+	target := filepath.Join(spec.dest, filepath.Base(spec.entries[0]))
+	if _, err := os.Lstat(target); err == nil {
+		r.noteCreated(target, false)
+		return nil
+	}
+	if err := os.MkdirAll(spec.dest, 0o700); err != nil {
+		return err
+	}
+	items, err := r.unpack(spec.sources[0], newPicker(spec.entries, true))
+	for _, item := range items {
+		r.noteCreated(item.Path, item.Dir)
+	}
+	return skipToNil(err)
+}
+
+func (r *runner) unpack(archive string, pick *picker) (items []placed, err error) {
+	format, err := detectFormat(archive)
+	if err != nil {
+		return nil, err
+	}
+	err = r.unlock(archive, func(password string) error {
+		items, err = r.unpackWith(archive, format, pick, password)
+		return err
+	})
+	return items, err
+}
+
+func (r *runner) layout() string {
+	switch {
+	case r.job.spec.layout != "":
+		return r.job.spec.layout
+	case len(r.job.spec.entries) > 0:
+		return LayoutFlat
+	}
+	return LayoutAuto
+}
+
+func (r *runner) unpackWith(archive string, format archiveFormat, pick *picker, password string) ([]placed, error) {
 	var in *os.File
 	if err := r.retryLocal(archive, func() error {
 		opened, err := os.Open(archive)
 		in = opened
 		return err
 	}); err != nil {
-		return "", false, err
+		return nil, err
 	}
 	defer in.Close()
 
 	stream, closeStream, err := openStream(in, format.compression)
 	if err != nil {
-		return "", false, err
+		return nil, err
 	}
 	defer closeStream()
 
@@ -76,34 +112,74 @@ func (r *runner) unpackWith(archive string, format archiveFormat, password strin
 	}
 	if kind == containerNone {
 		target, err := r.unpackFile(archive, stream)
-		return target, false, err
+		if err != nil {
+			return nil, err
+		}
+		return []placed{{Created{Path: target}, true}}, nil
 	}
 
-	target := r.targetPath(archive)
-	if err := os.Mkdir(target, 0o755); err != nil {
-		return "", false, err
-	}
-	root, err := os.OpenRoot(target)
+	reader, err := newArchiveReader(kind, in, stream, password)
 	if err != nil {
-		_ = os.RemoveAll(target)
-		return "", false, err
+		return nil, err
+	}
+	layout := r.layout()
+	holding := r.targetPath(archive)
+	if layout == LayoutFlat {
+		holding = r.tempPath(holding)
+	}
+	if err := os.Mkdir(holding, 0o755); err != nil {
+		return nil, err
 	}
 	before := r.progress()
-	fail := func(holding string, err error) (string, bool, error) {
-		_ = os.RemoveAll(holding)
+	fail := func(leftover string, err error) ([]placed, error) {
+		_ = os.RemoveAll(leftover)
 		r.restoreProgress(before)
-		return "", false, err
+		return nil, err
 	}
-	err = r.unpackInto(kind, in, stream, root, password)
+	root, err := os.OpenRoot(holding)
+	if err != nil {
+		return fail(holding, err)
+	}
+	err = r.unpackMembers(reader, root, pick, password)
 	_ = root.Close()
 	if err != nil {
-		return fail(target, err)
+		return fail(holding, err)
 	}
-	created, dir, err := r.hoistSoleEntry(target, archiveStem(filepath.Base(archive)))
+
+	switch layout {
+	case LayoutFlat:
+		return r.settle(holding)
+	case LayoutFolder:
+		return []placed{{Created{Path: holding, Dir: true}, true}}, nil
+	}
+	created, dir, err := r.hoistSoleEntry(holding, archiveStem(filepath.Base(archive)))
 	if err != nil {
 		return fail(created, err)
 	}
-	return created, dir, nil
+	return []placed{{Created{Path: created, Dir: dir}, true}}, nil
+}
+
+func (r *runner) settle(staging string) ([]placed, error) {
+	entries, err := os.ReadDir(staging)
+	if err != nil {
+		_ = os.RemoveAll(staging)
+		return nil, err
+	}
+	r.growTotals(len(entries))
+
+	var items []placed
+	for _, entry := range entries {
+		done, err := r.transfer(filepath.Join(staging, entry.Name()), filepath.Join(r.job.spec.dest, entry.Name()), true, false)
+		switch {
+		case errors.Is(err, errSkipped):
+			continue
+		case err != nil:
+			_ = os.RemoveAll(staging)
+			return items, err
+		}
+		items = append(items, placed{Created{Path: done.dst, Dir: done.dir}, done.undoable})
+	}
+	return items, os.RemoveAll(staging)
 }
 
 func (r *runner) hoistSoleEntry(target, stem string) (string, bool, error) {
@@ -154,21 +230,6 @@ func (r *runner) targetPath(archive string) string {
 		return uniquePath(target)
 	}
 	return target
-}
-
-func (r *runner) unpackInto(kind container, in *os.File, stream *bufio.Reader, root *os.Root, password string) error {
-	switch kind {
-	case containerZip:
-		return r.unzip(in, root, password)
-	case container7z:
-		return r.un7z(in, root, password)
-	case containerRar:
-		return r.unrar(stream, root, password)
-	case containerCpio:
-		return r.uncpio(stream, root)
-	default:
-		return r.untar(stream, root)
-	}
 }
 
 func openStream(in *os.File, kind compression) (*bufio.Reader, func(), error) {
@@ -242,373 +303,155 @@ func (r *runner) unpackFile(archive string, stream io.Reader) (string, error) {
 	return target, nil
 }
 
-func (r *runner) unzip(in *os.File, root *os.Root, password string) error {
-	info, err := in.Stat()
-	if err != nil {
-		return err
-	}
-	reader, err := zip.NewReader(in, info.Size())
-	if err != nil {
-		return err
-	}
-	var bytes int64
-	for _, f := range reader.File {
-		bytes += int64(f.UncompressedSize64)
-		if f.Flags&zipFlagEncrypted != 0 && password == "" {
-			return errPasswordNeeded
-		}
-	}
-	r.addTotals(len(reader.File), bytes)
-
-	for _, f := range reader.File {
-		if r.job.closed() {
-			return context.Canceled
-		}
-		open := f.Open
-		if f.Flags&zipFlagEncrypted != 0 {
-			open = func() (io.ReadCloser, error) { return openEncryptedZipEntry(f, password) }
-		}
-		if err := r.unzipEntry(root, f, open); err != nil {
-			return err
-		}
-	}
-	return nil
+type picker struct {
+	picked map[string]struct{}
+	single bool
+	hits   int
 }
 
-func (r *runner) unzipEntry(root *os.Root, f *zip.File, open func() (io.ReadCloser, error)) error {
-	if rootEntry(f.Name) {
+func newPicker(entries []string, single bool) *picker {
+	p := &picker{single: single}
+	if len(entries) == 0 {
+		return p
+	}
+	p.picked = make(map[string]struct{}, len(entries))
+	for _, entry := range entries {
+		p.picked[filepath.Clean(entry)] = struct{}{}
+	}
+	return p
+}
+
+func (p *picker) place(raw string) (string, error) {
+	if rootEntry(raw) {
+		return "", nil
+	}
+	name, err := entryName(raw)
+	if err != nil {
+		return "", err
+	}
+	if p.picked == nil {
+		return name, nil
+	}
+	for at := name; at != "."; at = filepath.Dir(at) {
+		if _, ok := p.picked[at]; !ok {
+			continue
+		}
+		p.hits++
+		parent := filepath.Dir(at)
+		if parent == "." {
+			return name, nil
+		}
+		return name[len(parent)+1:], nil
+	}
+	return "", nil
+}
+
+func (p *picker) measure(members []*member, password string) (count int, bytes int64, err error) {
+	for _, m := range members {
+		name, err := p.place(m.name)
+		if err != nil {
+			return 0, 0, err
+		}
+		if name == "" || m.kind == memberOther {
+			continue
+		}
+		if m.encrypted && password == "" {
+			return 0, 0, errPasswordNeeded
+		}
+		count++
+		bytes += m.size
+	}
+	return count, bytes, nil
+}
+
+func (p *picker) missed() error {
+	if p.picked == nil || p.hits > 0 {
 		return nil
 	}
-	name, err := entryName(f.Name)
-	if err != nil {
-		return err
-	}
-	mode := f.Mode()
-	switch {
-	case strings.HasSuffix(f.Name, "/") || mode.IsDir():
-		if err := root.MkdirAll(name, dirPerm(mode)); err != nil {
-			return err
-		}
-	case mode&fs.ModeSymlink != 0:
-		if err := linkFromBody(root, name, open); err != nil {
-			return err
-		}
-	default:
-		body, err := open()
+	return &files.Error{Code: files.CodeNotFound, Err: errors.New("not found in the archive")}
+}
+
+func (r *runner) unpackMembers(reader archiveReader, root *os.Root, pick *picker, password string) error {
+	listed, sized := reader.(*listedReader)
+	if sized {
+		count, bytes, err := pick.measure(listed.members, password)
 		if err != nil {
 			return err
 		}
-		err = r.writeEntry(root, name, body, filePerm(mode))
+		r.addTotals(count, bytes)
+	}
+	for {
+		if r.job.closed() {
+			return context.Canceled
+		}
+		m, err := reader.next()
+		switch {
+		case errors.Is(err, io.EOF):
+			return pick.missed()
+		case err != nil:
+			return err
+		}
+		name, err := pick.place(m.name)
+		if err != nil {
+			return err
+		}
+		if name == "" {
+			continue
+		}
+		if m.encrypted && password == "" {
+			return errPasswordNeeded
+		}
+		done, err := r.unpackMember(root, m, name, pick)
+		if err != nil {
+			return err
+		}
+		if !done {
+			r.skip()
+			continue
+		}
+		if !sized {
+			r.growTotals(1)
+		}
+		r.advance(filepath.Join(root.Name(), name), 1, 0)
+		if pick.single {
+			return nil
+		}
+	}
+}
+
+func (r *runner) unpackMember(root *os.Root, m *member, name string, pick *picker) (bool, error) {
+	switch m.kind {
+	case memberDir:
+		return true, root.MkdirAll(name, dirPerm(m.perm))
+	case memberSymlink:
+		target, err := m.linkTarget()
+		if err != nil {
+			return false, err
+		}
+		return true, makeLink(root, name, target)
+	case memberHardLink:
+		source, err := pick.place(m.link)
+		if err != nil || source == "" {
+			return false, err
+		}
+		if err := root.MkdirAll(filepath.Dir(name), 0o755); err != nil {
+			return false, err
+		}
+		return true, root.Link(source, name)
+	case memberFile:
+		body, err := m.open()
+		if err != nil {
+			return false, err
+		}
+		err = r.writeEntry(root, name, body, filePerm(m.perm))
 		_ = body.Close()
 		if err != nil {
-			return err
+			return false, err
 		}
-		_ = root.Chtimes(name, f.Modified, f.Modified)
+		_ = root.Chtimes(name, m.modified, m.modified)
+		return true, nil
 	}
-	r.advance(filepath.Join(root.Name(), name), 1, 0)
-	return nil
-}
-
-func (r *runner) un7z(in *os.File, root *os.Root, password string) error {
-	info, err := in.Stat()
-	if err != nil {
-		return err
-	}
-	reader, err := sevenzip.NewReaderWithPassword(in, info.Size(), password)
-	if err != nil {
-		return sevenZipPasswordError(err, password)
-	}
-	var bytes int64
-	for _, f := range reader.File {
-		bytes += int64(f.UncompressedSize)
-	}
-	r.addTotals(len(reader.File), bytes)
-
-	for _, f := range reader.File {
-		if r.job.closed() {
-			return context.Canceled
-		}
-		if rootEntry(f.Name) {
-			continue
-		}
-		name, err := entryName(f.Name)
-		if err != nil {
-			return err
-		}
-		open := func() (io.ReadCloser, error) {
-			body, err := f.Open()
-			if err != nil {
-				return nil, sevenZipPasswordError(err, password)
-			}
-			return &sevenZipEntry{inner: body, password: password, crc: crc32.NewIEEE(), want: f.CRC32}, nil
-		}
-		mode := sevenZipMode(f)
-		switch {
-		case mode.IsDir():
-			if err := root.MkdirAll(name, dirPerm(mode)); err != nil {
-				return err
-			}
-		case mode&fs.ModeSymlink != 0:
-			if err := linkFromBody(root, name, open); err != nil {
-				return err
-			}
-		default:
-			body, err := open()
-			if err != nil {
-				return err
-			}
-			err = r.writeEntry(root, name, body, filePerm(mode))
-			_ = body.Close()
-			if err != nil {
-				return err
-			}
-			_ = root.Chtimes(name, f.Modified, f.Modified)
-		}
-		r.advance(filepath.Join(root.Name(), name), 1, 0)
-	}
-	return nil
-}
-
-// an empty password still derives a key, so a protected entry can decode to garbage only the CRC catches
-func sevenZipPasswordError(err error, password string) error {
-	var readErr *sevenzip.ReadError
-	encrypted := errors.As(err, &readErr) && readErr.Encrypted
-	if !encrypted && !errors.Is(err, errDamagedEntry) {
-		return err
-	}
-	if password == "" {
-		return errPasswordNeeded
-	}
-	return &badPasswordError{err}
-}
-
-// sevenZipEntry checks the entry CRC itself; the library does not.
-type sevenZipEntry struct {
-	inner    io.ReadCloser
-	password string
-	crc      hash.Hash32
-	want     uint32
-}
-
-func (e *sevenZipEntry) Read(p []byte) (int, error) {
-	n, err := e.inner.Read(p)
-	e.crc.Write(p[:n])
-	switch {
-	case err == nil:
-		return n, nil
-	case errors.Is(err, io.EOF):
-		if e.want != 0 && e.crc.Sum32() != e.want {
-			return n, e.fail(errDamagedEntry)
-		}
-		return n, io.EOF
-	default:
-		return n, e.fail(err)
-	}
-}
-
-func (e *sevenZipEntry) fail(err error) error {
-	return sevenZipPasswordError(err, e.password)
-}
-
-func (e *sevenZipEntry) Close() error { return e.inner.Close() }
-
-// the unix mode sits in the high attribute bits; the library maps everything but links
-func sevenZipMode(f *sevenzip.File) fs.FileMode {
-	mode := f.Mode()
-	if f.Attributes&0x8000 != 0 && (f.Attributes>>16)&0xF000 == unixSymlinkAttribute {
-		mode |= fs.ModeSymlink
-	}
-	return mode
-}
-
-func (r *runner) unrar(stream io.Reader, root *os.Root, password string) error {
-	reader, err := rardecode.NewReader(stream, rardecode.Password(password))
-	if err != nil {
-		return rarPasswordError(err, password)
-	}
-	for {
-		if r.job.closed() {
-			return context.Canceled
-		}
-		header, err := reader.Next()
-		if errors.Is(err, io.EOF) {
-			return nil
-		}
-		if err != nil {
-			return rarPasswordError(err, password)
-		}
-		if (header.Encrypted || header.HeaderEncrypted) && password == "" {
-			return errPasswordNeeded
-		}
-		if rootEntry(header.Name) {
-			continue
-		}
-		name, err := entryName(header.Name)
-		if err != nil {
-			return err
-		}
-		body := io.Reader(reader)
-		if header.Encrypted {
-			body = &rarEntry{inner: reader}
-		}
-		mode := header.Mode()
-		switch {
-		case header.IsDir:
-			if err := root.MkdirAll(name, dirPerm(mode)); err != nil {
-				return err
-			}
-		case header.LinkTarget != "":
-			if err := makeLink(root, name, header.LinkTarget); err != nil {
-				return err
-			}
-		case mode&fs.ModeSymlink != 0:
-			target, err := io.ReadAll(body)
-			if err != nil {
-				return err
-			}
-			if err := makeLink(root, name, string(target)); err != nil {
-				return err
-			}
-		default:
-			r.growTotals(1)
-			if err := r.writeEntry(root, name, body, filePerm(mode)); err != nil {
-				return err
-			}
-			_ = root.Chtimes(name, header.ModificationTime, header.ModificationTime)
-		}
-		r.advance(filepath.Join(root.Name(), name), 1, 0)
-	}
-}
-
-func rarPasswordError(err error, password string) error {
-	switch {
-	case errors.Is(err, rardecode.ErrArchiveEncrypted), errors.Is(err, rardecode.ErrArchivedFileEncrypted):
-		if password == "" {
-			return errPasswordNeeded
-		}
-		return &badPasswordError{err}
-	case errors.Is(err, rardecode.ErrBadPassword):
-		return &badPasswordError{err}
-	}
-	return err
-}
-
-// RAR3 has no password check value, so a wrong key shows up as corrupt data
-type rarEntry struct{ inner io.Reader }
-
-func (e *rarEntry) Read(p []byte) (int, error) {
-	n, err := e.inner.Read(p)
-	if err == nil || errors.Is(err, io.EOF) {
-		return n, err
-	}
-	return n, &badPasswordError{err}
-}
-
-func (r *runner) uncpio(stream io.Reader, root *os.Root) error {
-	reader := cpio.NewReader(stream)
-	for {
-		if r.job.closed() {
-			return context.Canceled
-		}
-		header, err := reader.Next()
-		if errors.Is(err, io.EOF) {
-			return nil
-		}
-		if err != nil {
-			return err
-		}
-		if rootEntry(header.Name) {
-			continue
-		}
-		name, err := entryName(header.Name)
-		if err != nil {
-			return err
-		}
-		perm := fs.FileMode(header.Mode.Perm())
-		switch header.Mode & cpio.ModeType {
-		case cpio.TypeDir:
-			if err := root.MkdirAll(name, dirPerm(perm)); err != nil {
-				return err
-			}
-		case cpio.TypeSymlink:
-			target := header.Linkname
-			if target == "" {
-				body, err := io.ReadAll(reader)
-				if err != nil {
-					return err
-				}
-				target = string(body)
-			}
-			if err := makeLink(root, name, target); err != nil {
-				return err
-			}
-		case cpio.TypeReg:
-			r.growTotals(1)
-			if err := r.writeEntry(root, name, reader, filePerm(perm)); err != nil {
-				return err
-			}
-			_ = root.Chtimes(name, header.ModTime, header.ModTime)
-		default:
-			r.skip()
-			continue
-		}
-		r.advance(filepath.Join(root.Name(), name), 1, 0)
-	}
-}
-
-func (r *runner) untar(in io.Reader, root *os.Root) error {
-	reader := tar.NewReader(in)
-	for {
-		if r.job.closed() {
-			return context.Canceled
-		}
-		header, err := reader.Next()
-		if errors.Is(err, io.EOF) {
-			return nil
-		}
-		if err != nil {
-			return err
-		}
-		if rootEntry(header.Name) {
-			continue
-		}
-		name, err := entryName(header.Name)
-		if err != nil {
-			return err
-		}
-		mode := header.FileInfo().Mode()
-		switch header.Typeflag {
-		case tar.TypeDir:
-			if err := root.MkdirAll(name, dirPerm(mode)); err != nil {
-				return err
-			}
-		case tar.TypeSymlink:
-			if err := makeLink(root, name, header.Linkname); err != nil {
-				return err
-			}
-		case tar.TypeLink:
-			old, err := entryName(header.Linkname)
-			if err != nil {
-				return err
-			}
-			if err := root.MkdirAll(filepath.Dir(name), 0o755); err != nil {
-				return err
-			}
-			if err := root.Link(old, name); err != nil {
-				return err
-			}
-		case tar.TypeReg:
-			r.growTotals(1)
-			if err := r.writeEntry(root, name, reader, filePerm(mode)); err != nil {
-				return err
-			}
-			_ = root.Chtimes(name, header.ModTime, header.ModTime)
-		default:
-			r.skip()
-			continue
-		}
-		r.advance(filepath.Join(root.Name(), name), 1, 0)
-	}
+	return false, nil
 }
 
 func (r *runner) addTotals(files int, bytes int64) {
@@ -616,19 +459,6 @@ func (r *runner) addTotals(files int, bytes int64) {
 	r.job.mu.Lock()
 	r.job.progress.BytesTotal += bytes
 	r.job.mu.Unlock()
-}
-
-func linkFromBody(root *os.Root, name string, open func() (io.ReadCloser, error)) error {
-	body, err := open()
-	if err != nil {
-		return err
-	}
-	target, err := io.ReadAll(body)
-	_ = body.Close()
-	if err != nil {
-		return err
-	}
-	return makeLink(root, name, string(target))
 }
 
 func makeLink(root *os.Root, name, target string) error {

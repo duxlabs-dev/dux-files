@@ -172,6 +172,9 @@ func TestRedoIsClearedByANewOperation(t *testing.T) {
 }
 
 func TestACancelledOrSkippedUndoPushesNoRedo(t *testing.T) {
+	if os.Getuid() == 0 {
+		t.Skip("root ignores mode bits")
+	}
 	root := t.TempDir()
 	src := testfs.Write(t, filepath.Join(root, "src", "a.txt"), "a")
 	dest := filepath.Join(root, "dest")

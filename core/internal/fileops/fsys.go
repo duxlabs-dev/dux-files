@@ -1,11 +1,17 @@
 package fileops
 
 import (
+	"errors"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
+	"slices"
 	"time"
+
+	"golang.org/x/sys/unix"
+
+	"github.com/duxlabs-dev/dux-go/elevate"
 )
 
 type FS interface {
@@ -36,21 +42,20 @@ type Elevator interface {
 	Available() error
 }
 
-type Unavailable struct {
-	Reason string
-}
-
-func (u *Unavailable) Error() string { return "elevation unavailable: " + u.Reason }
+// An alias, so a helper that cannot start matches it from any operation, not only from Available.
+type Unavailable = elevate.Unavailable
 
 type localFS struct{}
 
 var local FS = localFS{}
 
 func (localFS) Lstat(path string) (os.FileInfo, error)     { return os.Lstat(path) }
-func (localFS) ReadDir(path string) ([]os.DirEntry, error) { return os.ReadDir(path) }
+func (localFS) ReadDir(path string) ([]os.DirEntry, error) { return readDirKeepingUnstattable(path) }
 func (localFS) Readlink(path string) (string, error)       { return os.Readlink(path) }
-func (localFS) Open(path string) (io.ReadCloser, error)    { return os.Open(path) }
-func (localFS) Mkdir(path string, perm os.FileMode) error  { return os.Mkdir(path, perm) }
+func (localFS) Open(path string) (io.ReadCloser, error) {
+	return openUnpolled(path, unix.O_RDONLY, 0)
+}
+func (localFS) Mkdir(path string, perm os.FileMode) error { return os.Mkdir(path, perm) }
 func (localFS) MkdirAll(path string, perm os.FileMode) error {
 	return os.MkdirAll(path, perm)
 }
@@ -70,11 +75,24 @@ func (localFS) Chtimes(path string, mtime time.Time) error {
 }
 
 func (localFS) Create(path string, perm os.FileMode) (Writer, error) {
-	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, perm)
+	file, err := openUnpolled(path, unix.O_WRONLY|unix.O_CREAT|unix.O_EXCL, perm)
 	if err != nil {
 		return nil, err
 	}
 	return &localWriter{File: file, path: path}, nil
+}
+
+func openUnpolled(path string, flags int, perm os.FileMode) (*os.File, error) {
+	for {
+		fd, err := unix.Open(path, flags|unix.O_CLOEXEC, uint32(perm.Perm()))
+		switch {
+		case err == unix.EINTR:
+			continue
+		case err != nil:
+			return nil, &os.PathError{Op: "open", Path: path, Err: err}
+		}
+		return os.NewFile(uintptr(fd), path), nil
+	}
 }
 
 func (localFS) Chmod(path string, mode os.FileMode, recursive bool) error {
@@ -103,6 +121,49 @@ func (localFS) Lchown(path string, uid, gid int, recursive bool) error {
 		return os.Lchown(child, uid, gid)
 	})
 }
+
+// os.ReadDir stats entries of unknown type and fails the whole read on the first error.
+func readDirKeepingUnstattable(path string) ([]os.DirEntry, error) {
+	if entries, err := os.ReadDir(path); err == nil {
+		return entries, nil
+	}
+	return readDirByName(path)
+}
+
+func readDirByName(path string) ([]os.DirEntry, error) {
+	dir, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer dir.Close()
+
+	names, err := dir.Readdirnames(-1)
+	if err != nil {
+		return nil, err
+	}
+	slices.Sort(names)
+
+	entries := make([]os.DirEntry, 0, len(names))
+	for _, name := range names {
+		info, err := os.Lstat(filepath.Join(path, name))
+		switch {
+		case errors.Is(err, fs.ErrNotExist):
+			continue
+		case err != nil:
+			entries = append(entries, unstattable{dir: path, name: name})
+			continue
+		}
+		entries = append(entries, fs.FileInfoToDirEntry(info))
+	}
+	return entries, nil
+}
+
+type unstattable struct{ dir, name string }
+
+func (e unstattable) Name() string               { return e.name }
+func (e unstattable) IsDir() bool                { return false }
+func (e unstattable) Type() fs.FileMode          { return fs.ModeIrregular }
+func (e unstattable) Info() (fs.FileInfo, error) { return os.Lstat(filepath.Join(e.dir, e.name)) }
 
 type localWriter struct {
 	*os.File

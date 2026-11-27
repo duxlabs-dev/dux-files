@@ -5,8 +5,10 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"sync"
+	"sync/atomic"
 
-	"github.com/duxlabs-dev/dux-files/core/internal/helper"
+	dhelper "github.com/duxlabs-dev/dux-go/elevate/helper"
 
 	"github.com/duxlabs-dev/dux-go/files"
 	"github.com/duxlabs-dev/dux-go/log"
@@ -32,7 +34,7 @@ func eachSource[T any](r *runner, items []T, step func(T) error) error {
 }
 
 func codeOf(err error) string {
-	return string(helper.CodeOf(err))
+	return string(dhelper.CodeOf(err))
 }
 
 type Stater interface {
@@ -40,14 +42,28 @@ type Stater interface {
 }
 
 type runner struct {
-	job         *job
-	stater      Stater
-	conflictAll Action
-	errorAll    Action
-	elevateRest bool
-	password    string
-	scanned     map[string]scanResult
-	estimating  bool
+	job               *job
+	stater            Stater
+	conflictAll       Action
+	folderConflictAll Action
+	errorAll          Action
+	elevateRest       bool
+	password          string
+	scanned           map[string]scanResult
+	estimating        bool
+	noClone           atomic.Bool
+	noRange           atomic.Bool
+	noUnnamed         atomic.Bool
+}
+
+var chunks sync.Pool
+
+func borrowChunk() *[]byte {
+	if buf, ok := chunks.Get().(*[]byte); ok && len(*buf) == copyChunk {
+		return buf
+	}
+	buf := make([]byte, copyChunk)
+	return &buf
 }
 
 func execute(j *job) error {
@@ -89,6 +105,8 @@ func execute(j *job) error {
 		return r.newFolderWith()
 	case KindPasteImage:
 		return r.pasteImage()
+	case KindUnlockArchive:
+		return r.unlockArchive()
 	}
 	return errors.New("unknown operation: " + string(j.spec.kind))
 }
